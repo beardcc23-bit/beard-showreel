@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Navigation({ theme, onToggleTheme }) {
+export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -43,28 +43,7 @@ export default function Navigation({ theme, onToggleTheme }) {
           ))}
         </div>
 
-        <div className="flex items-center gap-6">
-          {/* 主題切換按鈕 */}
-          <button
-            onClick={onToggleTheme}
-            className="p-2.5 rounded-full border border-border bg-zinc-950/20 dark:bg-zinc-950/20 light:bg-white/20 text-white-or-black hover:text-aurora-blue transition-all duration-300 flex items-center justify-center relative overflow-hidden backdrop-blur-md"
-            aria-label="Toggle Theme"
-          >
-            <motion.div
-              key={theme}
-              initial={{ rotate: -90, scale: 0.8, opacity: 0 }}
-              animate={{ rotate: 0, scale: 1, opacity: 1 }}
-              exit={{ rotate: 90, scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {theme === 'abyss' ? (
-                <Sun size={14} />
-              ) : (
-                <Moon size={14} />
-              )}
-            </motion.div>
-          </button>
-
+        <div className="flex items-center gap-4">
           <a
             href="#contact"
             className="prism-button px-6 py-2 text-[10px] font-black uppercase tracking-widest transition duration-300 hidden md:block"

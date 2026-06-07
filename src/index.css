@@ -31,27 +31,6 @@
   --orbit-ring-diag: rgba(255, 255, 255, 0.02);
 }
 
-.theme-prism {
-  --color-bg-core: #f4f4f7;
-  --color-bg-mist: #e4e4e7;
-  --color-bg-shadow: #d4d4d8;
-  --color-aurora-blue: #9e7f11; /* 調暗的精緻金 */
-  --color-title-white: #121314;
-  --color-info-gold-gray: #52525b;
-  --glass-white: rgba(0, 0, 0, 0.015);
-
-  /* 亮色語意變數 */
-  --text-white-or-black: #121314;
-  --text-gray-or-zinc: #52525b;
-  --border-color: rgba(0, 0, 0, 0.08);
-  --glass-bg: rgba(0, 0, 0, 0.015);
-  --grid-line: rgba(0, 0, 0, 0.03);
-  --orbit-ring: rgba(0, 0, 0, 0.04);
-  --orbit-ring-outer: rgba(0, 0, 0, 0.02);
-  --orbit-ring-inner: rgba(0, 0, 0, 0.05);
-  --orbit-ring-diag: rgba(0, 0, 0, 0.01);
-}
-
 body {
   font-family: 'Inter', 'Noto Sans TC', sans-serif;
   background-color: var(--color-bg-core);

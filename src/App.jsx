@@ -11,12 +11,6 @@ import Contact from './components/Contact';
 import Modal from './components/Modal';
 
 export default function App() {
-  const [theme, setTheme] = useState('abyss'); // 'abyss' | 'prism'
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'abyss' ? 'prism' : 'abyss'));
-  };
-
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: null, // 'project' | 'video'
@@ -48,7 +42,7 @@ export default function App() {
   };
 
   return (
-    <div className={`relative min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden theme-${theme} text-white-or-black`}>
+    <div className="relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden">
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />
       <div className="grid-bg" />
@@ -77,7 +71,7 @@ export default function App() {
       <CursorGlow />
 
       {/* 頂部與行動側邊導覽列 */}
-      <Navigation theme={theme} onToggleTheme={toggleTheme} />
+      <Navigation />
 
       {/* 主頁面區段 */}
       <main>
