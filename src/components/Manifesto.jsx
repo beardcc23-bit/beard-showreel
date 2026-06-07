@@ -37,13 +37,10 @@ export default function Manifesto() {
           </h2>
           <div className="space-y-8 text-info-gold-gray text-lg leading-relaxed font-light">
             <p>
-              在電影工業頂尖的 Flame 特效合成領域深耕 13 年，我對『幀』的雕琢已融入本能。那是對每一像素光影邏輯、光學物理與色彩科學的絕對誠實。如今，我將這份對{' '}
-              <span className="text-white font-medium">Pixel-Perfect</span> 的微米級精度，注入使用者體驗 (UX) 的架構中。
+              十三年的 <span className="text-white font-medium">Flame 特效生涯</span>，讓雕琢影格成為我的呼吸。那是對每一影格的光影與物理科學，最誠實的致敬。
             </p>
             <p>
-              我不再僅僅是合成視覺，而是透過嚴謹的{' '}
-              <span className="text-white font-medium">資訊架構 (Information Architecture)</span> 與流暢的{' '}
-              <span className="text-white font-medium">微交互原型迭代</span>，將複雜、生硬的業務邏輯，轉化為毫无摩擦、低認知負荷的極致直覺界面。
+              如今，我帶著這份對專業級的執著，跨界重構 <span className="text-white font-medium">使用者體驗（UX）</span>。不再拘泥於畫面的完美，我用嚴謹的 <span className="text-white font-medium">資訊架構</span> 為骨幹、<span className="text-white font-medium">微交互</span> 為血肉，將複雜的業務邏輯，馴化為毫無摩擦的極致直覺。
             </p>
             <p className="italic border-l-2 border-aurora-blue pl-6 py-2 text-zinc-300">
               「視覺是敲開感官的引信，而邏輯是留住心靈的錨點。我們不只是創造畫面，更在構建會呼吸的數位生態。」

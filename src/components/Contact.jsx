@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Linkedin } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 export default function Contact() {
   return (
@@ -26,7 +26,7 @@ export default function Contact() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-zinc-300 mb-20 font-light text-lg max-w-xl mx-auto leading-relaxed"
         >
-          無論是追求極致視覺的合成專案，還是需要邏輯與美感並行的 UI/UX 設計，我隨時準備好與你共同構建未來體驗。
+          期待有機會加入貴公司，與優秀的團隊並肩作戰，將極致的視覺美學與流暢的業務邏輯轉化為產品的核心競爭力。隨時歡迎您的來信或約訪，期待與您碰面交流。
         </motion.p>
         
         <motion.div
@@ -37,30 +37,28 @@ export default function Contact() {
           className="flex flex-col md:flex-row gap-12 justify-center items-center"
         >
           <a
-            href="mailto:your-email@example.com"
+            href="mailto:beard.cc23@gmail.com"
             className="group flex items-center gap-6 text-xl font-bold hover:text-aurora-blue transition duration-300"
           >
             <span className="bg-aurora-blue text-black p-4 rounded-sm group-hover:bg-white transition-colors duration-300 flex items-center justify-center">
               <Mail size={20} />
             </span>
             <span className="mono text-sm uppercase tracking-wider text-zinc-300 group-hover:text-aurora-blue transition-colors duration-300">
-              your-email@example.com
+              beard.cc23@gmail.com
             </span>
           </a>
           
           <div className="hidden md:block w-px h-8 bg-zinc-800" />
           
           <a
-            href="https://linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="tel:0910309687"
             className="group flex items-center gap-6 text-xl font-bold hover:text-aurora-blue transition duration-300"
           >
             <span className="bg-aurora-blue text-black p-4 rounded-sm group-hover:bg-white transition-colors duration-300 flex items-center justify-center">
-              <Linkedin size={20} />
+              <Phone size={20} />
             </span>
             <span className="mono text-sm uppercase tracking-wider text-zinc-300 group-hover:text-aurora-blue transition-colors duration-300">
-              LinkedIn Professional
+              0910309687
             </span>
           </a>
         </motion.div>
