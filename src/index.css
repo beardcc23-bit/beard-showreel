@@ -243,7 +243,12 @@ body {
   display: inline-block;
   z-index: 1;
   color: var(--color-title-white);
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+  transition: text-shadow 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-title:hover {
+  text-shadow: 0 0 35px rgba(212, 175, 55, 0.55), 0 0 70px rgba(212, 175, 55, 0.25);
 }
 
 .glow-title::after {
@@ -255,12 +260,13 @@ body {
   opacity: 0;
   z-index: -1;
   border-radius: 50%;
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
   transform: scale(0.8);
 }
 
 .glow-title:hover::after {
-  animation: breathe 2.5s ease-in-out infinite;
+  opacity: 0.45;
+  transform: scale(1.25);
 }
 
 @keyframes breathe {
@@ -422,7 +428,7 @@ body {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
-  transition: box-shadow 0.5s ease;
+  transition: box-shadow 0.5s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gold-flow-border::before {
