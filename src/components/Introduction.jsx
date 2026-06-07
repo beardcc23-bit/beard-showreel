@@ -35,6 +35,25 @@ export default function Introduction({ onPlayVideo }) {
             >
               Beard <span className="text-aurora-blue">Showreel</span>
             </motion.h2>
+
+            {/* 行動裝置專用照片 (大標題正下方，大螢幕隱藏) */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="block md:hidden my-8 w-full max-w-[280px]"
+            >
+              <div className="gold-flow-border aspect-[888/1024] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
+                <div className="gold-flow-inner w-full h-full">
+                  <img
+                    src="/avatar.jpg"
+                    alt="Beard"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            </motion.div>
             
             {/* 精雕文案 */}
             <motion.p
@@ -73,7 +92,7 @@ export default function Introduction({ onPlayVideo }) {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="md:col-span-5 flex justify-center md:justify-end w-full"
+            className="hidden md:flex md:col-span-5 justify-center md:justify-end w-full"
           >
             <div className="gold-flow-border w-[280px] sm:w-[320px] md:w-[350px] aspect-[888/1024] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
               <div className="gold-flow-inner w-full h-full">
