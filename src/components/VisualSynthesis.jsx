@@ -226,7 +226,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
       {/* 區段標頭 */}
       <div className="text-center mb-16 relative z-10">
         <div className="mono text-xs text-aurora-blue mb-6 uppercase tracking-[0.3em]">
-          03 // Visual Synthesis
+          02 // Visual Synthesis
         </div>
         <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
           The <span className="text-aurora-blue">Synthesis</span>

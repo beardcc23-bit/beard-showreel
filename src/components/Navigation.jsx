@@ -9,8 +9,8 @@ export default function Navigation() {
 
   const menuItems = [
     { name: '設計宣言', eng: 'Manifesto', href: '#about' },
-    { name: '體驗設計', eng: 'Experience Design', href: '#uiux' },
     { name: '視覺合成', eng: 'Visual Synthesis', href: '#vfx' },
+    { name: '體驗設計', eng: 'Experience Design', href: '#uiux' },
     { name: '建立聯繫', eng: 'Contact', href: '#contact' },
   ];
 

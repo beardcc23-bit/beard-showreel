@@ -43,7 +43,7 @@ export default function Experience({ onOpenProject }) {
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
           <div className="max-w-3xl">
             <div className="mono text-xs text-zinc-500 mb-6 uppercase tracking-[0.3em]">
-              02 // Experience Design
+              03 // Experience Design
             </div>
             <h2 className="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-none text-white-or-black">
               Surgical <span className="text-zinc-500">Precision</span>

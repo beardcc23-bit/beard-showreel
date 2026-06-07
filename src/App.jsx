@@ -83,11 +83,11 @@ export default function App() {
         {/* 02 設計宣言 (已整併技能進度條與設計故事) */}
         <Manifesto />
 
-        {/* 02 體驗設計 (UI/UX 專案列表，支援 state 彈窗資料傳遞) */}
-        <Experience onOpenProject={handleOpenProjectModal} />
-
         {/* 03 視覺合成 (VFX 影片卡片列表，支援 state 彈窗播放) */}
         <VisualSynthesis onPlayVideo={handleOpenVideoModal} />
+
+        {/* 02 體驗設計 (UI/UX 專案列表，支援 state 彈窗資料傳遞) */}
+        <Experience onOpenProject={handleOpenProjectModal} />
 
         {/* 聯絡我們 */}
         <Contact />
