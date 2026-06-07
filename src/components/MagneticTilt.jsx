@@ -27,10 +27,21 @@ export default function MagneticTilt({ children, className = '', ...props }) {
     y.set(relativeY);
   };
 
-  const handleMouseLeave = () => {
-    // 滑鼠離開時重設為 0
-    x.set(0);
-    y.set(0);
+  const handleMouseLeave = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const { clientX, clientY } = e;
+
+    // 只有在滑鼠實際坐標確實超出卡片幾何邊界時，才重設角度
+    if (
+      clientX < rect.left ||
+      clientX > rect.right ||
+      clientY < rect.top ||
+      clientY > rect.bottom
+    ) {
+      x.set(0);
+      y.set(0);
+    }
   };
 
   return (

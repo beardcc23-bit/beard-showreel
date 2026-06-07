@@ -160,7 +160,7 @@ export default function CanvasSequence({ onPlayVideo }) {
         }`}
       >
         <div className="w-full h-full overflow-hidden relative">
-          <canvas ref={canvasRef} className="w-full h-full block" />
+          <canvas ref={canvasRef} className="w-full h-full block pointer-events-none" />
           <div className="glow-border" />
         </div>
 
