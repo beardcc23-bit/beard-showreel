@@ -75,12 +75,12 @@ export default function Introduction({ onPlayVideo }) {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="md:col-span-5 flex justify-center md:justify-end w-full"
           >
-            <div className="gold-flow-border w-[280px] sm:w-[320px] md:w-[350px] aspect-[888/1024]">
+            <div className="gold-flow-border w-[280px] sm:w-[320px] md:w-[350px] aspect-[888/1024] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
               <div className="gold-flow-inner w-full h-full">
                 <img
                   src="/avatar.jpg"
                   alt="Beard"
-                  className="w-full h-full object-cover transition-all duration-700 ease-out origin-center hover:rotate-[25deg] hover:scale-125"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
