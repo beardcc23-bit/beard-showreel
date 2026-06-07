@@ -219,7 +219,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
   return (
-    <section id="vfx" className="max-w-6xl mx-auto px-8 py-24 relative overflow-hidden">
+    <section id="vfx" className="max-w-6xl mx-auto px-8 py-24 relative">
       {/* 背景點綴網格 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 

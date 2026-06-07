@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export default function Introduction({ onPlayVideo }) {
   return (
-    <section id="introduction" className="relative min-h-screen flex items-center justify-center py-24 overflow-hidden border-t border-zinc-900 bg-bg-core/60">
+    <section id="introduction" className="relative min-h-screen flex items-center justify-center py-24 border-t border-zinc-900 bg-bg-core/60">
       {/* 網格背景與漸層 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       

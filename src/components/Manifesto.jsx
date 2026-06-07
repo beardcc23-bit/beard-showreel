@@ -47,7 +47,7 @@ export default function Manifesto() {
   const activeCategory = skillCategories.find(cat => cat.id === activeTab) || skillCategories[0];
 
   return (
-    <section id="about" className="max-w-6xl mx-auto px-8 py-24 relative overflow-hidden border-t border-border">
+    <section id="about" className="max-w-6xl mx-auto px-8 py-24 relative border-t border-border">
       {/* 網格裝飾背景 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
