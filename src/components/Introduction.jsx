@@ -1,5 +1,33 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+
+function AnimatedCounter({ value, duration = 1.5 }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    let startTime = null;
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+      const easeProgress = progress * (2 - progress); // easeOutQuad
+      setCount(Math.floor(easeProgress * value));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        setCount(value);
+      }
+    };
+
+    window.requestAnimationFrame(step);
+  }, [isInView, value, duration]);
+
+  return <span ref={ref}>{count}</span>;
+}
 
 export default function Introduction({ onPlayVideo }) {
   return (
@@ -63,10 +91,10 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8, delay: 0.15 }}
               className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left"
             >
-              身為<span className="text-white font-medium">特效合成師 (VFX Compositing Artist)</span>，在 13 年的職業生涯中，我執行並見證了超過 300 隻商業廣告片的誕生。從前期的拍攝、剪接、調光，到最終在我手中執行的 Online 合成、去背（Keying）、修圖、特效融合與字幕動態。我深知在後期製程中，每一步都關乎完美的播映品質，絕不容許任何出錯。
+              身為資深特效合成師 (VFX Compositing Artist / D1)，在 13 年的職涯淬鍊中，我親手護航並見證了超過 300 支頂級商業廣告的誕生。從前期的實拍、剪輯、調光，到最終由我Online 、精準去背、數位修復、虛實融合與動態視覺。我深知在後期製程的終點線前，每一步都關乎製播品質的絕對完美，容不得絲毫差池。
               <br />
               <br />
-              我不只用細緻的光影美感與技術底蘊把關畫面，更穿梭於導演、廣告代理商與客戶之間，擔任<span className="text-aurora-blue font-medium">最清晰的溝通轉譯橋樑</span>，解決製程中的所有棘手問題，確保作品高質量地登上電視與網路大螢幕。
+              我不僅以敏銳的光影美感與技術底蘊封裝視覺，更穿梭於導演、廣告代理商與品牌主之間，擔任核心的「技術與創意轉譯橋樑」。我擅長排解製程中的繁複瓶頸，確保每一件作品皆以最高規格，完美跨螢登陸電視與數位全媒體。
             </motion.p>
 
             {/* 實戰成就數據面板 */}
@@ -79,7 +107,7 @@ export default function Introduction({ onPlayVideo }) {
             >
               <div>
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
-                  13<span className="text-aurora-blue text-xs font-bold mono">//Years</span>
+                  <AnimatedCounter value={13} />+<span className="text-aurora-blue text-xs font-bold mono">//Years</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
                   後期資歷
@@ -87,18 +115,18 @@ export default function Introduction({ onPlayVideo }) {
               </div>
               <div className="border-x border-zinc-800/80 px-6">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
-                  300+<span className="text-aurora-blue text-xs font-bold mono">//Spots</span>
+                  <AnimatedCounter value={300} />+<span className="text-aurora-blue text-xs font-bold mono">//Campaigns</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
-                  執行廣告量
+                  廣告專案
                 </div>
               </div>
               <div className="pl-2">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
-                  0<span className="text-aurora-blue text-xs font-bold mono">//Errors</span>
+                  <AnimatedCounter value={1000} />+<span className="text-aurora-blue text-xs font-bold mono">//Versions</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
-                  播映失誤率
+                  播放版本
                 </div>
               </div>
             </motion.div>
