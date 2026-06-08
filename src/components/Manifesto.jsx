@@ -51,17 +51,19 @@ export default function Manifesto() {
       {/* 網格裝飾背景 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
-      <div className="relative z-10 space-y-12">
+      <div className="relative z-10">
         {/* 頂部：標題區 */}
-        <div className="space-y-6">
-          <div className="mono text-[6px] text-aurora-blue uppercase tracking-[0.3em] flex items-center gap-2">
+        <div className="text-center mb-16 relative z-10">
+          <div className="mono text-[6px] text-aurora-blue mb-6 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-aurora-blue animate-pulse" />
             01 // The Narrative & Skills
           </div>
-          <h2 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter glow-title text-white">
-            用 <span className="text-white font-normal">極致合成</span> <br />
-            架起 <span className="text-aurora-blue">溝通橋樑</span>
+          <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
+            The <span className="text-aurora-blue">Manifesto</span>
           </h2>
+          <p className="text-zinc-300 font-light max-w-2xl mx-auto text-lg leading-relaxed">
+            用極致合成 架起溝通橋樑
+          </p>
         </div>
 
         {/* 內容區：左右對齊，items-start 使右側卡片完美對齊左側首段段落上方 */}
