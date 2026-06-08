@@ -11,7 +11,6 @@ export default function Navigation() {
     { name: '自我介紹', eng: 'Beard Chou', href: '#introduction' },
     { name: '設計宣言', eng: 'Manifesto', href: '#about' },
     { name: '視覺合成', eng: 'Visual Synthesis', href: '#vfx' },
-    { name: '建立聯繫', eng: 'Establish Connection', href: '#contact' },
   ];
 
   return (
@@ -30,18 +29,28 @@ export default function Navigation() {
           </div>
         </div>
         
-        <div className="hidden md:flex space-x-12">
-          {menuItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="hover:text-aurora-blue transition duration-300 relative group flex flex-col items-start gap-0.5"
-            >
-              <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono transition-colors duration-300 group-hover:text-aurora-blue">// {item.eng}</span>
-              <span className="text-xs font-normal tracking-wider">{item.name}</span>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
+        <div className="hidden md:flex items-center space-x-12">
+          <div className="flex space-x-12">
+            {menuItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="hover:text-aurora-blue transition duration-300 relative group flex flex-col items-start gap-0.5"
+              >
+                <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono transition-colors duration-300 group-hover:text-aurora-blue">// {item.eng}</span>
+                <span className="text-xs font-normal tracking-wider">{item.name}</span>
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
+              </a>
+            ))}
+          </div>
+
+          <a
+            href="#contact"
+            className="prism-button px-6 py-2.5 transition duration-300 flex flex-col items-center justify-center text-center leading-none"
+          >
+            <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">建立聯繫</span>
+          </a>
         </div>
       </nav>
 
@@ -73,7 +82,7 @@ export default function Navigation() {
                 <X size={28} />
               </button>
 
-              {menuItems.filter(item => item.href !== '#contact').map((item) => (
+              {menuItems.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
