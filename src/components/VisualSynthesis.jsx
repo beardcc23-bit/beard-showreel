@@ -158,8 +158,8 @@ function BrandCard({ item, onPlayVideo }) {
       onClick={() => hasVideo && onPlayVideo(item.videoId)}
       className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${
         hasVideo
-          ? 'border-zinc-800/80 bg-zinc-900/40 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
-          : 'border-zinc-900 bg-zinc-950/20 opacity-60'
+          ? 'border-zinc-700/60 bg-zinc-900/50 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
+          : 'border-zinc-800/80 bg-zinc-900/20'
       }`}
     >
       {/* 淡淡的金色漸層 hover 底色 (僅限有影片) */}
@@ -176,8 +176,8 @@ function BrandCard({ item, onPlayVideo }) {
             onError={() => setImgError(true)}
             className={`h-[22px] w-auto max-w-[70px] object-contain mb-2.5 transition-all duration-300 ${
               hasVideo 
-                ? 'grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100' 
-                : 'grayscale opacity-30 contrast-75 saturate-50'
+                ? 'grayscale group-hover:grayscale-0 opacity-95 group-hover:opacity-100' 
+                : 'grayscale opacity-50 group-hover:opacity-85'
             }`}
           />
         ) : googleFaviconUrl && !fallbackError ? (
@@ -186,7 +186,7 @@ function BrandCard({ item, onPlayVideo }) {
             alt={`${item.name} logo`}
             onError={() => setFallbackError(true)}
             className={`h-5 w-5 object-contain mb-2.5 rounded-sm transition-all duration-300 ${
-              hasVideo ? 'opacity-80 group-hover:opacity-100' : 'opacity-30 grayscale'
+              hasVideo ? 'opacity-90 group-hover:opacity-100' : 'opacity-50 grayscale'
             }`}
           />
         ) : (
@@ -194,7 +194,7 @@ function BrandCard({ item, onPlayVideo }) {
             <span className={`mono text-[6px] px-1.5 py-0.5 border rounded-sm transition-colors duration-300 ${
               hasVideo 
                 ? 'text-zinc-400 bg-zinc-900/50 border-zinc-800' 
-                : 'text-zinc-650 bg-zinc-950/20 border-zinc-900/80'
+                : 'text-zinc-500 bg-zinc-950/20 border-zinc-900/60'
             }`}>
               // BRAND
             </span>
@@ -203,8 +203,8 @@ function BrandCard({ item, onPlayVideo }) {
 
         <div className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${
           hasVideo
-            ? 'text-zinc-300 group-hover:text-white font-medium'
-            : 'text-zinc-500 font-light'
+            ? 'text-zinc-100 group-hover:text-white font-medium'
+            : 'text-zinc-300 font-normal'
         }`}>
           {item.name}
         </div>
@@ -215,7 +215,7 @@ function BrandCard({ item, onPlayVideo }) {
           <Play size={8} fill="currentColor" /> Play Reel
         </div>
       ) : (
-        <div className="mt-2.5 text-[6px] text-zinc-600 mono tracking-widest uppercase">
+        <div className="mt-2.5 text-[6px] text-zinc-500 mono tracking-widest uppercase">
           // ARCHIVE
         </div>
       )}
