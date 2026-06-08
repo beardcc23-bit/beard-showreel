@@ -6,39 +6,39 @@ import RefractionCard from './RefractionCard';
 const skillCategories = [
   {
     id: '01',
-    title: 'Visual Synthesis',
-    subtitle: '視覺合成與動態美學',
-    desc: '13 年電影級 Flame 特效合成背景，擅長光學折射、流體動力學與三維幾何在二維螢幕上的完美重組。',
+    title: 'VFX & Compositing',
+    subtitle: '特效合成與美學把關',
+    desc: '深厚駕馭 Autodesk Flame 高階合成系統，精準執行去背（Keying）、追蹤（Tracking）、數位擦除（Cleanup）及複雜修補；深度整合 2D 與 3D 數位元素，確保特效與實拍天衣無縫。',
     stats: [
-      { name: 'Flame / VFX Compositing', value: 98, code: 'FLAME_RENDER' },
-      { name: '3D Sequence Crafting', value: 92, code: 'POLY_SEQ_v3' },
-      { name: 'Color Science & Specularity', value: 95, code: 'HDR_OPTICAL' },
+      { name: 'Autodesk Flame Compositing', value: 98, code: 'FLAME_ONLINE' },
+      { name: 'Cleanup, Keying & Tracking', value: 95, code: 'VFX_CLEANUP' },
+      { name: '2D / 3D Element Integration', value: 96, code: 'SPACE_BLEND' },
     ],
-    meta: 'CORE.MODULE: ACTIVE // PORT: 7001'
+    meta: 'FLAME.SYSTEM: ACTIVE // PORT: 7001'
   },
   {
     id: '02',
-    title: 'Pipeline & Synergy',
-    subtitle: '製程整合與溝通協同',
-    desc: '具備橫跨導演、後期製程與技術團隊的完整溝通能力，善於將複雜的特效需求轉譯為高效的執行流程，確保創意完美落地。',
+    title: 'Pipeline & Delivery',
+    subtitle: '核心整合與製播輸出',
+    desc: '統籌後期特效合成流程，完美鏈結剪輯與調光。在高壓且緊迫時程限制下，透過高規格的製程管理確保專案如期，輸出品質符合頂級商業與播映標準。',
     stats: [
-      { name: 'Team Sync & Leadership', value: 95, code: 'TEAM_ALIGN' },
-      { name: 'Client-Director Bridge', value: 94, code: 'CREATIVE_TRANSLATE' },
-      { name: 'Post Pipeline Management', value: 90, code: 'VFX_FLOW_OPT' },
+      { name: 'Broadcast & Delivery Standards', value: 98, code: 'MASTER_OUTPUT' },
+      { name: 'Post-Pipeline Integration', value: 95, code: 'WORKFLOW_ALIGN' },
+      { name: 'High-Pressure Management', value: 92, code: 'DEADLINE_EXEC' },
     ],
-    meta: 'PM.MODULE: ACTIVE // PORT: 7002'
+    meta: 'PIPELINE.DELIVERY: ACTIVE // PORT: 7002'
   },
   {
     id: '03',
-    title: 'Creative Front-End',
-    subtitle: '創意前端與互動特效',
-    desc: '拒絕平庸的靜態網頁。使用 React / Vite / Framer Motion 等技術，將高端視覺理念完美還原在瀏覽器中。',
+    title: 'Synergy & Translation',
+    subtitle: '跨界轉譯與協作應變',
+    desc: '敏銳穿梭於導演、代理商與客戶三方，將抽象指令轉譯為高效執行方案；以高 EQ 快速響應修改需求，主動提供優化建議並共創完美體驗。',
     stats: [
-      { name: 'React / Next.js Ecosystem', value: 91, code: 'DOM_VIRTUAL' },
-      { name: 'Vite / Fast Build Tooling', value: 95, code: 'VITE_COMPILER' },
-      { name: 'Framer Motion Mechanics', value: 96, code: 'SPRING_ENGINE' },
+      { name: 'Director-Agency-Client Bridge', value: 97, code: 'THREE_WAY_SYNC' },
+      { name: 'Collaboration & High EQ', value: 96, code: 'AGILE_RESPONSE' },
+      { name: 'Visual Optimization Proposal', value: 91, code: 'CREATIVE_PITCH' },
     ],
-    meta: 'DEV.MODULE: ACTIVE // PORT: 7003'
+    meta: 'COMMUNICATION.SYNERGY: ACTIVE // PORT: 7003'
   }
 ];
 
@@ -67,7 +67,7 @@ export default function Manifesto() {
               十三年的 <span className="text-white font-medium">VFX 視覺特效與 Flame 合成生涯</span>，磨練出我對光影折射、色彩科學與畫面美學的極致追求。對我而言，合成不只是將素材拼湊，更是重新賦予每個鏡頭生命力與故事溫度。
             </p>
             <p>
-              在追求視覺巔峰的同時，我深知後期製作是一場團隊運作。我以<span className="text-white font-medium">完整的跨領域溝通能力</span>，在導演、藝術家、工程師與客戶之間建立清晰、高效的轉譯語言，將天馬行空的創意，精準且按部就班地落地實現。
+              在追求視覺巔峰的同時，我深知後期製作是一場不容出錯的高壓戰役。我以<span className="text-white font-medium">完整的跨領域溝通與整合能力</span>，在導演、藝術家、廣告代理商與客戶之間建立清晰、高效的轉譯語言，確保 300+ 隻廣告片從拍攝、剪接、調光到最終 Online 播帶的每一步均完美無瑕。
             </p>
             <p className="italic border-l-2 border-aurora-blue pl-6 py-2 text-zinc-300">
               「畫面是敲開感官的引信，而溝通是將想像落地的錨點。我們不只是合成像素，更在串聯每個創意的靈魂。」

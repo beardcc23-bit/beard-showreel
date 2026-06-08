@@ -61,20 +61,54 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.15 }}
-              className="text-zinc-300 text-base md:text-lg font-light leading-relaxed tracking-wide mb-12"
+              className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left"
             >
-              <span className="text-white font-medium">十三年的頂尖視覺特效與 Flame 合成深耕</span>，賦予我對每一影格光影物理的絕對掌控；多年的跨界協作，則淬煉出我對複雜製程需求的敏銳度。
+              身為<span className="text-white font-medium">特效合成師 (VFX Compositing Artist)</span>，在 13 年的職業生涯中，我執行並見證了超過 300 隻商業廣告片的誕生。從前期的拍攝、剪接、調光，到最終在我手中執行的 Online 合成、去背（Keying）、修圖、特效融合與字幕動態。我深知在後期製程中，每一步都關乎完美的播映品質，絕不容許任何出錯。
               <br />
               <br />
-              我不只用電影級的畫面實力與合成美感驚艷感官，更用<span className="text-aurora-blue font-medium">完整且清晰的跨界溝通力</span>，在導演、客戶與技術團隊之間架起最穩固的橋樑，將每個驚艷的創意精準落地。
+              我不只用細緻的光影美感與技術底蘊把關畫面，更穿梭於導演、廣告代理商與客戶之間，擔任<span className="text-aurora-blue font-medium">最清晰的溝通轉譯橋樑</span>，解決製程中的所有棘手問題，確保作品高質量地登上電視與網路大螢幕。
             </motion.p>
+
+            {/* 實戰成就數據面板 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="grid grid-cols-3 gap-6 w-full max-w-lg mb-12 border-y border-zinc-800/80 py-6 text-left"
+            >
+              <div>
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
+                  13<span className="text-aurora-blue text-xs font-bold mono">//Years</span>
+                </div>
+                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
+                  後期資歷
+                </div>
+              </div>
+              <div className="border-x border-zinc-800/80 px-6">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
+                  300+<span className="text-aurora-blue text-xs font-bold mono">//Spots</span>
+                </div>
+                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
+                  執行廣告量
+                </div>
+              </div>
+              <div className="pl-2">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
+                  0<span className="text-aurora-blue text-xs font-bold mono">//Errors</span>
+                </div>
+                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
+                  播映失誤率
+                </div>
+              </div>
+            </motion.div>
 
             {/* 霓虹光感按鈕組 */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.25 }}
               className="w-full flex justify-center md:justify-start"
             >
               <button
