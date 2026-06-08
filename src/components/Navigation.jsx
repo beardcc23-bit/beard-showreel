@@ -49,7 +49,7 @@ export default function Navigation() {
             className="prism-button px-6 py-2.5 transition duration-300 flex flex-col items-center justify-center text-center leading-none"
           >
             <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
-            <span className="text-[10px] font-normal uppercase tracking-widest">建立聯繫</span>
+            <span className="text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </a>
         </div>
       </nav>
