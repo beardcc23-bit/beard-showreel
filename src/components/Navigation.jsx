@@ -29,15 +29,16 @@ export default function Navigation() {
           </div>
         </div>
         
-        <div className="hidden md:flex space-x-12 text-xs font-bold uppercase tracking-widest mono">
+        <div className="hidden md:flex space-x-12">
           {menuItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="hover:text-aurora-blue transition duration-300 relative group"
+              className="hover:text-aurora-blue transition duration-300 relative group flex flex-col items-start gap-0.5"
             >
-              {item.eng}
-              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
+              <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono transition-colors duration-300 group-hover:text-aurora-blue">// {item.eng}</span>
+              <span className="text-xs font-bold tracking-wider">{item.name}</span>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </div>
@@ -45,9 +46,10 @@ export default function Navigation() {
         <div className="flex items-center gap-4">
           <a
             href="#contact"
-            className="prism-button px-6 py-2 text-[10px] font-black uppercase tracking-widest transition duration-300 hidden md:block"
+            className="prism-button px-6 py-2.5 transition duration-300 hidden md:flex flex-col items-center justify-center text-center leading-none"
           >
-            Establish Connection
+            <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">建立聯繫</span>
           </a>
         </div>
       </nav>
@@ -80,8 +82,9 @@ export default function Navigation() {
                 <X size={28} />
               </button>
 
-              <div className="text-sm text-zinc-600 font-bold uppercase tracking-widest mono mb-4">
-                // Navigate
+              <div className="text-[6px] text-zinc-500 font-medium tracking-widest mono mb-4 flex items-center gap-2">
+                <span>// NAVIGATE</span>
+                <span className="opacity-50">導覽</span>
               </div>
 
               {menuItems.map((item) => (
@@ -91,7 +94,7 @@ export default function Navigation() {
                   onClick={toggleMenu}
                   className="text-2xl font-black uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
                 >
-                  <span className="text-[10px] text-zinc-600 font-medium tracking-widest mono">// {item.eng}</span>
+                  <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono mb-1">// {item.eng}</span>
                   {item.name}
                 </a>
               ))}
@@ -100,9 +103,10 @@ export default function Navigation() {
                 <a
                   href="#contact"
                   onClick={toggleMenu}
-                  className="prism-button block w-full py-4 text-center text-black font-bold uppercase text-xs tracking-widest"
+                  className="prism-button block w-full py-3.5 text-center transition duration-300 flex flex-col items-center justify-center leading-none"
                 >
-                  建立聯繫
+                  <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
+                  <span className="text-xs font-bold uppercase tracking-widest">建立聯繫</span>
                 </a>
               </div>
             </motion.div>

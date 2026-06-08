@@ -79,19 +79,30 @@ export default function Manifesto() {
         <div className="md:col-span-6 flex flex-col h-full">
           {/* 微型 Tabs 切換 */}
           <div className="flex gap-2 mb-4">
-            {skillCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveTab(cat.id)}
-                className={`px-4 py-2.5 text-[10px] mono tracking-widest font-black uppercase transition-all duration-300 border rounded-sm ${
-                  activeTab === cat.id
-                    ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.25)]'
-                    : 'border-zinc-850 text-zinc-400 hover:text-white hover:border-zinc-700 bg-zinc-950/20'
-                }`}
-              >
-                {cat.title.split(' ')[0]}
-              </button>
-            ))}
+            {skillCategories.map((cat) => {
+              const labelMap = {
+                '01': { eng: 'VFX', zht: '特效合成' },
+                '02': { eng: 'PIPELINE', zht: '製播輸出' },
+                '03': { eng: 'SYNERGY', zht: '跨界溝通' }
+              };
+              const label = labelMap[cat.id];
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveTab(cat.id)}
+                  className={`px-4 py-2 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm min-w-[90px] leading-none ${
+                    activeTab === cat.id
+                      ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.25)]'
+                      : 'border-zinc-850 text-zinc-400 hover:text-white hover:border-zinc-700 bg-zinc-950/20'
+                  }`}
+                >
+                  <span className={`text-[6px] mono tracking-widest uppercase mb-0.5 ${
+                    activeTab === cat.id ? 'text-black/70' : 'text-zinc-500'
+                  }`}>{label.eng}</span>
+                  <span className="text-[10px] font-black tracking-wider">{label.zht}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* HUD 面板卡片 */}
@@ -111,8 +122,9 @@ export default function Manifesto() {
                       <span className="mono text-[6px] text-aurora-blue uppercase tracking-widest block mb-1">
                         {activeCategory.meta}
                       </span>
-                      <h3 className="text-xl font-black text-white uppercase tracking-tight">
-                        {activeCategory.title}
+                      <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-baseline gap-2 flex-wrap">
+                        <span>{activeCategory.title}</span>
+                        <span className="text-[10px] text-zinc-400 font-normal normal-case tracking-wide">// {activeCategory.subtitle}</span>
                       </h3>
                     </div>
                     <div className="mono text-[6px] text-zinc-500 px-2.5 py-1 border border-border bg-zinc-950 rounded-sm flex items-center gap-1.5">

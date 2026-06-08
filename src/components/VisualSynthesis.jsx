@@ -237,20 +237,35 @@ export default function VisualSynthesis({ onPlayVideo }) {
       </div>
 
       {/* 分類切換 Tab */}
-      <div className="flex flex-wrap justify-center gap-2.5 mb-12 relative z-10">
-        {categories.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-5 py-3 text-xs font-bold uppercase tracking-wider transition-all duration-300 border rounded-sm ${
-              activeTab === tab.id
-                ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
-                : 'border-zinc-800 text-zinc-400 bg-zinc-950/20 hover:text-white hover:border-zinc-700'
-            }`}
-          >
-            {tab.name}
-          </button>
-        ))}
+      <div className="flex flex-wrap justify-center gap-2 mb-12 relative z-10">
+        {categories.map((tab) => {
+          const engMap = {
+            food: 'FOOD & BEV',
+            tech: 'TECH & TELECOM',
+            vehicle: 'AUTO & TRAVEL',
+            lifestyle: 'LIFESTYLE',
+            health: 'HEALTH & MEDICAL',
+            beauty: 'BEAUTY & CARE',
+            finance: 'FINANCE & INS'
+          };
+          const engName = engMap[tab.id] || tab.id.toUpperCase();
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm leading-none ${
+                activeTab === tab.id
+                  ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
+                  : 'border-zinc-850 text-zinc-400 bg-zinc-950/20 hover:text-white hover:border-zinc-700'
+              }`}
+            >
+              <span className={`text-[6px] mono tracking-widest uppercase mb-0.5 ${
+                activeTab === tab.id ? 'text-black/70' : 'text-zinc-500'
+              }`}>{engName}</span>
+              <span className="text-xs font-bold tracking-wider">{tab.name}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* 品牌卡片 Grid */}
