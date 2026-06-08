@@ -18,27 +18,27 @@ const skillCategories = [
   },
   {
     id: '02',
-    title: 'Pipeline & Delivery',
-    subtitle: '核心整合與製播輸出',
-    desc: '統籌後期特效合成流程，完美鏈結剪輯與調光。在高壓且緊迫時程限制下，透過高規格的製程管理確保專案如期，輸出品質符合頂級商業與播映標準。',
+    title: 'Editing & Color',
+    subtitle: '剪接調色',
+    desc: '熟練掌握後期製程中的剪輯節奏與色彩科學，鏈結前后期工作流。在緊迫的商業專案時程下，提供精準的色域轉換、影音對齊與高品質播映規格輸出。',
     stats: [
-      { name: 'Broadcast & Delivery Standards', value: 98, code: 'MASTER_OUTPUT' },
-      { name: 'Post-Pipeline Integration', value: 95, code: 'WORKFLOW_ALIGN' },
-      { name: 'High-Pressure Management', value: 92, code: 'DEADLINE_EXEC' },
+      { name: 'Timeline Editing & Rhythm', value: 93, code: 'TIMELINE_CUT' },
+      { name: 'Color Grading & Science', value: 91, code: 'COLOR_GRADE' },
+      { name: 'Broadcast Mastering Standards', value: 94, code: 'MASTER_OUTPUT' },
     ],
-    meta: 'PIPELINE.DELIVERY: ACTIVE // PORT: 7002'
+    meta: 'PIPELINE.COLOR: ACTIVE // PORT: 7002'
   },
   {
     id: '03',
-    title: 'Synergy & Translation',
-    subtitle: '跨界轉譯與協作應變',
-    desc: '敏銳穿梭於導演、代理商與客戶三方，將抽象指令轉譯為高效執行方案；以高 EQ 快速響應修改需求，主動提供優化建議並共創完美體驗。',
+    title: 'AI Capabilities',
+    subtitle: 'AI能力',
+    desc: '積極探索並實踐 generative AI 工具在後期特效與創意開發中的潛能。將 AI 去背、擴圖、超解析度與生成式元素無縫整合入傳統 VFX 管線，倍增生產效率。',
     stats: [
-      { name: 'Director-Agency-Client Bridge', value: 97, code: 'THREE_WAY_SYNC' },
-      { name: 'Collaboration & High EQ', value: 96, code: 'AGILE_RESPONSE' },
-      { name: 'Visual Optimization Proposal', value: 91, code: 'CREATIVE_PITCH' },
+      { name: 'Generative AI Integration', value: 90, code: 'AI_FLOW_SYNC' },
+      { name: 'AI Upscaling & Inpainting', value: 92, code: 'INPAINT_UPSCAL' },
+      { name: 'Prompt-to-Asset Pipeline', value: 88, code: 'PROMPT_ASSET' },
     ],
-    meta: 'COMMUNICATION.SYNERGY: ACTIVE // PORT: 7003'
+    meta: 'AI.COGNITIVE: ACTIVE // PORT: 7003'
   }
 ];
 
@@ -69,6 +69,9 @@ export default function Manifesto() {
             <p>
               在追求視覺巔峰的同時，我深知後期製作是一場不容出錯的高壓戰役。我以<span className="text-white font-medium">完整的跨領域溝通與整合能力</span>，在導演、藝術家、廣告代理商與客戶之間建立清晰、高效的轉譯語言，確保 300+ 隻廣告片從拍攝、剪接、調光到最終 Online 播帶的每一步均完美無瑕。
             </p>
+            <p>
+              面對這個 AI 時代，我也不停嘗試使用 AI 技能，將先進的智慧輔助技術融入傳統合成流程，以更高的效率與敏銳的視覺直覺，探索影音後期創作的全新邊界。
+            </p>
             <p className="italic border-l-2 border-aurora-blue pl-6 py-2 text-zinc-300">
               「畫面是敲開感官的引信，而溝通是將想像落地的錨點。我們不只是合成像素，更在串聯每個創意的靈魂。」
             </p>
@@ -82,8 +85,8 @@ export default function Manifesto() {
             {skillCategories.map((cat) => {
               const labelMap = {
                 '01': { eng: 'VFX', zht: '特效合成' },
-                '02': { eng: 'PIPELINE', zht: '製播輸出' },
-                '03': { eng: 'SYNERGY', zht: '跨界溝通' }
+                '02': { eng: 'EDITING', zht: '剪接調色' },
+                '03': { eng: 'AI SKILLS', zht: 'AI能力' }
               };
               const label = labelMap[cat.id];
               return (
