@@ -33,7 +33,7 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8 }}
               className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none glow-title"
             >
-              Beard <span className="text-aurora-blue">Showreel</span>
+              Beard <span className="text-aurora-blue">Chou</span>
             </motion.h2>
 
             {/* 行動裝置專用照片 (大標題正下方，大螢幕隱藏) */}
