@@ -158,8 +158,8 @@ function BrandCard({ item, onPlayVideo }) {
       onClick={() => hasVideo && onPlayVideo(item.videoId)}
       className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${
         hasVideo
-          ? 'border-zinc-200 bg-white hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.15)]'
-          : 'border-zinc-200 bg-white hover:shadow-[0_6px_20px_rgba(0,0,0,0.06)]'
+          ? 'border-zinc-800/80 bg-zinc-900/40 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
+          : 'border-zinc-900 bg-zinc-950/20 opacity-60'
       }`}
     >
       {/* 淡淡的金色漸層 hover 底色 (僅限有影片) */}
@@ -174,18 +174,28 @@ function BrandCard({ item, onPlayVideo }) {
             src={logoUrl}
             alt={`${item.name} logo`}
             onError={() => setImgError(true)}
-            className="h-[22px] w-auto max-w-[70px] object-contain mb-2.5 grayscale group-hover:grayscale-0 transition-all duration-300"
+            className={`h-[22px] w-auto max-w-[70px] object-contain mb-2.5 transition-all duration-300 ${
+              hasVideo 
+                ? 'grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100' 
+                : 'grayscale opacity-30 contrast-75 saturate-50'
+            }`}
           />
         ) : googleFaviconUrl && !fallbackError ? (
           <img
             src={googleFaviconUrl}
             alt={`${item.name} logo`}
             onError={() => setFallbackError(true)}
-            className="h-5 w-5 object-contain mb-2.5 rounded-sm"
+            className={`h-5 w-5 object-contain mb-2.5 rounded-sm transition-all duration-300 ${
+              hasVideo ? 'opacity-80 group-hover:opacity-100' : 'opacity-30 grayscale'
+            }`}
           />
         ) : (
           <div className="h-[22px] flex items-center mb-2.5">
-            <span className="mono text-[6px] text-zinc-400 bg-zinc-100 px-1.5 py-0.5 border border-zinc-200 rounded-sm">
+            <span className={`mono text-[6px] px-1.5 py-0.5 border rounded-sm transition-colors duration-300 ${
+              hasVideo 
+                ? 'text-zinc-400 bg-zinc-900/50 border-zinc-800' 
+                : 'text-zinc-650 bg-zinc-950/20 border-zinc-900/80'
+            }`}>
               // BRAND
             </span>
           </div>
@@ -193,19 +203,19 @@ function BrandCard({ item, onPlayVideo }) {
 
         <div className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${
           hasVideo
-            ? 'text-zinc-800 group-hover:text-black font-semibold'
-            : 'text-zinc-600 font-normal'
+            ? 'text-zinc-300 group-hover:text-white font-medium'
+            : 'text-zinc-500 font-light'
         }`}>
           {item.name}
         </div>
       </div>
 
       {hasVideo ? (
-        <div className="mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-80 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1">
+        <div className="mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-85 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1">
           <Play size={8} fill="currentColor" /> Play Reel
         </div>
       ) : (
-        <div className="mt-2.5 text-[6px] text-zinc-400 mono tracking-widest uppercase">
+        <div className="mt-2.5 text-[6px] text-zinc-600 mono tracking-widest uppercase">
           // ARCHIVE
         </div>
       )}
