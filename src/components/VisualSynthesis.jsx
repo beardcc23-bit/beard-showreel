@@ -237,7 +237,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
       </div>
 
       {/* 分類切換 Tab */}
-      <div className="flex flex-wrap justify-center gap-2 mb-12 relative z-10">
+      <div className="flex flex-wrap justify-center md:justify-end gap-2 mb-12 relative z-10">
         {categories.map((tab) => {
           const engMap = {
             food: 'FOOD & BEV',

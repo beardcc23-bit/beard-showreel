@@ -34,11 +34,11 @@ export default function Navigation() {
             <a
               key={item.href}
               href={item.href}
-              className="hover:text-aurora-blue transition duration-300 relative group flex flex-col items-start gap-0.5"
+              className="hover:text-aurora-blue transition duration-300 relative group flex flex-col items-end gap-0.5"
             >
               <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono transition-colors duration-300 group-hover:text-aurora-blue">// {item.eng}</span>
               <span className="text-xs font-bold tracking-wider">{item.name}</span>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 right-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </div>
@@ -81,11 +81,6 @@ export default function Navigation() {
               >
                 <X size={28} />
               </button>
-
-              <div className="text-[6px] text-zinc-500 font-medium tracking-widest mono mb-4 flex items-center gap-2">
-                <span>// NAVIGATE</span>
-                <span className="opacity-50">導覽</span>
-              </div>
 
               {menuItems.map((item) => (
                 <a
