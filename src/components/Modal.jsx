@@ -49,14 +49,25 @@ export default function Modal({ isOpen, onClose, type, data }) {
           {type === 'video' ? (
             /* 影片播放模式 */
             <div className="aspect-video w-full bg-black">
-              <iframe
-                src={`https://www.youtube.com/embed/${data.videoId}?autoplay=1`}
-                title="YouTube Video Player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="w-full h-full"
-              ></iframe>
+              {data.isFacebook ? (
+                <iframe
+                  src={`https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${data.videoId}&show_text=0&t=0&autoplay=1`}
+                  title="Facebook Video Player"
+                  frameBorder="0"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                ></iframe>
+              ) : (
+                <iframe
+                  src={`https://www.youtube.com/embed/${data.videoId}?autoplay=1`}
+                  title="YouTube Video Player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                ></iframe>
+              )}
             </div>
           ) : (
             /* Case Study 專案模式 */

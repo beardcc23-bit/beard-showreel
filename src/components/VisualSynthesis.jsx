@@ -7,34 +7,32 @@ const categories = [
     id: 'food',
     name: '食品與飲料',
     items: [
-      { name: 'TOBLERONE 三角巧克力', domain: 'toblerone.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Toblerone_logo.svg', videoId: 'exDc-2Xnb4E', bgImage: '/toblerone_bg.png' },
-      { name: 'UCC', domain: 'ucc.co.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/UCC_Holding_logo.svg', videoId: 'AuuxyMIutf8', bgImage: '/ucc_bg.png' },
-      { name: '三得利 蜂王乳+芝麻明E', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
-      { name: '三得利 蜜露珂娜', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
-      { name: '可口可樂', domain: 'cocacola.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg' },
-      { name: '多力多滋', domain: 'doritos.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Doritos_logo.svg' },
-      { name: '好侍咖哩', domain: 'housefoods-group.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/House_Foods_Holdings_logo.svg' },
-      { name: '伯朗咖啡', domain: 'mrbrown.com.tw', logo: 'https://www.kingcar.com.tw/Uploads/Images/202005/0c1737e5-1ab2-4b26-80de-bd1ec2c86e0c.png' },
-      { name: '每朝綠茶', domain: 'vitalon.com.tw', logo: 'https://www.vitalon.com.tw/Uploads/Images/202005/3e3cb897-402a-464a-9ef8-e04f114c2742.png' },
-      { name: '金車噶瑪蘭威士忌', domain: 'kavalanwhisky.com', logo: 'https://www.kingcar.com.tw/Uploads/Images/202005/0c1737e5-1ab2-4b26-80de-bd1ec2c86e0c.png' },
-      { name: '柏克金啤酒', domain: 'buckskin.com.tw', logo: 'https://www.kingcar.com.tw/Uploads/Images/202005/0c1737e5-1ab2-4b26-80de-bd1ec2c86e0c.png' },
-      { name: '金門高粱', domain: 'kkl.com.tw', logo: 'https://www.kkl.com.tw/Uploads/Images/202005/85bdc329-873b-41ca-ab0c-66f8fa176df9.png' },
-      { name: '旨醞鐵板燒', domain: 'feastogether.com.tw', logo: 'https://www.feastogether.com.tw/images/logo.png' },
-      { name: '活沛多', domain: 'watsons.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/27/Watsons_Logo.svg' },
-      { name: '格蘭利威', domain: 'theglenlivet.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/da/The_Glenlivet_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: '桂格喝的燕麥', domain: 'quaker.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Quaker_Oats_company_logo.svg' },
-      { name: '桂格形象片', domain: 'quaker.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Quaker_Oats_company_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: '桂格雙效健康奶粉', domain: 'quaker.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Quaker_Oats_company_logo.svg' },
-      { name: '泰山八寶粥', domain: 'taisungroup.com.tw', logo: 'https://www.taisun.com.tw/wp-content/themes/taisun/images/logo.png' },
-      { name: '健酪乳酸飲料', domain: 'kingcar.com.tw', logo: 'https://www.kingcar.com.tw/Uploads/Images/202005/3e3cb897-402a-464a-9ef8-e04f114c2742.png' },
-      { name: '黑松茶花', domain: 'heysong.com.tw', logo: 'https://www.heysong.com.tw/wp-content/themes/heysong/images/logo.png' },
-      { name: '瑞穗鮮乳', domain: 'uni-president.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ae/Uni-President_Enterprises_Corporation_logo.svg' },
-      { name: '義美', domain: 'imeifoods.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/I-MEI_Foods_logo.svg' },
-      { name: '義美生機', domain: 'imeieco.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/I-MEI_Foods_logo.svg' },
-      { name: '裸雀威士忌', domain: 'nakedmalt.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a2/The_Famous_Grouse_logo.svg' },
-      { name: '維他露P', domain: 'vitalon.com.tw', logo: 'https://www.vitalon.com.tw/Uploads/Images/202005/3e3cb897-402a-464a-9ef8-e04f114c2742.png' },
-      { name: '樂事', domain: 'lays.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Lay%27s_Logo.svg' },
-      { name: '灣仔碼頭水餃', domain: 'generalmills.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/30/General_Mills_logo.svg' }
+      { name: 'Extra', domain: 'wrigley.com' },
+      { name: 'TOBLERONE 三角巧克力', domain: 'toblerone.com', videoId: 'exDc-2Xnb4E', bgImage: '/toblerone_bg.png' },
+      { name: 'UCC', domain: 'ucc.co.jp', videoId: 'AuuxyMIutf8', bgImage: '/ucc_bg.png' },
+      { name: '可口可樂', domain: 'cocacola.com', videoId: '1286974884802497', isFacebook: true },
+      { name: '好侍咖哩', domain: 'housefoods-group.com', videoId: 'jScTOFsO97U' },
+      { name: '伯朗EX雙倍濃烈咖啡', domain: 'mrbrown.com.tw', videoId: 'UmoyLNbcevQ' },
+      { name: '每朝双纖綠茶', domain: 'vitalon.com.tw', videoId: 'w1EUT4JnHck' },
+      { name: '每朝健康', domain: 'vitalon.com.tw', videoId: '_xC48BnWOAQ' },
+      { name: '噶瑪蘭威士忌', domain: 'kavalanwhisky.com' },
+      { name: '柏克金啤酒', domain: 'buckskin.com.tw', videoId: 'aKYv6_VMPFI' },
+      { name: '金門高粱千日醇', domain: 'kkl.com.tw', videoId: '8rl7u3SPQpY' },
+      { name: '旨醞鐵板燒', domain: 'feastogether.com.tw', videoId: '2203781970428596', isFacebook: true },
+      { name: '活沛多', domain: 'watsons.com.tw', videoId: 'Y4CG2QNa5hs' },
+      { name: '格蘭利威', domain: 'theglenlivet.com' },
+      { name: '桂格喝的燕麥', domain: 'quaker.com.tw' },
+      { name: '桂格', domain: 'quaker.com.tw', videoId: 'lxRJO_qPcWQ' },
+      { name: '泰山八寶粥', domain: 'taisungroup.com.tw', videoId: 'ry5k_i-XhVE' },
+      { name: '健酪乳酸飲料', domain: 'kingcar.com.tw', videoId: 'qJqmBWZxbdo' },
+      { name: '黑松茶花', domain: 'heysong.com.tw', videoId: 'TRqUVCCZwRU', bgImage: '/heysong_bg.png' },
+      { name: '黑松茶花', domain: 'heysong.com.tw', videoId: 'cKbH-CxdjxY' },
+      { name: '瑞穗鮮乳', domain: 'uni-president.com.tw', videoId: 'owT3Sj_So60', bgImage: '/ruisui_bg.png' },
+      { name: '義美生機', domain: 'imeieco.com', videoId: 'kakD_HQkIQU', bgImage: '/imeieco_bg.png' },
+      { name: '裸雀威士忌', domain: 'nakedmalt.com' },
+      { name: '維他露P+', domain: 'vitalon.com.tw', videoId: 'AyQQZ37OPfU', bgImage: '/vitalon_p_bg.png' },
+      { name: '樂事', domain: 'lays.com', videoId: 'zQfi9U_023I', bgImage: '/lays_bg.png' },
+      { name: '灣仔碼頭水餃', domain: 'generalmills.com' }
     ]
   },
   {
@@ -149,7 +147,7 @@ function BrandCard({ item, onPlayVideo }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      onClick={() => hasVideo && onPlayVideo(item.videoId)}
+      onClick={() => hasVideo && onPlayVideo(item.videoId, !!item.isFacebook)}
       className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${
         hasVideo
           ? 'border-zinc-700/60 bg-zinc-900/50 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
