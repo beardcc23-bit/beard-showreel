@@ -185,7 +185,7 @@ function BrandCard({ item, onPlayVideo }) {
           />
         ) : (
           <div className="h-[22px] flex items-center mb-2.5">
-            <span className="mono text-[7px] text-zinc-400 bg-zinc-100 px-1.5 py-0.5 border border-zinc-200 rounded-sm">
+            <span className="mono text-[6px] text-zinc-400 bg-zinc-100 px-1.5 py-0.5 border border-zinc-200 rounded-sm">
               // BRAND
             </span>
           </div>
@@ -205,7 +205,7 @@ function BrandCard({ item, onPlayVideo }) {
           <Play size={8} fill="currentColor" /> Play Reel
         </div>
       ) : (
-        <div className="mt-2.5 text-[8px] text-zinc-400 mono tracking-widest uppercase">
+        <div className="mt-2.5 text-[6px] text-zinc-400 mono tracking-widest uppercase">
           // ARCHIVE
         </div>
       )}
@@ -225,7 +225,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
 
       {/* 區段標頭 */}
       <div className="text-center mb-16 relative z-10">
-        <div className="mono text-xs text-aurora-blue mb-6 uppercase tracking-[0.3em]">
+        <div className="mono text-[6px] text-aurora-blue mb-6 uppercase tracking-[0.3em]">
           02 // Visual Synthesis
         </div>
         <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">

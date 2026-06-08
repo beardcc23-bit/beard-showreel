@@ -54,7 +54,7 @@ export default function Manifesto() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-center relative z-10">
         {/* 左側：品牌文字宣言 */}
         <div className="md:col-span-6 space-y-12">
-          <div className="mono text-xs text-aurora-blue uppercase tracking-[0.3em] flex items-center gap-2">
+          <div className="mono text-[6px] text-aurora-blue uppercase tracking-[0.3em] flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-aurora-blue animate-pulse" />
             01 // The Narrative & Skills
           </div>
@@ -108,14 +108,14 @@ export default function Manifesto() {
                 <div>
                   <div className="flex justify-between items-center border-b border-border pb-5 mb-6">
                     <div>
-                      <span className="mono text-[9px] text-aurora-blue uppercase tracking-widest block mb-1">
+                      <span className="mono text-[6px] text-aurora-blue uppercase tracking-widest block mb-1">
                         {activeCategory.meta}
                       </span>
                       <h3 className="text-xl font-black text-white uppercase tracking-tight">
                         {activeCategory.title}
                       </h3>
                     </div>
-                    <div className="mono text-[8px] text-zinc-500 px-2.5 py-1 border border-border bg-zinc-950 rounded-sm flex items-center gap-1.5">
+                    <div className="mono text-[6px] text-zinc-500 px-2.5 py-1 border border-border bg-zinc-950 rounded-sm flex items-center gap-1.5">
                       <Cpu size={10} className="text-aurora-blue" />
                       OPTIMAL
                     </div>
@@ -148,7 +148,7 @@ export default function Manifesto() {
                           />
                         </div>
                         
-                        <div className="mono text-[8px] text-zinc-650">
+                        <div className="mono text-[6px] text-zinc-650">
                           ADDR: 0x8A2C // REG: {stat.code}
                         </div>
                       </div>
@@ -157,7 +157,7 @@ export default function Manifesto() {
                 </div>
 
                 {/* 底部 HUD 裝飾 */}
-                <div className="border-t border-border pt-5 mt-6 flex justify-between items-center mono text-[8px] text-zinc-500">
+                <div className="border-t border-border pt-5 mt-6 flex justify-between items-center mono text-[6px] text-zinc-500">
                   <span>SYS_TEMP: 38.2°C // VOLT: 1.2V</span>
                   <span className="flex items-center gap-1">
                     <Terminal size={8} className="text-aurora-blue animate-pulse" />

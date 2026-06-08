@@ -48,7 +48,7 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="mono text-xs text-aurora-blue uppercase tracking-[0.5em] mb-8 opacity-80 flex items-center gap-2"
+              className="mono text-[6px] text-aurora-blue uppercase tracking-[0.5em] mb-8 opacity-80 flex items-center gap-2"
             >
               <span className="w-2 h-2 rounded-full bg-aurora-blue animate-ping" />
               SYSTEM_STATUS : OPTIMAL // ARCHIVE_ACTIVE
@@ -109,7 +109,7 @@ export default function Introduction({ onPlayVideo }) {
             >
               <div className="flex flex-col items-center justify-center">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
-                  <AnimatedCounter value={13} trigger={statsInView} />+<span className="text-aurora-blue text-xs font-bold mono">//Years</span>
+                  <AnimatedCounter value={13} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Years</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
                   後期資歷
@@ -117,7 +117,7 @@ export default function Introduction({ onPlayVideo }) {
               </div>
               <div className="flex flex-col items-center justify-center border-x border-zinc-800/80 px-4">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
-                  <AnimatedCounter value={300} trigger={statsInView} />+<span className="text-aurora-blue text-xs font-bold mono">//Campaigns</span>
+                  <AnimatedCounter value={300} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Campaigns</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
                   廣告專案
@@ -125,7 +125,7 @@ export default function Introduction({ onPlayVideo }) {
               </div>
               <div className="flex flex-col items-center justify-center">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
-                  <AnimatedCounter value={1000} trigger={statsInView} />+<span className="text-aurora-blue text-xs font-bold mono">//Versions</span>
+                  <AnimatedCounter value={1000} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Versions</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
                   播放版本
