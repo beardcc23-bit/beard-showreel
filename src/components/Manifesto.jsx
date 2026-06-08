@@ -51,9 +51,9 @@ export default function Manifesto() {
       {/* 網格裝飾背景 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-center relative z-10">
-        {/* 左側：品牌文字宣言 */}
-        <div className="md:col-span-6 space-y-12">
+      <div className="relative z-10 space-y-12">
+        {/* 頂部：標題區 */}
+        <div className="space-y-6">
           <div className="mono text-[6px] text-aurora-blue uppercase tracking-[0.3em] flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-aurora-blue animate-pulse" />
             01 // The Narrative & Skills
@@ -62,7 +62,12 @@ export default function Manifesto() {
             用 <span className="text-white font-normal">極致合成</span> <br />
             架起 <span className="text-aurora-blue">溝通橋樑</span>
           </h2>
-          <div className="space-y-8 text-info-gold-gray text-lg leading-relaxed font-light">
+        </div>
+
+        {/* 內容區：左右對齊，items-start 使右側卡片完美對齊左側首段段落上方 */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-start">
+          {/* 左側：品牌文字宣言 */}
+          <div className="md:col-span-6 space-y-8 text-info-gold-gray text-lg leading-relaxed font-light">
             <p>
               十三年的 <span className="text-white font-medium">VFX 視覺特效與 Flame 合成生涯</span>，磨練出我對光影折射、色彩科學與畫面美學的極致追求。對我而言，合成不只是將素材拼湊，更是重新賦予每個鏡頭生命力與故事溫度。
             </p>
@@ -76,10 +81,9 @@ export default function Manifesto() {
               「畫面是敲開感官的引信，而溝通是將想像落地的錨點。我們不只是合成像素，更在串聯每個創意的靈魂。」
             </p>
           </div>
-        </div>
 
-        {/* 右側：整合的小型 HUD 技能進度條面板 */}
-        <div className="md:col-span-6 flex flex-col h-full">
+          {/* 右側：整合的小型 HUD 技能進度條面板 */}
+          <div className="md:col-span-6 flex flex-col">
           {/* 微型 Tabs 切換 */}
           <div className="flex gap-2 mb-4">
             {skillCategories.map((cat) => {
@@ -137,7 +141,7 @@ export default function Manifesto() {
                   </div>
 
                   {/* 描述 */}
-                  <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
+                  <p className="text-lg text-info-gold-gray font-light leading-relaxed mb-6">
                     {activeCategory.desc}
                   </p>
 
@@ -184,6 +188,7 @@ export default function Manifesto() {
           </AnimatePresence>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
   );
 }
