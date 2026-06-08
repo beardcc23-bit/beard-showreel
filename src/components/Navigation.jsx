@@ -49,7 +49,7 @@ export default function Navigation() {
             className="prism-button px-6 py-2.5 transition duration-300 flex flex-col items-center justify-center text-center leading-none"
           >
             <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
-            <span className="text-[10px] font-black uppercase tracking-widest">建立聯繫</span>
+            <span className="text-[10px] font-normal uppercase tracking-widest">建立聯繫</span>
           </a>
         </div>
       </nav>
@@ -87,7 +87,7 @@ export default function Navigation() {
                   key={item.href}
                   href={item.href}
                   onClick={toggleMenu}
-                  className="text-2xl font-black uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
+                  className="text-2xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
                 >
                   <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono mb-1">// {item.eng}</span>
                   {item.name}
@@ -101,7 +101,7 @@ export default function Navigation() {
                   className="prism-button block w-full py-3.5 text-center transition duration-300 flex flex-col items-center justify-center leading-none"
                 >
                   <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
-                  <span className="text-xs font-bold uppercase tracking-widest">建立聯繫</span>
+                  <span className="text-xs font-normal uppercase tracking-widest">建立聯繫</span>
                 </a>
               </div>
             </motion.div>

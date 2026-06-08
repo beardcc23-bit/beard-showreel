@@ -203,7 +203,7 @@ function BrandCard({ item, onPlayVideo }) {
 
         <div className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${
           hasVideo
-            ? 'text-zinc-100 group-hover:text-white font-medium'
+            ? 'text-zinc-100 group-hover:text-white font-normal'
             : 'text-zinc-300 font-normal'
         }`}>
           {item.name}
@@ -272,7 +272,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
               <span className={`text-[6px] mono tracking-widest uppercase mb-0.5 ${
                 activeTab === tab.id ? 'text-black/70' : 'text-zinc-500'
               }`}>{engName}</span>
-              <span className="text-xs font-bold tracking-wider">{tab.name}</span>
+              <span className="text-xs font-normal tracking-wider">{tab.name}</span>
             </button>
           );
         })}
