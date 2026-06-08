@@ -18,15 +18,15 @@ const skillCategories = [
   },
   {
     id: '02',
-    title: 'UX Architecture',
-    subtitle: '體驗架構與系統邏輯',
-    desc: '注重形式與功能的絕對統一。利用資訊架構（IA）解構用戶痛點，建立高效率、低認知負荷的微互動。',
+    title: 'Pipeline & Synergy',
+    subtitle: '製程整合與溝通協同',
+    desc: '具備橫跨導演、後期製程與技術團隊的完整溝通能力，善於將複雜的特效需求轉譯為高效的執行流程，確保創意完美落地。',
     stats: [
-      { name: 'Information Architecture', value: 90, code: 'INFO_ROUTING' },
-      { name: 'Interactive Prototyping', value: 94, code: 'UX_LOGIC_PROTO' },
-      { name: 'Design Token Systems', value: 88, code: 'TOKEN_REGISTRY' },
+      { name: 'Team Sync & Leadership', value: 95, code: 'TEAM_ALIGN' },
+      { name: 'Client-Director Bridge', value: 94, code: 'CREATIVE_TRANSLATE' },
+      { name: 'Post Pipeline Management', value: 90, code: 'VFX_FLOW_OPT' },
     ],
-    meta: 'UX.MODULE: ACTIVE // PORT: 7002'
+    meta: 'PM.MODULE: ACTIVE // PORT: 7002'
   },
   {
     id: '03',
@@ -59,18 +59,18 @@ export default function Manifesto() {
             01 // The Narrative & Skills
           </div>
           <h2 className="text-5xl md:text-7xl font-black leading-tight tracking-tighter glow-title text-white">
-            從 <span className="text-white font-normal">視覺合成</span> <br />
-            到 <span className="text-aurora-blue">體驗構建</span>
+            用 <span className="text-white font-normal">極致合成</span> <br />
+            架起 <span className="text-aurora-blue">溝通橋樑</span>
           </h2>
           <div className="space-y-8 text-info-gold-gray text-lg leading-relaxed font-light">
             <p>
-              十三年的 <span className="text-white font-medium">Flame 特效生涯</span>，讓雕琢影格成為我的呼吸。那是對每一影格的光影與物理科學，最誠實的致敬。
+              十三年的 <span className="text-white font-medium">VFX 視覺特效與 Flame 合成生涯</span>，磨練出我對光影折射、色彩科學與畫面美學的極致追求。對我而言，合成不只是將素材拼湊，更是重新賦予每個鏡頭生命力與故事溫度。
             </p>
             <p>
-              如今，我帶著這份對專業級的執著，跨界重構 <span className="text-white font-medium whitespace-nowrap">使用者體驗（UX）</span>。不再拘泥於畫面的完美，我用嚴謹的 <span className="text-white font-medium">資訊架構</span> 為骨幹、<span className="text-white font-medium">微交互</span> 為血肉，將複雜的業務邏輯，精煉為毫無摩擦的極致直覺。
+              在追求視覺巔峰的同時，我深知後期製作是一場團隊運作。我以<span className="text-white font-medium">完整的跨領域溝通能力</span>，在導演、藝術家、工程師與客戶之間建立清晰、高效的轉譯語言，將天馬行空的創意，精準且按部就班地落地實現。
             </p>
             <p className="italic border-l-2 border-aurora-blue pl-6 py-2 text-zinc-300">
-              「視覺是敲開感官的引信，而邏輯是留住心靈的錨點。我們不只是創造畫面，更在構建會呼吸的數位生態。」
+              「畫面是敲開感官的引信，而溝通是將想像落地的錨點。我們不只是合成像素，更在串聯每個創意的靈魂。」
             </p>
           </div>
         </div>

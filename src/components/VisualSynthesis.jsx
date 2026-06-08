@@ -232,7 +232,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
           The <span className="text-aurora-blue">Synthesis</span>
         </h2>
         <p className="text-zinc-500 font-light max-w-2xl mx-auto text-lg leading-relaxed">
-          13 年 Flame 合成經驗，將影像處理的極限精準度，轉化為跨次元的視覺敘事力。
+          13 年頂尖 Flame 特效合成大師，雕琢百部一線商業廣告，以極致的光影邏輯、物理細節與視覺合成美感，將想像力完美呈現於螢幕之上。
         </p>
       </div>
 

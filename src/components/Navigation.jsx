@@ -11,7 +11,6 @@ export default function Navigation() {
     { name: '自我介紹', eng: 'About', href: '#introduction' },
     { name: '設計宣言', eng: 'Manifesto', href: '#about' },
     { name: '視覺合成', eng: 'Visual Synthesis', href: '#vfx' },
-    { name: '體驗設計', eng: 'Experience Design', href: '#uiux' },
   ];
 
   return (

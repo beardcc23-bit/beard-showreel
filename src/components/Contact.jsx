@@ -26,7 +26,7 @@ export default function Contact() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-zinc-300 mb-20 font-light text-lg max-w-xl mx-auto leading-relaxed"
         >
-          期待有機會加入貴公司，與優秀的團隊並肩作戰，將極致的視覺美學與流暢的業務邏輯轉化為產品的核心競爭力。隨時歡迎您的來信或約訪，期待與您碰面交流。
+          期待能與優秀的團隊並肩作戰，將極致的特效合成美感與高效的專案溝通能力帶入下一個挑戰。隨時歡迎您的來信或約訪，期待與您交流。
         </motion.p>
         
         <motion.div

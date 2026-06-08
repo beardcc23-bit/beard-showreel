@@ -63,10 +63,10 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8, delay: 0.15 }}
               className="text-zinc-300 text-base md:text-lg font-light leading-relaxed tracking-wide mb-12"
             >
-              <span className="text-white font-medium">十三年的頂尖視覺深耕</span>，賦予我對每一像素光影邏輯的絕對掌控；多年的跨領域協調，則內化為我對複雜商務需求的敏銳聽力。
+              <span className="text-white font-medium">十三年的頂尖視覺特效與 Flame 合成深耕</span>，賦予我對每一影格光影物理的絕對掌控；多年的跨界協作，則淬煉出我對複雜製程需求的敏銳度。
               <br />
               <br />
-              我不只用電影級的畫面實力驚艷感官，更用<span className="text-aurora-blue font-medium">清晰的邏輯與跨界溝通力</span>，解構並重塑數位產品的<span className="text-white font-medium glow-text">互動靈魂</span>。
+              我不只用電影級的畫面實力與合成美感驚艷感官，更用<span className="text-aurora-blue font-medium">完整且清晰的跨界溝通力</span>，在導演、客戶與技術團隊之間架起最穩固的橋樑，將每個驚艷的創意精準落地。
             </motion.p>
 
             {/* 霓虹光感按鈕組 */}

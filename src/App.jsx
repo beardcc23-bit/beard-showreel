@@ -4,7 +4,6 @@ import CursorGlow from './components/CursorGlow';
 import Hero from './components/Hero';
 import Introduction from './components/Introduction';
 import Manifesto from './components/Manifesto';
-import Experience from './components/Experience';
 import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
 import Modal from './components/Modal';
@@ -16,13 +15,6 @@ export default function App() {
     data: null,
   });
 
-  const handleOpenProjectModal = (projectData) => {
-    setModalState({
-      isOpen: true,
-      type: 'project',
-      data: projectData,
-    });
-  };
 
   const handleOpenVideoModal = (videoId) => {
     setModalState({
@@ -86,8 +78,6 @@ export default function App() {
         {/* 03 視覺合成 (VFX 影片卡片列表，支援 state 彈窗播放) */}
         <VisualSynthesis onPlayVideo={handleOpenVideoModal} />
 
-        {/* 02 體驗設計 (UI/UX 專案列表，支援 state 彈窗資料傳遞) */}
-        <Experience onOpenProject={handleOpenProjectModal} />
 
         {/* 聯絡我們 */}
         <Contact />
