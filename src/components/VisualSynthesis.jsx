@@ -7,8 +7,7 @@ const categories = [
     id: 'food',
     name: '食品與飲料',
     items: [
-      { name: 'KIRIN', domain: 'kirin.co.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ee/Kirin_Holdings_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: 'TOBLERONE 三角巧克力', domain: 'toblerone.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Toblerone_logo.svg' },
+      { name: 'TOBLERONE 三角巧克力', domain: 'toblerone.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Toblerone_logo.svg', videoId: 'exDc-2Xnb4E', bgImage: '/toblerone_bg.png' },
       { name: 'UCC', domain: 'ucc.co.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/UCC_Holding_logo.svg' },
       { name: '三得利 蜂王乳+芝麻明E', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
       { name: '三得利 蜜露珂娜', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
@@ -162,12 +161,24 @@ function BrandCard({ item, onPlayVideo }) {
           : 'border-zinc-800/80 bg-zinc-900/20'
       }`}
     >
-      {/* 淡淡的金色漸層 hover 底色 (僅限有影片) */}
-      {hasVideo && (
+      {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
+      {item.bgImage && (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-sm">
+          <img
+            src={item.bgImage}
+            alt={`${item.name} background`}
+            className="w-full h-full object-cover opacity-50 group-hover:opacity-85 transition-all duration-500 scale-105 group-hover:scale-100 filter brightness-[0.7]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20" />
+        </div>
+      )}
+
+      {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage) */}
+      {hasVideo && !item.bgImage && (
         <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       )}
 
-      <div>
+      <div className="relative z-10">
         {/* Logo 顯示區 */}
         {logoUrl && !imgError ? (
           <img
@@ -211,11 +222,11 @@ function BrandCard({ item, onPlayVideo }) {
       </div>
 
       {hasVideo ? (
-        <div className="mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-85 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1">
+        <div className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-85 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1">
           <Play size={8} fill="currentColor" /> Play Reel
         </div>
       ) : (
-        <div className="mt-2.5 text-[6px] text-zinc-500 mono tracking-widest uppercase">
+        <div className="relative z-10 mt-2.5 text-[6px] text-zinc-500 mono tracking-widest uppercase">
           // ARCHIVE
         </div>
       )}
