@@ -241,7 +241,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
         <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
           The <span className="text-aurora-blue">Synthesis</span>
         </h2>
-        <p className="text-zinc-500 font-light max-w-2xl mx-auto text-lg leading-relaxed">
+        <p className="text-zinc-300 font-light max-w-2xl mx-auto text-lg leading-relaxed">
           精選近期參與之一線品牌與商業廣告作品。融合極致的光影邏輯與嚴謹的物理細節，以頂尖合成美學淬鍊每幀畫面的視覺張力。
         </p>
       </div>

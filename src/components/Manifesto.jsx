@@ -108,7 +108,7 @@ export default function Manifesto() {
                   <span className={`text-[6px] mono tracking-widest uppercase mb-0.5 ${
                     activeTab === cat.id ? 'text-black/70' : 'text-zinc-500'
                   }`}>{label.eng}</span>
-                  <span className="text-[10px] font-normal tracking-wider">{label.zht}</span>
+                  <span className="text-xs font-normal tracking-wider">{label.zht}</span>
                 </button>
               );
             })}
