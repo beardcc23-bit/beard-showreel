@@ -69,16 +69,16 @@ export default function Manifesto() {
           {/* 左側：品牌文字宣言 */}
           <div className="md:col-span-6 space-y-8 text-info-gold-gray text-lg leading-relaxed font-light">
             <p>
-              十三年的 <span className="text-white font-medium">VFX 視覺特效與 Flame 合成生涯</span>，磨練出我對光影折射、色彩科學與畫面美學的極致追求。對我而言，合成不只是將素材拼湊，更是重新賦予每個鏡頭生命力與故事溫度。
+              在後期合成的視界裡，每一個像素都關乎物理真實與美學底蘊。我將十餘年對光影折射、色彩科學與幾何運動的感知，融入 <span className="text-white font-medium">Autodesk Flame 高階合成系統</span>。特效不只是數位元素的堆疊，更是以極致的細節，在虛實之間重塑故事的靈魂。
             </p>
             <p>
-              在追求視覺巔峰的同時，我深知後期製作是一場不容出錯的高壓戰役。我以<span className="text-white font-medium">完整的跨領域溝通與整合能力</span>，在導演、藝術家、廣告代理商與客戶之間建立清晰、高效的轉譯語言，確保 300+ 隻廣告片從拍攝、剪接、調光到最終 Online 播帶的每一步均完美無瑕。
+              完美的後期製作是一場將抽象想像落地的嚴謹戰役。我立足於技術最前端，用清晰、高效的轉譯語言，將導演的藝術想像、代理商的商業策略與客戶的期待完美收斂，在追逐極致畫面的同時，以堅實的整合管線讓每件作品順暢著陸。
             </p>
             <p>
               面對這個 AI 時代，我也不停嘗試使用 AI 技能，將先進的智慧輔助技術融入傳統合成流程，以更高的效率與敏銳的視覺直覺，探索影音後期創作的全新邊界。
             </p>
             <p className="italic border-l-2 border-aurora-blue pl-6 py-2 text-zinc-300">
-              「畫面是敲開感官的引信，而溝通是將想像落地的錨點。我們不只是合成像素，更在串聯每個創意的靈魂。」
+              「科技在於加速想像力的落地，而合成師則是守候在終點線前的藝術封裝者。我們重塑像素，更在串聯每個創意的生命力。」
             </p>
           </div>
 
