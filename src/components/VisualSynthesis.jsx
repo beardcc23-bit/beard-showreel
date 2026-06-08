@@ -162,9 +162,9 @@ function BrandCard({ item, onPlayVideo }) {
           <img
             src={item.bgImage}
             alt={`${item.name} background`}
-            className="w-full h-full object-cover opacity-50 group-hover:opacity-85 transition-all duration-500 scale-105 group-hover:scale-100 filter brightness-[0.7]"
+            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-105 group-hover:scale-100"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         </div>
       )}
 
