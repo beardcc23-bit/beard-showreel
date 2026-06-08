@@ -9,7 +9,7 @@ export default function CanvasSequence({ onPlayVideo }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
 
-  const frameCount = 181; // 000.png ~ 180.png
+  const frameCount = 145; // png-0_00000000.png ~ png-0_00000144.png
   const fps = 30;
   const frameInterval = 1000 / fps;
 
@@ -31,7 +31,7 @@ export default function CanvasSequence({ onPlayVideo }) {
     for (let i = 0; i < frameCount; i++) {
       const img = new Image();
       const basePath = import.meta.env.BASE_URL;
-      img.src = `${basePath}jpg/showreel00108${String(i).padStart(3, '0')}.jpg`;
+      img.src = `${basePath}png-0/png-0_${String(i).padStart(8, '0')}.png`;
       img.onload = handleImageLoad;
       img.onerror = handleImageLoad; // 容錯防卡死
       loadedImages.push(img);
@@ -45,9 +45,9 @@ export default function CanvasSequence({ onPlayVideo }) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
-    // 設定畫布解析度 (1000x563)
-    canvas.width = 1000;
-    canvas.height = 563;
+    // 設定畫布解析度 (1504x832)
+    canvas.width = 1504;
+    canvas.height = 832;
 
     let animationFrameId;
     let currentFrame = 0;
