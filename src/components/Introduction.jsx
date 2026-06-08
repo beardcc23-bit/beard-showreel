@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-function AnimatedCounter({ value, duration = 1.5 }) {
+function AnimatedCounter({ value, trigger, duration = 1.5 }) {
   const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!trigger) return;
 
     let startTime = null;
     const step = (timestamp) => {
@@ -24,12 +22,15 @@ function AnimatedCounter({ value, duration = 1.5 }) {
     };
 
     window.requestAnimationFrame(step);
-  }, [isInView, value, duration]);
+  }, [trigger, value, duration]);
 
-  return <span ref={ref}>{count}</span>;
+  return <span>{count}</span>;
 }
 
 export default function Introduction({ onPlayVideo }) {
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, margin: "-50px" });
+
   return (
     <section id="introduction" className="relative min-h-screen flex items-center justify-center py-24 border-t border-zinc-900 bg-bg-core/60">
       {/* 網格背景與漸層 */}
@@ -99,33 +100,34 @@ export default function Introduction({ onPlayVideo }) {
 
             {/* 實戰成就數據面板 */}
             <motion.div
+              ref={statsRef}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid grid-cols-3 gap-6 w-full max-w-lg mb-12 border-y border-zinc-800/80 py-6 text-left"
+              className="grid grid-cols-3 w-full max-w-2xl mb-12 border-y border-zinc-800/80 py-6 text-center"
             >
-              <div>
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
-                  <AnimatedCounter value={13} />+<span className="text-aurora-blue text-xs font-bold mono">//Years</span>
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
+                  <AnimatedCounter value={13} trigger={statsInView} />+<span className="text-aurora-blue text-xs font-bold mono">//Years</span>
                 </div>
-                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
+                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
                   後期資歷
                 </div>
               </div>
-              <div className="border-x border-zinc-800/80 px-6">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
-                  <AnimatedCounter value={300} />+<span className="text-aurora-blue text-xs font-bold mono">//Campaigns</span>
+              <div className="flex flex-col items-center justify-center border-x border-zinc-800/80 px-4">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
+                  <AnimatedCounter value={300} trigger={statsInView} />+<span className="text-aurora-blue text-xs font-bold mono">//Campaigns</span>
                 </div>
-                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
+                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
                   廣告專案
                 </div>
               </div>
-              <div className="pl-2">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline gap-1">
-                  <AnimatedCounter value={1000} />+<span className="text-aurora-blue text-xs font-bold mono">//Versions</span>
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
+                  <AnimatedCounter value={1000} trigger={statsInView} />+<span className="text-aurora-blue text-xs font-bold mono">//Versions</span>
                 </div>
-                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-1.5 mono">
+                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
                   播放版本
                 </div>
               </div>
