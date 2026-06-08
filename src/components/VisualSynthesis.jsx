@@ -242,7 +242,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
           The <span className="text-aurora-blue">Synthesis</span>
         </h2>
         <p className="text-zinc-500 font-light max-w-2xl mx-auto text-lg leading-relaxed">
-          13 年頂尖 Flame 特效合成大師，雕琢百部一線商業廣告，以極致的光影邏輯、物理細節與視覺合成美感，將想像力完美呈現於螢幕之上。
+          精選近期參與之一線品牌與商業廣告作品。融合極致的光影邏輯與嚴謹的物理細節，以頂尖合成美學淬鍊每幀畫面的視覺張力。
         </p>
       </div>
 
