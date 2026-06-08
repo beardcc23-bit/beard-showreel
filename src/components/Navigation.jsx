@@ -25,7 +25,7 @@ export default function Navigation() {
             <Menu size={24} />
           </button>
           <div className="text-xl font-black tracking-tighter mono text-white-or-black">
-            Beard<span className="text-aurora-blue"> Chou</span>
+            Beard<span className="text-aurora-blue"> Showreel</span>
           </div>
         </div>
         
