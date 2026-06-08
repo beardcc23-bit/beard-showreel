@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CanvasSequence({ onPlayVideo }) {
   const canvasRef = useRef(null);
+  const currentFrameRef = useRef(0);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState(0);
@@ -50,7 +51,6 @@ export default function CanvasSequence({ onPlayVideo }) {
     canvas.height = 832;
 
     let animationFrameId;
-    let currentFrame = 0;
     let lastFrameTime = performance.now();
 
     const render = (now) => {
@@ -58,16 +58,16 @@ export default function CanvasSequence({ onPlayVideo }) {
         const deltaTime = now - lastFrameTime;
         if (deltaTime >= frameInterval) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const img = images[currentFrame];
+          const img = images[currentFrameRef.current];
           if (img && img.complete) {
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           }
-          currentFrame = (currentFrame + 1) % frameCount;
+          currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
           lastFrameTime = now - (deltaTime % frameInterval);
         }
       } else {
         // 暫停時繪製當前畫面，避免空白
-        const img = images[currentFrame];
+        const img = images[currentFrameRef.current];
         if (img && img.complete) {
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         }

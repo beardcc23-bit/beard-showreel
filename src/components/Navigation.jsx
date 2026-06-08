@@ -46,7 +46,7 @@ export default function Navigation() {
 
           <a
             href="#contact"
-            className="prism-button px-6 py-2.5 transition duration-300 flex flex-col items-center justify-center text-center leading-none"
+            className="prism-button px-6 py-2.5 rounded-full transition duration-300 flex flex-col items-center justify-center text-center leading-none"
           >
             <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
             <span className="text-xs font-normal uppercase tracking-widest">建立聯繫</span>
@@ -98,7 +98,7 @@ export default function Navigation() {
                 <a
                   href="#contact"
                   onClick={toggleMenu}
-                  className="prism-button block w-full py-3.5 text-center transition duration-300 flex flex-col items-center justify-center leading-none"
+                  className="prism-button block w-full py-3.5 rounded-full text-center transition duration-300 flex flex-col items-center justify-center leading-none"
                 >
                   <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
                   <span className="text-xs font-normal uppercase tracking-widest">建立聯繫</span>

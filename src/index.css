@@ -279,6 +279,7 @@ body {
   color: #121314; /* 高對比暗金色字體 */
   font-weight: 800;
   box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+  border-radius: 9999px;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
