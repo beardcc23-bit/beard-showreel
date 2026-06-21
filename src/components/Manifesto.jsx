@@ -12,9 +12,8 @@ const lawCategories = [
     quote: '「光影是物理的，但靈魂是主觀的。」',
     desc: '完美的合成是對物理光學的絕對敬畏。金屬的反射不能只是乾淨，它必須帶有微小的噪點與折射偏差；在像素的維度上，我只做一件事：用最嚴謹的物理邏輯，重建每幀畫面應有的自然折射與光斑深度。',
     params: [
-      { key: '光學折射率 (Refractive Index)', value: '1.3333 // 水體 (Water)' },
-      { key: '菲涅耳反射 (Fresnel Reflection)', value: 'Active // 物理反射定律' },
-      { key: '色散與偏振 (Chromatic Dispersion)', value: 'RGB Split // 0.8px 偏移' }
+      { key: 'UCC 咖啡廣告', value: '解構杯身玻璃在強光下的透鏡反射，讓虛擬 3D 咖啡液體的流動呈現出 100% 具食慾感的真實折射。' },
+      { key: '噶瑪蘭威士忌廣告', value: '精準還原厚重水晶杯底部光線的焦散（Caustics）與二次折射，重現威士忌的尊貴琥珀光澤。' }
     ]
   },
   {
@@ -25,9 +24,8 @@ const lawCategories = [
     quote: '「看不見的特效，才是最完美的特效。」',
     desc: '將幾百個無形元素融於日常生活場景中，而觀眾毫無察覺。這需要對大腦視覺心理學的精準拿捏——我們如何感知景深、如何被色彩的飽和度引導視線。最好的技術是完全隱形，只為創意的靈魂服務。',
     params: [
-      { key: '動態模糊快門 (Motion Blur)', value: '180° 快門角度' },
-      { key: '鏡頭散景控制 (Lens Bokeh)', value: '5-Blade Anamorphic Iris' },
-      { key: '電影幀率同步 (Frame Rate Sync)', value: '24.000 fps // Cinematic' }
+      { key: '長榮航空形象片', value: '在陰天實拍中，無痕植入多維度陽光折射與高空雲霧景深，平衡寫實感與神聖感，觀眾完全看不出特效痕跡。' },
+      { key: 'Samsung 旗艦機廣告', value: '動態模擬鏡頭邊緣的變形暗角與動態模糊，使 CG 手機完美融入實拍影片的底片顆粒。' }
     ]
   },
   {
@@ -38,9 +36,8 @@ const lawCategories = [
     quote: '「AI 是催化劑，而我們是終點線前的藝術封裝者。」',
     desc: 'AI 可以生成無限的圖像碎片，但它缺乏對畫面真實分量的理解。合成師的職責，是將 AI 的無限可能，精準過濾、解構並封裝進嚴謹的電影與商業管線中。科技在於加速想像力落地，而人的審美直覺才是決定作品溫度的最終刻度。',
     params: [
-      { key: '色彩科學標準 (Color Space)', value: 'ACEScg / Rec.709' },
-      { key: '畫面精確色彩 (Color Precision)', value: '32-Bit Float EXR' },
-      { key: 'AI 智慧降噪 (AI Denoising)', value: 'Gaussian Denoise / 32 Iter' }
+      { key: '旨醞鐵板燒廣告', value: '運用 AI 輔助進行高難度煙霧去背與修補，縮短 40% 的後期時間，讓食物的熱氣與現場光影水乳交融。' },
+      { key: 'Panasonic 電視廣告', value: '全程採用 ACEScg 工業級高動態色域管線合成，確保從大銀幕到家用電視的色彩無偏差呈現。' }
     ]
   }
 ];
@@ -105,7 +102,7 @@ export default function Manifesto() {
                     className={`px-4 py-2.5 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-none min-w-[100px] leading-none ${
                       activeTab === cat.id
                         ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.2)]'
-                        : 'border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 bg-zinc-950/20'
+                        : 'border-zinc-880 text-zinc-400 hover:text-white hover:border-zinc-700 bg-zinc-950/20'
                     }`}
                   >
                     <span className={`text-[6px] mono tracking-widest uppercase mb-1 ${
@@ -151,20 +148,22 @@ export default function Manifesto() {
                     </div>
 
                     {/* 描述 */}
-                    <p className="text-sm md:text-base text-zinc-400 font-light leading-relaxed mb-8">
+                    <p className="text-sm md:text-base text-zinc-400 font-light leading-relaxed mb-6">
                       {activeCategory.desc}
                     </p>
 
-                    {/* 物理參數列表 (替代進度條) */}
-                    <div className="space-y-3.5">
-                      <div className="mono text-[6px] text-zinc-500 uppercase tracking-widest mb-1.5">// Physical Parameters</div>
+                    {/* 大師實踐解密 (Mastery In Action) */}
+                    <div className="space-y-4 pt-2">
+                      <div className="mono text-[6px] text-zinc-500 uppercase tracking-[0.25em] mb-3 flex items-center gap-1.5">// Mastery In Action // 實踐解密</div>
                       {activeCategory.params.map((param) => (
-                        <div key={param.key} className="flex justify-between items-center text-[10px] mono border-b border-zinc-900 pb-2">
-                          <span className="text-zinc-500 flex items-center gap-1.5">
+                        <div key={param.key} className="space-y-1 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
+                          <div className="flex items-center gap-2 text-xs font-bold text-red-500/90">
                             <Binary size={10} className="text-red-500/80" />
                             {param.key}
-                          </span>
-                          <span className="text-aurora-blue font-semibold">{param.value}</span>
+                          </div>
+                          <p className="text-xs text-zinc-450 font-light leading-relaxed pl-4">
+                            {param.value}
+                          </p>
                         </div>
                       ))}
                     </div>
