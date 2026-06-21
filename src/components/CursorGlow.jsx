@@ -6,11 +6,8 @@ export default function CursorGlow() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
 
-  // 記錄真實的滑鼠位置
+  // 在 ref 中緩存滑鼠位置，避免 mousemove 時頻繁更新 React state 導致重複 render
   const mouseCoords = useRef({ x: 0, y: 0 });
-  // 記錄帶有物理延遲（Lerp）的游標位置
-  const glowCoords = useRef({ x: 0, y: 0 });
-  const dotCoords = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const checkMobile = () => {
@@ -28,23 +25,13 @@ export default function CursorGlow() {
 
     let animationFrameId = null;
 
-    // 線性插值公式 (Lerp)，用來模擬物理慣性與鏡頭折射滯後感
-    const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
-
+    // 使用 requestAnimationFrame 同步瀏覽器重繪幀率
     const updateCursorPosition = () => {
-      const { x: targetX, y: targetY } = mouseCoords.current;
-
-      // 核心點 (dot)：跟隨速度較快，幾乎即時
-      dotCoords.current.x = lerp(dotCoords.current.x, targetX, 0.25);
-      dotCoords.current.y = lerp(dotCoords.current.y, targetY, 0.25);
-
-      // 外層折射光斑 (glow)：跟隨速度較慢，產生漂浮與鏡頭拉鏡時的光學長尾延遲 (Lagging)
-      glowCoords.current.x = lerp(glowCoords.current.x, targetX, 0.07);
-      glowCoords.current.y = lerp(glowCoords.current.y, targetY, 0.07);
-
       if (glowRef.current && dotRef.current) {
-        glowRef.current.style.transform = `translate3d(${glowCoords.current.x}px, ${glowCoords.current.y}px, 0) translate(-50%, -50%)`;
-        dotRef.current.style.transform = `translate3d(${dotCoords.current.x}px, ${dotCoords.current.y}px, 0) translate(-50%, -50%)`;
+        const { x, y } = mouseCoords.current;
+        // 使用 translate3d 啟用 GPU 硬體加速，避開 Reflow/Layout，直接進行 Composite 渲染
+        glowRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        dotRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
       }
       animationFrameId = requestAnimationFrame(updateCursorPosition);
     };
@@ -65,7 +52,7 @@ export default function CursorGlow() {
         target.closest('.tech-card') ||
         target.closest('.glow-title') ||
         target.closest('[role="button"]') ||
-        target.closest('.group')
+        target.closest('.group') // 懸停在卡片上時也觸發放大
       ) {
         setIsHovered(true);
       }
@@ -104,30 +91,30 @@ export default function CursorGlow() {
 
   return (
     <>
-      {/* 模擬鏡頭折射光圈 (Lens Flare Glow) */}
+      {/* 游標外層光暈 */}
       <div
         ref={glowRef}
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[100] transition-all duration-500 ease-out will-change-transform"
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[100] transition-all duration-300 ease-out will-change-transform"
         style={{
-          width: isHovered ? '900px' : '650px',
-          height: isHovered ? '900px' : '650px',
-          // 模擬透鏡色散折射感：使用非對稱的漸層偏心，搭配極微弱的冷暖彩虹邊緣
+          width: isHovered ? '1000px' : '750px', // 將原本 1620px 縮小至最高 1000px，降低 GPU Fill-rate 繪製負擔
+          height: isHovered ? '1000px' : '750px',
           background: isHovered
-            ? 'radial-gradient(circle at 45% 45%, rgba(62, 161, 220, 0.16) 0%, rgba(196, 132, 165, 0.08) 45%, rgba(62, 161, 220, 0.02) 60%, transparent 70%)'
-            : 'radial-gradient(circle at 45% 45%, rgba(62, 161, 220, 0.1) 0%, rgba(196, 132, 165, 0.04) 40%, rgba(62, 161, 220, 0.01) 55%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(62, 161, 220, 0.14) 0%, rgba(196, 132, 165, 0.07) 45%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(62, 161, 220, 0.1) 0%, rgba(196, 132, 165, 0.04) 40%, transparent 70%)',
         }}
       />
       {/* 游標核心中心點 */}
       <div
         ref={dotRef}
         id="cursor-dot"
-        className="fixed top-0 left-0 pointer-events-none z-[101] will-change-transform rounded-none" // 直角化
+        className="fixed top-0 left-0 pointer-events-none z-[101] will-change-transform"
         style={{
-          width: '5px',
-          height: '5px',
-          backgroundColor: '#ef4444', // 改為紅色核心，呼應 Play 的紅色三角，建立強烈的視覺關聯
-          transform: `translate3d(0,0,0) translate(-50%, -50%) scale(${isHovered ? 2.2 : 1})`,
-          transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+          width: '6px',
+          height: '6px',
+          backgroundColor: '#3ea1dc',
+          borderRadius: '50%',
+          transform: `translate3d(0,0,0) translate(-50%, -50%) scale(${isHovered ? 2.5 : 1})`,
+          transition: 'transform 0.15s ease-out',
         }}
       />
     </>
