@@ -12,9 +12,9 @@ const lawCategories = [
     quote: '「光影是物理的，但靈魂是主觀的。」',
     desc: '完美的合成是對物理光學的絕對敬畏。金屬的反射不能只是乾淨，它必須帶有微小的噪點與折射偏差；在像素的維度上，我只做一件事：用最嚴謹的物理邏輯，重建每幀畫面應有的自然折射與光斑深度。',
     params: [
-      { key: 'refractive_index', value: '1.3333 // WATER' },
-      { key: 'fresnel_reflection', value: 'f0 = 0.02 + (1-0.02)*(1-cosθ)⁵' },
-      { key: 'chrome_dispersion', value: 'RGB_SPLIT_OFFSET = 0.8px' }
+      { key: '光學折射率 (Refractive Index)', value: '1.3333 // 水體 (Water)' },
+      { key: '菲涅耳反射 (Fresnel Reflection)', value: 'Active // 物理反射定律' },
+      { key: '色散與偏振 (Chromatic Dispersion)', value: 'RGB Split // 0.8px 偏移' }
     ]
   },
   {
@@ -25,9 +25,9 @@ const lawCategories = [
     quote: '「看不見的特效，才是最完美的特效。」',
     desc: '將幾百個無形元素融於日常生活場景中，而觀眾毫無察覺。這需要對大腦視覺心理學的精準拿捏——我們如何感知景深、如何被色彩的飽和度引導視線。最好的技術是完全隱形，只為創意的靈魂服務。',
     params: [
-      { key: 'motion_blur_shutter', value: '180.0° // CINEMATIC_MOTION' },
-      { key: 'depth_of_field_bokeh', value: '5-BLADE_ANAMORPHIC_IRIS' },
-      { key: 'frame_sync_frequency', value: '24.000 // CINEMATIC_RHYTHM' }
+      { key: '動態模糊快門 (Motion Blur)', value: '180° 快門角度' },
+      { key: '鏡頭散景控制 (Lens Bokeh)', value: '5-Blade Anamorphic Iris' },
+      { key: '電影幀率同步 (Frame Rate Sync)', value: '24.000 fps // Cinematic' }
     ]
   },
   {
@@ -38,9 +38,9 @@ const lawCategories = [
     quote: '「AI 是催化劑，而我們是終點線前的藝術封裝者。」',
     desc: 'AI 可以生成無限的圖像碎片，但它缺乏對畫面真實分量的理解。合成師的職責，是將 AI 的無限可能，精準過濾、解構並封裝進嚴謹的電影與商業管線中。科技在於加速想像力落地，而人的審美直覺才是決定作品溫度的最終刻度。',
     params: [
-      { key: 'lut_color_space_sync', value: 'ACEScg / REC_709_CALIBRATED' },
-      { key: 'flame_action_depth', value: 'FLOATING_POINT_32BIT_EXR' },
-      { key: 'latent_space_denoise', value: 'GAUSSIAN_SAMPLING_ITER_32' }
+      { key: '色彩科學標準 (Color Space)', value: 'ACEScg / Rec.709' },
+      { key: '畫面精確色彩 (Color Precision)', value: '32-Bit Float EXR' },
+      { key: 'AI 智慧降噪 (AI Denoising)', value: 'Gaussian Denoise / 32 Iter' }
     ]
   }
 ];
