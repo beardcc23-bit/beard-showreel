@@ -143,7 +143,7 @@ export default function Manifesto() {
                     </div>
 
                     {/* 大字箴言 */}
-                    <div className="text-zinc-100 font-bold text-base md:text-lg tracking-tight mb-4 text-left border-l-2 border-red-500/80 pl-4 py-0.5">
+                    <div className="text-zinc-100 font-bold text-base md:text-lg tracking-tight mb-4 text-left border-l-2 border-aurora-blue pl-4 py-0.5">
                       {activeCategory.quote}
                     </div>
 
@@ -157,8 +157,8 @@ export default function Manifesto() {
                       <div className="mono text-[6px] text-zinc-500 uppercase tracking-[0.25em] mb-3 flex items-center gap-1.5">// Mastery In Action // 實踐解密</div>
                       {activeCategory.params.map((param) => (
                         <div key={param.key} className="space-y-1 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
-                          <div className="flex items-center gap-2 text-xs font-bold text-red-500/90">
-                            <Binary size={10} className="text-red-500/80" />
+                          <div className="flex items-center gap-2 text-xs font-bold text-aurora-blue">
+                            <Binary size={10} className="text-aurora-blue" />
                             {param.key}
                           </div>
                           <p className="text-xs text-zinc-450 font-light leading-relaxed pl-4">
