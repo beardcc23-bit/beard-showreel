@@ -5,7 +5,8 @@ export default function CanvasSequence({ onPlayVideo }) {
   const canvasRef = useRef(null);
   const currentFrameRef = useRef(0);
   const [images, setImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // 代表第一幀是否載入完成（首頁解鎖）
+  const [bgPreloadComplete, setBgPreloadComplete] = useState(false); // 背景其餘影格是否預載完畢
   const [loadProgress, setLoadProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -15,28 +16,70 @@ export default function CanvasSequence({ onPlayVideo }) {
   const frameInterval = 1000 / fps;
 
   useEffect(() => {
-    // 預載入圖片序列
-    let loadedCount = 0;
-    const loadedImages = [];
-
-    const handleImageLoad = () => {
-      loadedCount++;
-      const progress = Math.round((loadedCount / frameCount) * 100);
-      setLoadProgress(progress);
-      if (loadedCount === frameCount) {
-        setImages(loadedImages);
-        setIsLoading(false);
-      }
+    const basePath = import.meta.env.BASE_URL;
+    const firstFrameSrc = `${basePath}png-0/png-0_00000000.png?v=2`;
+    
+    const firstImg = new Image();
+    firstImg.src = firstFrameSrc;
+    
+    firstImg.onload = () => {
+      // 第一幀載入成功，立即初始化 images 陣列並結束全螢幕 loading
+      const initialImages = new Array(frameCount);
+      initialImages[0] = firstImg;
+      setImages(initialImages);
+      setIsLoading(false);
+      setLoadProgress(1);
+      
+      // 接著在背景非同步分批加載剩餘 144 張圖片
+      preloadRemainingFrames(initialImages);
     };
 
-    for (let i = 0; i < frameCount; i++) {
-      const img = new Image();
-      const basePath = import.meta.env.BASE_URL;
-      img.src = `${basePath}png-0/png-0_${String(i).padStart(8, '0')}.png`;
-      img.onload = handleImageLoad;
-      img.onerror = handleImageLoad; // 容錯防卡死
-      loadedImages.push(img);
-    }
+    firstImg.onerror = () => {
+      // 容錯防卡死
+      setIsLoading(false);
+      preloadRemainingFrames(new Array(frameCount));
+    };
+
+    const preloadRemainingFrames = async (targetArray) => {
+      const concurrencyLimit = 4; // 每次併發 4 個請求，防止網路排隊堵塞
+      let nextIndex = 1;
+      let loadedCount = 1;
+
+      const loadFrame = (index) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = `${basePath}png-0/png-0_${String(index).padStart(8, '0')}.png?v=2`;
+          img.onload = () => {
+            targetArray[index] = img;
+            resolve();
+          };
+          img.onerror = () => {
+            resolve(); // 容錯，出錯也 resolve 以便加載繼續
+          };
+        });
+      };
+
+      const worker = async () => {
+        while (nextIndex < frameCount) {
+          const currentIndex = nextIndex++;
+          await loadFrame(currentIndex);
+          loadedCount++;
+          const progress = Math.round((loadedCount / frameCount) * 100);
+          setLoadProgress(progress);
+        }
+      };
+
+      // 啟動多個並行下載 worker
+      const workers = [];
+      for (let w = 0; w < concurrencyLimit; w++) {
+        workers.push(worker());
+      }
+      await Promise.all(workers);
+      
+      // 背景加載完畢，更新全數 images 並開啟播放
+      setImages([...targetArray]);
+      setBgPreloadComplete(true);
+    };
   }, []);
 
   useEffect(() => {
@@ -46,7 +89,7 @@ export default function CanvasSequence({ onPlayVideo }) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
-    // 設定畫布解析度 (1504x832)
+    // 設定畫布解析度匹配原始高畫質尺寸 (1504x832)
     canvas.width = 1504;
     canvas.height = 832;
 
@@ -54,7 +97,8 @@ export default function CanvasSequence({ onPlayVideo }) {
     let lastFrameTime = performance.now();
 
     const render = (now) => {
-      if (isPlaying) {
+      // 只有在背景預載入完全結束，且 isPlaying 為 true 時，才播放動畫
+      if (isPlaying && bgPreloadComplete) {
         const deltaTime = now - lastFrameTime;
         if (deltaTime >= frameInterval) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -66,8 +110,9 @@ export default function CanvasSequence({ onPlayVideo }) {
           lastFrameTime = now - (deltaTime % frameInterval);
         }
       } else {
-        // 暫停時繪製當前畫面，避免空白
-        const img = images[currentFrameRef.current];
+        // 背景加載中或暫停時，繪製首幀或當前幀，防止畫面空白
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const img = images[currentFrameRef.current] || images[0];
         if (img && img.complete) {
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         }
@@ -80,7 +125,7 @@ export default function CanvasSequence({ onPlayVideo }) {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isLoading, images, isPlaying]);
+  }, [isLoading, images, isPlaying, bgPreloadComplete]);
 
   const handleMouseEnter = () => {
     setIsPlaying(false);
@@ -94,7 +139,7 @@ export default function CanvasSequence({ onPlayVideo }) {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-      {/* 高質感科幻 Preloader */}
+      {/* 高質感科幻 Preloader (載入第一幀即消失) */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
@@ -123,13 +168,13 @@ export default function CanvasSequence({ onPlayVideo }) {
                   strokeWidth="3"
                   fill="transparent"
                   strokeDasharray="314"
-                  strokeDashoffset={314 - (314 * loadProgress) / 100}
+                  strokeDashoffset={0}
                   transition={{ ease: 'easeInOut' }}
                 />
               </svg>
               {/* 內圈呼吸燈 */}
               <div className="w-20 h-20 rounded-full bg-bg-mist flex items-center justify-center animate-pulse border border-aurora-blue/20">
-                <span className="mono text-xs font-black text-white">{loadProgress}%</span>
+                <span className="mono text-xs font-black text-white">SYNC</span>
               </div>
             </div>
             
@@ -138,7 +183,7 @@ export default function CanvasSequence({ onPlayVideo }) {
                 INITIALIZING VISUAL MATRIX
               </span>
               <p className="text-[10px] text-zinc-500 mono mt-2 uppercase tracking-widest">
-                FPS: 30 // FRAME_COUNT: {frameCount} // REGISTRY: OPTIMAL
+                FPS: 30 // CHUNKED PRELOAD ACTIVE // REGISTRY: OPTIMAL
               </p>
             </div>
           </motion.div>
@@ -162,7 +207,7 @@ export default function CanvasSequence({ onPlayVideo }) {
           <div className="glow-border" />
         </div>
 
-        {/* 置中獨立感應區 (對應使用者的紅色方框感應範圍) */}
+        {/* 置中獨立感應區 */}
         {!isLoading && (
           <div
             onMouseEnter={handleMouseEnter}
@@ -170,7 +215,7 @@ export default function CanvasSequence({ onPlayVideo }) {
             onClick={() => onPlayVideo('s6s2p87fPdA')}
             className="absolute inset-0 m-auto w-[260px] h-[160px] z-20 flex flex-col items-center justify-center cursor-pointer pointer-events-auto"
           >
-            {/* 播放按鈕與提示字（無邊框、無背景色塊，僅在 hover 時浮現） */}
+            {/* 播放按鈕與提示字 */}
             <div className="relative z-10 flex flex-col items-center pointer-events-none">
               <div className={`w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all duration-300 transform ${
                 showOverlay ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
@@ -191,6 +236,14 @@ export default function CanvasSequence({ onPlayVideo }) {
                 Click to View Full Reel
               </span>
             </div>
+          </div>
+        )}
+
+        {/* 右上角極微型背景加載進度指示器（精緻細節，當加載完畢後淡出消失） */}
+        {!bgPreloadComplete && !isLoading && (
+          <div className="absolute top-4 right-4 mono text-[6px] text-aurora-blue opacity-50 select-none pointer-events-none uppercase tracking-widest flex items-center gap-1.5 animate-pulse">
+            <span className="w-1 h-1 rounded-full bg-aurora-blue animate-ping" />
+            Caching Matrix: {loadProgress}%
           </div>
         )}
       </motion.div>

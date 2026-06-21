@@ -581,8 +581,9 @@ const categories = [
   }
 ];
 
-const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
+const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const hasVideo = !!item.videoId || !!item.url;
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const handleClick = () => {
     if (!hasVideo) return;
@@ -594,13 +595,8 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
   };
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      layout
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
       onClick={handleClick}
       className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${
         hasVideo
@@ -611,10 +607,19 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
       {item.bgImage && (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-sm">
+          {!isImageLoaded && (
+            <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-aurora-blue/5 filter blur-md" />
+            </div>
+          )}
           <img
             src={item.bgImage}
             alt={`${item.name} background`}
-            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-105 group-hover:scale-100"
+            loading="lazy"
+            onLoad={() => setIsImageLoaded(true)}
+            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${
+              isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+            }`}
           />
           {/* 全區域暗化遮罩，用來壓低高光 */}
           <div className="absolute inset-0 bg-black/25" />
@@ -649,9 +654,9 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
           <Play size={8} fill="currentColor" /> Play
         </div>
       ) : null}
-    </motion.div>
+    </div>
   );
-});
+}));
 
 BrandCard.displayName = 'BrandCard';
 
@@ -709,17 +714,28 @@ export default function VisualSynthesis({ onPlayVideo }) {
         })}
       </div>
 
-      {/* 品牌卡片 Grid */}
-      <motion.div
-        layout
-        className="grid grid-cols-3 md:grid-cols-5 gap-3 relative z-10"
-      >
-        <AnimatePresence mode="popLayout">
-          {currentCategory.items.map((item, index) => (
-            <BrandCard key={`${activeTab}-${item.name}-${index}`} item={item} onPlayVideo={onPlayVideo} />
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      {/* 品牌卡片 Grid - 6 個類別各自靜態預渲染，透過 display 與 CSS 動畫切換，達到 0 毫秒 JS 阻塞 */}
+      <div className="relative z-10 min-h-[300px]">
+        {categories.map((category) => {
+          const isActive = category.id === activeTab;
+          return (
+            <div
+              key={category.id}
+              className={`grid grid-cols-3 md:grid-cols-5 gap-3 ${
+                isActive ? 'tab-content-active' : 'tab-content-hidden'
+              }`}
+            >
+              {category.items.map((item, index) => (
+                <BrandCard
+                  key={`${category.id}-${item.name}-${index}`}
+                  item={item}
+                  onPlayVideo={onPlayVideo}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }

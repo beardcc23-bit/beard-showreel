@@ -8,10 +8,40 @@ export default function Navigation() {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const menuItems = [
-    { name: '自我介紹', eng: 'Beard Chou', href: '#introduction' },
-    { name: '設計宣言', eng: 'Manifesto', href: '#about' },
-    { name: '視覺合成', eng: 'Visual Synthesis', href: '#vfx' },
+    { name: '個人介紹', eng: 'CREATIVE PROFILE', href: '#introduction' },
+    { name: '視覺思考', eng: 'VISUAL LOGIC', href: '#about' },
+    { name: '作品案例', eng: 'PRODUCTION FILES', href: '#vfx' },
   ];
+
+  const handleScroll = (e, href) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    if (!element) return;
+    
+    setIsOpen(false); // 關閉行動版選單
+
+    const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 85;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 400; // 400ms 高速直達
+    let startTime = null;
+
+    const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+    const animateScroll = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const percent = Math.min(progress / duration, 1);
+      const easedPercent = easeInOutCubic(percent);
+      window.scrollTo(0, startPosition + distance * easedPercent);
+      if (progress < duration) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
+  };
 
   return (
     <>
@@ -35,6 +65,7 @@ export default function Navigation() {
               <a
                 key={item.href}
                 href={item.href}
+                onClick={(e) => handleScroll(e, item.href)}
                 className="hover:text-aurora-blue transition duration-300 relative group flex flex-col items-start gap-0.5"
               >
                 <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono transition-colors duration-300 group-hover:text-aurora-blue">// {item.eng}</span>
@@ -46,6 +77,7 @@ export default function Navigation() {
 
           <a
             href="#contact"
+            onClick={(e) => handleScroll(e, '#contact')}
             className="prism-button px-6 py-2.5 rounded-full transition duration-300 flex flex-col items-center justify-center text-center leading-none"
           >
             <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>
@@ -86,7 +118,7 @@ export default function Navigation() {
                 <a
                   key={item.href}
                   href={item.href}
-                  onClick={toggleMenu}
+                  onClick={(e) => handleScroll(e, item.href)}
                   className="text-2xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
                 >
                   <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono mb-1">// {item.eng}</span>
@@ -97,7 +129,7 @@ export default function Navigation() {
               <div className="mt-8 border-t border-zinc-800 pt-8">
                 <a
                   href="#contact"
-                  onClick={toggleMenu}
+                  onClick={(e) => handleScroll(e, '#contact')}
                   className="prism-button block w-full py-3.5 rounded-full text-center transition duration-300 flex flex-col items-center justify-center leading-none"
                 >
                   <span className="text-[6px] opacity-70 tracking-widest mono mb-0.5 uppercase">// Establish Connection</span>

@@ -35,7 +35,6 @@ body {
   font-family: 'Inter', 'Noto Sans TC', sans-serif;
   background-color: var(--color-bg-core);
   color: var(--text-white-or-black);
-  scroll-behavior: smooth;
   overflow-x: hidden;
   transition: var(--theme-transition);
 }
@@ -72,13 +71,54 @@ body {
 #cursor-dot {
   position: fixed;
   top: 0; left: 0;
-  width: 8px; height: 8px;
-  background: var(--color-aurora-blue);
-  border-radius: 50%;
   pointer-events: none;
   z-index: 99999;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px var(--color-aurora-blue);
+  will-change: transform;
+}
+
+/* 高科技同心圓環旋轉動畫 */
+.cursor-ring-outer {
+  transform-origin: 16px 16px;
+  animation: rotate-clockwise 4s linear infinite;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, stroke-opacity 0.3s ease;
+}
+
+.cursor-ring-inner {
+  transform-origin: 16px 16px;
+  animation: rotate-counter-clockwise 3s linear infinite;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, stroke-opacity 0.3s ease;
+}
+
+
+
+@keyframes rotate-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-counter-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+/* 游標外層光暈去狀態化 CSS 樣式 */
+.cursor-glow-element {
+  position: fixed;
+  top: 0; left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100;
+  width: 750px;
+  height: 750px;
+  background: radial-gradient(circle, rgba(62, 161, 220, 0.08) 0%, rgba(196, 132, 165, 0.03) 40%, transparent 70%);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.cursor-glow-element.is-hovered {
+  width: 1000px;
+  height: 1000px;
+  background: radial-gradient(circle, rgba(62, 161, 220, 0.12) 0%, rgba(196, 132, 165, 0.05) 45%, transparent 70%);
 }
 
 .mono { font-family: 'JetBrains Mono', monospace; }
@@ -98,8 +138,8 @@ body {
   opacity: 0.07; /* 降低對比，讓噪點更隱約高雅 */
   pointer-events: none;
   z-index: -1;
-  /* 增加 baseFrequency 至 1.8 讓噪點變為極細微的磨砂粉末感 */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  /* 增加 baseFrequency 至 1.8 讓噪點變為極細微的磨砂粉末感，並將 numOctaves 降為 1 降低 GPU 負擔 */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 .grid-bg {
@@ -462,6 +502,27 @@ body {
   border-radius: 6px;
   overflow: hidden;
   display: flex;
+}
+
+/* 作品集 Tab 切換科幻淡入動畫與顯隱類別 */
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-content-active {
+  display: grid !important;
+  animation: tab-fade-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tab-content-hidden {
+  display: none !important;
 }
 
 
