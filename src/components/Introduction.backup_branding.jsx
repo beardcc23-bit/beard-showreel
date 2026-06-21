@@ -51,7 +51,7 @@ export default function Introduction({ onPlayVideo }) {
               className="mono text-[6px] text-aurora-blue uppercase tracking-[0.5em] mb-8 opacity-80 flex items-center gap-2"
             >
               <span className="w-2 h-2 rounded-full bg-aurora-blue animate-ping" />
-              ARCHIVAL SYSTEM LOG // 13 YEARS OF COMPOSITING // BEARD CHOU
+              SYSTEM_STATUS : OPTIMAL // ARCHIVE_ACTIVE
             </motion.div>
             
             {/* 精緻標題 */}
@@ -92,10 +92,10 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8, delay: 0.15 }}
               className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left"
             >
-              光線在透鏡間折射的痕跡、金屬微小的劃痕、大氣中若隱若現的微塵——這些常人忽略的細節，是我 13 年來每日凝視的戰場。
+              身為資深特效合成師 (VFX Compositing Artist / D1)，在 13 年的職涯淬鍊中，我親手護航並見證了超過 300 支頂級商業廣告的誕生。從前期的實拍、剪輯、調光，到最終由我Online 、精準去背、數位修復、虛實融合與動態視覺。我深知在後期製程的終點線前，每一步都關乎製播品質的絕對完美，容不得絲毫差池。
               <br />
               <br />
-              作為後期合成的視覺轉譯者，我親手打磨了超過 300 支一線品牌大作。我相信，完美的特效是「隱形」的。我穿梭於導演的藝術想像與品牌主商業策略的交界處，用清晰的高效流程，將那些虛無縹緲的創意，化為大銀幕上無可辯駁的極致畫面。
+              我不僅以敏銳的光影美感與技術底蘊封裝視覺，更穿梭於導演、廣告代理商與品牌主之間，擔任核心的「<span className="text-aurora-blue font-normal">技術與創意轉譯橋樑</span>」。我擅長排解製程中的繁複瓶頸，確保每一件作品皆以最高規格，完美跨螢登陸電視與數位全媒體。
             </motion.p>
 
             {/* 實戰成就數據面板 */}
@@ -145,7 +145,7 @@ export default function Introduction({ onPlayVideo }) {
                 onClick={() => onPlayVideo('s6s2p87fPdA')}
                 className="prism-button px-16 py-5 text-black font-bold rounded-sm uppercase text-xs tracking-[0.2em] text-center w-full sm:w-auto"
               >
-                解構影像檔案 (ENTER ARCHIVE)
+                觀看作品集
               </button>
             </motion.div>
           </div>
