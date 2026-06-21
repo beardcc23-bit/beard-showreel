@@ -6,8 +6,10 @@ export default function CursorGlow() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
 
+  // 在 ref 中緩存滑鼠位置，避免 mousemove 時頻繁更新 React state 導致重複 render
+  const mouseCoords = useRef({ x: 0, y: 0 });
+
   useEffect(() => {
-    // 檢查是否為行動裝置
     const checkMobile = () => {
       const isMobileDevice = window.innerWidth < 768;
       setIsMobile(isMobileDevice);
@@ -21,26 +23,36 @@ export default function CursorGlow() {
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
-    const handleMouseMove = (e) => {
+    let animationFrameId = null;
+
+    // 使用 requestAnimationFrame 同步瀏覽器重繪幀率
+    const updateCursorPosition = () => {
       if (glowRef.current && dotRef.current) {
-        glowRef.current.style.left = `${e.clientX}px`;
-        glowRef.current.style.top = `${e.clientY}px`;
-        dotRef.current.style.left = `${e.clientX}px`;
-        dotRef.current.style.top = `${e.clientY}px`;
+        const { x, y } = mouseCoords.current;
+        // 使用 translate3d 啟用 GPU 硬體加速，避開 Reflow/Layout，直接進行 Composite 渲染
+        glowRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        dotRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
       }
+      animationFrameId = requestAnimationFrame(updateCursorPosition);
     };
 
+    const handleMouseMove = (e) => {
+      mouseCoords.current.x = e.clientX;
+      mouseCoords.current.y = e.clientY;
+    };
+
+    animationFrameId = requestAnimationFrame(updateCursorPosition);
+
     const handleMouseOver = (e) => {
-      // 判斷是否懸停在可互動元素上
       const target = e.target;
       if (!target) return;
-      
       if (
         target.closest('a') ||
         target.closest('button') ||
         target.closest('.tech-card') ||
         target.closest('.glow-title') ||
-        target.closest('[role="button"]')
+        target.closest('[role="button"]') ||
+        target.closest('.group') // 懸停在卡片上時也觸發放大
       ) {
         setIsHovered(true);
       }
@@ -49,13 +61,13 @@ export default function CursorGlow() {
     const handleMouseOut = (e) => {
       const target = e.target;
       if (!target) return;
-      
       if (
         target.closest('a') ||
         target.closest('button') ||
         target.closest('.tech-card') ||
         target.closest('.glow-title') ||
-        target.closest('[role="button"]')
+        target.closest('[role="button"]') ||
+        target.closest('.group')
       ) {
         setIsHovered(false);
       }
@@ -70,6 +82,7 @@ export default function CursorGlow() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
       window.removeEventListener('mouseout', handleMouseOut);
+      cancelAnimationFrame(animationFrameId);
       document.body.classList.remove('custom-cursor');
     };
   }, []);
@@ -78,23 +91,30 @@ export default function CursorGlow() {
 
   return (
     <>
+      {/* 游標外層光暈 */}
       <div
         ref={glowRef}
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[100] -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out"
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[100] transition-all duration-300 ease-out will-change-transform"
         style={{
-          width: isHovered ? '1620px' : '1260px',
-          height: isHovered ? '1620px' : '1260px',
+          width: isHovered ? '1000px' : '750px', // 將原本 1620px 縮小至最高 1000px，降低 GPU Fill-rate 繪製負擔
+          height: isHovered ? '1000px' : '750px',
           background: isHovered
-            ? 'radial-gradient(circle, rgba(62, 161, 220, 0.16) 0%, rgba(196, 132, 165, 0.08) 45%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(62, 161, 220, 0.12) 0%, rgba(196, 132, 165, 0.05) 40%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(62, 161, 220, 0.14) 0%, rgba(196, 132, 165, 0.07) 45%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(62, 161, 220, 0.1) 0%, rgba(196, 132, 165, 0.04) 40%, transparent 70%)',
         }}
       />
+      {/* 游標核心中心點 */}
       <div
         ref={dotRef}
         id="cursor-dot"
-        className="transition-transform duration-100 ease-out"
+        className="fixed top-0 left-0 pointer-events-none z-[101] will-change-transform"
         style={{
-          transform: `translate(-50%, -50%) scale(${isHovered ? 2.5 : 1})`,
+          width: '6px',
+          height: '6px',
+          backgroundColor: '#3ea1dc',
+          borderRadius: '50%',
+          transform: `translate3d(0,0,0) translate(-50%, -50%) scale(${isHovered ? 2.5 : 1})`,
+          transition: 'transform 0.15s ease-out',
         }}
       />
     </>
