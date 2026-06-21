@@ -616,7 +616,10 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
             alt={`${item.name} background`}
             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-105 group-hover:scale-100"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          {/* 全區域暗化遮罩，用來壓低高光 */}
+          <div className="absolute inset-0 bg-black/25" />
+          {/* 強化的漸層遮罩 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25" />
         </div>
       )}
 
@@ -626,21 +629,30 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
       )}
 
       <div className="relative z-10">
-        <div className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${
-          hasVideo
-            ? 'text-zinc-100 group-hover:text-white font-normal'
-            : 'text-zinc-300 font-normal'
-        }`}>
+        <div 
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,0.95), 0 0 1px rgba(0,0,0,0.8)' }}
+          className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${
+            hasVideo
+              ? 'text-zinc-100 group-hover:text-white font-semibold'
+              : 'text-zinc-200 font-semibold'
+          }`}
+        >
           {item.name}
         </div>
       </div>
 
       {hasVideo ? (
-        <div className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-85 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1">
+        <div 
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.95)' }}
+          className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
+        >
           <Play size={8} fill="currentColor" /> Play Reel
         </div>
       ) : (
-        <div className="relative z-10 mt-2.5 text-[6px] text-zinc-500 mono tracking-widest uppercase">
+        <div 
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.95)' }}
+          className="relative z-10 mt-2.5 text-[6px] text-zinc-400 mono tracking-widest uppercase"
+        >
           // ARCHIVE
         </div>
       )}
