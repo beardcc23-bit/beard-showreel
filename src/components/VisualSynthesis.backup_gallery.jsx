@@ -581,7 +581,7 @@ const categories = [
   }
 ];
 
-const BrandCard = React.forwardRef(({ item, onPlayVideo, index, categoryCode }, ref) => {
+const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
   const hasVideo = !!item.videoId || !!item.url;
 
   const handleClick = () => {
@@ -593,27 +593,6 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo, index, categoryCode }, 
     }
   };
 
-  // 依 index 動態分配非對稱寬度與偏移，形成藝廊牆面交錯感
-  const getLayoutClasses = (idx) => {
-    const layouts = [
-      // 跨 4 欄 (1/3 寬)
-      { span: 'col-span-2 md:col-span-4 h-[115px]', offset: '' },
-      // 跨 3 欄 (1/4 寬)
-      { span: 'col-span-1 md:col-span-3 h-[115px]', offset: '' },
-      // 跨 5 欄 (約 5/12 寬)
-      { span: 'col-span-1 md:col-span-5 h-[115px]', offset: '' },
-      // 跨 3 欄，帶有微幅下移
-      { span: 'col-span-1 md:col-span-3 h-[115px]', offset: 'md:translate-y-4' },
-      // 跨 6 欄 (1/2 寬)
-      { span: 'col-span-2 md:col-span-6 h-[115px]', offset: '' },
-      // 跨 3 欄，帶有微幅上移
-      { span: 'col-span-1 md:col-span-3 h-[115px]', offset: 'md:-translate-y-2' },
-    ];
-    return layouts[idx % layouts.length];
-  };
-
-  const layout = getLayoutClasses(index);
-
   return (
     <motion.div
       ref={ref}
@@ -623,45 +602,39 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo, index, categoryCode }, 
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
       onClick={handleClick}
-      className={`p-3.5 border rounded-none flex flex-col justify-between transition-all duration-500 relative overflow-hidden group border-zinc-800/80 bg-zinc-950/20 ${layout.span} ${layout.offset} ${
+      className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${
         hasVideo
-          ? 'hover:border-red-500/80 cursor-pointer hover:shadow-[0_10px_30px_rgba(239,68,68,0.03)]'
-          : 'border-zinc-900/60'
+          ? 'border-zinc-700/60 bg-zinc-900/50 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
+          : 'border-zinc-800/80 bg-zinc-900/20'
       }`}
     >
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
       {item.bgImage && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-none">
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-sm">
           <img
             src={item.bgImage}
             alt={`${item.name} background`}
-            // Hover 時從 scale-105 收縮為 scale-100，帶來實體材料微收縮感
-            className="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-all duration-700 ease-out scale-105 group-hover:scale-100"
+            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-105 group-hover:scale-100"
           />
           {/* 全區域暗化遮罩，用來壓低高光 */}
-          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/15 transition-colors duration-500" />
+          <div className="absolute inset-0 bg-black/25" />
           {/* 強化的漸層遮罩 */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25" />
         </div>
       )}
 
-      {/* 館藏檔案編號系統 (Archival Numbering) */}
-      <div className="relative z-10 flex justify-between items-center text-[7px] mono text-zinc-500 tracking-[0.2em] mb-1 opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-        <span style={{ textShadow: '0 1px 2px rgba(0,0,0,0.95)' }}>
-          [ CAT_{categoryCode}-{String(index + 1).padStart(3, '0')} ]
-        </span>
-        <span style={{ textShadow: '0 1px 2px rgba(0,0,0,0.95)' }}>
-          {hasVideo ? '// ACTIVE' : '// ARCHIVE'}
-        </span>
-      </div>
+      {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage) */}
+      {hasVideo && !item.bgImage && (
+        <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      )}
 
-      <div className="relative z-10 flex-1 flex flex-col justify-start">
+      <div className="relative z-10">
         <div 
-          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,0.95)' }}
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,0.95), 0 0 1px rgba(0,0,0,0.8)' }}
           className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${
             hasVideo
               ? 'text-zinc-100 group-hover:text-white font-semibold'
-              : 'text-zinc-450 font-normal'
+              : 'text-zinc-200 font-semibold'
           }`}
         >
           {item.name}
@@ -671,7 +644,7 @@ const BrandCard = React.forwardRef(({ item, onPlayVideo, index, categoryCode }, 
       {hasVideo ? (
         <div 
           style={{ textShadow: '0 1px 3px rgba(0,0,0,0.95)' }}
-          className="relative z-10 mt-2 flex items-center gap-1 text-[8px] text-red-500 font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
+          className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-red-500 font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
         >
           <Play size={8} fill="currentColor" /> Play
         </div>
@@ -688,25 +661,25 @@ export default function VisualSynthesis({ onPlayVideo }) {
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
   return (
-    <section id="vfx" className="max-w-6xl mx-auto px-8 py-36 relative">
+    <section id="vfx" className="max-w-6xl mx-auto px-8 py-24 relative">
       {/* 背景點綴網格 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
       {/* 區段標頭 */}
-      <div className="text-center mb-20 relative z-10">
-        <div className="mono text-[7px] text-aurora-blue mb-6 uppercase tracking-[0.4em] opacity-80">
+      <div className="text-center mb-16 relative z-10">
+        <div className="mono text-[6px] text-aurora-blue mb-6 uppercase tracking-[0.3em]">
           02 // Visual Synthesis
         </div>
         <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
           The <span className="text-aurora-blue">Synthesis</span>
         </h2>
-        <p className="text-zinc-350 font-light max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-          精選 13 年來參與之一線品牌與商業廣告作品。融合極致的光影邏輯與嚴謹的物理細節，以頂尖合成美學淬鍊每幀畫面的視覺張力。
+        <p className="text-zinc-300 font-light max-w-2xl mx-auto text-lg leading-relaxed">
+          精選近期參與之一線品牌與商業廣告作品。融合極致的光影邏輯與嚴謹的物理細節，以頂尖合成美學淬鍊每幀畫面的視覺張力。
         </p>
       </div>
 
-      {/* 分類切換 Tab (直角化 rounded-none) */}
-      <div className="flex flex-wrap justify-center gap-3 mb-16 relative z-10">
+      {/* 分類切換 Tab */}
+      <div className="flex flex-wrap justify-center gap-2.5 mb-12 relative z-10">
         {categories.map((tab) => {
           const engMap = {
             food: 'FOOD & BEV',
@@ -721,14 +694,14 @@ export default function VisualSynthesis({ onPlayVideo }) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2.5 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-none leading-none ${
+              className={`px-4 py-2 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm leading-none ${
                 activeTab === tab.id
-                  ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.25)]'
-                  : 'border-zinc-800 text-zinc-400 bg-zinc-950/20 hover:text-white hover:border-zinc-700'
+                  ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
+                  : 'border-zinc-855 text-zinc-400 bg-zinc-955/20 hover:text-white hover:border-zinc-700'
               }`}
             >
-              <span className={`text-[6px] mono tracking-widest uppercase mb-1.5 ${
-                activeTab === tab.id ? 'text-black/80' : 'text-zinc-500'
+              <span className={`text-[6px] mono tracking-widest uppercase mb-0.5 ${
+                activeTab === tab.id ? 'text-black/70' : 'text-zinc-500'
               }`}>{engName}</span>
               <span className="text-xs font-normal tracking-wider">{tab.name}</span>
             </button>
@@ -736,32 +709,15 @@ export default function VisualSynthesis({ onPlayVideo }) {
         })}
       </div>
 
-      {/* 品牌卡片 Grid (重構為 12 欄非對稱網格) */}
+      {/* 品牌卡片 Grid */}
       <motion.div
         layout
-        className="grid grid-cols-2 md:grid-cols-12 gap-5 relative z-10 min-h-[350px] pb-16"
+        className="grid grid-cols-3 md:grid-cols-5 gap-3 relative z-10"
       >
         <AnimatePresence mode="popLayout">
-          {currentCategory.items.map((item, index) => {
-            const categoryCodeMap = {
-              food: 'A',
-              tech: 'B',
-              vehicle: 'C',
-              lifestyle: 'D',
-              beauty: 'E',
-              finance: 'F'
-            };
-            const code = categoryCodeMap[activeTab] || 'A';
-            return (
-              <BrandCard 
-                key={`${activeTab}-${item.name}-${index}`} 
-                item={item} 
-                onPlayVideo={onPlayVideo} 
-                index={index}
-                categoryCode={code}
-              />
-            );
-          })}
+          {currentCategory.items.map((item, index) => (
+            <BrandCard key={`${activeTab}-${item.name}-${index}`} item={item} onPlayVideo={onPlayVideo} />
+          ))}
         </AnimatePresence>
       </motion.div>
     </section>
