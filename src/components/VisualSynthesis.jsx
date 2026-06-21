@@ -4,150 +4,604 @@ import { Play } from 'lucide-react';
 
 const categories = [
   {
-    id: 'food',
-    name: '食品與飲料',
-    items: [
-      { name: 'Extra', domain: 'wrigley.com' },
-      { name: 'TOBLERONE 三角巧克力', domain: 'toblerone.com', videoId: 'exDc-2Xnb4E', bgImage: '/vfx/toblerone_bg.png' },
-      { name: 'UCC', domain: 'ucc.co.jp', videoId: 'AuuxyMIutf8', bgImage: '/vfx/ucc_bg.png' },
-      { name: '可口可樂', domain: 'cocacola.com', videoId: '1286974884802497', isFacebook: true, bgImage: '/vfx/bg_a04.png' },
-      { name: '好侍咖哩', domain: 'housefoods-group.com', videoId: 'jScTOFsO97U', bgImage: '/vfx/bg_a05.png' },
-      { name: '伯朗EX雙倍濃烈咖啡', domain: 'mrbrown.com.tw', videoId: 'UmoyLNbcevQ', bgImage: '/vfx/bg_a06.png' },
-      { name: '每朝双纖綠茶', domain: 'vitalon.com.tw', videoId: 'w1EUT4JnHck', bgImage: '/vfx/bg_a07.png' },
-      { name: '每朝健康', domain: 'vitalon.com.tw', videoId: '_xC48BnWOAQ', bgImage: '/vfx/bg_a08.png' },
-      { name: '噶瑪蘭威士忌', domain: 'kavalanwhisky.com' },
-      { name: '柏克金啤酒', domain: 'buckskin.com.tw', videoId: 'aKYv6_VMPFI', bgImage: '/vfx/bg_a10.png' },
-      { name: '金門高粱千日醇', domain: 'kkl.com.tw', videoId: '8rl7u3SPQpY', bgImage: '/vfx/bg_a11.png' },
-      { name: '旨醞鐵板燒', domain: 'feastogether.com.tw', videoId: '2203781970428596', isFacebook: true, bgImage: '/vfx/bg_a12.png' },
-      { name: '活沛多', domain: 'watsons.com.tw', videoId: 'Y4CG2QNa5hs', bgImage: '/vfx/bg_a13.png' },
-      { name: '格蘭利威', domain: 'theglenlivet.com' },
-      { name: '桂格喝的燕麥', domain: 'quaker.com.tw' },
-      { name: '桂格', domain: 'quaker.com.tw', videoId: 'lxRJO_qPcWQ', bgImage: '/vfx/bg_a16.png' },
-      { name: '泰山八寶粥', domain: 'taisungroup.com.tw', videoId: 'ry5k_i-XhVE', bgImage: '/vfx/bg_a17.png' },
-      { name: '健酪乳酸飲料', domain: 'kingcar.com.tw', videoId: 'qJqmBWZxbdo', bgImage: '/vfx/bg_a18.png' },
-      { name: '黑松茶花', domain: 'heysong.com.tw', videoId: 'TRqUVCCZwRU', bgImage: '/vfx/bg_a19.png' },
-      { name: '黑松茶花', domain: 'heysong.com.tw', videoId: 'cKbH-CxdjxY', bgImage: '/vfx/bg_a20.png' },
-      { name: '瑞穗鮮乳', domain: 'uni-president.com.tw', videoId: 'owT3Sj_So60', bgImage: '/vfx/bg_a21.png' },
-      { name: '義美生機', domain: 'imeieco.com', videoId: 'kakD_HQkIQU', bgImage: '/vfx/bg_a22.png' },
-      { name: '裸雀威士忌', domain: 'nakedmalt.com' },
-      { name: '維他露P+', domain: 'vitalon.com.tw', videoId: 'AyQQZ37OPfU', bgImage: '/vfx/bg_a24.png' },
-      { name: '樂事', domain: 'lays.com', videoId: 'zQfi9U_023I', bgImage: '/vfx/bg_a25.png' },
-      { name: '灣仔碼頭水餃', domain: 'generalmills.com' }
+    "id": "food",
+    "name": "食品與飲料",
+    "items": [
+      {
+        "name": "Extra",
+        "bgImage": "/vfx/A/A-001.png"
+      },
+      {
+        "name": "Johnnie Walker",
+        "bgImage": "/vfx/A/A-002.png"
+      },
+      {
+        "name": "TOBLERONE 三角巧克力",
+        "bgImage": "/vfx/A/A-003.png",
+        "url": "https://www.youtube.com/watch?v=exDc-2Xnb4E&t=1s",
+        "videoId": "exDc-2Xnb4E"
+      },
+      {
+        "name": "UCC",
+        "bgImage": "/vfx/A/A-004.png",
+        "url": "https://www.youtube.com/watch?v=AuuxyMIutf8",
+        "videoId": "AuuxyMIutf8"
+      },
+      {
+        "name": "可口可樂",
+        "bgImage": "/vfx/A/A-005.png",
+        "url": "https://www.facebook.com/watch/?v=1286974884802497",
+        "videoId": "1286974884802497",
+        "isFacebook": true
+      },
+      {
+        "name": "好侍咖哩",
+        "bgImage": "/vfx/A/A-006.png",
+        "url": "https://www.youtube.com/watch?v=jScTOFsO97U",
+        "videoId": "jScTOFsO97U"
+      },
+      {
+        "name": "伯朗EX雙倍濃烈咖啡",
+        "bgImage": "/vfx/A/A-007.png",
+        "url": "https://www.youtube.com/watch?v=UmoyLNbcevQ",
+        "videoId": "UmoyLNbcevQ"
+      },
+      {
+        "name": "每朝双纖綠茶",
+        "bgImage": "/vfx/A/A-008.png",
+        "url": "https://www.youtube.com/watch?v=w1EUT4JnHck",
+        "videoId": "w1EUT4JnHck"
+      },
+      {
+        "name": "每朝健康",
+        "bgImage": "/vfx/A/A-009.png",
+        "url": "https://www.youtube.com/watch?v=_xC48BnWOAQ",
+        "videoId": "_xC48BnWOAQ"
+      },
+      {
+        "name": "噶瑪蘭威士忌",
+        "bgImage": "/vfx/A/A-010.png"
+      },
+      {
+        "name": "柏克金啤酒",
+        "bgImage": "/vfx/A/A-011.png",
+        "url": "https://www.youtube.com/watch?v=aKYv6_VMPFI",
+        "videoId": "aKYv6_VMPFI"
+      },
+      {
+        "name": "金門高粱千日醇",
+        "bgImage": "/vfx/A/A-012.png",
+        "url": "https://www.youtube.com/watch?v=8rl7u3SPQpY",
+        "videoId": "8rl7u3SPQpY"
+      },
+      {
+        "name": "旨醞鐵板燒",
+        "bgImage": "/vfx/A/A-013.png",
+        "url": "https://www.facebook.com/reel/2203781970428596?locale=zh_TW",
+        "videoId": "2203781970428596",
+        "isFacebook": true
+      },
+      {
+        "name": "活沛多",
+        "bgImage": "/vfx/A/A-014.png",
+        "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
+        "videoId": "Y4CG2QNa5hs"
+      },
+      {
+        "name": "格蘭利威",
+        "bgImage": "/vfx/A/A-015.png"
+      },
+      {
+        "name": "桂格喝的燕麥",
+        "bgImage": "/vfx/A/A-016.png",
+        "url": "https://www.instagram.com/p/DN7VHH2DbeC/"
+      },
+      {
+        "name": "桂格奇亞籽麥片",
+        "bgImage": "/vfx/A/A-017.png",
+        "url": "https://www.facebook.com/quaker.tw/videos/1095555185815161/",
+        "videoId": "1095555185815161",
+        "isFacebook": true
+      },
+      {
+        "name": "桂格",
+        "bgImage": "/vfx/A/A-018.png",
+        "url": "https://www.youtube.com/watch?v=lxRJO_qPcWQ",
+        "videoId": "lxRJO_qPcWQ"
+      },
+      {
+        "name": "泰山八寶粥",
+        "bgImage": "/vfx/A/A-019.png",
+        "url": "https://www.youtube.com/watch?v=ry5k_i-XhVE",
+        "videoId": "ry5k_i-XhVE"
+      },
+      {
+        "name": "健酪乳酸飲料",
+        "bgImage": "/vfx/A/A-020.png",
+        "url": "https://www.youtube.com/watch?v=qJqmBWZxbdo",
+        "videoId": "qJqmBWZxbdo"
+      },
+      {
+        "name": "黑松茶花",
+        "bgImage": "/vfx/A/A-021.png",
+        "url": "https://www.youtube.com/watch?v=TRqUVCCZwRU",
+        "videoId": "TRqUVCCZwRU"
+      },
+      {
+        "name": "黑松茶花",
+        "bgImage": "/vfx/A/A-022.png",
+        "url": "https://www.youtube.com/watch?v=cKbH-CxdjxY",
+        "videoId": "cKbH-CxdjxY"
+      },
+      {
+        "name": "瑞穗鮮乳",
+        "bgImage": "/vfx/A/A-023.png",
+        "url": "https://www.youtube.com/watch?v=owT3Sj_So60",
+        "videoId": "owT3Sj_So60"
+      },
+      {
+        "name": "義美生機",
+        "bgImage": "/vfx/A/A-024.png",
+        "url": "https://www.youtube.com/watch?v=kakD_HQkIQU",
+        "videoId": "kakD_HQkIQU"
+      },
+      {
+        "name": "裸雀威士忌",
+        "bgImage": "/vfx/A/A-025.png"
+      },
+      {
+        "name": "維他露P+",
+        "bgImage": "/vfx/A/A-026.png",
+        "url": "https://www.youtube.com/watch?v=AyQQZ37OPfU",
+        "videoId": "AyQQZ37OPfU"
+      },
+      {
+        "name": "樂事",
+        "bgImage": "/vfx/A/A-027.png",
+        "url": "https://www.youtube.com/watch?v=zQfi9U_023I",
+        "videoId": "zQfi9U_023I"
+      },
+      {
+        "name": "多力多滋",
+        "bgImage": "/vfx/A/A-028.png"
+      }
     ]
   },
   {
-    id: 'tech',
-    name: '科技電信與家電',
-    items: [
-      { name: 'Panasonic 蒸汽電熨斗', domain: 'panasonic.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Panasonic_logo.svg' },
-      { name: 'Panasonic VIERA', domain: 'panasonic.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Panasonic_logo.svg' },
-      { name: 'Panasonic 便座', domain: 'panasonic.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Panasonic_logo.svg' },
-      { name: 'Panasonic 冷萃咖啡機', domain: 'panasonic.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Panasonic_logo.svg' },
-      { name: 'Panasonic 吸頂燈', domain: 'panasonic.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Panasonic_logo.svg' },
-      { name: 'Panasonic W音波電動牙刷', domain: 'panasonic.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Panasonic_logo.svg' },
-      { name: 'Samsung S20', domain: 'samsung.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
-      { name: 'Samsung S21', domain: 'samsung.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
-      { name: 'Samsung S22', domain: 'samsung.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg', videoId: 's6s2p87fPdA' },
-      { name: 'Samsung Z Fold2', domain: 'samsung.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
-      { name: 'Samsung Z Fold3', domain: 'samsung.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
-      { name: 'Samsung Z Fold4', domain: 'samsung.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg', videoId: 's6s2p87fPdA' },
-      { name: 'Samsung 平板', domain: 'samsung.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
-      { name: 'Sharp', domain: 'sharpcorp.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/SHARP_logo.svg' },
-      { name: 'Sony Xperia', domain: 'sony.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Sony_logo.svg' },
-      { name: 'TOKUYO', domain: 'tokuyo.com.tw', logo: 'https://www.tokuyo.com.tw/Uploads/Images/2021/logo.png' },
-      { name: '三菱重工空調', domain: 'mhi-mth.co.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Mitsubishi_Electric_logo.svg' },
-      { name: '三菱電機', domain: 'mitsubishielectric.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Mitsubishi_Electric_logo.svg' },
-      { name: '中華電信', domain: 'cht.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Chunghwa_Telecom.svg' }
+    "id": "tech",
+    "name": "3C與家電",
+    "items": [
+      {
+        "name": "panasonic 瞬熱式溫水洗淨便座",
+        "bgImage": "/vfx/B/B-01.png",
+        "url": "https://www.youtube.com/watch?v=SMCldr-5kbg",
+        "videoId": "SMCldr-5kbg"
+      },
+      {
+        "name": "Panasonic 電視",
+        "bgImage": "/vfx/B/B-02.png",
+        "url": "https://www.youtube.com/watch?v=J8IkANYZD3s",
+        "videoId": "J8IkANYZD3s"
+      },
+      {
+        "name": "Panasonic 蒸氣電熨斗",
+        "bgImage": "/vfx/B/B-03.png",
+        "url": "https://www.facebook.com/watch/?v=844958797010401",
+        "videoId": "844958797010401",
+        "isFacebook": true
+      },
+      {
+        "name": "Panasonic W音波電動牙刷",
+        "bgImage": "/vfx/B/B-04.png",
+        "url": "https://www.facebook.com/PanasonicBeautyTaiwan/videos/1352504146494183/",
+        "videoId": "1352504146494183",
+        "isFacebook": true
+      },
+      {
+        "name": "Panasonic 吸頂燈",
+        "bgImage": "/vfx/B/B-05.png",
+        "url": "https://www.facebook.com/PanasonicTaiwan/videos/634112755292450/",
+        "videoId": "634112755292450",
+        "isFacebook": true
+      },
+      {
+        "name": "Samsung S22",
+        "bgImage": "/vfx/B/B-06.png",
+        "url": "https://www.youtube.com/watch?v=UkSewV5ScR0",
+        "videoId": "UkSewV5ScR0"
+      },
+      {
+        "name": "Samsung Z Fold2｜Z Flip2",
+        "bgImage": "/vfx/B/B-07.png",
+        "url": "https://www.facebook.com/watch/?v=1046986065709266",
+        "videoId": "1046986065709266",
+        "isFacebook": true
+      },
+      {
+        "name": "Samsung Z Fold3｜Z Flip3",
+        "bgImage": "/vfx/B/B-08.png",
+        "url": "https://www.facebook.com/watch/?v=558217842125093",
+        "videoId": "558217842125093",
+        "isFacebook": true
+      },
+      {
+        "name": "Samsung Z Fold4｜Z Flip4",
+        "bgImage": "/vfx/B/B-09.png"
+      },
+      {
+        "name": "Samsung Galaxy Tab S11 Ultra",
+        "bgImage": "/vfx/B/B-10.png",
+        "url": "https://www.facebook.com/reel/1338163857656555",
+        "videoId": "1338163857656555",
+        "isFacebook": true
+      },
+      {
+        "name": "Sony Xperia",
+        "bgImage": "/vfx/B/B-11.png"
+      },
+      {
+        "name": "Tokuyo按摩椅",
+        "bgImage": "/vfx/B/B-12.png",
+        "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
+        "videoId": "_SENfBsNjgE"
+      },
+      {
+        "name": "三菱重工空調",
+        "bgImage": "/vfx/B/B-13.png",
+        "url": "https://www.youtube.com/watch?v=fanfOOV80ok",
+        "videoId": "fanfOOV80ok"
+      },
+      {
+        "name": "三菱電機",
+        "bgImage": "/vfx/B/B-14.png",
+        "url": "https://www.facebook.com/watch/?v=824057254764949",
+        "videoId": "824057254764949",
+        "isFacebook": true
+      },
+      {
+        "name": "中華電信",
+        "bgImage": "/vfx/B/B-15.png"
+      }
     ]
   },
   {
-    id: 'vehicle',
-    name: '汽車與交通',
-    items: [
-      { name: 'Momentum', domain: 'momentum-biking.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Momentum_Bicycles_logo.svg' },
-      { name: 'AUDI', domain: 'audi.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg', videoId: 's6s2p87fPdA' },
-      { name: 'GOGORO', domain: 'gogoro.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/ff/Gogoro_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: 'Honda', domain: 'honda.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg' },
-      { name: 'MAZDA', domain: 'mazda.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c9/Mazda_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: 'Skoda', domain: 'skoda-auto.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b3/Skoda_Auto_logo_%282023%29.svg' },
-      { name: '中華航空', domain: 'china-airlines.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/China_Airlines_logo.svg' },
-      { name: '長榮航太', domain: 'egat.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/91/EVA_Air_logo.svg' },
-      { name: '長榮航空', domain: 'evaair.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/91/EVA_Air_logo.svg' }
+    "id": "vehicle",
+    "name": "交通工具",
+    "items": [
+      {
+        "name": "Audi",
+        "bgImage": "/vfx/C/C-01.png",
+        "url": "https://www.youtube.com/watch?v=vgf14stUB0w",
+        "videoId": "vgf14stUB0w"
+      },
+      {
+        "name": "foxtron caviar",
+        "bgImage": null
+      },
+      {
+        "name": "Gogoro EZZY",
+        "bgImage": "/vfx/C/C-03.png",
+        "url": "https://www.youtube.com/watch?v=4apkzFFsV4E",
+        "videoId": "4apkzFFsV4E"
+      },
+      {
+        "name": "Gogoro Pulse",
+        "bgImage": "/vfx/C/C-04.png",
+        "url": "https://www.youtube.com/watch?v=Wyijlye4kMg",
+        "videoId": "Wyijlye4kMg"
+      },
+      {
+        "name": "Gogoro JEGO",
+        "bgImage": "/vfx/C/C-05.png",
+        "url": "https://www.youtube.com/watch?v=54Yr36d251s",
+        "videoId": "54Yr36d251s"
+      },
+      {
+        "name": "Škoda Kodiaq",
+        "bgImage": "/vfx/C/C-06.png",
+        "url": "https://www.youtube.com/watch?v=I8jdO9GQVkM",
+        "videoId": "I8jdO9GQVkM"
+      },
+      {
+        "name": "Mazda",
+        "bgImage": "/vfx/C/C-07.png",
+        "url": "https://www.youtube.com/watch?v=V7t6AvjDl80",
+        "videoId": "V7t6AvjDl80"
+      },
+      {
+        "name": "Momentum Bicycles",
+        "bgImage": "/vfx/C/C-08.png",
+        "url": "https://www.youtube.com/watch?v=iIdgx-eoAT0",
+        "videoId": "iIdgx-eoAT0"
+      },
+      {
+        "name": "中華航空",
+        "bgImage": "/vfx/C/C-09.png",
+        "url": "https://www.youtube.com/watch?v=8YC6qYvByU8",
+        "videoId": "8YC6qYvByU8"
+      },
+      {
+        "name": "長榮航空",
+        "bgImage": "/vfx/C/C-10.png",
+        "url": "https://www.youtube.com/watch?v=bQZxUBpimgY",
+        "videoId": "bQZxUBpimgY"
+      },
+      {
+        "name": "長榮航空 Bizfam",
+        "bgImage": "/vfx/C/C-11.png",
+        "url": "https://www.facebook.com/evaairwayscorp.tw/videos/668508182730128/",
+        "videoId": "668508182730128",
+        "isFacebook": true
+      },
+      {
+        "name": "長榮航太",
+        "bgImage": "/vfx/C/C-12.png",
+        "url": "https://www.youtube.com/watch?v=yuUHorteLAw",
+        "videoId": "yuUHorteLAw"
+      }
     ]
   },
   {
-    id: 'lifestyle',
-    name: '生活與百貨零售',
-    items: [
-      { name: 'Ariel 抗菌洗衣精', domain: 'ariel.co.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Ariel_%28brand%29_logo.svg' },
-      { name: 'Foodpanda', domain: 'foodpanda.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/13/Foodpanda_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: 'HOLA', domain: 'hola.com.tw', logo: 'https://www.hola.com.tw/v2/official/SalePageCategory/images/logo.svg' },
-      { name: 'LaLaport 南港', domain: 'mitsui-fudosan.co.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b2/Mitsui_Fudosan_logo.svg' },
-      { name: 'UberEats', domain: 'ubereats.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b3/Uber_Eats_2018_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: '東和鋼鐵', domain: 'tunghasteel.com.tw', logo: 'https://www.tunghasteel.com.tw/images/logo.png' },
-      { name: '犀牛盾', domain: 'rhinoshield.tw', logo: 'https://logo.clearbit.com/rhinoshield.tw' },
-      { name: '新光三越', domain: 'skm.com.tw', logo: 'https://www.skm.com.tw/img/logo.png' },
-      { name: '楓康一滴淨', domain: 'funcom.com.tw', logo: 'https://www.funcom.com.tw/images/logo.png' },
-      { name: '錦鋐氣密窗', domain: 'chinhong.com.tw', logo: 'https://www.chinhong.com.tw/img/header_logo.png' },
-      { name: '魔術靈', domain: 'kao.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Kao_Logo.svg' }
+    "id": "lifestyle",
+    "name": "生活與百貨",
+    "items": [
+      {
+        "name": "Ariel 抗菌洗衣精",
+        "bgImage": "/vfx/D/D-01.png"
+      },
+      {
+        "name": "Foodpanda",
+        "bgImage": "/vfx/D/D-02.png"
+      },
+      {
+        "name": "HOLA",
+        "bgImage": "/vfx/D/D-03.png",
+        "url": "https://www.youtube.com/watch?v=Q9LzOnPCeNY",
+        "videoId": "Q9LzOnPCeNY"
+      },
+      {
+        "name": "HOLA",
+        "bgImage": "/vfx/D/D-04.png",
+        "url": "https://www.youtube.com/watch?v=j8XBx4yFsN8",
+        "videoId": "j8XBx4yFsN8"
+      },
+      {
+        "name": "LaLaport南港",
+        "bgImage": "/vfx/D/D-05.png",
+        "url": "https://www.youtube.com/watch?v=tDANOqHSnTE",
+        "videoId": "tDANOqHSnTE"
+      },
+      {
+        "name": "UberEats",
+        "bgImage": "/vfx/D/D-06.png"
+      },
+      {
+        "name": "五月花極上系列",
+        "bgImage": "/vfx/D/D-07.png",
+        "url": "https://www.youtube.com/watch?v=Dr7e8rl7spg",
+        "videoId": "Dr7e8rl7spg"
+      },
+      {
+        "name": "舒潔 喀什米爾",
+        "bgImage": "/vfx/D/D-08.png",
+        "url": "https://www.youtube.com/watch?v=nFl6OMheFho",
+        "videoId": "nFl6OMheFho"
+      },
+      {
+        "name": "東和鋼鐵",
+        "bgImage": "/vfx/D/D-09.png",
+        "url": "https://www.youtube.com/watch?v=rYPjfcAH-rc",
+        "videoId": "rYPjfcAH-rc"
+      },
+      {
+        "name": "東和鋼鐵",
+        "bgImage": "/vfx/D/D-10.png",
+        "url": "https://www.youtube.com/watch?v=F7SOWrCCJyM",
+        "videoId": "F7SOWrCCJyM"
+      },
+      {
+        "name": "東和鋼鐵",
+        "bgImage": "/vfx/D/D-11.png",
+        "url": "https://www.youtube.com/watch?v=UFPNdAaG0_M",
+        "videoId": "UFPNdAaG0_M"
+      },
+      {
+        "name": "犀牛盾",
+        "bgImage": "/vfx/D/D-12.png",
+        "url": "https://www.youtube.com/watch?v=yjl03-QCzbM",
+        "videoId": "yjl03-QCzbM"
+      },
+      {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-13.png",
+        "url": "https://www.youtube.com/watch?v=xS3VLzTJxs0",
+        "videoId": "xS3VLzTJxs0"
+      },
+      {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-14.png",
+        "url": "https://www.youtube.com/watch?v=7bpKC3naivA",
+        "videoId": "7bpKC3naivA"
+      },
+      {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-15.png",
+        "url": "https://www.youtube.com/watch?v=QC2Adq-3lOc",
+        "videoId": "QC2Adq-3lOc"
+      },
+      {
+        "name": "錦鋐氣密窗",
+        "bgImage": "/vfx/D/D-16.png",
+        "url": "https://www.youtube.com/watch?v=BOj8-iDaB0s",
+        "videoId": "BOj8-iDaB0s"
+      },
+      {
+        "name": "魔術靈",
+        "bgImage": "/vfx/D/D-17.png"
+      }
     ]
   },
   {
-    id: 'health',
-    name: '生醫與醫藥保健',
-    items: [
-      { name: 'Accu-Chek 羅氏血糖機', domain: 'accu-chek.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Roche_Logo.svg' },
-      { name: '大本山益生菌', domain: 'yohome.com.tw', logo: 'https://www.yohome.com.tw/wp-content/uploads/2019/12/logo-1.png' },
-      { name: '加倍優', domain: 'yohome.com.tw', logo: 'https://www.yohome.com.tw/wp-content/uploads/2019/12/logo-1.png' },
-      { name: '台灣武田合利他命', domain: 'takeda.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Takeda_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: '克潰精顆粒a', domain: 'kowa.co.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Kowa_Logo.svg' }
+    "id": "beauty",
+    "name": "美妝與健康",
+    "items": [
+      {
+        "name": "1028睫毛膏",
+        "bgImage": "/vfx/E/E-01.png",
+        "url": "https://www.youtube.com/watch?v=pHGEKlXxdgY",
+        "videoId": "pHGEKlXxdgY"
+      },
+      {
+        "name": "Acuu-Chek羅氏血糖機",
+        "bgImage": "/vfx/E/E-02.png",
+        "url": "https://www.youtube.com/watch?v=HUaASbBDOSM",
+        "videoId": "HUaASbBDOSM"
+      },
+      {
+        "name": "Bifesta 碧菲絲特",
+        "bgImage": "/vfx/E/E-03.png",
+        "url": "https://www.youtube.com/shorts/jPH0atsz3UY",
+        "videoId": "jPH0atsz3UY"
+      },
+      {
+        "name": "Calm Night Day淨日夜",
+        "bgImage": "/vfx/E/E-04.png",
+        "url": "https://www.youtube.com/watch?v=_ociCDswXUI",
+        "videoId": "_ociCDswXUI"
+      },
+      {
+        "name": "EMSCULPT肌動減脂",
+        "bgImage": "/vfx/E/E-05.png",
+        "url": "https://www.youtube.com/watch?v=SJqwyPXT1CI",
+        "videoId": "SJqwyPXT1CI"
+      },
+      {
+        "name": "LUX髮的補給",
+        "bgImage": "/vfx/E/E-06.png",
+        "url": "https://www.facebook.com/watch/?v=822528356385191",
+        "videoId": "822528356385191",
+        "isFacebook": true
+      },
+      {
+        "name": "MAMA 永恆光燦系列",
+        "bgImage": "/vfx/E/E-07.png"
+      },
+      {
+        "name": "TKLAB",
+        "bgImage": "/vfx/E/E-08.png",
+        "url": "https://www.facebook.com/TKLAB.tw/videos/1495921932163292",
+        "videoId": "1495921932163292",
+        "isFacebook": true
+      },
+      {
+        "name": "三得利 蜂王乳+芝麻明E",
+        "bgImage": "/vfx/E/E-09.png"
+      },
+      {
+        "name": "三得利 蜜露珂娜",
+        "bgImage": "/vfx/E/E-10.png"
+      },
+      {
+        "name": "三得利 密得絲",
+        "bgImage": "/vfx/E/E-11.png"
+      },
+      {
+        "name": "舒潔女性濕式衛生紙",
+        "bgImage": "/vfx/E/E-12.png",
+        "url": "https://www.youtube.com/watch?v=YG70M6HajCU",
+        "videoId": "YG70M6HajCU"
+      },
+      {
+        "name": "蕾妮亞",
+        "bgImage": "/vfx/E/E-13.png",
+        "url": "https://www.instagram.com/reels/DLjzvwEyK6A/"
+      }
     ]
   },
   {
-    id: 'beauty',
-    name: '美妝與個人護理',
-    items: [
-      { name: '1028 睫毛膏', domain: '1028.com.tw', logo: 'https://logo.clearbit.com/1028.com.tw', videoId: 's6s2p87fPdA' },
-      { name: 'Bifesta 碧菲絲特', domain: 'bifesta.jp', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Kao_Logo.svg' },
-      { name: 'Calm Night Day 淨日夜', domain: 'yolu.jp', logo: 'https://logo.clearbit.com/yolu.jp' },
-      { name: 'LUX 髮的補給', domain: 'lux.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/ab/LUX_logo.svg', videoId: 's6s2p87fPdA' },
-      { name: 'MAMA 永恆光燦系列', domain: 'kao.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Kao_Logo.svg' },
-      { name: 'TKLAB', domain: 'tklab.com.tw', logo: 'https://logo.clearbit.com/tklab.com.tw' },
-      { name: '三得利 比菲德氏菌', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
-      { name: '三得利 蜂王乳+芝麻明E', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
-      { name: '三得利 蜜露珂娜', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
-      { name: '三得利 密得絲', domain: 'suntory.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Suntory_logo.svg' },
-      { name: '五月花極上系列', domain: 'yfycp.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2b/YFY_logo.svg' },
-      { name: '舒潔', domain: 'kleenex.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Kleenex_logo.svg' },
-      { name: '蕾妮亞', domain: 'laurier.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/be/Kao_Logo.svg' }
-    ]
-  },
-  {
-    id: 'finance',
-    name: '金融與保險',
-    items: [
-      { name: '中國信託 點燃生命之火', domain: 'ctbcbank.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a2/CTBC-Bank-Logo.svg', videoId: 's6s2p87fPdA' },
-      { name: '台灣 Pay', domain: 'taiwanpay.com.tw', logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Taiwan_Pay_logo.svg' },
-      { name: '安聯人壽', domain: 'allianz.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Allianz.svg' },
-      { name: '復華投信', domain: 'fhtrust.com.tw', logo: 'https://www.fhtrust.com.tw/images/logo.png' },
-      { name: '遠雄人壽', domain: 'fglife.com.tw', logo: 'https://www.fglife.com.tw/images/logo.png' },
-      { name: '渣打銀行', domain: 'sc.com', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Standard_Chartered_Logo.svg' },
-      { name: '磊山保經', domain: 'leishan.com.tw', logo: 'https://www.leishan.com.tw/images/logo.png' }
+    "id": "finance",
+    "name": "金融與保險",
+    "items": [
+      {
+        "name": "中國信託 點燃生命之火",
+        "bgImage": "/vfx/F/F-01.png",
+        "url": "https://www.youtube.com/watch?v=u1uWyX51Prc&list=PLfRfUZjsbf4RuYO75RLGDmhQ3hhbX0Ul5&index=37",
+        "videoId": "u1uWyX51Prc"
+      },
+      {
+        "name": "台灣Pay",
+        "bgImage": "/vfx/F/F-02.png",
+        "url": "https://www.youtube.com/watch?v=gsQScjFurQs",
+        "videoId": "gsQScjFurQs"
+      },
+      {
+        "name": "台灣Pay",
+        "bgImage": "/vfx/F/F-03.png",
+        "url": "https://www.youtube.com/watch?v=ckgbItI0kaw",
+        "videoId": "ckgbItI0kaw"
+      },
+      {
+        "name": "安聯人壽",
+        "bgImage": "/vfx/F/F-04.png",
+        "url": "https://www.facebook.com/AllianzTaiwanLife/videos/1014825593450292/",
+        "videoId": "1014825593450292",
+        "isFacebook": true
+      },
+      {
+        "name": "復華投信",
+        "bgImage": "/vfx/F/F-05.png",
+        "url": "https://www.youtube.com/watch?v=8OiOhQbAvHg",
+        "videoId": "8OiOhQbAvHg"
+      },
+      {
+        "name": "富達投信",
+        "bgImage": "/vfx/F/F-06.png",
+        "url": "https://www.youtube.com/watch?v=QILBfZPs-Fo",
+        "videoId": "QILBfZPs-Fo"
+      },
+      {
+        "name": "遠雄人壽",
+        "bgImage": "/vfx/F/F-07.png",
+        "url": "https://www.youtube.com/watch?v=0OEmLKIjAtk",
+        "videoId": "0OEmLKIjAtk"
+      },
+      {
+        "name": "渣打銀行",
+        "bgImage": "/vfx/F/F-08.png",
+        "url": "https://www.youtube.com/watch?v=OBTrK1ukstc",
+        "videoId": "OBTrK1ukstc"
+      },
+      {
+        "name": "磊山保經",
+        "bgImage": "/vfx/F/F-09.png",
+        "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
+        "videoId": "Rwrn87N2PUc"
+      }
     ]
   }
 ];
 
-function BrandCard({ item, onPlayVideo }) {
-  const hasVideo = !!item.videoId;
+const BrandCard = React.forwardRef(({ item, onPlayVideo }, ref) => {
+  const hasVideo = !!item.videoId || !!item.url;
+
+  const handleClick = () => {
+    if (!hasVideo) return;
+    if (item.videoId) {
+      onPlayVideo(item.videoId, !!item.isFacebook);
+    } else if (item.url) {
+      window.open(item.url, '_blank');
+    }
+  };
 
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      onClick={() => hasVideo && onPlayVideo(item.videoId, !!item.isFacebook)}
+      onClick={handleClick}
       className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${
         hasVideo
           ? 'border-zinc-700/60 bg-zinc-900/50 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
@@ -192,7 +646,9 @@ function BrandCard({ item, onPlayVideo }) {
       )}
     </motion.div>
   );
-}
+});
+
+BrandCard.displayName = 'BrandCard';
 
 export default function VisualSynthesis({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('food');
@@ -225,8 +681,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
             tech: 'TECH & TELECOM',
             vehicle: 'AUTO & TRAVEL',
             lifestyle: 'LIFESTYLE',
-            health: 'HEALTH & MEDICAL',
-            beauty: 'BEAUTY & CARE',
+            beauty: 'BEAUTY & HEALTH',
             finance: 'FINANCE & INS'
           };
           const engName = engMap[tab.id] || tab.id.toUpperCase();
@@ -237,7 +692,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
               className={`px-4 py-2 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm leading-none ${
                 activeTab === tab.id
                   ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
-                  : 'border-zinc-850 text-zinc-400 bg-zinc-950/20 hover:text-white hover:border-zinc-700'
+                  : 'border-zinc-855 text-zinc-400 bg-zinc-955/20 hover:text-white hover:border-zinc-700'
               }`}
             >
               <span className={`text-[6px] mono tracking-widest uppercase mb-0.5 ${
@@ -255,8 +710,8 @@ export default function VisualSynthesis({ onPlayVideo }) {
         className="grid grid-cols-3 md:grid-cols-5 gap-3 relative z-10"
       >
         <AnimatePresence mode="popLayout">
-          {currentCategory.items.map((item) => (
-            <BrandCard key={item.name} item={item} onPlayVideo={onPlayVideo} />
+          {currentCategory.items.map((item, index) => (
+            <BrandCard key={`${activeTab}-${item.name}-${index}`} item={item} onPlayVideo={onPlayVideo} />
           ))}
         </AnimatePresence>
       </motion.div>
