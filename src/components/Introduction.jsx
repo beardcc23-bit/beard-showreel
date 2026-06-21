@@ -92,10 +92,10 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8, delay: 0.15 }}
               className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left"
             >
-              光線在透鏡間折射的痕跡、金屬微小的劃痕、大氣中若隱若現的微塵——這些常人忽略的細節，是我 13 年來每日凝視的戰場。
+              重力與空氣的流動、玻璃與金屬上的漫反射、光線穿透塵埃的折射軌跡——這些構築真實感的微小物理，是我 13 年來每日校準的日常。
               <br />
               <br />
-              作為後期合成的視覺轉譯者，我親手打磨了超過 300 支一線品牌大作。我相信，完美的特效是「隱形」的。我穿梭於導演的藝術想像與品牌主商業策略的交界處，用清晰的高效流程，將那些虛無縹緲的創意，化為大銀幕上無可辯駁的極致畫面。
+              最頂級的合成特效，往往不著痕跡。在長期與頂級品牌合作的洗禮下，我立足於感性與理性的黃金交叉點——將導演的斑斕想像，以理性高效的製程收攏，在螢幕上呈現無可挑剔的極致畫面。
             </motion.p>
 
             {/* 實戰成就數據面板 */}
@@ -145,7 +145,7 @@ export default function Introduction({ onPlayVideo }) {
                 onClick={() => onPlayVideo('s6s2p87fPdA')}
                 className="prism-button px-16 py-5 text-black font-bold rounded-sm uppercase text-xs tracking-[0.2em] text-center w-full sm:w-auto"
               >
-                解構影像檔案 (ENTER ARCHIVE)
+                SHOWREEL
               </button>
             </motion.div>
           </div>

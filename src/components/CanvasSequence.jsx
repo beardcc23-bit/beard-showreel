@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function CanvasSequence({ onPlayVideo }) {
   const canvasRef = useRef(null);
   const currentFrameRef = useRef(0);
+  const loadedImagesRef = useRef([]);
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // 代表第一幀是否載入完成（首頁解鎖）
   const [bgPreloadComplete, setBgPreloadComplete] = useState(false); // 背景其餘影格是否預載完畢
@@ -19,28 +20,30 @@ export default function CanvasSequence({ onPlayVideo }) {
     const basePath = import.meta.env.BASE_URL;
     const firstFrameSrc = `${basePath}png-0/png-0_00000000.png?v=2`;
     
+    // 初始化 ref 陣列長度
+    loadedImagesRef.current = new Array(frameCount);
+    
     const firstImg = new Image();
     firstImg.src = firstFrameSrc;
     
     firstImg.onload = () => {
-      // 第一幀載入成功，立即初始化 images 陣列並結束全螢幕 loading
-      const initialImages = new Array(frameCount);
-      initialImages[0] = firstImg;
-      setImages(initialImages);
+      // 第一幀載入成功，立即初始化並結束全螢幕 loading，使首頁解鎖
+      loadedImagesRef.current[0] = firstImg;
+      setImages([...loadedImagesRef.current]);
       setIsLoading(false);
       setLoadProgress(1);
       
       // 接著在背景非同步分批加載剩餘 144 張圖片
-      preloadRemainingFrames(initialImages);
+      preloadRemainingFrames();
     };
 
     firstImg.onerror = () => {
       // 容錯防卡死
       setIsLoading(false);
-      preloadRemainingFrames(new Array(frameCount));
+      preloadRemainingFrames();
     };
 
-    const preloadRemainingFrames = async (targetArray) => {
+    const preloadRemainingFrames = async () => {
       const concurrencyLimit = 4; // 每次併發 4 個請求，防止網路排隊堵塞
       let nextIndex = 1;
       let loadedCount = 1;
@@ -50,7 +53,7 @@ export default function CanvasSequence({ onPlayVideo }) {
           const img = new Image();
           img.src = `${basePath}png-0/png-0_${String(index).padStart(8, '0')}.png?v=2`;
           img.onload = () => {
-            targetArray[index] = img;
+            loadedImagesRef.current[index] = img;
             resolve();
           };
           img.onerror = () => {
@@ -76,14 +79,14 @@ export default function CanvasSequence({ onPlayVideo }) {
       }
       await Promise.all(workers);
       
-      // 背景加載完畢，更新全數 images 並開啟播放
-      setImages([...targetArray]);
+      // 背景加載完畢，更新全數 images 並關閉進度條
+      setImages([...loadedImagesRef.current]);
       setBgPreloadComplete(true);
     };
   }, []);
 
   useEffect(() => {
-    if (isLoading || images.length === 0) return;
+    if (isLoading) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -97,23 +100,26 @@ export default function CanvasSequence({ onPlayVideo }) {
     let lastFrameTime = performance.now();
 
     const render = (now) => {
-      // 只有在背景預載入完全結束，且 isPlaying 為 true 時，才播放動畫
-      if (isPlaying && bgPreloadComplete) {
+      // 只要 isPlaying 為 true，我們就持續進行播放運算，即使背景還在加載
+      if (isPlaying) {
         const deltaTime = now - lastFrameTime;
         if (deltaTime >= frameInterval) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const img = images[currentFrameRef.current];
+          const img = loadedImagesRef.current[currentFrameRef.current];
+          // 只有當前圖片下載完成且可用時，才繪製它
           if (img && img.complete) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           }
+          // 無論圖片是否載入成功，都繼續前進到下一影格，確保流暢播放
+          // 因為不呼叫 clearRect，所以如果當前幀沒下載好，會直接保留上一幀的畫面，防止閃爍
           currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
           lastFrameTime = now - (deltaTime % frameInterval);
         }
       } else {
-        // 背景加載中或暫停時，繪製首幀或當前幀，防止畫面空白
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const img = images[currentFrameRef.current] || images[0];
+        // 暫停時，繪製當前影格或首幀，防止畫面空白
+        const img = loadedImagesRef.current[currentFrameRef.current] || loadedImagesRef.current[0];
         if (img && img.complete) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         }
       }
@@ -125,7 +131,7 @@ export default function CanvasSequence({ onPlayVideo }) {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isLoading, images, isPlaying, bgPreloadComplete]);
+  }, [isLoading, isPlaying]);
 
   const handleMouseEnter = () => {
     setIsPlaying(false);

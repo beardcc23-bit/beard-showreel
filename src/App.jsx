@@ -85,7 +85,7 @@ export default function App() {
 
       {/* 頁尾 */}
       <footer className="py-20 text-center text-zinc-700 mono text-[6px] uppercase tracking-[0.4em]">
-        &copy; 2026 VISUAL ARCHITECT // SYSTEM.STATUS: ACTIVE // ALL RIGHTS RESERVED.
+        &copy; 2026 Beard Chou // SYSTEM SECURED
       </footer>
 
       {/* 全域狀態驅動互動彈窗 */}
