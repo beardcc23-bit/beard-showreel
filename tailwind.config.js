@@ -17,6 +17,16 @@ export default {
         'title-white': 'var(--color-title-white)',
         'info-gold-gray': 'var(--color-info-gold-gray)',
       },
+      fontFamily: {
+        sans: ['"Space Mono"', '"Noto Sans TC"', 'monospace', 'sans-serif'],
+        mono: ['"Space Mono"', 'monospace'],
+      },
+      fontSize: {
+        '3xl': '32px', // Heading 1
+        '2xl': '24px', // Heading 2
+        'xl': '20px',  // Heading 3
+        'base': '16px', // Body Text
+      },
     },
   },
   plugins: [],
