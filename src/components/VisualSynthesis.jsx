@@ -683,8 +683,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
         </p>
       </div>
 
-      {/* 分類切換 Tab */}
-      <div className="grid grid-cols-3 gap-2 max-w-xl mx-auto px-4 md:flex md:flex-wrap md:justify-center md:gap-2.5 mb-12 relative z-10">
+      <div className="grid grid-cols-3 gap-2 max-w-xl md:max-w-5xl mx-auto px-4 md:flex md:flex-row md:flex-nowrap md:justify-center md:gap-4 mb-12 relative z-10">
         {categories.map((tab) => {
           const engMap = {
             food: 'FOOD & BEV',
@@ -699,7 +698,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-2 py-1.5 md:px-4 md:py-2 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm leading-none ${
+              className={`px-2 py-1.5 md:px-5 md:py-3 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm leading-none ${
                 activeTab === tab.id
                   ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
                   : 'border-zinc-855 text-zinc-400 bg-zinc-955/20 hover:text-white hover:border-zinc-700'
