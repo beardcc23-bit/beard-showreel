@@ -117,8 +117,9 @@ export default function Navigation() {
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleScroll(e, item.href)}
-                  className="text-xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex items-center"
+                  className="text-xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
                 >
+                  <span className="text-[9px] text-zinc-500 font-medium tracking-widest mono mb-1">// {item.eng}</span>
                   {item.name}
                 </a>
               ))}
@@ -127,8 +128,9 @@ export default function Navigation() {
                 <a
                   href="#contact"
                   onClick={(e) => handleScroll(e, '#contact')}
-                  className="prism-button block w-full py-4 rounded-full text-center transition duration-300 flex items-center justify-center leading-none"
+                  className="prism-button block w-full py-4 rounded-full text-center transition duration-300 flex flex-col items-center justify-center leading-none"
                 >
+                  <span className="text-[9px] opacity-70 tracking-widest mono mb-1 uppercase">// Establish Connection</span>
                   <span className="text-base font-normal uppercase tracking-widest">建立聯繫</span>
                 </a>
               </div>
