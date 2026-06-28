@@ -35,13 +35,13 @@ export default function Introduction({ onPlayVideo }) {
     <section id="introduction" className="relative min-h-screen flex items-center justify-center py-24 border-t border-zinc-900 bg-bg-core/60">
       {/* 網格背景與漸層 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
-      
+
       <div className="max-w-6xl mx-auto px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
-          
+
           {/* 左側：文字與按鈕 */}
           <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
-            
+
             {/* 呼吸感狀態點綴 */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -53,7 +53,7 @@ export default function Introduction({ onPlayVideo }) {
               <span className="w-2 h-2 rounded-full bg-aurora-blue animate-ping" />
               ARCHIVAL SYSTEM LOG // 13 YEARS OF COMPOSITING // BEARD CHOU
             </motion.div>
-            
+
             {/* 精緻標題 */}
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
@@ -83,7 +83,7 @@ export default function Introduction({ onPlayVideo }) {
                 </div>
               </div>
             </motion.div>
-            
+
             {/* 精雕文案 */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -92,10 +92,12 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8, delay: 0.15 }}
               className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left"
             >
-              重力與空氣的流動、玻璃與金屬上的漫反射、光線穿透塵埃的折射軌跡——這些構築真實感的微小物理，是我 13 年來每日校準的日常。
+              重力與空氣的流動、光線穿透塵埃的折射軌跡、人物肌膚的毛孔質感精修——這些構築真實感的微小物理，是我的日常畫面。
               <br />
               <br />
-              最頂級的合成特效，往往不著痕跡。在長期與頂級品牌合作的洗禮下，我立足於感性與理性的黃金交叉點——將導演的斑斕想像，以理性高效的製程收攏，在螢幕上呈現無可挑剔的極致畫面。
+              最頂級的合成特效，往往不著痕跡。在長期與頂級品牌合作的洗禮下，我立足於感性與理性的黃金交叉點——將導演的斑斕想像快速收攏，在有限時程內交付無可挑剔的商業影片。
+
+
             </motion.p>
 
             {/* 實戰成就數據面板 */}
@@ -168,7 +170,7 @@ export default function Introduction({ onPlayVideo }) {
               </div>
             </div>
           </motion.div>
-          
+
         </div>
       </div>
     </section>

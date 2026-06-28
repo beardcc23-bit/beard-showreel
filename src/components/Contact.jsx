@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone } from 'lucide-react';
+import { Mail } from 'lucide-react';
 
 export default function Contact() {
   return (
@@ -16,7 +16,7 @@ export default function Contact() {
           transition={{ duration: 0.6 }}
           className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-16 glow-title"
         >
-          Let's <span className="text-aurora-blue">Sync</span>
+          Let's <span className="text-aurora-blue">Connect</span>
         </motion.h2>
         
         <motion.p
@@ -26,7 +26,7 @@ export default function Contact() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-zinc-300 mb-20 font-light text-lg max-w-xl mx-auto leading-relaxed"
         >
-          期待能與優秀的團隊並肩作戰，將極致的特效合成美感與高效的專案溝通能力帶入下一個挑戰。隨時歡迎您的來信或約訪，期待與您交流。
+          期待與對影像有相同執著的創作人相遇。隨時歡迎來信交流，分享有趣的專案，或是探討影像後期與跟片的更多可能。
         </motion.p>
         
         <motion.div
@@ -34,7 +34,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col md:flex-row gap-12 justify-center items-center"
+          className="flex justify-center items-center"
         >
           <a
             href="mailto:beard.cc23@gmail.com"
@@ -45,20 +45,6 @@ export default function Contact() {
             </span>
             <span className="mono text-sm tracking-wider text-zinc-300 group-hover:text-aurora-blue transition-colors duration-300">
               beard.cc23@gmail.com
-            </span>
-          </a>
-          
-          <div className="hidden md:block w-px h-8 bg-zinc-800" />
-          
-          <a
-            href="tel:0910-309-687"
-            className="group flex items-center gap-6 text-xl font-bold hover:text-aurora-blue transition duration-300"
-          >
-            <span className="bg-aurora-blue text-black p-4 rounded-sm group-hover:bg-white transition-colors duration-300 flex items-center justify-center">
-              <Phone size={20} />
-            </span>
-            <span className="mono text-sm tracking-wider text-zinc-300 group-hover:text-aurora-blue transition-colors duration-300">
-              0910-309-687
             </span>
           </a>
         </motion.div>
