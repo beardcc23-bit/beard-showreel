@@ -550,4 +550,29 @@ body {
   display: none !important;
 }
 
+/* 行動裝置效能優化：關閉高耗能背景特效 */
+@media (max-width: 768px) {
+  /* 1. 關閉旋轉軌道與帶有 backdrop-filter 的漂浮水晶（手機版最嚴重的卡頓來源） */
+  .orbit-container,
+  .crystal {
+    display: none !important;
+  }
+
+  /* 2. 關閉高模糊度（filter: blur）的霓虹光學暈光 */
+  .lens-flare {
+    display: none !important;
+  }
+
+  /* 3. 關閉滿版 SVG 動態噪點濾鏡，避免手機瀏覽器滾動時強制重繪 */
+  .mist-bg::before {
+    display: none !important;
+  }
+
+  /* 4. 移除網格背景的滿版 mask-image 遮罩計算，改以低透明度呈現 */
+  .grid-bg {
+    mask-image: none !important;
+    opacity: 0.08 !important;
+  }
+}
+
 
