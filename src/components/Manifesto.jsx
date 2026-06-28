@@ -122,24 +122,7 @@ export default function Manifesto() {
                 transition={{ duration: 0.3 }}
               >
                 <RefractionCard className="bg-zinc-955/20 backdrop-blur-md border border-zinc-800/80 rounded-none p-6 md:p-8 flex flex-col justify-between min-h-[380px] shadow-2xl relative overflow-hidden">
-                  {/* 面板頂部資訊 */}
                   <div>
-                    <div className="flex justify-between items-center border-b border-zinc-800 pb-5 mb-6">
-                      <div>
-                        <span className="mono text-[6px] text-aurora-blue uppercase tracking-widest block mb-1">
-                          {activeCategory.meta}
-                        </span>
-                        <h3 className="text-xl font-black text-white uppercase tracking-tight flex items-baseline gap-2 flex-wrap">
-                          <span>{activeCategory.title}</span>
-                          <span className="text-[9px] text-zinc-550 font-normal normal-case tracking-wide">// {activeCategory.subtitle}</span>
-                        </h3>
-                      </div>
-                      <div className="mono text-[6px] text-zinc-500 px-2.5 py-1 border border-zinc-800 bg-zinc-950 rounded-none flex items-center gap-1.5">
-                        <Cpu size={10} className="text-aurora-blue" />
-                        OPTIMAL
-                      </div>
-                    </div>
-
                     {/* 大字箴言 */}
                     <div className="text-zinc-100 font-bold text-base md:text-lg tracking-tight mb-4 text-left border-l-2 border-aurora-blue pl-4 py-0.5">
                       {activeCategory.quote}
@@ -150,9 +133,8 @@ export default function Manifesto() {
                       {activeCategory.desc}
                     </p>
 
-                    {/* 大師實踐解密 (Mastery In Action) */}
-                    <div className="space-y-4 pt-2">
-                      <div className="mono text-[6px] text-zinc-500 uppercase tracking-[0.25em] mb-3 flex items-center gap-1.5">// Mastery In Action // 實踐解密</div>
+                    {/* 大師實踐解密 (Mastery In Action) - 調整為純乾淨頂邊線分隔 */}
+                    <div className="space-y-4 pt-6 border-t border-zinc-900/60 mt-6">
                       {activeCategory.params.map((param) => (
                         <div key={param.key} className="space-y-1 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
                           <div className="flex items-center gap-2 text-xs font-bold text-aurora-blue">
