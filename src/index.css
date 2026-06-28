@@ -146,6 +146,7 @@ body {
 }
 
 .mono { font-family: 'Space Mono', monospace; }
+.font-source-code { font-family: 'Source Code Pro', monospace; }
 
 /* 水泥背景與噪點 overlay */
 .mist-bg {
