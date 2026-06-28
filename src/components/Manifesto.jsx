@@ -6,38 +6,38 @@ import RefractionCard from './RefractionCard';
 const lawCategories = [
   {
     id: '01',
-    title: 'LIGHT & REFRACTION',
-    subtitle: '光影與折射定律',
-    meta: 'SYSTEM.REFRACT: LENS_FLARE // FRESNEL: ACTIVE',
-    quote: '「光影是物理的，但靈魂是主觀的。」',
-    desc: '完美的合成是對物理光學的絕對敬畏。金屬的反射不能只是乾淨，它必須帶有微小的噪點與折射偏差；在像素的維度上，我只做一件事：用最嚴謹的物理邏輯，重建每幀畫面應有的自然折射與光斑深度。',
+    title: 'CHROMA KEYING',
+    subtitle: '綠幕去背合成',
+    meta: 'SYSTEM.CHROMA: KEY_EXTRACTION // MATTE: ACTIVE',
+    quote: '「無痕去背的關鍵，在於邊緣的光影與溢色折射。」',
+    desc: '綠幕去背與合成不只是套用濾鏡。它考量頭髮邊緣的透明度、場景的溢色（Green Spill）消除，以及實拍人物與背景之間的景深與光線流向。我只做一件事：重塑髮絲極致細節，重建完美的物理邊界。',
     params: [
-      { key: 'UCC 咖啡廣告', value: '重塑杯身玻璃在強光下的 Fresnel 反射，讓虛擬 3D 咖啡液體呈現出 100% 具食慾感的真實透鏡折射。' },
-      { key: '噶瑪蘭威士忌廣告', value: '還原厚重水晶杯底部的物理光線焦散（Caustics）與二次折射，重現威士忌的尊貴琥珀光影。' }
+      { key: '茶飲品牌形象廣告', value: '精細還原代言人飄逸髮絲邊緣，並完美濾除綠幕溢色，讓人物無縫融入大自然茶園天光。' },
+      { key: '科技跑車宣傳片', value: '處理大面積綠幕去背與車身玻璃反射，精準合成霓虹賽博朋克街景，重現動態溢光。' }
     ]
   },
   {
     id: '02',
-    title: 'ILLUSION & PERCEPTION',
-    subtitle: '虛實調和與視覺感知',
-    meta: 'SYSTEM.PERCEPTION: COGNITIVE_VIS // RHYTHM: ACTIVE',
-    quote: '「看不見的特效，才是最完美的特效。」',
-    desc: '將幾百個無形元素融於日常生活場景中，而觀眾毫無察覺。這需要對大腦視覺心理學的精準拿捏——我們如何感知景深、如何被色彩的飽和度引導視線。最好的技術是完全隱形，只為創意的靈魂服務。',
+    title: 'BEAUTY RETOUCHING',
+    subtitle: '人物美體膚質精修',
+    meta: 'SYSTEM.RETOUCH: FACE_TRACKING // SKIN: OPTIMAL',
+    quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
+    desc: '人像與美體精修不能像塑膠蠟像。我專注於臉部追蹤與肌肉動態，進行身材比例微調與膚質雜點清潔，同時保留毛孔紋理與光影高光。在極限時程內，交付導演與客戶挑剔的特寫鏡頭。',
     params: [
-      { key: '長榮航空形象片', value: '陰天實拍下重建大氣光流，無痕擦除雜物並植入多維度陽光折射與高空雲景，重塑史詩級天光。' },
-      { key: 'Samsung 旗艦機廣告', value: '動態模擬鏡頭邊緣的變形暗角與微弱色散像差（RGB Split），讓 CG 手機完美融入實拍底片顆粒。' }
+      { key: '國際美妝保養廣告', value: '對女主角面部進行高精度追蹤，無痕清潔膚質暗沉與微小瑕疵，保留自然皮脂反光。' },
+      { key: '運動服飾代言片', value: '依據人體肌肉紋理與運動軌跡，細緻微調身材比例與線條，呈現健康優美的物理動態。' }
     ]
   },
   {
     id: '03',
-    title: 'COGNITIVE INTEGRATION',
-    subtitle: '未來管線與人機協作',
-    meta: 'SYSTEM.PIPELINE: AI_COGNITIVE // FLAME_LINK: ACTIVE',
-    quote: '「AI 是催化劑，而我們是終點線前的藝術封裝者。」',
-    desc: 'AI 可以生成無限的圖像碎片，但它缺乏對畫面真實分量的理解。合成師的職責，是將 AI 的無限可能，精準過濾、解構並封裝進嚴謹的電影與商業管線中。科技在於加速想像力落地，而人的審美直覺才是決定作品溫度的最終刻度。',
+    title: 'AI GENERATION',
+    subtitle: 'AI 智慧影像生成',
+    meta: 'SYSTEM.AI: VIDEO_SYNTHESIS // DIFFUSION: COMPILING',
+    quote: '「AI 負責拓寬創意的邊界，而我們負責將其無縫封裝落地。」',
+    desc: 'AI 影片生成帶來無限可能，但也伴隨著雜訊與動態抖動。我將先進的 AI 生成技術融入傳統合成工作流中，利用 AI 進行材質擴展、補幀與煙霧去背，在大幅提升效率的同時，以專業直覺把關畫面的極致美感。',
     params: [
-      { key: '旨醞鐵板燒廣告', value: '運用 AI 輔助進行高難度煙霧去背與修補，縮短 40% 後期時間，實現現場光影與煙霧的無縫交融。' },
-      { key: 'Panasonic 電視廣告', value: '全程採用 ACEScg 工業級高動態色域管線合成，確保從大銀幕到家用電視的色彩無偏差呈現。' }
+      { key: '科幻概念宣傳片', value: '利用 Stable Diffusion 進行科幻場景的材質擴增與動態修補，大幅縮短前期三維渲染時間。' },
+      { key: '音樂錄影帶 MV', value: '採用 AI 影片轉譯技術將實拍人像風格化，並在 Flame 中進行動態去噪與色彩一致性校正。' }
     ]
   }
 ];
@@ -90,9 +90,9 @@ export default function Manifesto() {
             <div className="flex gap-2.5 mb-5">
               {lawCategories.map((cat) => {
                 const labelMap = {
-                  '01': { eng: '01 / LIGHT', zht: '光影物理律' },
-                  '02': { eng: '02 / ILLUSION', zht: '視覺感知' },
-                  '03': { eng: '03 / PIPELINE', zht: '未來管線' }
+                  '01': { eng: '01 / CHROMA KEY', zht: '綠幕去背合成' },
+                  '02': { eng: '02 / BEAUTY WORK', zht: '人物美體精修' },
+                  '03': { eng: '03 / AI VIDEO', zht: 'AI 影片生成' }
                 };
                 const label = labelMap[cat.id];
                 return (
