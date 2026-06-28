@@ -62,7 +62,7 @@ export default function Manifesto() {
             The <span className="text-aurora-blue">Manifesto</span>
           </h2>
           <p className="text-zinc-350 font-light max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-            13 年像素探索，在理性的物理常數中，封裝感性的創意靈魂。
+            在商業廣告的極速步調中，憑藉心手合一的極速直覺，讓每個創意精準且高速交付。
           </p>
         </div>
 
