@@ -14,12 +14,12 @@
     font-weight: 700;
   }
   h3, .h3 {
-    font-family: 'Space Mono', 'Noto Sans TC', monospace, sans-serif;
+    font-family: 'Source Code Pro', 'Noto Sans TC', monospace, sans-serif;
     font-size: 20px;
     font-weight: 500;
   }
   p, .body-text {
-    font-family: 'Space Mono', 'Noto Sans TC', monospace, sans-serif;
+    font-family: 'Source Code Pro', 'Noto Sans TC', monospace, sans-serif;
     font-size: 16px;
     font-weight: 400;
   }
@@ -56,7 +56,7 @@
 }
 
 body {
-  font-family: 'Space Mono', 'Noto Sans TC', monospace, sans-serif;
+  font-family: 'Source Code Pro', 'Noto Sans TC', monospace, sans-serif;
   background-color: var(--color-bg-core);
   color: var(--text-white-or-black);
   overflow-x: hidden;
@@ -145,8 +145,8 @@ body {
   background: radial-gradient(circle, rgba(62, 161, 220, 0.12) 0%, rgba(196, 132, 165, 0.05) 45%, transparent 70%);
 }
 
-.mono { font-family: 'Space Mono', monospace; }
-.font-source-code { font-family: 'Source Code Pro', monospace; }
+.mono { font-family: 'Source Code Pro', monospace; }
+.font-space-mono { font-family: 'Space Mono', monospace; }
 
 /* 水泥背景與噪點 overlay */
 .mist-bg {

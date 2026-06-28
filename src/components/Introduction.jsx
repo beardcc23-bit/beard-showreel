@@ -110,7 +110,7 @@ export default function Introduction({ onPlayVideo }) {
               className="grid grid-cols-3 w-full max-w-2xl mb-12 border-y border-zinc-800/80 py-6 text-center"
             >
               <div className="flex flex-col items-center justify-center">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1 font-source-code">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
                   <AnimatedCounter value={13} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Years</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
@@ -118,7 +118,7 @@ export default function Introduction({ onPlayVideo }) {
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center border-x border-zinc-800/80 px-4">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1 font-source-code">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
                   <AnimatedCounter value={300} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Campaigns</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
@@ -126,7 +126,7 @@ export default function Introduction({ onPlayVideo }) {
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1 font-source-code">
+                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
                   <AnimatedCounter value={1000} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Versions</span>
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
