@@ -45,8 +45,8 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center backdrop-blur-xl border-b border-border bg-bg-core/40 transition-colors duration-500">
-        <div className="flex items-center gap-6">
+      <nav className="fixed top-0 w-full z-50 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center backdrop-blur-xl border-b border-border bg-bg-core/40 transition-colors duration-500">
+        <div className="flex items-center gap-4 md:gap-6">
           <button
             onClick={toggleMenu}
             className="md:hidden p-2 text-white-or-black hover:text-aurora-blue transition focus:outline-none"
