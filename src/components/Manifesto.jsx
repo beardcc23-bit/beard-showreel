@@ -71,7 +71,7 @@ export default function Manifesto() {
           {/* 左側：品牌文字宣言 */}
           <div className="md:col-span-6 space-y-8 text-zinc-350 text-base md:text-lg leading-relaxed font-light">
             <p>
-              作為台灣俗稱的 D1 技師，我接手廣告製作的最後一步。從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手上開始 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作SC播帶，完成這次製作。
+              作為台灣俗稱的 D1 技師，我接手廣告製作的最後一步。從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用 Autodesk Flame 進行 Online 。依需求進行人物膚質精修、場景穿幫、綠幕去背、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作SC播帶，完成這次製作。
             </p>
             <p>
               即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。
@@ -100,8 +100,8 @@ export default function Manifesto() {
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
                     className={`px-4 py-2.5 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-none min-w-[100px] leading-none ${activeTab === cat.id
-                        ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.2)]'
-                        : 'border-zinc-880 text-zinc-400 hover:text-white hover:border-zinc-700 bg-zinc-950/20'
+                      ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.2)]'
+                      : 'border-zinc-880 text-zinc-400 hover:text-white hover:border-zinc-700 bg-zinc-950/20'
                       }`}
                   >
                     <span className={`text-[6px] mono tracking-widest uppercase mb-1 ${activeTab === cat.id ? 'text-black/80' : 'text-zinc-500'
