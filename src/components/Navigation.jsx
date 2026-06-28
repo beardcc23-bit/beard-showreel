@@ -66,9 +66,8 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 onClick={(e) => handleScroll(e, item.href)}
-                className="hover:text-aurora-blue transition duration-300 relative group flex flex-col items-start gap-0.5"
+                className="hover:text-aurora-blue transition duration-300 relative group flex items-center"
               >
-                <span className="text-[6px] text-zinc-500 font-medium tracking-widest mono transition-colors duration-300 group-hover:text-aurora-blue">// {item.eng}</span>
                 <span className="text-xs font-normal tracking-wider">{item.name}</span>
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
               </a>
@@ -118,9 +117,8 @@ export default function Navigation() {
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleScroll(e, item.href)}
-                  className="text-xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
+                  className="text-xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex items-center"
                 >
-                  <span className="text-[9px] text-zinc-500 font-medium tracking-widest mono mb-1">// {item.eng}</span>
                   {item.name}
                 </a>
               ))}
