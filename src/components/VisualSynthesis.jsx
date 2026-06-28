@@ -178,7 +178,7 @@ const categories = [
         "videoId": "SMCldr-5kbg"
       },
       {
-        "name": "Panasonic 電視",
+        "name": "Panasonic Viera 電視",
         "bgImage": "/vfx/B/B-02.png",
         "url": "https://www.youtube.com/watch?v=J8IkANYZD3s",
         "videoId": "J8IkANYZD3s"
@@ -205,27 +205,27 @@ const categories = [
         "isFacebook": true
       },
       {
-        "name": "Samsung S22",
+        "name": "Samsung Galaxy S22",
         "bgImage": "/vfx/B/B-06.png",
         "url": "https://www.youtube.com/watch?v=UkSewV5ScR0",
         "videoId": "UkSewV5ScR0"
       },
       {
-        "name": "Samsung Z Fold2｜Z Flip2",
+        "name": "Samsung Z Fold2 / Z Flip2",
         "bgImage": "/vfx/B/B-07.png",
         "url": "https://www.facebook.com/watch/?v=1046986065709266",
         "videoId": "1046986065709266",
         "isFacebook": true
       },
       {
-        "name": "Samsung Z Fold3｜Z Flip3",
+        "name": "Samsung Z Fold3 / Z Flip3",
         "bgImage": "/vfx/B/B-08.png",
         "url": "https://www.facebook.com/watch/?v=558217842125093",
         "videoId": "558217842125093",
         "isFacebook": true
       },
       {
-        "name": "Samsung Z Fold4｜Z Flip4",
+        "name": "Samsung Z Fold4 / Z Flip4",
         "bgImage": "/vfx/B/B-09.png"
       },
       {
@@ -240,7 +240,7 @@ const categories = [
         "bgImage": "/vfx/B/B-11.png"
       },
       {
-        "name": "Tokuyo按摩椅",
+        "name": "Tokuyo 按摩椅",
         "bgImage": "/vfx/B/B-12.png",
         "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
         "videoId": "_SENfBsNjgE"
@@ -259,7 +259,7 @@ const categories = [
         "isFacebook": true
       },
       {
-        "name": "中華電信",
+        "name": "中華電信 企業形象影片",
         "bgImage": "/vfx/B/B-15.png"
       }
     ]
@@ -366,7 +366,7 @@ const categories = [
         "videoId": "j8XBx4yFsN8"
       },
       {
-        "name": "LaLaport南港",
+        "name": "LaLaport 南港",
         "bgImage": "/vfx/D/D-05.png",
         "url": "https://www.youtube.com/watch?v=tDANOqHSnTE",
         "videoId": "tDANOqHSnTE"
@@ -382,7 +382,7 @@ const categories = [
         "videoId": "Dr7e8rl7spg"
       },
       {
-        "name": "舒潔 喀什米爾",
+        "name": "舒潔 喀什米爾衛生紙",
         "bgImage": "/vfx/D/D-08.png",
         "url": "https://www.youtube.com/watch?v=nFl6OMheFho",
         "videoId": "nFl6OMheFho"
@@ -446,13 +446,13 @@ const categories = [
     "name": "美妝與健康",
     "items": [
       {
-        "name": "1028睫毛膏",
+        "name": "1028 睫毛膏",
         "bgImage": "/vfx/E/E-01.png",
         "url": "https://www.youtube.com/watch?v=pHGEKlXxdgY",
         "videoId": "pHGEKlXxdgY"
       },
       {
-        "name": "Acuu-Chek羅氏血糖機",
+        "name": "Acuu-Chek 羅氏血糖機",
         "bgImage": "/vfx/E/E-02.png",
         "url": "https://www.youtube.com/watch?v=HUaASbBDOSM",
         "videoId": "HUaASbBDOSM"
@@ -464,19 +464,19 @@ const categories = [
         "videoId": "jPH0atsz3UY"
       },
       {
-        "name": "Calm Night Day淨日夜",
+        "name": "Calm Night Day 淨日夜沐浴露",
         "bgImage": "/vfx/E/E-04.png",
         "url": "https://www.youtube.com/watch?v=_ociCDswXUI",
         "videoId": "_ociCDswXUI"
       },
       {
-        "name": "EMSCULPT肌動減脂",
+        "name": "EMSCULPT 肌動減脂",
         "bgImage": "/vfx/E/E-05.png",
         "url": "https://www.youtube.com/watch?v=SJqwyPXT1CI",
         "videoId": "SJqwyPXT1CI"
       },
       {
-        "name": "LUX髮的補給",
+        "name": "LUX 髮的補給",
         "bgImage": "/vfx/E/E-06.png",
         "url": "https://www.facebook.com/watch/?v=822528356385191",
         "videoId": "822528356385191",
@@ -506,7 +506,7 @@ const categories = [
         "bgImage": "/vfx/E/E-11.png"
       },
       {
-        "name": "舒潔女性濕式衛生紙",
+        "name": "舒潔 女性濕式衛生紙",
         "bgImage": "/vfx/E/E-12.png",
         "url": "https://www.youtube.com/watch?v=YG70M6HajCU",
         "videoId": "YG70M6HajCU"
@@ -598,11 +598,10 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     <div
       ref={ref}
       onClick={handleClick}
-      className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${
-        hasVideo
-          ? 'border-zinc-700/60 bg-zinc-900/50 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
-          : 'border-zinc-800/80 bg-zinc-900/20'
-      }`}
+      className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${hasVideo
+        ? 'border-zinc-700/60 bg-zinc-900/50 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
+        : 'border-zinc-800/80 bg-zinc-900/20'
+        }`}
     >
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
       {item.bgImage && (
@@ -617,9 +616,8 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
             alt={`${item.name} background`}
             loading="lazy"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${
-              isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
-            }`}
+            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+              }`}
           />
           {/* 全區域暗化遮罩，用來壓低高光 */}
           <div className="absolute inset-0 bg-black/25" />
@@ -634,20 +632,19 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       )}
 
       <div className="relative z-10">
-        <div 
+        <div
           style={{ textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,0.95), 0 0 1px rgba(0,0,0,0.8)' }}
-          className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${
-            hasVideo
-              ? 'text-zinc-100 group-hover:text-white font-semibold'
-              : 'text-zinc-200 font-semibold'
-          }`}
+          className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${hasVideo
+            ? 'text-zinc-100 group-hover:text-white font-semibold'
+            : 'text-zinc-200 font-semibold'
+            }`}
         >
           {item.name}
         </div>
       </div>
 
       {hasVideo ? (
-        <div 
+        <div
           style={{ textShadow: '0 1px 3px rgba(0,0,0,0.95)' }}
           className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
         >
@@ -683,7 +680,8 @@ export default function VisualSynthesis({ onPlayVideo }) {
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 max-w-xl md:max-w-5xl mx-auto px-4 md:flex md:flex-row md:flex-nowrap md:justify-center md:gap-4 mb-12 relative z-10">
+      {/* 分類切換 Tab */}
+      <div className="grid grid-cols-3 gap-2 max-w-xl mx-auto px-4 md:flex md:flex-wrap md:justify-center md:gap-2.5 mb-12 relative z-10">
         {categories.map((tab) => {
           const engMap = {
             food: 'FOOD & BEV',
@@ -698,15 +696,13 @@ export default function VisualSynthesis({ onPlayVideo }) {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-2 py-1.5 md:px-5 md:py-3 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm leading-none ${
-                activeTab === tab.id
-                  ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
-                  : 'border-zinc-855 text-zinc-400 bg-zinc-955/20 hover:text-white hover:border-zinc-700'
-              }`}
+              className={`px-2 py-1.5 md:px-4 md:py-2 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-sm leading-none ${activeTab === tab.id
+                ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
+                : 'border-zinc-855 text-zinc-400 bg-zinc-955/20 hover:text-white hover:border-zinc-700'
+                }`}
             >
-              <span className={`text-[5px] md:text-[6px] mono tracking-widest uppercase mb-0.5 ${
-                activeTab === tab.id ? 'text-black/70' : 'text-zinc-500'
-              }`}>{engName}</span>
+              <span className={`text-[5px] md:text-[6px] mono tracking-widest uppercase mb-0.5 ${activeTab === tab.id ? 'text-black/70' : 'text-zinc-500'
+                }`}>{engName}</span>
               <span className="text-[10px] md:text-xs font-normal tracking-wider">{tab.name}</span>
             </button>
           );
@@ -720,9 +716,8 @@ export default function VisualSynthesis({ onPlayVideo }) {
           return (
             <div
               key={category.id}
-              className={`grid grid-cols-3 md:grid-cols-5 gap-3 ${
-                isActive ? 'tab-content-active' : 'tab-content-hidden'
-              }`}
+              className={`grid grid-cols-3 md:grid-cols-5 gap-3 ${isActive ? 'tab-content-active' : 'tab-content-hidden'
+                }`}
             >
               {category.items.map((item, index) => (
                 <BrandCard
