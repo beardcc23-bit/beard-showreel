@@ -35,7 +35,13 @@ export default function Modal({ isOpen, onClose, type, data }) {
           animate={{ scale: 1, y: 0, opacity: 1 }}
           exit={{ scale: 0.9, y: 40, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="relative w-full max-w-4xl bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[90vh]"
+          className={`relative w-full bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[95vh] transition-all duration-300 ${
+            type === 'video' && data.aspect === 'portrait'
+              ? 'max-w-[45vh] md:max-w-[50vh]'
+              : type === 'video' && data.aspect === 'square'
+              ? 'max-w-[70vh] md:max-w-[75vh]'
+              : 'max-w-4xl'
+          }`}
         >
           {/* 關閉按鈕 */}
           <button
@@ -48,7 +54,13 @@ export default function Modal({ isOpen, onClose, type, data }) {
 
           {type === 'video' ? (
             /* 影片播放模式 */
-            <div className="aspect-video w-full bg-black">
+            <div className={`bg-black mx-auto overflow-hidden w-full ${
+              data.aspect === 'portrait'
+                ? 'aspect-[9/16] h-[80vh]'
+                : data.aspect === 'square'
+                ? 'aspect-square h-[70vh] md:h-[75vh]'
+                : 'aspect-video'
+            }`}>
               {data.isFacebook ? (
                 <iframe
                   src={`https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${data.videoId}&show_text=0&t=0&autoplay=1`}

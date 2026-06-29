@@ -72,7 +72,8 @@ const categories = [
         "bgImage": "/vfx/A/A-013.png",
         "url": "https://www.facebook.com/reel/2203781970428596?locale=zh_TW",
         "videoId": "2203781970428596",
-        "isFacebook": true
+        "isFacebook": true,
+        "aspect": "portrait"
       },
       {
         "name": "活沛多",
@@ -226,7 +227,8 @@ const categories = [
         "bgImage": "/vfx/B/B-10.png",
         "url": "https://www.facebook.com/reel/1338163857656555",
         "videoId": "1338163857656555",
-        "isFacebook": true
+        "isFacebook": true,
+        "aspect": "portrait"
       },
       {
         "name": "Sony Xperia",
@@ -486,7 +488,8 @@ const categories = [
         "bgImage": "/vfx/E/E-08.png",
         "url": "https://www.facebook.com/TKLAB.tw/videos/1495921932163292",
         "videoId": "1495921932163292",
-        "isFacebook": true
+        "isFacebook": true,
+        "aspect": "square"
       },
       {
         "name": "三得利 蜂王乳+芝麻明E",
@@ -583,7 +586,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const handleClick = () => {
     if (!hasVideo) return;
     if (item.videoId) {
-      onPlayVideo(item.videoId, !!item.isFacebook);
+      onPlayVideo(item.videoId, !!item.isFacebook, item.aspect);
     } else if (item.url) {
       window.open(item.url, '_blank');
     }

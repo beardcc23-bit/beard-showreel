@@ -56,7 +56,8 @@ const lawCategories = [
         key: 'TKLAB',
         value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並精細抹去手部與雙腿的刺青細節。',
         videoId: '1495921932163292',
-        isFacebook: true
+        isFacebook: true,
+        aspect: 'square'
       },
       {
         key: 'LUX 髮的補給',
@@ -168,7 +169,7 @@ export default function Manifesto({ onPlayVideo }) {
                             <div 
                               onClick={() => {
                                 if (hasVideo && onPlayVideo) {
-                                  onPlayVideo(param.videoId, !!param.isFacebook);
+                                  onPlayVideo(param.videoId, !!param.isFacebook, param.aspect);
                                 }
                               }}
                               className={`flex items-center gap-2 text-sm md:text-[15px] font-semibold transition-all duration-200 ${
