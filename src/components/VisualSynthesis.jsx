@@ -575,6 +575,10 @@ const categories = [
           {
             "name": "國泰世華 財富管理",
             "bgImage": "/vfx/F/F-09_cathay.png"
+          },
+          {
+            "name": "臺灣證券交易所",
+            "bgImage": "/vfx/F/F-10_twse.png"
           }
         ]
       }
