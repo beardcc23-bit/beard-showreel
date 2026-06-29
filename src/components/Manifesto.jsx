@@ -130,7 +130,7 @@ export default function Manifesto({ onPlayVideo }) {
                   >
                     <span className={`text-[5px] sm:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === cat.id ? 'text-black/80' : 'text-zinc-500'
                       }`}>{label.eng}</span>
-                    <span className="text-[10px] sm:text-xs font-normal tracking-wider whitespace-nowrap">{label.zht}</span>
+                    <span className="text-[11px] sm:text-xs font-normal tracking-wider whitespace-nowrap">{label.zht}</span>
                   </button>
                 );
               })}
