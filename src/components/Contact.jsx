@@ -24,7 +24,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-zinc-300 mb-20 font-light text-lg max-w-xl mx-auto leading-relaxed"
+          className="text-zinc-300 mb-20 font-light text-sm sm:text-lg max-w-xl mx-auto leading-relaxed"
         >
           隨時歡迎來信交流，探討影像的更多可能。
         </motion.p>
