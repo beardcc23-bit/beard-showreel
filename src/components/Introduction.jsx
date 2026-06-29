@@ -92,10 +92,10 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8, delay: 0.15 }}
               className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left"
             >
-              重力與空氣的流動、光線穿透塵埃的折射軌跡、人物肌膚的毛孔質感精修——這些構築真實感的微小物理，是我的日常畫面。
+              重力與空氣的流動、光線穿透塵埃的折射軌跡、人物肌膚的毛孔質感——這些構築真實感的微小物理，是我畫面創作的日常。
               <br />
               <br />
-              最厲害的合成特效，往往不著痕跡。在長期與頂級品牌合作的洗禮下，我立足於感性與理性的黃金交叉點——將導演的斑斕想像快速收攏，在有限時程內交付無可挑剔的商業影片。
+              最極致的合成特效，往往不著痕跡。在長期與頂級品牌合作的洗禮下，我立足於感性與理性的黃金交叉點——精準收攏導演天馬行空的想像，在有限時程內交付無可挑剔的商業影片。
 
 
             </motion.p>
