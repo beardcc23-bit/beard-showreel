@@ -93,19 +93,25 @@ export default function Manifesto({ onPlayVideo }) {
         {/* 內容區：左右對齊 */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-start">
           {/* 左側：品牌文字宣言 */}
-          <div className="md:col-span-6 space-y-8 text-zinc-350 text-base md:text-lg leading-relaxed font-light">
-            <p>
-              作為台灣俗稱的 D1 技師，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用 Autodesk Flame 進行 Online 。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 SC 播帶，完成這次專案。
-            </p>
-            <p>
-              即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。
-            </p>
-            <p>
-              面對 AI 浪潮，我不斷學習並掌握 AI 技能，將智慧輔助技術融入傳統合成流程。藉由更高的效率與敏銳的視覺直覺，探索影音創作的全新視野。
-            </p>
-            <p className="border-l-2 border-aurora-blue pl-6 py-2 text-zinc-200">
-              「細心雕琢每一格畫面，在極限的時程裡，成為替導演與客戶解決問題的人。」
-            </p>
+          <div className="md:col-span-6 flex flex-col text-zinc-350 text-base md:text-lg leading-relaxed font-light">
+            {/* 左側頂部 HUD 裝飾性標籤，高度與右側按鈕及間距呼應，以達成左右文字齊頭 */}
+            <div className="hidden md:flex items-end h-[51px] mb-5 border-b border-zinc-800/40 pb-2">
+              <span className="text-[10px] text-zinc-500 tracking-widest mono uppercase">// Creative Profile / Online Statement</span>
+            </div>
+            <div className="space-y-8 md:mt-8">
+              <p>
+                作為台灣俗稱的 D1 技師，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用 Autodesk Flame 進行 Online 。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 SC 播帶，完成這次專案。
+              </p>
+              <p>
+                即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。
+              </p>
+              <p>
+                面對 AI 浪潮，我不斷學習並掌握 AI 技能，將智慧輔助技術融入傳統合成流程。藉由更高的效率與敏銳的視覺直覺，探索影音創作的全新視野。
+              </p>
+              <p className="border-l-2 border-aurora-blue pl-6 py-2 text-zinc-200">
+                「細心雕琢每一格畫面，在極限的時程裡，成為替導演與客戶解決問題的人。」
+              </p>
+            </div>
           </div>
 
           {/* 右側：整合的 Laws 系統 HUD 面板 */}
