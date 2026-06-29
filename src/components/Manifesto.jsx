@@ -171,7 +171,11 @@ export default function Manifesto({ onPlayVideo }) {
                               onClick={() => {
                                 if (hasVideo) {
                                   if (param.isFacebook && param.url) {
-                                    window.open(param.url, '_blank');
+                                    if (window.innerWidth < 768) {
+                                      window.location.href = param.url;
+                                    } else {
+                                      window.open(param.url, '_blank');
+                                    }
                                   } else if (onPlayVideo) {
                                     onPlayVideo(param.videoId, false, param.aspect);
                                   }

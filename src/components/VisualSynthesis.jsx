@@ -576,11 +576,19 @@ const categories = [
       const handleClick = () => {
         if (!hasVideo) return;
         if (item.isFacebook && item.url) {
-          window.open(item.url, '_blank');
+          if (window.innerWidth < 768) {
+            window.location.href = item.url;
+          } else {
+            window.open(item.url, '_blank');
+          }
         } else if (item.videoId) {
           onPlayVideo(item.videoId, false, item.aspect);
         } else if (item.url) {
-          window.open(item.url, '_blank');
+          if (window.innerWidth < 768) {
+            window.location.href = item.url;
+          } else {
+            window.open(item.url, '_blank');
+          }
         }
       };
 
