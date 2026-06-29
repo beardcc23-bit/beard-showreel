@@ -671,7 +671,7 @@ const categories = [
           ADVER<span className="text-aurora-blue">TISING</span>
         </h2>
         <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
-          近期參與的一線品牌與商業廣告。
+          近期參與的廣告專案。
         </p>
       </div >
 
