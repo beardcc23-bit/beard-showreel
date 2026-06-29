@@ -14,7 +14,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-16 glow-title"
+          className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter uppercase mb-16 glow-title whitespace-nowrap"
         >
           Let's <span className="text-aurora-blue">Connect</span>
         </motion.h2>
@@ -26,7 +26,7 @@ export default function Contact() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-zinc-300 mb-20 font-light text-lg max-w-xl mx-auto leading-relaxed"
         >
-          期待與對影像有相同執著的創作人相遇。隨時歡迎來信交流，分享有趣的專案，或是探討影像後期與跟片的更多可能。
+          隨時歡迎來信交流，探討影像的更多可能。
         </motion.p>
         
         <motion.div
