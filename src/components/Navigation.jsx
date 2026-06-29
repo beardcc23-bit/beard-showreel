@@ -77,7 +77,7 @@ export default function Navigation() {
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hud-btn px-5 py-3 flex items-center justify-center text-center leading-none"
+            className="hud-btn is-active px-5 py-3 flex items-center justify-center text-center leading-none"
           >
             <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </a>
@@ -124,16 +124,14 @@ export default function Navigation() {
                 </a>
               ))}
 
-              <div className="mt-8 border-t border-zinc-800 pt-8">
-                <a
-                  href="#contact"
-                  onClick={(e) => handleScroll(e, '#contact')}
-                  className="hud-btn block w-full px-5 py-4 flex flex-col items-start justify-center leading-none"
-                >
-                  <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">[ // Establish Connection ]</span>
-                  <span className="hud-zht text-xl font-normal uppercase tracking-widest">建立聯繫</span>
-                </a>
-              </div>
+              <a
+                href="#contact"
+                onClick={(e) => handleScroll(e, '#contact')}
+                className="hud-btn is-active block w-full px-5 py-4 flex flex-col items-start justify-center leading-none"
+              >
+                <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">[ // Establish Connection ]</span>
+                <span className="hud-zht text-xl font-normal uppercase tracking-widest">建立聯繫</span>
+              </a>
             </motion.div>
           </>
         )}
