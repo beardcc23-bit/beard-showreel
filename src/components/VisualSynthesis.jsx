@@ -667,7 +667,7 @@ const categories = [
 
           {/* 區段標頭 */ }
           < div className = "text-center mb-16 relative z-10" >
-        <h2 className="text-[48px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
+        <h2 className="text-[46px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
           ADVER<span className="text-aurora-blue">TISING</span>
         </h2>
         <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
