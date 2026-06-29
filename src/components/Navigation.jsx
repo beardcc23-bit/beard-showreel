@@ -131,7 +131,7 @@ export default function Navigation() {
                   className="prism-button block w-full py-4 rounded-full text-center transition duration-300 flex flex-col items-center justify-center leading-none"
                 >
                   <span className="text-[9px] opacity-70 tracking-widest mono mb-1 uppercase">// Establish Connection</span>
-                  <span className="text-base font-normal uppercase tracking-widest">建立聯繫</span>
+                  <span className="text-xl font-normal uppercase tracking-widest">建立聯繫</span>
                 </a>
               </div>
             </motion.div>
