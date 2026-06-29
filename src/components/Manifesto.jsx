@@ -19,7 +19,7 @@ const lawCategories = [
       },
       {
         key: '黑松茶花',
-        value: '前期透過 AI 生成水豚君角色的各種動態，作為現場實拍演員的動作對位與表演參照。',
+        value: '在前期階段，我利用 AI 生成技術快速模擬水豚君的動態與表情，不僅利於與導演高效溝通並預覽畫面，也作為現場演員動作對位與表演的精準參照。',
         videoId: 'TRqUVCCZwRU'
       }
     ]
@@ -29,7 +29,7 @@ const lawCategories = [
     title: 'CHROMA KEYING',
     subtitle: '綠幕去背合成',
     meta: 'SYSTEM.CHROMA: KEY_EXTRACTION // MATTE: ACTIVE',
-    quote: '「真正的無痕合成，是讓去背邊緣與環境光影產生自然呼吸感。」',
+    quote: '「真正的無痕合成，是讓主體邊緣與環境互動光影產生自然呼吸感。」',
     desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
     params: [
       {
@@ -91,14 +91,14 @@ export default function Manifesto({ onPlayVideo }) {
         </div>
 
         {/* 內容區：左右對齊 */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-16 items-start">
           {/* 左側：品牌文字宣言 */}
-          <div className="md:col-span-6 flex flex-col text-zinc-350 text-base md:text-lg leading-relaxed font-light">
+          <div className="md:col-span-6 flex flex-col text-zinc-350 text-sm md:text-lg leading-relaxed font-light">
             {/* 隱形占位區，高度與右側按鈕及間距呼應，以達成左右文字齊頭 */}
             <div className="hidden md:block h-[51px] mb-5" />
             <div className="space-y-8">
               <p>
-                作為台灣俗稱的 D1 技師，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用 Autodesk Flame 進行 Online 。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 SC 播帶，完成這次專案。
+                作為台灣俗稱的 D1 技師 (VFX Artist)，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用 Autodesk Flame 進行 Online 。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 SC 播帶，完成這次專案。
               </p>
               <p>
                 即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。
@@ -107,7 +107,7 @@ export default function Manifesto({ onPlayVideo }) {
                 面對 AI 浪潮，我不斷學習並掌握 AI 技能，將智慧輔助技術融入傳統合成流程。藉由更高的效率與敏銳的視覺直覺，探索影音創作的全新視野。
               </p>
               <p className="border-l-2 border-aurora-blue pl-6 py-2 text-zinc-200">
-                「細心雕琢每一格畫面，在極限的時程裡，成為替導演與客戶解決問題的人。」
+                「細心雕琢每一格畫面，在極限的時程裡，成為替導演與客戶<span className="inline-block">解決問題的人。</span>」
               </p>
             </div>
           </div>

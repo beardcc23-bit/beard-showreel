@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import RefractionCard from './RefractionCard';
 
 function AnimatedCounter({ value, trigger, duration = 1.5 }) {
   const [count, setCount] = useState(0);
@@ -37,7 +38,7 @@ export default function Introduction({ onPlayVideo }) {
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-8 relative z-10 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-16 xl:gap-20 items-center">
 
           {/* 左側：文字與按鈕 */}
           <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
@@ -48,7 +49,7 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none glow-title"
+              className="text-6xl md:text-7xl font-black tracking-tighter mb-8 leading-none glow-title"
             >
               Beard <span className="text-aurora-blue">Chou</span>
             </motion.h2>
@@ -61,7 +62,7 @@ export default function Introduction({ onPlayVideo }) {
               transition={{ duration: 0.8, delay: 0.1 }}
               className="block md:hidden my-8 w-full max-w-[280px]"
             >
-              <div className="gold-flow-border aspect-[888/1024] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
+              <div className="gold-flow-border aspect-[3/4] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
                 <div className="gold-flow-inner w-full h-full">
                   <img
                     src="/avatar.jpg"
@@ -95,32 +96,50 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid grid-cols-3 w-full max-w-2xl mb-12 py-6 text-center bg-[#090a0b] rounded-2xl border border-zinc-900/60 shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
+              className="w-full max-w-2xl mb-12"
             >
-              <div className="flex flex-col items-center justify-center">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
-                  <AnimatedCounter value={13} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Years</span>
+              <RefractionCard
+                className="grid grid-cols-3 w-full py-6 px-4 md:px-8 text-center backdrop-blur-2xl border border-white/[0.1] rounded-[24px] shadow-2xl relative overflow-hidden group"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.65) 100%)',
+                  backgroundColor: 'rgba(6, 6, 6, 0.45)',
+                  boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
+                }}
+              >
+                <div className="flex flex-col items-center justify-center relative z-10">
+                  <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
+                    <div>
+                      <AnimatedCounter value={13} trigger={statsInView} />+
+                    </div>
+                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Years</span>
+                  </div>
+                  <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-2 mono">
+                    後期資歷
+                  </div>
                 </div>
-                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
-                  後期資歷
+                <div className="flex flex-col items-center justify-center px-2 relative z-10">
+                  <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
+                    <div>
+                      <AnimatedCounter value={300} trigger={statsInView} />+
+                    </div>
+                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Campaigns</span>
+                  </div>
+                  <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-2 mono">
+                    廣告專案
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col items-center justify-center px-4">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
-                  <AnimatedCounter value={300} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Campaigns</span>
+                <div className="flex flex-col items-center justify-center relative z-10">
+                  <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
+                    <div>
+                      <AnimatedCounter value={1000} trigger={statsInView} />+
+                    </div>
+                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Versions</span>
+                  </div>
+                  <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-2 mono">
+                    播放版本
+                  </div>
                 </div>
-                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
-                  廣告專案
-                </div>
-              </div>
-              <div className="flex flex-col items-center justify-center">
-                <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
-                  <AnimatedCounter value={1000} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Versions</span>
-                </div>
-                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mt-2.5 mono">
-                  播放版本
-                </div>
-              </div>
+              </RefractionCard>
             </motion.div>
 
             {/* 霓虹光感按鈕組 */}
@@ -148,7 +167,7 @@ export default function Introduction({ onPlayVideo }) {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="hidden md:flex md:col-span-5 justify-center md:justify-end w-full"
           >
-            <div className="gold-flow-border w-[280px] sm:w-[320px] md:w-[350px] aspect-[888/1024] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
+            <div className="gold-flow-border w-[280px] sm:w-[320px] md:w-[350px] aspect-[3/4] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
               <div className="gold-flow-inner w-full h-full">
                 <img
                   src="/avatar.jpg"

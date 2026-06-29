@@ -14,7 +14,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-4xl sm:text-6xl md:text-9xl font-black tracking-tighter uppercase mb-16 glow-title whitespace-nowrap"
+          className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-16 glow-title whitespace-nowrap"
         >
           Let's <span className="text-aurora-blue">Connect</span>
         </motion.h2>
@@ -40,10 +40,10 @@ export default function Contact() {
             href="mailto:beard.cc23@gmail.com"
             className="group flex items-center gap-6 text-xl font-bold hover:text-aurora-blue transition duration-300"
           >
-            <span className="bg-aurora-blue text-black p-4 rounded-sm group-hover:bg-white transition-colors duration-300 flex items-center justify-center">
-              <Mail size={20} />
+            <span className="bg-aurora-blue text-black p-2.5 rounded-sm group-hover:bg-white transition-colors duration-300 flex items-center justify-center">
+              <Mail size={18} />
             </span>
-            <span className="mono text-sm tracking-wider text-zinc-300 group-hover:text-aurora-blue transition-colors duration-300">
+            <span className="mono text-sm sm:text-base tracking-wider text-zinc-300 group-hover:text-aurora-blue transition-colors duration-300">
               beard.cc23@gmail.com
             </span>
           </a>
