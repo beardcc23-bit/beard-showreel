@@ -12,8 +12,16 @@ const lawCategories = [
     quote: '「AI 負責拓寬創意的邊界，而我負責將其無縫封裝落地。」',
     desc: 'AI 生成看似帶來無限想像，實則伴隨著物理邏輯崩壞、畫面閃爍與無規律的細節錯誤。我專注於從這些隨機不可控的片段中，精準篩選並萃取可用元素，透過 Flame 重新雕琢光影物理、動態透視與真實反射，將隨機的 AI 素材，無痕合成為符合大片質感的高階商業畫面。',
     params: [
-      { key: '黑松茶花', value: '前期預先透過 AI 生成水豚君角色的各種動態，作為現場實拍演員的動作對位與表演參照。' },
-      { key: 'Foxtron Caviar', value: '將實際車輛路跑影片，完美結合 AI 輔助生成的淡江大橋路跑背景，在 Flame 中重塑極致的物理光影與動態透視。' }
+      { 
+        key: '黑松茶花', 
+        value: '前期預先透過 AI 生成水豚君角色的各種動態，作為現場實拍演員的動作對位與表演參照。',
+        videoId: 'TRqUVCCZwRU'
+      },
+      { 
+        key: 'Foxtron Caviar', 
+        value: '將實際車輛路跑影片，完美結合 AI 輔助生成的淡江大橋路跑背景，在 Flame 中重塑極致的物理光影與動態透視。',
+        videoId: 'pCBQA1vEDig'
+      }
     ]
   },
   {
@@ -24,8 +32,16 @@ const lawCategories = [
     quote: '「真正的無痕合成，是讓去背邊緣與環境光影產生自然呼吸感。」',
     desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
     params: [
-      { key: 'UCC', value: '免去出外景的大量時程，於棚內進行綠幕拍攝，後期精準合成海景與山景，依然呈現如實地拍攝般的高質感天光。' },
-      { key: '磊山保經', value: '克服無綠幕環境的限制，以細緻的手工逐幀去背抽離角色，並在多重圖層間嵌入動態閃爍色塊，創造出節奏感強烈且層次豐富的畫面視覺。' }
+      { 
+        key: 'UCC', 
+        value: '免去出外景的大量時程，於棚內進行綠幕拍攝，後期精準合成海景與山景，依然呈現如實地拍攝般的高質感天光。',
+        videoId: 'AuuxyMIutf8'
+      },
+      { 
+        key: '磊山保經', 
+        value: '克服無綠幕環境的限制，以細緻的手工逐格去背抽離角色，並在多重圖層間嵌入動態閃爍色塊，創造出節奏感強烈且層次豐富的畫面視覺。',
+        videoId: 'Rwrn87N2PUc'
+      }
     ]
   },
   {
@@ -36,13 +52,23 @@ const lawCategories = [
     quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
     desc: '極致的人像修飾，是讓主角展現無瑕面容與完美體態，卻不失真實溫度。我藉由精確的動態轉描與肌理微調，在避免塑膠感的同時，精修出最符合黃金比例的自然物理動態。',
     params: [
-      { key: 'TKLAB', value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並精細抹去手部與雙腿的刺青細節。' },
-      { key: 'LUX 髮的補給', value: '不只雕琢面部無瑕膚質的自然光澤，更針對秀髮的動態細節進行優化，呈現流暢且具空氣感的長髮飄逸視覺。' }
+      { 
+        key: 'TKLAB', 
+        value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並精細抹去手部與雙腿的刺青細節。',
+        videoId: '1495921932163292',
+        isFacebook: true
+      },
+      { 
+        key: 'LUX 髮的補給', 
+        value: '不只雕琢面部無瑕膚質的自然光澤，更針對秀髮的動態細節進行優化，呈現流暢且具空氣感的長髮飄逸視覺。',
+        videoId: '822528356385191',
+        isFacebook: true
+      }
     ]
   }
 ];
 
-export default function Manifesto() {
+export default function Manifesto({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('01');
   const activeCategory = lawCategories.find(cat => cat.id === activeTab) || lawCategories[0];
 
@@ -135,17 +161,38 @@ export default function Manifesto() {
 
                     {/* 大師實踐解密 (Mastery In Action) - 調整為純乾淨頂邊線分隔 */}
                     <div className="space-y-4 pt-6 border-t border-zinc-900/60 mt-6">
-                      {activeCategory.params.map((param) => (
-                        <div key={param.key} className="space-y-1 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
-                          <div className="flex items-center gap-2 text-xs font-bold text-aurora-blue">
-                            <Binary size={10} className="text-aurora-blue" />
-                            {param.key}
+                      {activeCategory.params.map((param) => {
+                        const hasVideo = !!param.videoId;
+                        return (
+                          <div key={param.key} className="space-y-1 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
+                            <div 
+                              onClick={() => {
+                                if (hasVideo && onPlayVideo) {
+                                  onPlayVideo(param.videoId, !!param.isFacebook);
+                                }
+                              }}
+                              className={`flex items-center gap-2 text-xs font-bold transition-all duration-200 ${
+                                hasVideo 
+                                  ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title' 
+                                  : 'text-aurora-blue'
+                              }`}
+                            >
+                              <Binary size={10} className="text-aurora-blue group-hover/title:scale-110 transition-transform duration-200" />
+                              <span className={hasVideo ? 'group-hover/title:underline' : ''}>
+                                {param.key}
+                              </span>
+                              {hasVideo && (
+                                <span className="text-[9px] text-zinc-600 font-light tracking-wider opacity-0 group-hover/title:opacity-100 transition-opacity duration-200 ml-1">
+                                  // 點擊播放影片
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-zinc-450 font-light leading-relaxed pl-4">
+                              {param.value}
+                            </p>
                           </div>
-                          <p className="text-xs text-zinc-450 font-light leading-relaxed pl-4">
-                            {param.value}
-                          </p>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 

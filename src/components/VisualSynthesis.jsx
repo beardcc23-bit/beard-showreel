@@ -68,7 +68,7 @@ const categories = [
         "videoId": "8rl7u3SPQpY"
       },
       {
-        "name": "旨醞鐵板燒",
+        "name": "旨醞 鐵板燒",
         "bgImage": "/vfx/A/A-013.png",
         "url": "https://www.facebook.com/reel/2203781970428596?locale=zh_TW",
         "videoId": "2203781970428596",
@@ -97,7 +97,7 @@ const categories = [
         "isFacebook": true
       },
       {
-        "name": "桂格",
+        "name": "桂格 企業形象影片",
         "bgImage": "/vfx/A/A-018.png",
         "url": "https://www.youtube.com/watch?v=lxRJO_qPcWQ",
         "videoId": "lxRJO_qPcWQ"
