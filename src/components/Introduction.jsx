@@ -49,7 +49,7 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="text-6xl md:text-7xl font-black tracking-tighter mb-8 leading-none glow-title"
+              className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter mb-8 leading-none glow-title whitespace-nowrap"
             >
               Beard <span className="text-aurora-blue">Chou</span>
             </motion.h2>
@@ -117,7 +117,7 @@ export default function Introduction({ onPlayVideo }) {
                     後期資歷
                   </div>
                 </div>
-                <div className="flex flex-col items-center justify-center relative z-10 -translate-x-[2px] md:translate-x-0">
+                <div className="flex flex-col items-center justify-center relative z-10 translate-x-[2px] md:translate-x-0">
                   <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
                     <div>
                       <AnimatedCounter value={300} trigger={statsInView} />+
