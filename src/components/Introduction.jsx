@@ -42,18 +42,6 @@ export default function Introduction({ onPlayVideo }) {
           {/* 左側：文字與按鈕 */}
           <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
 
-            {/* 呼吸感狀態點綴 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mono text-[6px] text-aurora-blue uppercase tracking-[0.5em] mb-8 opacity-80 flex items-center gap-2"
-            >
-              <span className="w-2 h-2 rounded-full bg-aurora-blue animate-ping" />
-              ARCHIVAL SYSTEM LOG // 13 YEARS OF COMPOSITING // BEARD CHOU
-            </motion.div>
-
             {/* 精緻標題 */}
             <motion.h2
               initial={{ opacity: 0, y: 30 }}

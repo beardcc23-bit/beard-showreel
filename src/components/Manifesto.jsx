@@ -82,10 +82,6 @@ export default function Manifesto({ onPlayVideo }) {
       <div className="relative z-10">
         {/* 頂部：標題區 */}
         <div className="text-center mb-20 relative z-10">
-          <div className="mono text-[7px] text-aurora-blue mb-6 uppercase tracking-[0.4em] flex items-center justify-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-aurora-blue animate-pulse" />
-            01 // The Narrative & Laws
-          </div>
           <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
             The <span className="text-aurora-blue">Manifesto</span>
           </h2>
