@@ -127,7 +127,7 @@ export default function Navigation() {
               <a
                 href="#contact"
                 onClick={(e) => handleScroll(e, '#contact')}
-                className="hud-btn is-active block w-full px-5 py-4 flex flex-col items-start justify-center leading-none"
+                className="hud-btn is-active block w-auto -mx-5 px-5 py-4 flex flex-col items-start justify-center leading-none"
               >
                 <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">[ // Establish Connection ]</span>
                 <span className="hud-zht text-xl font-normal uppercase tracking-widest">建立聯繫</span>
