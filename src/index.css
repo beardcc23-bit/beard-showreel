@@ -500,8 +500,10 @@ body {
     rgba(255, 255, 255, 0.03) 70%,
     transparent 100%
   );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
+  /* 修正 Webkit (Chrome/Safari) 與 Firefox 標準遮罩挖空相容性，只留下 1px 的細緻邊框 */
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask: linear-gradient(#fff 0 0) padding-box exclude, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -510,7 +512,7 @@ body {
 }
 
 .glass-prism-border:hover::after {
-  opacity: 1;
+  opacity: 0.5; /* 透明度折半 */
 }
 
 .perspective-1000 {

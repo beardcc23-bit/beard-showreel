@@ -176,11 +176,11 @@ export default function Manifesto({ onPlayVideo }) {
 
                   {/* 寫實玻璃邊緣高光反光 (Specular Reflection Highlights - 符合圖二) */}
                   {/* 頂部偏右邊緣高光 */}
-                  <div className="absolute top-0 right-[20%] w-40 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                  <div className="absolute top-0 right-[20%] w-40 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent blur-[0.3px] pointer-events-none z-10" />
                   {/* 右側邊緣高光 */}
-                  <div className="absolute top-[40%] right-0 w-[1.5px] h-32 bg-gradient-to-b from-transparent via-white/60 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                  <div className="absolute top-[40%] right-0 w-[1.5px] h-32 bg-gradient-to-b from-transparent via-white/30 to-transparent blur-[0.3px] pointer-events-none z-10" />
                   {/* 底部偏左邊緣高光 */}
-                  <div className="absolute bottom-0 left-[15%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/45 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                  <div className="absolute bottom-0 left-[15%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/22 to-transparent blur-[0.3px] pointer-events-none z-10" />
 
                   <div className="space-y-6 relative z-10">
                     {/* 大字箴言 */}
