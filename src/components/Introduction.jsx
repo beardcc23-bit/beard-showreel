@@ -99,7 +99,7 @@ export default function Introduction({ onPlayVideo }) {
               className="w-full max-w-2xl mb-12"
             >
               <RefractionCard
-                className="grid grid-cols-3 w-full py-6 px-4 md:px-8 text-center backdrop-blur-2xl border border-white/[0.1] rounded-[24px] shadow-2xl relative overflow-hidden group"
+                className="flex justify-around w-full py-6 px-2 md:px-8 text-center backdrop-blur-2xl border border-white/[0.1] rounded-[24px] shadow-2xl relative overflow-hidden group"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.65) 100%)',
                   backgroundColor: 'rgba(6, 6, 6, 0.45)',
@@ -117,7 +117,7 @@ export default function Introduction({ onPlayVideo }) {
                     後期資歷
                   </div>
                 </div>
-                <div className="flex flex-col items-center justify-center px-2 relative z-10">
+                <div className="flex flex-col items-center justify-center relative z-10 -translate-x-[2px] md:translate-x-0">
                   <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
                     <div>
                       <AnimatedCounter value={300} trigger={statsInView} />+
