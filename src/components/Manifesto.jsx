@@ -173,10 +173,10 @@ export default function Manifesto({ onPlayVideo }) {
                   <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/6 rounded-full blur-[80px] pointer-events-none" />
 
                   {/* 四角金色科技切角 (HUD Corner Brackets) */}
-                  <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-dawn-gold/50 pointer-events-none" />
-                  <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-dawn-gold/50 pointer-events-none" />
-                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-dawn-gold/50 pointer-events-none" />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-dawn-gold/50 pointer-events-none" />
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t border-l pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
+                  <div className="absolute top-0 right-0 w-3 h-3 border-t border-r pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
+                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
 
                   <div className="space-y-6 relative z-10">
                     {/* 大字箴言 */}
