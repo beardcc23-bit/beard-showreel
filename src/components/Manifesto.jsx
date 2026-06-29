@@ -85,7 +85,7 @@ export default function Manifesto({ onPlayVideo }) {
           <h2 className="text-6xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
             The <span className="text-aurora-blue">Manifesto</span>
           </h2>
-          <p className="text-zinc-350 font-light max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+          <p className="text-zinc-350 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
             在商業廣告的極速步調中，憑藉心手合一的極速直覺，讓每個創意精準且高速交付。
           </p>
         </div>

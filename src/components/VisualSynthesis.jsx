@@ -670,7 +670,7 @@ const categories = [
         <h2 className="text-4xl sm:text-5xl md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
           ADVER<span className="text-aurora-blue">TISING</span>
         </h2>
-        <p className="text-zinc-300 font-light max-w-2xl mx-auto text-lg leading-relaxed">
+        <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
           近期參與的一線品牌與商業廣告。
         </p>
       </div >
