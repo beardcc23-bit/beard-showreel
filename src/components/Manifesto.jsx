@@ -23,52 +23,51 @@ const lawCategories = [
         videoId: 'TRqUVCCZwRU'
       }
     ]
-  }
   },
-{
-  id: '02',
+  {
+    id: '02',
     title: 'CHROMA KEYING',
-      subtitle: '綠幕去背合成',
-        meta: 'SYSTEM.CHROMA: KEY_EXTRACTION // MATTE: ACTIVE',
-          quote: '「真正的無痕合成，是讓去背邊緣與環境光影產生自然呼吸感。」',
-            desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
-              params: [
-                {
-                  key: 'UCC',
-                  value: '免去出外景的大量時程，於棚內進行綠幕拍攝，後期精準合成海景與山景，依然呈現如同實地外景拍攝般的高質感天光。',
-                  videoId: 'AuuxyMIutf8'
-                },
-                {
-                  key: '磊山保經',
-                  value: '克服無綠幕環境的限制，以細緻的手工逐格去背抽離人物，並在多重圖層間嵌入動態閃爍色塊，創造出節奏感強烈且層次豐富的視覺張力。',
-                  videoId: 'Ofl89MtikqE'
-                }
-              ]
-},
-{
-  id: '03',
+    subtitle: '綠幕去背合成',
+    meta: 'SYSTEM.CHROMA: KEY_EXTRACTION // MATTE: ACTIVE',
+    quote: '「真正的無痕合成，是讓去背邊緣與環境光影產生自然呼吸感。」',
+    desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
+    params: [
+      {
+        key: 'UCC',
+        value: '免去出外景的大量時程，於棚內進行綠幕拍攝，後期精準合成海景與山景，依然呈現如同實地外景拍攝般的高質感天光。',
+        videoId: 'AuuxyMIutf8'
+      },
+      {
+        key: '磊山保經',
+        value: '克服無綠幕環境的限制，以細緻的手工逐格去背抽離人物，並在多重圖層間嵌入動態閃爍色塊，創造出節奏感強烈且層次豐富的視覺張力。',
+        videoId: 'Ofl89MtikqE'
+      }
+    ]
+  },
+  {
+    id: '03',
     title: 'BEAUTY RETOUCHING',
-      subtitle: '人物美體膚質精修',
-        meta: 'SYSTEM.RETOUCH: FACE_TRACKING // SKIN: OPTIMAL',
-          quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
-            desc: '極致的人像修飾，是讓主角展現無瑕面容與完美體態，卻不失真實溫度。我藉由精確的動態轉描與肌理微調，在避免塑膠感的同時，精修出最符合黃金比例的自然物理動態。',
-              params: [
-                {
-                  key: 'TKLAB',
-                  value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並乾淨抹去手部與雙腿的刺青細節。',
-                  videoId: '1495921932163292',
-                  isFacebook: true,
-                  aspect: 'square',
-                  url: 'https://www.facebook.com/TKLAB.tw/videos/1495921932163292'
-                },
-                {
-                  key: 'LUX 髮的補給',
-                  value: '不只雕琢面部無瑕膚質的自然光澤，更針對秀髮的動態細節進行優化，呈現流暢且具空氣感的長髮飄逸視覺。',
-                  videoId: '822528356385191',
-                  isFacebook: true
-                }
-              ]
-}
+    subtitle: '人物美體膚質精修',
+    meta: 'SYSTEM.RETOUCH: FACE_TRACKING // SKIN: OPTIMAL',
+    quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
+    desc: '極致的人像修飾，是讓主角展現無瑕面容與完美體態，卻不失真實溫度。我藉由精確的動態轉描與肌理微調，在避免塑膠感的同時，精修出最符合黃金比例的自然物理動態。',
+    params: [
+      {
+        key: 'TKLAB',
+        value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並乾淨抹去手部與雙腿的刺青細節。',
+        videoId: '1495921932163292',
+        isFacebook: true,
+        aspect: 'square',
+        url: 'https://www.facebook.com/TKLAB.tw/videos/1495921932163292'
+      },
+      {
+        key: 'LUX 髮的補給',
+        value: '不只雕琢面部無瑕膚質的自然光澤，更針對秀髮的動態細節進行優化，呈現流暢且具空氣感的長髮飄逸視覺。',
+        videoId: '822528356385191',
+        isFacebook: true
+      }
+    ]
+  }
 ];
 
 export default function Manifesto({ onPlayVideo }) {
@@ -150,8 +149,18 @@ export default function Manifesto({ onPlayVideo }) {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3 }}
               >
-                <RefractionCard className="bg-zinc-955/20 backdrop-blur-md border border-zinc-800/80 rounded-none p-6 md:p-8 shadow-2xl relative overflow-hidden">
-                  <div className="space-y-6">
+                <RefractionCard 
+                  className="backdrop-blur-xl border border-white/[0.06] rounded-none p-6 md:p-8 shadow-2xl relative overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.4) 100%)',
+                    backgroundColor: 'rgba(10, 10, 10, 0.45)'
+                  }}
+                >
+                  {/* 玻璃內部的折射光源 (Refraction Glows) */}
+                  <div className="absolute -top-32 -left-32 w-64 h-64 bg-aurora-blue/10 rounded-full blur-[80px] pointer-events-none" />
+                  <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/5 rounded-full blur-[80px] pointer-events-none" />
+
+                  <div className="space-y-6 relative z-10">
                     {/* 大字箴言 */}
                     <div className="text-zinc-100 font-semibold text-lg md:text-xl tracking-wide text-left border-l-2 border-aurora-blue pl-4 py-0.5 leading-relaxed">
                       {activeCategory.quote}
@@ -172,7 +181,11 @@ export default function Manifesto({ onPlayVideo }) {
                               onClick={() => {
                                 if (hasVideo) {
                                   if (param.isFacebook && param.url) {
-                                    window.open(param.url, '_blank');
+                                    if (window.innerWidth < 768) {
+                                      window.location.href = param.url;
+                                    } else {
+                                      window.open(param.url, '_blank');
+                                    }
                                   } else if (onPlayVideo) {
                                     onPlayVideo(param.videoId, false, param.aspect);
                                   }
