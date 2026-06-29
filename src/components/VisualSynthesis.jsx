@@ -510,6 +510,12 @@ const categories = [
             "name": "蕾妮亞",
             "bgImage": "/vfx/E/E-13.png",
             "url": "https://www.instagram.com/reels/DLjzvwEyK6A/"
+          },
+          {
+            "name": "義美生醫 鈣D加",
+            "bgImage": "/vfx/E/E-14_imei.png",
+            "url": "https://www.youtube.com/watch?v=bbl9tJP92IY",
+            "videoId": "bbl9tJP92IY"
           }
         ]
       },
