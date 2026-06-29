@@ -204,7 +204,7 @@ export default function CanvasSequence({ onPlayVideo }) {
           scale: isLoading ? 0.95 : 1 
         }}
         transition={{ duration: 1, ease: 'easeOut' }}
-        className={`w-full max-w-[90vw] md:w-[1000px] aspect-[3/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-sm relative overflow-hidden border border-zinc-800 transition-all duration-300 ${
+        className={`w-full max-w-[90vw] md:w-[1000px] aspect-square md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-sm relative overflow-hidden border border-zinc-800 transition-all duration-300 ${
           isLoading ? 'pointer-events-none' : 'pointer-events-auto'
         }`}
       >
