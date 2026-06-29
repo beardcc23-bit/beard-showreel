@@ -633,10 +633,10 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
       <div className="relative z-10">
         <div
-          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
-          className={`text-xs tracking-wide transition-all duration-300 leading-snug ${hasVideo
-            ? 'text-white/30 group-hover:text-white font-semibold'
-            : 'text-white/30 font-semibold'
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.3)' }}
+          className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${hasVideo
+            ? 'text-zinc-100 group-hover:text-white font-semibold'
+            : 'text-zinc-200 font-semibold'
             }`}
         >
           {item.name}
@@ -645,7 +645,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
       {hasVideo ? (
         <div
-          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
           className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
         >
           <Play size={8} fill="currentColor" /> Play
