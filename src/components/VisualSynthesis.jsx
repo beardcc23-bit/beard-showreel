@@ -516,6 +516,10 @@ const categories = [
             "bgImage": "/vfx/E/E-14_imei.png",
             "url": "https://www.youtube.com/watch?v=bbl9tJP92IY",
             "videoId": "bbl9tJP92IY"
+          },
+          {
+            "name": "台灣武田合利他命 A25",
+            "bgImage": "/vfx/E/E-15_alinamin.png"
           }
         ]
       },
