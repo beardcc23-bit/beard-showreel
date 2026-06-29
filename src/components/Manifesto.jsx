@@ -147,15 +147,15 @@ export default function Manifesto({ onPlayVideo }) {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3 }}
               >
-                <RefractionCard className="bg-zinc-955/20 backdrop-blur-md border border-zinc-800/80 rounded-none p-6 md:p-8 flex flex-col justify-between min-h-[380px] shadow-2xl relative overflow-hidden">
-                  <div>
+                <RefractionCard className="bg-zinc-955/20 backdrop-blur-md border border-zinc-800/80 rounded-none p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                  <div className="space-y-6">
                     {/* 大字箴言 */}
-                    <div className="text-zinc-100 font-bold text-base md:text-lg tracking-tight mb-4 text-left border-l-2 border-aurora-blue pl-4 py-0.5">
+                    <div className="text-zinc-100 font-semibold text-lg md:text-xl tracking-wide text-left border-l-2 border-aurora-blue pl-4 py-0.5 leading-relaxed">
                       {activeCategory.quote}
                     </div>
 
                     {/* 描述 */}
-                    <p className="text-sm md:text-base text-zinc-400 font-light leading-relaxed mb-6">
+                    <p className="text-sm md:text-[15px] text-zinc-400 font-light leading-relaxed md:leading-loose">
                       {activeCategory.desc}
                     </p>
 
@@ -164,19 +164,20 @@ export default function Manifesto({ onPlayVideo }) {
                       {activeCategory.params.map((param) => {
                         const hasVideo = !!param.videoId;
                         return (
-                          <div key={param.key} className="space-y-1 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
-                            <div
+                          <div key={param.key} className="space-y-1.5 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
+                            <div 
                               onClick={() => {
                                 if (hasVideo && onPlayVideo) {
                                   onPlayVideo(param.videoId, !!param.isFacebook);
                                 }
                               }}
-                              className={`flex items-center gap-2 text-xs font-bold transition-all duration-200 ${hasVideo
-                                ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title'
-                                : 'text-aurora-blue'
-                                }`}
+                              className={`flex items-center gap-2 text-sm md:text-[15px] font-semibold transition-all duration-200 ${
+                                hasVideo 
+                                  ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title' 
+                                  : 'text-aurora-blue'
+                              }`}
                             >
-                              <Binary size={10} className="text-aurora-blue group-hover/title:scale-110 transition-transform duration-200" />
+                              <Binary size={12} className="text-aurora-blue group-hover/title:scale-110 transition-transform duration-200" />
                               <span className={hasVideo ? 'group-hover/title:underline' : ''}>
                                 {param.key}
                               </span>
@@ -186,22 +187,13 @@ export default function Manifesto({ onPlayVideo }) {
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs text-zinc-450 font-light leading-relaxed pl-4">
+                            <p className="text-xs md:text-[13px] text-zinc-450 font-light leading-relaxed md:leading-loose pl-5">
                               {param.value}
                             </p>
                           </div>
                         );
                       })}
                     </div>
-                  </div>
-
-                  {/* 底部 HUD 裝飾 */}
-                  <div className="border-t border-zinc-900 pt-5 mt-8 flex justify-between items-center mono text-[6px] text-zinc-500">
-                    <span>SYS_TEMP: 37.4°C // VOLT: 1.15V</span>
-                    <span className="flex items-center gap-1">
-                      <Terminal size={8} className="text-aurora-blue animate-pulse" />
-                      SHELL: ZSH // LAWS: COMPILING
-                    </span>
                   </div>
                 </RefractionCard>
               </motion.div>
