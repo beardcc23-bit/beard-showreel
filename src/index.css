@@ -645,31 +645,33 @@ body {
 
 /* 文字樣式控制 */
 .hud-btn .hud-eng {
-  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hud-btn .hud-zht {
-  transition: letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.4s;
+  transition: letter-spacing 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.5s ease;
 }
 
-/* Hover / Active 時文字顏色變化 */
+/* Hover / Active 時文字顏色變化與字距呼吸感 */
 .hud-btn:hover .hud-eng {
   color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.22em;
 }
 
 .hud-btn:hover .hud-zht {
   color: #fff;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.18em; /* 顯著拉開中文字距，帶來靈動的呼吸感 */
 }
 
 .hud-btn.is-active .hud-eng {
   color: var(--color-aurora-blue) !important;
+  letter-spacing: 0.18em !important;
 }
 
 .hud-btn.is-active .hud-zht {
   color: var(--color-aurora-blue) !important;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em !important;
 }
 
 
