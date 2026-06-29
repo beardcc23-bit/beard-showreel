@@ -95,7 +95,7 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid grid-cols-3 w-full max-w-2xl mb-12 border-y border-zinc-800/80 py-6 text-center"
+              className="grid grid-cols-3 w-full max-w-2xl mb-12 py-6 text-center"
             >
               <div className="flex flex-col items-center justify-center">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
@@ -105,7 +105,7 @@ export default function Introduction({ onPlayVideo }) {
                   後期資歷
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-center border-x border-zinc-800/80 px-4">
+              <div className="flex flex-col items-center justify-center px-4">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
                   <AnimatedCounter value={300} trigger={statsInView} />+<span className="text-aurora-blue text-[6px] font-bold mono">//Campaigns</span>
                 </div>
