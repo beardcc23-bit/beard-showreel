@@ -61,9 +61,11 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 ? 'aspect-square h-[70vh] md:h-[75vh]'
                 : 'aspect-video'
             }`}>
-              {data.isFacebook ? (
+               {data.isFacebook ? (
                 <iframe
-                  src={`https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${data.videoId}&show_text=0&t=0&autoplay=1`}
+                  src={data.videoUrl 
+                    ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(data.videoUrl)}&show_text=0&t=0&autoplay=1`
+                    : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${data.videoId}&show_text=0&t=0&autoplay=1`}
                   title="Facebook Video Player"
                   frameBorder="0"
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"

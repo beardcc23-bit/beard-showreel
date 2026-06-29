@@ -16,11 +16,11 @@ export default function App() {
   });
 
 
-  const handleOpenVideoModal = (videoId, isFacebook = false, aspect = 'video') => {
+  const handleOpenVideoModal = (videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
     setModalState({
       isOpen: true,
       type: 'video',
-      data: { videoId, isFacebook, aspect },
+      data: { videoId, isFacebook, aspect, videoUrl },
     });
   };
 

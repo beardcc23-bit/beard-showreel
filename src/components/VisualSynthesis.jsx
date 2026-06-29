@@ -585,8 +585,10 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
   const handleClick = () => {
     if (!hasVideo) return;
-    if (item.videoId) {
-      onPlayVideo(item.videoId, !!item.isFacebook, item.aspect);
+    if (item.isFacebook && item.url) {
+      window.open(item.url, '_blank');
+    } else if (item.videoId) {
+      onPlayVideo(item.videoId, false, item.aspect);
     } else if (item.url) {
       window.open(item.url, '_blank');
     }

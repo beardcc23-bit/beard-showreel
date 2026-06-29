@@ -57,7 +57,8 @@ const lawCategories = [
         value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並精細抹去手部與雙腿的刺青細節。',
         videoId: '1495921932163292',
         isFacebook: true,
-        aspect: 'square'
+        aspect: 'square',
+        url: 'https://www.facebook.com/TKLAB.tw/videos/1495921932163292'
       },
       {
         key: 'LUX 髮的補給',
@@ -166,17 +167,20 @@ export default function Manifesto({ onPlayVideo }) {
                         const hasVideo = !!param.videoId;
                         return (
                           <div key={param.key} className="space-y-1.5 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
-                            <div 
+                            <div
                               onClick={() => {
-                                if (hasVideo && onPlayVideo) {
-                                  onPlayVideo(param.videoId, !!param.isFacebook, param.aspect);
+                                if (hasVideo) {
+                                  if (param.isFacebook && param.url) {
+                                    window.open(param.url, '_blank');
+                                  } else if (onPlayVideo) {
+                                    onPlayVideo(param.videoId, false, param.aspect);
+                                  }
                                 }
                               }}
-                              className={`flex items-center gap-2 text-sm md:text-[15px] font-semibold transition-all duration-200 ${
-                                hasVideo 
-                                  ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title' 
-                                  : 'text-aurora-blue'
-                              }`}
+                              className={`flex items-center gap-2 text-sm md:text-[15px] font-semibold transition-all duration-200 ${hasVideo
+                                ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title'
+                                : 'text-aurora-blue'
+                                }`}
                             >
                               <Binary size={12} className="text-aurora-blue group-hover/title:scale-110 transition-transform duration-200" />
                               <span className={hasVideo ? 'group-hover/title:underline' : ''}>
