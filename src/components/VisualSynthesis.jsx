@@ -148,16 +148,6 @@ const categories = [
         "bgImage": "/vfx/A/A-026.png",
         "url": "https://www.youtube.com/watch?v=AyQQZ37OPfU",
         "videoId": "AyQQZ37OPfU"
-      },
-      {
-        "name": "樂事",
-        "bgImage": "/vfx/A/A-027.png",
-        "url": "https://www.youtube.com/watch?v=zQfi9U_023I",
-        "videoId": "zQfi9U_023I"
-      },
-      {
-        "name": "多力多滋",
-        "bgImage": "/vfx/A/A-028.png"
       }
     ]
   },
