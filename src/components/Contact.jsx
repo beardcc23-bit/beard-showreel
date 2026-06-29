@@ -4,7 +4,7 @@ import { Mail } from 'lucide-react';
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden py-32 border-t border-zinc-900 bg-bg-core/50">
+    <section id="contact" className="relative overflow-hidden py-32 bg-bg-core/50">
       {/* 科技光點背景 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       
