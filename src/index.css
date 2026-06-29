@@ -270,7 +270,7 @@ body {
 
 @keyframes float-crystal {
   0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-30px) rotate(25deg); }
+  50% { transform: translateY(-75px) rotate(45deg); } /* 大幅增加上下漂浮位移與旋轉幅度，提升太空零重力漂動感 */
   100% { transform: translateY(0) rotate(0deg); }
 }
 
