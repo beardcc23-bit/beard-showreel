@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Binary, Cpu } from 'lucide-react';
+import { Terminal, Binary, Cpu, Play } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 
 const lawCategories = [
@@ -182,7 +182,7 @@ export default function Manifesto({ onPlayVideo }) {
                                 : 'text-aurora-blue'
                                 }`}
                             >
-                              <Binary size={12} className="text-aurora-blue group-hover/title:scale-110 transition-transform duration-200" />
+                              <Play size={10} fill="currentColor" className="text-aurora-blue group-hover/title:scale-110 transition-transform duration-200" />
                               <span className={hasVideo ? 'group-hover/title:underline' : ''}>
                                 {param.key}
                               </span>
