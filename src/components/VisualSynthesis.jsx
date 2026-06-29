@@ -692,14 +692,11 @@ const categories = [
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
-          className={`px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-none min-w-0 leading-none ${activeTab === tab.id
-            ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
-            : 'border-zinc-855 text-zinc-400 bg-zinc-955/20 hover:text-white hover:border-zinc-700'
-            }`}
+          className={`hud-btn px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none ${activeTab === tab.id ? 'is-active' : ''}`}
         >
-          <span className={`text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === tab.id ? 'text-black/80' : 'text-zinc-500'
-            }`}>{engName}</span>
-          <span className="text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
+          <span className={`hud-eng text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === tab.id ? '' : 'text-zinc-500'
+            }`}>{`[ ${engName} ]`}</span>
+          <span className="hud-zht text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
         </button>
       );
     })
