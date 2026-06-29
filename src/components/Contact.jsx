@@ -7,18 +7,18 @@ export default function Contact() {
     <section id="contact" className="relative overflow-hidden py-32 bg-bg-core/50">
       {/* 科技光點背景 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
-      
+
       <div className="max-w-4xl mx-auto px-8 text-center relative z-10">
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter uppercase mb-16 glow-title whitespace-nowrap"
+          className="text-4xl sm:text-6xl md:text-9xl font-black tracking-tighter uppercase mb-16 glow-title whitespace-nowrap"
         >
           Let's <span className="text-aurora-blue">Connect</span>
         </motion.h2>
-        
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ export default function Contact() {
         >
           隨時歡迎來信交流，探討影像的更多可能。
         </motion.p>
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
