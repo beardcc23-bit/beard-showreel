@@ -197,9 +197,9 @@ export default function CanvasSequence({ onPlayVideo }) {
       </AnimatePresence>
 
       {/* 圖片序列 Canvas 主體 */}
-      {/* 播放器後方 HUD 同心圓旋轉背景 */}
+      {/* 播放器後方 HUD 同心圓旋轉背景（僅在手機版顯示，網頁桌面版隱藏） */}
       {!isLoading && (
-        <div className="absolute w-[1300px] h-[1300px] md:w-[1500px] md:h-[1500px] max-w-[140vw] max-h-[140vw] z-0 pointer-events-none flex items-center justify-center overflow-visible opacity-50">
+        <div className="absolute w-[1300px] h-[1300px] md:w-[1500px] md:h-[1500px] max-w-[140vw] max-h-[140vw] z-0 pointer-events-none flex md:hidden items-center justify-center overflow-visible opacity-50">
           <div className="absolute w-[90%] h-[90%] rounded-full border border-dashed border-zinc-800/80 animate-[spin_100s_linear_infinite]" />
           <div className="absolute w-[75%] h-[75%] rounded-full border-[1.5px] border-dashed border-dawn-gold/25 animate-[spin_70s_linear_infinite_reverse]" />
           <div className="absolute w-[55%] h-[55%] rounded-full border border-zinc-800/40 animate-[spin_40s_linear_infinite]" />
