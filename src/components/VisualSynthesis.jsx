@@ -695,7 +695,7 @@ const categories = [
           className={`hud-btn px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none ${activeTab === tab.id ? 'is-active' : ''}`}
         >
           <span className={`hud-eng text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === tab.id ? '' : 'text-zinc-500'
-            }`}>{`[ ${engName} ]`}</span>
+            }`}>{engName}</span>
           <span className="hud-zht text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
         </button>
       );

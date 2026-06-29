@@ -130,7 +130,7 @@ export default function Manifesto({ onPlayVideo }) {
                     className={`hud-btn px-1.5 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none ${activeTab === cat.id ? 'is-active' : ''}`}
                   >
                     <span className={`hud-eng text-[5px] sm:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === cat.id ? '' : 'text-zinc-500'
-                      }`}>[ {label.eng} ]</span>
+                      }`}>{label.eng}</span>
                     <span className="hud-zht text-[11px] sm:text-xs font-normal tracking-wider whitespace-nowrap">{label.zht}</span>
                   </button>
                 );
