@@ -147,10 +147,11 @@ export default function Manifesto({ onPlayVideo }) {
                 transition={{ duration: 0.3 }}
               >
                 <RefractionCard 
-                  className="backdrop-blur-2xl border border-white/[0.05] rounded-none p-6 md:p-8 shadow-2xl relative overflow-hidden group"
+                  className="backdrop-blur-2xl border border-white/[0.1] rounded-[32px] p-6 md:p-8 shadow-2xl relative overflow-hidden group"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 50%, rgba(0, 0, 0, 0.5) 100%)',
-                    backgroundColor: 'rgba(6, 6, 6, 0.5)'
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.65) 100%)',
+                    backgroundColor: 'rgba(6, 6, 6, 0.45)',
+                    boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
                   }}
                 >
                   {/* 高級科技微網格背景 (Micro Dot Grid Matrix) */}
@@ -173,11 +174,13 @@ export default function Manifesto({ onPlayVideo }) {
                   <div className="absolute -top-32 -left-32 w-64 h-64 bg-aurora-blue/12 rounded-full blur-[80px] pointer-events-none" />
                   <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/6 rounded-full blur-[80px] pointer-events-none" />
 
-                  {/* 四角金色科技切角 (HUD Corner Brackets) */}
-                  <div className="absolute top-0 left-0 w-3 h-3 border-t border-l pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
-                  <div className="absolute top-0 right-0 w-3 h-3 border-t border-r pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
-                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r pointer-events-none" style={{ borderColor: 'rgba(255, 224, 130, 0.5)' }} />
+                  {/* 寫實玻璃邊緣高光反光 (Specular Reflection Highlights - 符合圖二) */}
+                  {/* 頂部偏右邊緣高光 */}
+                  <div className="absolute top-0 right-[20%] w-40 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                  {/* 右側邊緣高光 */}
+                  <div className="absolute top-[40%] right-0 w-[1.5px] h-32 bg-gradient-to-b from-transparent via-white/60 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                  {/* 底部偏左邊緣高光 */}
+                  <div className="absolute bottom-0 left-[15%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/45 to-transparent blur-[0.3px] pointer-events-none z-10" />
 
                   <div className="space-y-6 relative z-10">
                     {/* 大字箴言 */}

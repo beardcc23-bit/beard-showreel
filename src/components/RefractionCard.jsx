@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-export default function RefractionCard({ children, className = '', ...props }) {
+export default function RefractionCard({ children, className = '', variant = 'glass', ...props }) {
   const cardRef = useRef(null);
 
   const handleMouseMove = (e) => {
@@ -12,11 +12,13 @@ export default function RefractionCard({ children, className = '', ...props }) {
     cardRef.current.style.setProperty('--mouse-y', `${y}px`);
   };
 
+  const borderClass = variant === 'glass' ? 'glass-prism-border' : 'prism-border';
+
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`prism-border ${className}`}
+      className={`${borderClass} ${className}`}
       {...props}
     >
       {children}
