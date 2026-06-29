@@ -616,13 +616,13 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
             alt={`${item.name} background`}
             loading="lazy"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
           />
-          {/* 全區域暗化遮罩，用來壓低高光 */}
-          <div className="absolute inset-0 bg-black/25" />
-          {/* 強化的漸層遮罩 */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25" />
+          {/* 全區域暗化遮罩：改為極淡的 5% 以釋放圖片亮度 */}
+          <div className="absolute inset-0 bg-black/5" />
+          {/* 漸層遮罩：僅底部保留暗色以突顯 PLAY，頂部與中間回歸全透明 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
         </div>
       )}
 
