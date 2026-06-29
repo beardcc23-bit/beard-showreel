@@ -49,7 +49,7 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="text-[46px] sm:text-6xl md:text-7xl font-black tracking-tighter mb-8 leading-none glow-title whitespace-nowrap"
+              className="text-[48px] sm:text-6xl md:text-7xl font-black tracking-tighter mb-8 leading-none glow-title whitespace-nowrap"
             >
               Beard <span className="text-aurora-blue">Chou</span>
             </motion.h2>

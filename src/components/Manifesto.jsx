@@ -82,7 +82,7 @@ export default function Manifesto({ onPlayVideo }) {
       <div className="relative z-10">
         {/* 頂部：標題區 */}
         <div className="text-center mb-20 relative z-10">
-          <h2 className="text-[46px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
+          <h2 className="text-[48px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
             The <span className="text-aurora-blue">Manifesto</span>
           </h2>
           <p className="text-zinc-350 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
