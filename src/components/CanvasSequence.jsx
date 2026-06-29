@@ -17,8 +17,10 @@ export default function CanvasSequence({ onPlayVideo }) {
   const frameInterval = 1000 / fps;
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    const folderName = isMobile ? 'png-0-mobile' : 'png-0';
     const basePath = import.meta.env.BASE_URL;
-    const firstFrameSrc = `${basePath}png-0/png-0_00000000.png?v=2`;
+    const firstFrameSrc = `${basePath}${folderName}/png-0_00000000.png?v=2`;
     
     // 初始化 ref 陣列長度
     loadedImagesRef.current = new Array(frameCount);
@@ -34,16 +36,16 @@ export default function CanvasSequence({ onPlayVideo }) {
       setLoadProgress(1);
       
       // 接著在背景非同步分批加載剩餘 144 張圖片
-      preloadRemainingFrames();
+      preloadRemainingFrames(folderName);
     };
 
     firstImg.onerror = () => {
       // 容錯防卡死
       setIsLoading(false);
-      preloadRemainingFrames();
+      preloadRemainingFrames(folderName);
     };
 
-    const preloadRemainingFrames = async () => {
+    const preloadRemainingFrames = async (activeFolder) => {
       const concurrencyLimit = 4; // 每次併發 4 個請求，防止網路排隊堵塞
       let nextIndex = 1;
       let loadedCount = 1;
@@ -51,7 +53,7 @@ export default function CanvasSequence({ onPlayVideo }) {
       const loadFrame = (index) => {
         return new Promise((resolve) => {
           const img = new Image();
-          img.src = `${basePath}png-0/png-0_${String(index).padStart(8, '0')}.png?v=2`;
+          img.src = `${basePath}${activeFolder}/png-0_${String(index).padStart(8, '0')}.png?v=2`;
           img.onload = () => {
             loadedImagesRef.current[index] = img;
             resolve();
