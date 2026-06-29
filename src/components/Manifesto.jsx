@@ -6,38 +6,38 @@ import RefractionCard from './RefractionCard';
 const lawCategories = [
   {
     id: '01',
-    title: 'CHROMA KEYING',
-    subtitle: '綠幕去背合成',
-    meta: 'SYSTEM.CHROMA: KEY_EXTRACTION // MATTE: ACTIVE',
-    quote: '「無痕去背的關鍵，在於邊緣的光影與溢色折射。」',
-    desc: '綠幕去背與合成不只是套用濾鏡。它考量頭髮邊緣的透明度、場景的溢色（Green Spill）消除，以及實拍人物與背景之間的景深與光線流向。我只做一件事：重塑髮絲極致細節，重建完美的物理邊界。',
+    title: 'AI GENERATION',
+    subtitle: 'AI 智慧影像生成',
+    meta: 'SYSTEM.AI: VIDEO_SYNTHESIS // DIFFUSION: COMPILING',
+    quote: '「AI 負責拓寬創意的邊界，而我負責將其無縫封裝落地。」',
+    desc: 'AI 生成看似帶來無限想像，實則伴隨著物理邏輯崩壞、畫面閃爍與無規律的細節錯誤。我專注於從這些隨機不可控的片段中，精準篩選並萃取可用元素，透過 Flame 重新雕琢光影物理、動態透視與真實反射，將隨機的 AI 素材，無痕合成為符合大片質感的高階商業畫面。',
     params: [
-      { key: '茶飲品牌形象廣告', value: '精細還原代言人飄逸髮絲邊緣，並完美濾除綠幕溢色，讓人物無縫融入大自然茶園天光。' },
-      { key: '科技跑車宣傳片', value: '處理大面積綠幕去背與車身玻璃反射，精準合成霓虹賽博朋克街景，重現動態溢光。' }
+      { key: '黑松茶花', value: '前期預先透過 AI 生成水豚君角色的各種動態，作為現場實拍演員的動作對位與表演參照。' },
+      { key: 'Foxtron Caviar', value: '將實際車輛路跑影片，完美結合 AI 輔助生成的淡江大橋路跑背景，在 Flame 中重塑極致的物理光影與動態透視。' }
     ]
   },
   {
     id: '02',
-    title: 'BEAUTY RETOUCHING',
-    subtitle: '人物美體膚質精修',
-    meta: 'SYSTEM.RETOUCH: FACE_TRACKING // SKIN: OPTIMAL',
-    quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
-    desc: '人像與美體精修不能像塑膠蠟像。我專注於臉部追蹤與肌肉動態，進行身材比例微調與膚質雜點清潔，同時保留毛孔紋理與光影高光。在極限時程內，交付導演與客戶挑剔的特寫鏡頭。',
+    title: 'CHROMA KEYING',
+    subtitle: '綠幕去背合成',
+    meta: 'SYSTEM.CHROMA: KEY_EXTRACTION // MATTE: ACTIVE',
+    quote: '「真正的無痕合成，是讓去背邊緣與環境光影產生自然呼吸感。」',
+    desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
     params: [
-      { key: '國際美妝保養廣告', value: '對女主角面部進行高精度追蹤，無痕清潔膚質暗沉與微小瑕疵，保留自然皮脂反光。' },
-      { key: '運動服飾代言片', value: '依據人體肌肉紋理與運動軌跡，細緻微調身材比例與線條，呈現健康優美的物理動態。' }
+      { key: 'UCC', value: '免去出外景的大量時程，於棚內進行綠幕拍攝，後期精準合成海景與山景，依然呈現如實地拍攝般的高質感天光。' },
+      { key: '磊山保經', value: '克服無綠幕環境的限制，以細緻的手工逐幀去背抽離角色，並在多重圖層間嵌入動態閃爍色塊，創造出節奏感強烈且層次豐富的畫面視覺。' }
     ]
   },
   {
     id: '03',
-    title: 'AI GENERATION',
-    subtitle: 'AI 智慧影像生成',
-    meta: 'SYSTEM.AI: VIDEO_SYNTHESIS // DIFFUSION: COMPILING',
-    quote: '「AI 負責拓寬創意的邊界，而我們負責將其無縫封裝落地。」',
-    desc: 'AI 影片生成帶來無限可能，但也伴隨著雜訊與動態抖動。我將先進的 AI 生成技術融入傳統合成工作流中，利用 AI 進行材質擴展、補幀與煙霧去背，在大幅提升效率的同時，以專業直覺把關畫面的極致美感。',
+    title: 'BEAUTY RETOUCHING',
+    subtitle: '人物美體膚質精修',
+    meta: 'SYSTEM.RETOUCH: FACE_TRACKING // SKIN: OPTIMAL',
+    quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
+    desc: '極致的人像修飾，是讓主角展現無瑕面容與完美體態，卻不失真實溫度。我藉由精確的動態轉描與肌理微調，在避免塑膠感的同時，精修出最符合黃金比例的自然物理動態。',
     params: [
-      { key: '科幻概念宣傳片', value: '利用 Stable Diffusion 進行科幻場景的材質擴增與動態修補，大幅縮短前期三維渲染時間。' },
-      { key: '音樂錄影帶 MV', value: '採用 AI 影片轉譯技術將實拍人像風格化，並在 Flame 中進行動態去噪與色彩一致性校正。' }
+      { key: 'TKLAB', value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並精細抹去手部與雙腿的刺青細節。' },
+      { key: 'LUX 髮的補給', value: '不只雕琢面部無瑕膚質的自然光澤，更針對秀髮的動態細節進行優化，呈現流暢且具空氣感的長髮飄逸視覺。' }
     ]
   }
 ];
@@ -90,9 +90,9 @@ export default function Manifesto() {
             <div className="flex gap-2.5 mb-5">
               {lawCategories.map((cat) => {
                 const labelMap = {
-                  '01': { eng: '01 / CHROMA KEY', zht: '綠幕去背合成' },
-                  '02': { eng: '02 / BEAUTY WORK', zht: '人物美體精修' },
-                  '03': { eng: '03 / AI VIDEO', zht: 'AI 影片生成' }
+                  '01': { eng: '01 / AI VIDEO', zht: 'AI 影片生成' },
+                  '02': { eng: '02 / CHROMA KEY', zht: '綠幕去背合成' },
+                  '03': { eng: '03 / BEAUTY WORK', zht: '人物美體精修' }
                 };
                 const label = labelMap[cat.id];
                 return (
