@@ -28,13 +28,6 @@ const categories = [
         "videoId": "AuuxyMIutf8"
       },
       {
-        "name": "可口可樂",
-        "bgImage": "/vfx/A/A-005.png",
-        "url": "https://www.facebook.com/watch/?v=1286974884802497",
-        "videoId": "1286974884802497",
-        "isFacebook": true
-      },
-      {
         "name": "好侍咖哩",
         "bgImage": "/vfx/A/A-006.png",
         "url": "https://www.youtube.com/watch?v=jScTOFsO97U",
@@ -275,8 +268,10 @@ const categories = [
         "videoId": "vgf14stUB0w"
       },
       {
-        "name": "foxtron caviar",
-        "bgImage": null
+        "name": "Foxtron Caviar",
+        "bgImage": "/vfx/C/C-02.png",
+        "url": "https://youtu.be/pCBQA1vEDig?si=lbbvGmTm90P5Vx4P",
+        "videoId": "pCBQA1vEDig"
       },
       {
         "name": "Gogoro EZZY",
