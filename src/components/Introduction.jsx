@@ -95,7 +95,7 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid grid-cols-3 w-full max-w-2xl mb-12 py-6 text-center"
+              className="grid grid-cols-3 w-full max-w-2xl mb-12 py-6 text-center bg-[#090a0b] rounded-2xl border border-zinc-900/60 shadow-[0_10px_30px_rgba(0,0,0,0.3)]"
             >
               <div className="flex flex-col items-center justify-center">
                 <div className="text-3xl md:text-4xl font-black text-white tracking-tight glow-text flex items-baseline justify-center gap-1">
