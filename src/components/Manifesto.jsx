@@ -111,7 +111,7 @@ export default function Manifesto({ onPlayVideo }) {
           {/* 右側：整合的 Laws 系統 HUD 面板 */}
           <div className="md:col-span-6 flex flex-col">
             {/* 微型 Tabs 切換 */}
-            <div className="flex gap-2.5 mb-5">
+            <div className="flex gap-1.5 sm:gap-2.5 mb-5 w-full">
               {lawCategories.map((cat) => {
                 const labelMap = {
                   '01': { eng: '01 / AI VIDEO', zht: 'AI 影片生成' },
@@ -123,14 +123,14 @@ export default function Manifesto({ onPlayVideo }) {
                   <button
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
-                    className={`px-4 py-2.5 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-none min-w-[100px] leading-none ${activeTab === cat.id
+                    className={`px-1.5 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center transition-all duration-300 border rounded-none min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none ${activeTab === cat.id
                       ? 'border-aurora-blue text-black bg-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.2)]'
                       : 'border-zinc-880 text-zinc-400 hover:text-white hover:border-zinc-700 bg-zinc-950/20'
                       }`}
                   >
-                    <span className={`text-[6px] mono tracking-widest uppercase mb-1 ${activeTab === cat.id ? 'text-black/80' : 'text-zinc-500'
+                    <span className={`text-[5px] sm:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === cat.id ? 'text-black/80' : 'text-zinc-500'
                       }`}>{label.eng}</span>
-                    <span className="text-xs font-normal tracking-wider">{label.zht}</span>
+                    <span className="text-[10px] sm:text-xs font-normal tracking-wider whitespace-nowrap">{label.zht}</span>
                   </button>
                 );
               })}
