@@ -571,6 +571,10 @@ const categories = [
             "bgImage": "/vfx/F/F-09.png",
             "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
             "videoId": "Rwrn87N2PUc"
+          },
+          {
+            "name": "國泰世華 財富管理",
+            "bgImage": "/vfx/F/F-09_cathay.png"
           }
         ]
       }
