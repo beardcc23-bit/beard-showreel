@@ -96,7 +96,7 @@ export default function Manifesto({ onPlayVideo }) {
           <div className="md:col-span-6 flex flex-col text-zinc-350 text-base md:text-lg leading-relaxed font-light">
             {/* 隱形占位區，高度與右側按鈕及間距呼應，以達成左右文字齊頭 */}
             <div className="hidden md:block h-[51px] mb-5" />
-            <div className="space-y-8 md:mt-8">
+            <div className="space-y-8">
               <p>
                 作為台灣俗稱的 D1 技師，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用 Autodesk Flame 進行 Online 。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 SC 播帶，完成這次專案。
               </p>
