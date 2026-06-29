@@ -189,6 +189,13 @@ const categories = [
             "isFacebook": true
           },
           {
+            "name": "Panasonic 冷萃咖啡機",
+            "bgImage": "/vfx/B/B-05_coffee.png",
+            "url": "https://www.facebook.com/PanasonicCooking/videos/1251224095275421/?locale=ms_MY",
+            "videoId": "1251224095275421",
+            "isFacebook": true
+          },
+          {
             "name": "Samsung Galaxy S22",
             "bgImage": "/vfx/B/B-06.png",
             "url": "https://www.youtube.com/watch?v=UkSewV5ScR0",
