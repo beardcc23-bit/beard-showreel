@@ -655,23 +655,23 @@ body {
 /* Hover / Active 時文字顏色變化與字距呼吸感 */
 .hud-btn:hover .hud-eng {
   color: rgba(255, 255, 255, 0.9);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.44em;
 }
 
 .hud-btn:hover .hud-zht {
   color: #fff;
-  letter-spacing: 0.18em; /* 顯著拉開中文字距，帶來靈動的呼吸感 */
+  letter-spacing: 0.36em; /* 字距再展開一倍，極大增強呼吸動態感 */
 }
 
 .hud-btn.is-active .hud-eng {
   color: var(--color-aurora-blue) !important;
-  letter-spacing: 0.18em !important;
+  letter-spacing: 0.36em !important;
 }
 
 .hud-btn.is-active .hud-zht {
   color: var(--color-aurora-blue) !important;
   font-weight: 500;
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.2em !important;
 }
 
 
