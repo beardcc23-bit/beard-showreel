@@ -146,15 +146,37 @@ export default function Manifesto({ onPlayVideo }) {
                 transition={{ duration: 0.3 }}
               >
                 <RefractionCard 
-                  className="backdrop-blur-xl border border-white/[0.06] rounded-none p-6 md:p-8 shadow-2xl relative overflow-hidden"
+                  className="backdrop-blur-2xl border border-white/[0.05] rounded-none p-6 md:p-8 shadow-2xl relative overflow-hidden group"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.4) 100%)',
-                    backgroundColor: 'rgba(10, 10, 10, 0.45)'
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 50%, rgba(0, 0, 0, 0.5) 100%)',
+                    backgroundColor: 'rgba(6, 6, 6, 0.5)'
                   }}
                 >
-                  {/* 玻璃內部的折射光源 (Refraction Glows) */}
-                  <div className="absolute -top-32 -left-32 w-64 h-64 bg-aurora-blue/10 rounded-full blur-[80px] pointer-events-none" />
-                  <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/5 rounded-full blur-[80px] pointer-events-none" />
+                  {/* 高級科技微網格背景 (Micro Dot Grid Matrix) */}
+                  <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+                       style={{
+                         backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.8) 1px, transparent 1px)',
+                         backgroundSize: '20px 20px'
+                       }}
+                  />
+
+                  {/* 隨滑鼠游標移動的動態高光折射 (Interactive Specular Reflection) */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0"
+                    style={{
+                      background: 'radial-gradient(circle 250px at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.035), transparent 80%)'
+                    }}
+                  />
+
+                  {/* 玻璃內部的雙色折射光源 (Refraction Ambient Glows) */}
+                  <div className="absolute -top-32 -left-32 w-64 h-64 bg-aurora-blue/12 rounded-full blur-[80px] pointer-events-none" />
+                  <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/6 rounded-full blur-[80px] pointer-events-none" />
+
+                  {/* 四角金色科技切角 (HUD Corner Brackets) */}
+                  <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-aurora-blue/30 pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-aurora-blue/30 pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-aurora-blue/30 pointer-events-none" />
+                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-aurora-blue/30 pointer-events-none" />
 
                   <div className="space-y-6 relative z-10">
                     {/* 大字箴言 */}
