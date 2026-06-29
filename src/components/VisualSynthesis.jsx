@@ -166,7 +166,7 @@ const categories = [
     "name": "3C與家電",
     "items": [
       {
-        "name": "panasonic 瞬熱式溫水洗淨便座",
+        "name": "Panasonic 溫水洗淨便座",
         "bgImage": "/vfx/B/B-01.png",
         "url": "https://www.youtube.com/watch?v=SMCldr-5kbg",
         "videoId": "SMCldr-5kbg"
