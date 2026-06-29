@@ -131,7 +131,7 @@ body {
   top: 0; left: 0;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 100;
+  z-index: 0;
   width: 375px;
   height: 375px;
   background: radial-gradient(circle, rgba(101, 180, 227, 0.22) 0%, rgba(208, 157, 183, 0.09) 40%, rgba(208, 157, 183, 0) 70%);
