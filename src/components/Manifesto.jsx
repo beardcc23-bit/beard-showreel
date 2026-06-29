@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Binary, Cpu, Play } from 'lucide-react';
+import { Cpu, Play } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 
 const lawCategories = [
