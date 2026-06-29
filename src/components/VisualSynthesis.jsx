@@ -616,13 +616,13 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
             alt={`${item.name} background`}
             loading="lazy"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-100' : 'opacity-0'
+            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
               }`}
           />
-          {/* 全區域暗化遮罩：改為極淡的 5% 以釋放圖片亮度 */}
-          <div className="absolute inset-0 bg-black/5" />
-          {/* 漸層遮罩：僅底部保留暗色以突顯 PLAY，頂部與中間回歸全透明 */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+          {/* 全區域暗化遮罩：滑鼠移入時由 25% 調淡至 5% */}
+          <div className="absolute inset-0 bg-black/25 group-hover:bg-black/5 transition-all duration-300" />
+          {/* 漸層遮罩：滑鼠移入時變淡，釋放圖片色彩 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25 group-hover:from-black/85 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300" />
         </div>
       )}
 
@@ -633,10 +633,10 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
       <div className="relative z-10">
         <div
-          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)' }}
-          className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${hasVideo
-            ? 'text-zinc-100 group-hover:text-white font-semibold'
-            : 'text-zinc-200 font-semibold'
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
+          className={`text-xs tracking-wide transition-all duration-300 leading-snug ${hasVideo
+            ? 'text-white/30 group-hover:text-white font-semibold'
+            : 'text-white/30 font-semibold'
             }`}
         >
           {item.name}
