@@ -76,12 +76,6 @@ const categories = [
         "aspect": "portrait"
       },
       {
-        "name": "活沛多",
-        "bgImage": "/vfx/A/A-014.png",
-        "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
-        "videoId": "Y4CG2QNa5hs"
-      },
-      {
         "name": "格蘭利威",
         "bgImage": "/vfx/A/A-015.png"
       },
@@ -487,6 +481,12 @@ const categories = [
             "videoId": "1495921932163292",
             "isFacebook": true,
             "aspect": "square"
+          },
+          {
+            "name": "活沛多",
+            "bgImage": "/vfx/A/A-014.png",
+            "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
+            "videoId": "Y4CG2QNa5hs"
           },
           {
             "name": "三得利 蜂王乳+芝麻明E",
