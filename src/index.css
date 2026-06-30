@@ -179,6 +179,24 @@ body {
   transition: var(--theme-transition);
 }
 
+/* Autodesk Flame 懸浮文字底線流光動畫 */
+@keyframes line-shimmer {
+  0% { background-position: 150% 0; }
+  100% { background-position: -150% 0; }
+}
+
+.flowing-laser-line {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.22) 0%, #ffe082 50%, rgba(212, 175, 55, 0.22) 100%);
+  background-size: 200% 100%;
+  animation: line-shimmer 2.8s linear infinite;
+  transition: all 0.3s ease;
+}
+
+.group\/flame:hover .flowing-laser-line {
+  background: #D4AF37 !important; /* hover 時變回完全飽和的金黃實線 */
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.7);
+  animation: none; /* 停止動畫，回歸靜態實線 */
+}
 
 /* 幾何軌道容器與動畫 - 提升 z-index 確保在背景層之上、內容層之下 */
 .orbit-container {
