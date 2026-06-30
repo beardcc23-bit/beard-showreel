@@ -108,25 +108,57 @@ export default function Manifesto({ onPlayVideo }) {
                   <span className="absolute bottom-0 left-0 w-full h-[1.5px] flowing-laser-line" />
                   
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
-                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-[280px] md:w-[340px] pointer-events-none opacity-0 translate-y-2 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-300 ease-out z-[99]">
-                    <span className="block backdrop-blur-xl bg-zinc-950/90 border border-white/10 rounded-sm p-3 shadow-[0_20px_40px_rgba(0,0,0,0.85),_0_0_25px_rgba(255,255,255,0.03)] relative overflow-hidden">
-                      {/* 玻璃邊緣高光反光 */}
-                      <span className="absolute top-0 right-[15%] w-28 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent blur-[0.2px] pointer-events-none z-10" />
-                      <span className="absolute top-[20%] left-0 w-[1px] h-14 bg-gradient-to-b from-transparent via-white/25 to-transparent blur-[0.2px] pointer-events-none z-10" />
-                      
-                      {/* 縮圖 */}
-                      <img
-                        src="/f1.jpg"
-                        alt="Autodesk Flame Batch Schematic"
-                        className="w-full aspect-video object-cover border border-zinc-900 rounded-sm mb-2.5"
-                      />
-                      {/* 底部小字註解 */}
-                      <span className="block text-[10px] text-zinc-300 leading-relaxed mono pl-2 border-l-2 border-aurora-blue">
-                        實際專案Batch節點介面
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-[290px] md:w-[350px] pointer-events-none opacity-0 translate-y-3 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-500 ease-out z-[99]">
+                    <span className="block backdrop-blur-2xl bg-zinc-950/85 border border-white/10 rounded-[12px] p-3.5 shadow-[0_30px_60px_rgba(0,0,0,0.9),_0_0_30px_rgba(212,175,55,0.12)] relative overflow-hidden">
+                      {/* 寫實高透玻璃反光 */}
+                      <span className="absolute top-0 right-[25%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent blur-[0.2px] pointer-events-none z-10" />
+                      <span className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurora-blue/15 to-transparent blur-[0.5px] pointer-events-none z-10" />
+                      <span className="absolute top-[15%] left-0 w-[1px] h-16 bg-gradient-to-b from-transparent via-white/25 to-transparent blur-[0.2px] pointer-events-none z-10" />
+                      <span className="absolute bottom-0 right-[15%] w-24 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent blur-[0.2px] pointer-events-none z-10" />
+
+                      {/* 頂部 HUD 狀態標籤列 (中英文搭配 + 閃爍綠燈) */}
+                      <span className="flex justify-between items-center text-[7.5px] mono text-zinc-500 tracking-[0.25em] uppercase mb-2.5 border-b border-zinc-900 pb-2">
+                        <span>SYS.FLAME // BATCH_NODE_003</span>
+                        <span className="flex items-center gap-1.5 text-zinc-400 font-bold tracking-wider">
+                          <span className="w-1.5 h-1.5 rounded-full bg-prism-green animate-pulse relative flex items-center justify-center">
+                            <span className="absolute w-full h-full rounded-full bg-prism-green animate-ping opacity-60" />
+                          </span>
+                          LIVE SYNC
+                        </span>
+                      </span>
+
+                      {/* 縮圖顯示器容器 (含網格掃描線與內光暈) */}
+                      <span className="block relative aspect-video overflow-hidden border border-zinc-900 rounded-sm mb-3">
+                        <img
+                          src="/f1.jpg"
+                          alt="Autodesk Flame Batch Schematic"
+                          className="w-full h-full object-cover grayscale-[10%] group-hover/flame:grayscale-0 transition-all duration-700"
+                        />
+                        {/* 科技感顯示器網格掃描線 overlay */}
+                        <span className="absolute inset-0 bg-[linear-gradient(rgba(18,19,20,0)_96%,rgba(212,175,55,0.06)_96%)] bg-[size:100%_4px] pointer-events-none mix-blend-overlay opacity-60" />
+                        <span className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10 pointer-events-none" />
+                        {/* 內發光邊框 */}
+                        <span className="absolute inset-0 border border-white/5 pointer-events-none" />
+                      </span>
+
+                      {/* 底部說明文字 (左側雙線高對比金色標識) */}
+                      <span className="flex items-start gap-2.5">
+                        <span className="flex gap-[1.5px] h-3.5 mt-0.5 pointer-events-none">
+                          <span className="w-[1.5px] h-full bg-aurora-blue" />
+                          <span className="w-[1px] h-full bg-aurora-blue/50" />
+                        </span>
+                        <span className="flex flex-col text-left">
+                          <span className="text-[7.5px] mono text-aurora-blue tracking-widest font-black uppercase mb-0.5">
+                            SCHEMATIC OVERVIEW
+                          </span>
+                          <span className="text-[10px] text-zinc-300 font-bold leading-normal tracking-wide">
+                            實際專案 Batch 節點介面
+                          </span>
+                        </span>
                       </span>
                     </span>
                     {/* 微型指向天線/箭頭 */}
-                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-zinc-950/90" />
+                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-zinc-950/85" />
                     <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-white/10 -z-10 translate-y-[1px]" />
                   </span>
                 </span>{' '}
