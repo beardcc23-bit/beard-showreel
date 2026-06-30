@@ -99,7 +99,37 @@ export default function Manifesto({ onPlayVideo }) {
             <div className="hidden md:block h-[51px] mb-5" />
             <div className="space-y-8">
               <p>
-                作為台灣俗稱的 <span className="inline-block">D1 技師</span> <span className="inline-block">(VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用 <span className="inline-block">Autodesk Flame</span> 進行 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 <span className="inline-block">SC 播帶</span>，完成這次專案。
+                作為台灣俗稱的 <span className="inline-block">D1 技師</span> <span className="inline-block">(VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用{' '}
+                <span className="relative inline-block group/flame cursor-pointer">
+                  <span className="text-aurora-blue font-bold border-b border-dashed border-aurora-blue/60 group-hover/flame:border-solid transition-all duration-300">
+                    Autodesk Flame
+                  </span>
+                  
+                  {/* 浮動的 HUD 節點圖預覽卡片 */}
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-[280px] md:w-[340px] pointer-events-none opacity-0 translate-y-2 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-300 ease-out z-[99]">
+                    <span className="block backdrop-blur-xl bg-zinc-950/95 border border-aurora-blue/45 rounded-sm p-3 shadow-[0_20px_40px_rgba(0,0,0,0.85),_0_0_25px_rgba(212,175,55,0.18)]">
+                      {/* 頂部 HUD 微標籤 */}
+                      <span className="flex justify-between items-center text-[8px] mono text-zinc-500 tracking-wider uppercase mb-2 border-b border-zinc-900 pb-1.5">
+                        <span>// WORKSPACE_SCHEMATIC: ACTIVE</span>
+                        <span className="text-aurora-blue">FLAME_BATCH_v2026</span>
+                      </span>
+                      {/* 縮圖 */}
+                      <img
+                        src="/f1.png"
+                        alt="Autodesk Flame Batch Schematic"
+                        className="w-full aspect-video object-cover border border-zinc-900 rounded-sm"
+                      />
+                      {/* 底部小字註解 */}
+                      <span className="block text-[10px] text-zinc-400 leading-relaxed mt-2 mono pl-2 border-l border-aurora-blue/40">
+                        實際專案節點流：去背合成、動態追蹤與 Action 三維物理光影匹配
+                      </span>
+                    </span>
+                    {/* 微型指向天線/箭頭 */}
+                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-zinc-950/95" />
+                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-aurora-blue/45 -z-10 translate-y-[1px]" />
+                  </span>
+                </span>{' '}
+                進行 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 <span className="inline-block">SC 播帶</span>，完成這次專案。
               </p>
               <p>
                 即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。
