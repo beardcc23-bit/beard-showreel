@@ -120,7 +120,7 @@ export default function Manifesto({ onPlayVideo }) {
                   
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
                   <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-[290px] md:w-[350px] pointer-events-none opacity-0 translate-y-3 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-500 ease-out z-[99] hidden md:block">
-                    <span className="block backdrop-blur-2xl bg-zinc-950/60 border border-white/10 rounded-[12px] p-3.5 shadow-[0_30px_60px_rgba(0,0,0,0.9),_0_0_30px_rgba(212,175,55,0.12)] relative overflow-hidden">
+                    <span className="block bg-zinc-950/95 border border-white/10 rounded-[12px] p-3.5 shadow-[0_30px_60px_rgba(0,0,0,0.9),_0_0_30px_rgba(212,175,55,0.12)] relative overflow-hidden">
                       {/* 寫實高透玻璃反光 */}
                       <span className="absolute top-0 right-[25%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent blur-[0.2px] pointer-events-none z-10" />
                       <span className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurora-blue/15 to-transparent blur-[0.5px] pointer-events-none z-10" />
