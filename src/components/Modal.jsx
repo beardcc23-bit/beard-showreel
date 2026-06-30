@@ -42,6 +42,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
               ? 'max-w-[45vh] md:max-w-[50vh]'
               : type === 'video' && data.aspect === 'square'
               ? 'max-w-[70vh] md:max-w-[75vh]'
+              : type === 'image'
+              ? 'max-w-2xl'
               : 'max-w-4xl'
           }`}
         >
@@ -88,6 +90,30 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   className="w-full h-full"
                 ></iframe>
               )}
+            </div>
+          ) : type === 'image' ? (
+            /* 單張圖片展示模式 (例如 Flame 節點解密) */
+            <div className="p-4 md:p-6 flex flex-col bg-[#121314] rounded-lg">
+              <div className="flex justify-between items-center text-[10px] mb-3 border-b border-zinc-900 pb-2.5 mono text-zinc-500">
+                <span>// AUTODESK FLAME WORKSPACE</span>
+                <span className="text-aurora-blue font-bold">LIVE SCHEMATIC</span>
+              </div>
+              <div className="w-full overflow-hidden border border-zinc-900 rounded-sm mb-3.5">
+                <img
+                  src={data.imageUrl}
+                  alt={data.title}
+                  className="w-full aspect-video object-cover"
+                />
+              </div>
+              <div className="flex items-center gap-2.5 pl-1 pb-1">
+                <span className="flex gap-[1.5px] h-3 pointer-events-none">
+                  <span className="w-[1.5px] h-full bg-aurora-blue" />
+                  <span className="w-[1px] h-full bg-aurora-blue/50" />
+                </span>
+                <span className="text-[11px] text-zinc-300 font-bold tracking-wide">
+                  {data.description}
+                </span>
+              </div>
             </div>
           ) : (
             /* Case Study 專案模式 */

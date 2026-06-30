@@ -15,6 +15,21 @@ export default function App() {
     data: null,
   });
 
+  React.useEffect(() => {
+    const handleOpenImage = (e) => {
+      const { imageUrl, title, description } = e.detail;
+      setModalState({
+        isOpen: true,
+        type: 'image',
+        data: { imageUrl, title, description }
+      });
+    };
+    window.addEventListener('open-image-modal', handleOpenImage);
+    return () => {
+      window.removeEventListener('open-image-modal', handleOpenImage);
+    };
+  }, []);
+
 
   const handleOpenVideoModal = (videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
     setModalState({

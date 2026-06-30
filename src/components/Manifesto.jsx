@@ -100,7 +100,18 @@ export default function Manifesto({ onPlayVideo }) {
             <div className="space-y-8">
               <p>
                 作為台灣俗稱的 <span className="inline-block">D1 技師</span> <span className="inline-block">(VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用{' '}
-                <span className="relative inline-block group/flame cursor-pointer">
+                <span 
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('open-image-modal', {
+                      detail: {
+                        imageUrl: '/f1.jpg',
+                        title: 'Autodesk Flame Batch Schematic',
+                        description: '實際專案 Batch 節點介面'
+                      }
+                    }));
+                  }}
+                  className="relative inline-block group/flame cursor-pointer"
+                >
                   <span className="text-white group-hover/flame:text-aurora-blue font-bold transition-colors duration-300">
                     Autodesk Flame
                   </span>
@@ -108,7 +119,7 @@ export default function Manifesto({ onPlayVideo }) {
                   <span className="absolute bottom-0 left-0 w-full h-[1.5px] flowing-laser-line" />
                   
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
-                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-[290px] md:w-[350px] pointer-events-none opacity-0 translate-y-3 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-500 ease-out z-[99]">
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-[290px] md:w-[350px] pointer-events-none opacity-0 translate-y-3 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-500 ease-out z-[99] hidden md:block">
                     <span className="block backdrop-blur-2xl bg-zinc-950/60 border border-white/10 rounded-[12px] p-3.5 shadow-[0_30px_60px_rgba(0,0,0,0.9),_0_0_30px_rgba(212,175,55,0.12)] relative overflow-hidden">
                       {/* 寫實高透玻璃反光 */}
                       <span className="absolute top-0 right-[25%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent blur-[0.2px] pointer-events-none z-10" />
