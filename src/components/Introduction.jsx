@@ -155,7 +155,7 @@ export default function Introduction({ onPlayVideo }) {
             >
               <button
                 onClick={() => onPlayVideo('s6s2p87fPdA')}
-                className="prism-button px-16 py-5 text-black font-bold rounded-sm uppercase text-xs tracking-[0.2em] text-center w-full sm:w-auto"
+                className="prism-button px-16 py-5 !text-white font-bold rounded-sm uppercase text-sm tracking-[0.25em] text-center w-full sm:w-auto"
               >
                 SHOWREEL
               </button>
