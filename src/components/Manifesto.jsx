@@ -102,13 +102,16 @@ export default function Manifesto({ onPlayVideo }) {
                 作為台灣俗稱的 <span className="inline-block">D1 技師</span> <span className="inline-block">(VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用{' '}
                 <span 
                   onClick={() => {
-                    window.dispatchEvent(new CustomEvent('open-image-modal', {
-                      detail: {
-                        imageUrl: '/f1.jpg',
-                        title: 'Autodesk Flame Batch Schematic',
-                        description: '實際專案 Batch 節點介面'
-                      }
-                    }));
+                    // 只有在手機版（螢幕小於 768px）點擊才彈出 Modal，網頁版（桌機）只靠懸浮
+                    if (window.innerWidth < 768) {
+                      window.dispatchEvent(new CustomEvent('open-image-modal', {
+                        detail: {
+                          imageUrl: '/f1.jpg',
+                          title: 'Autodesk Flame Batch Schematic',
+                          description: '實際專案 Batch 節點介面'
+                        }
+                      }));
+                    }
                   }}
                   className="relative inline-block group/flame cursor-pointer"
                 >
