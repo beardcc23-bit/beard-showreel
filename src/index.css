@@ -188,7 +188,7 @@ body {
 .flowing-laser-line {
   background: linear-gradient(90deg, rgba(212, 175, 55, 0.22) 0%, #ffe082 50%, rgba(212, 175, 55, 0.22) 100%);
   background-size: 200% 100%;
-  animation: line-shimmer 2.8s linear infinite;
+  animation: line-shimmer 8s linear infinite;
   transition: all 0.3s ease;
 }
 
