@@ -102,6 +102,26 @@ export default function CanvasSequence({ onPlayVideo }) {
     let lastFrameTime = performance.now();
 
     const render = (now) => {
+      const drawImageProp = (img) => {
+        const imgRatio = img.width / img.height;
+        const canvasRatio = canvas.width / canvas.height;
+        let drawWidth, drawHeight, drawX, drawY;
+
+        if (imgRatio > canvasRatio) {
+          drawHeight = canvas.height;
+          drawWidth = canvas.height * imgRatio;
+          drawX = (canvas.width - drawWidth) / 2;
+          drawY = 0;
+        } else {
+          drawWidth = canvas.width;
+          drawHeight = canvas.width / imgRatio;
+          drawX = 0;
+          drawY = (canvas.height - drawHeight) / 2;
+        }
+
+        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+      };
+
       // 只要 isPlaying 為 true，我們就持續進行播放運算，即使背景還在加載
       if (isPlaying) {
         const deltaTime = now - lastFrameTime;
@@ -110,7 +130,7 @@ export default function CanvasSequence({ onPlayVideo }) {
           // 只有當前圖片下載完成且可用時，才繪製它
           if (img && img.complete) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            drawImageProp(img);
           }
           // 無論圖片是否載入成功，都繼續前進到下一影格，確保流暢播放
           // 因為不呼叫 clearRect，所以如果當前幀沒下載好，會直接保留上一幀的畫面，防止閃爍
@@ -122,7 +142,7 @@ export default function CanvasSequence({ onPlayVideo }) {
         const img = loadedImagesRef.current[currentFrameRef.current] || loadedImagesRef.current[0];
         if (img && img.complete) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          drawImageProp(img);
         }
       }
       animationFrameId = requestAnimationFrame(render);
