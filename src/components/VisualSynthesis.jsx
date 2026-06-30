@@ -603,6 +603,25 @@ const categories = [
     const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       const hasVideo = !!item.videoId || !!item.url;
       const [isImageLoaded, setIsImageLoaded] = useState(false);
+      const innerRef = React.useRef(null);
+
+      const setRefs = (node) => {
+        innerRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      };
+
+      const handleMouseMove = (e) => {
+        if (!innerRef.current) return;
+        const rect = innerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        innerRef.current.style.setProperty('--mouse-x', `${x}px`);
+        innerRef.current.style.setProperty('--mouse-y', `${y}px`);
+      };
 
       const handleClick = () => {
         if (!hasVideo) return;
@@ -625,12 +644,16 @@ const categories = [
 
       return (
         <div
-          ref={ref}
+          ref={setRefs}
+          onMouseMove={handleMouseMove}
           onClick={handleClick}
-          className={`p-3.5 border rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] ${hasVideo
-            ? 'border-zinc-700/60 bg-zinc-900/50 hover:border-aurora-blue cursor-pointer hover:shadow-[0_10px_30px_rgba(212,175,55,0.08)] hover:-translate-y-1'
-            : 'border-zinc-800/80 bg-zinc-900/20'
+          className={`prism-border p-3.5 rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] ${hasVideo
+            ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1'
+            : 'bg-white/[0.01] border-white/8'
             }`}
+          style={{
+            '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
+          }}
         >
           {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
           {item.bgImage && (
@@ -648,8 +671,8 @@ const categories = [
                 className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
                   }`}
               />
-              {/* 全區域暗化遮罩：滑鼠移入時由 25% 調淡至 5% */}
-              <div className="absolute inset-0 bg-black/25 group-hover:bg-black/5 transition-all duration-300" />
+              {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
+              <div className="absolute inset-0 bg-black/10 backdrop-blur-none md:backdrop-blur-[1px] group-hover:backdrop-blur-none group-hover:bg-black/5 transition-all duration-300" />
               {/* 漸層遮罩：滑鼠移入時變淡，釋放圖片色彩 */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25 group-hover:from-black/85 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300" />
             </div>

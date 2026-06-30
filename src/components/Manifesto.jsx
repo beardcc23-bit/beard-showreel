@@ -64,7 +64,8 @@ const lawCategories = [
         key: 'LUX 髮的補給',
         value: '不只雕琢面部無瑕膚質的自然光澤，更針對秀髮的動態細節進行優化，呈現流暢且具空氣感的長髮飄逸視覺。',
         videoId: '822528356385191',
-        isFacebook: true
+        isFacebook: true,
+        url: 'https://www.facebook.com/watch/?v=822528356385191'
       }
     ]
   }
@@ -209,7 +210,7 @@ export default function Manifesto({ onPlayVideo }) {
                                       window.open(param.url, '_blank');
                                     }
                                   } else if (onPlayVideo) {
-                                    onPlayVideo(param.videoId, false, param.aspect);
+                                    onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
                                   }
                                 }
                               }}

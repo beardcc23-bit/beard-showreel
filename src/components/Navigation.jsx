@@ -94,7 +94,7 @@ export default function Navigation() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={toggleMenu}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[999] md:hidden"
+              className="fixed inset-0 bg-black/10 backdrop-blur-md z-[999] md:hidden"
             />
             {/* 側邊選單主體 */}
             <motion.div
@@ -127,7 +127,7 @@ export default function Navigation() {
               <a
                 href="#contact"
                 onClick={(e) => handleScroll(e, '#contact')}
-                className="hud-btn is-active block w-auto -mx-5 px-5 py-4 flex flex-col items-start justify-center leading-none"
+                className="hud-btn is-active w-fit px-6 py-3.5 flex flex-col items-start justify-center leading-none mt-2 -ml-6"
               >
                 <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">Establish Connection</span>
                 <span className="hud-zht text-xl font-normal uppercase tracking-widest">建立聯繫</span>
