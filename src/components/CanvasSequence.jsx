@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function CanvasSequence({ onPlayVideo }) {
+export default function CanvasSequence({ onPlayVideo, isModalOpen }) {
   const canvasRef = useRef(null);
   const currentFrameRef = useRef(0);
   const loadedImagesRef = useRef([]);
@@ -122,8 +122,8 @@ export default function CanvasSequence({ onPlayVideo }) {
         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
       };
 
-      // 只要 isPlaying 為 true，我們就持續進行播放運算，即使背景還在加載
-      if (isPlaying) {
+      // 只要 isPlaying 為 true 且 Modal 關閉，我們就持續進行播放運算
+      if (isPlaying && !isModalOpen) {
         const deltaTime = now - lastFrameTime;
         if (deltaTime >= frameInterval) {
           const img = loadedImagesRef.current[currentFrameRef.current];
@@ -153,7 +153,7 @@ export default function CanvasSequence({ onPlayVideo }) {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isLoading, isPlaying]);
+  }, [isLoading, isPlaying, isModalOpen]);
 
   const handleMouseEnter = () => {
     setIsPlaying(false);

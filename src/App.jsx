@@ -88,7 +88,7 @@ export default function App() {
       {/* 主頁面區段 */}
       <main>
         {/* 首頁 Hero 區 (純全屏 Canvas 序列播放，無重疊文字) */}
-        <Hero onPlayVideo={handleOpenVideoModal} />
+        <Hero onPlayVideo={handleOpenVideoModal} isModalOpen={modalState.isOpen} />
 
         {/* 開場介紹區段 (S Y S T E M _ S T A T U S : O P T I M A L 及精雕文案與按鈕) */}
         <Introduction onPlayVideo={handleOpenVideoModal} />

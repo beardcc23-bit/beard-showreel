@@ -28,7 +28,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/90 backdrop-blur-md cursor-pointer"
+          className="fixed inset-0 bg-black/90 cursor-pointer"
         />
 
         {/* 彈窗內容本體 */}
