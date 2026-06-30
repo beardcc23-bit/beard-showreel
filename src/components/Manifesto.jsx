@@ -109,23 +109,12 @@ export default function Manifesto({ onPlayVideo }) {
                   
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
                   <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-[290px] md:w-[350px] pointer-events-none opacity-0 translate-y-3 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-500 ease-out z-[99]">
-                    <span className="block backdrop-blur-2xl bg-zinc-950/85 border border-white/10 rounded-[12px] p-3.5 shadow-[0_30px_60px_rgba(0,0,0,0.9),_0_0_30px_rgba(212,175,55,0.12)] relative overflow-hidden">
+                    <span className="block backdrop-blur-2xl bg-zinc-950/60 border border-white/10 rounded-[12px] p-3.5 shadow-[0_30px_60px_rgba(0,0,0,0.9),_0_0_30px_rgba(212,175,55,0.12)] relative overflow-hidden">
                       {/* 寫實高透玻璃反光 */}
                       <span className="absolute top-0 right-[25%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent blur-[0.2px] pointer-events-none z-10" />
                       <span className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurora-blue/15 to-transparent blur-[0.5px] pointer-events-none z-10" />
                       <span className="absolute top-[15%] left-0 w-[1px] h-16 bg-gradient-to-b from-transparent via-white/25 to-transparent blur-[0.2px] pointer-events-none z-10" />
                       <span className="absolute bottom-0 right-[15%] w-24 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent blur-[0.2px] pointer-events-none z-10" />
-
-                      {/* 頂部 HUD 狀態標籤列 (中英文搭配 + 閃爍綠燈) */}
-                      <span className="flex justify-between items-center text-[7.5px] mono text-zinc-500 tracking-[0.25em] uppercase mb-2.5 border-b border-zinc-900 pb-2">
-                        <span>SYS.FLAME // BATCH_NODE_003</span>
-                        <span className="flex items-center gap-1.5 text-zinc-400 font-bold tracking-wider">
-                          <span className="w-1.5 h-1.5 rounded-full bg-prism-green animate-pulse relative flex items-center justify-center">
-                            <span className="absolute w-full h-full rounded-full bg-prism-green animate-ping opacity-60" />
-                          </span>
-                          LIVE SYNC
-                        </span>
-                      </span>
 
                       {/* 縮圖顯示器容器 (含網格掃描線與內光暈) */}
                       <span className="block relative aspect-video overflow-hidden border border-zinc-900 rounded-sm mb-3">
@@ -142,23 +131,18 @@ export default function Manifesto({ onPlayVideo }) {
                       </span>
 
                       {/* 底部說明文字 (左側雙線高對比金色標識) */}
-                      <span className="flex items-start gap-2.5">
-                        <span className="flex gap-[1.5px] h-3.5 mt-0.5 pointer-events-none">
+                      <span className="flex items-center gap-2.5">
+                        <span className="flex gap-[1.5px] h-3 pointer-events-none">
                           <span className="w-[1.5px] h-full bg-aurora-blue" />
                           <span className="w-[1px] h-full bg-aurora-blue/50" />
                         </span>
-                        <span className="flex flex-col text-left">
-                          <span className="text-[7.5px] mono text-aurora-blue tracking-widest font-black uppercase mb-0.5">
-                            SCHEMATIC OVERVIEW
-                          </span>
-                          <span className="text-[10px] text-zinc-300 font-bold leading-normal tracking-wide">
-                            實際專案 Batch 節點介面
-                          </span>
+                        <span className="text-[10px] text-zinc-300 font-bold leading-none tracking-wide">
+                          實際專案 Batch 節點介面
                         </span>
                       </span>
                     </span>
                     {/* 微型指向天線/箭頭 */}
-                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-zinc-950/85" />
+                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-zinc-950/60" />
                     <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-white/10 -z-10 translate-y-[1px]" />
                   </span>
                 </span>{' '}
