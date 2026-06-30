@@ -18,8 +18,8 @@ const lawCategories = [
         videoId: 'pCBQA1vEDig'
       },
       {
-        key: '黑松茶花',
-        value: '在前期階段，我利用 AI 生成技術快速模擬水豚君的動態與表情，不僅利於與導演高效溝通並預覽畫面，也作為現場演員動作對位與表演的精準參照。',
+        key: '活沛多',
+        value: '將實拍的人物，運用 AI 生成模型小人，再跟其他 AI 人物互動。',
         videoId: 'TRqUVCCZwRU'
       }
     ]
