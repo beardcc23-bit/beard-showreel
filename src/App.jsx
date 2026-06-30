@@ -37,7 +37,6 @@ export default function App() {
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />
       <div className="grid-bg" />
-      <div className="schematic-bg" />
 
       {/* 3D 幾何與折射背景裝飾 */}
       <div className="lens-flare flare-1" />
