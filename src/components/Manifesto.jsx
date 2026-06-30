@@ -189,7 +189,10 @@ export default function Manifesto({ onPlayVideo }) {
 
                   <div className="space-y-6 relative z-10">
                     {/* 大字箴言 */}
-                    <div className="text-zinc-100 font-semibold text-lg md:text-xl tracking-wide text-left border-l-2 border-aurora-blue pl-4 py-0.5 leading-relaxed">
+                    <div 
+                      className="text-zinc-100 font-semibold text-lg md:text-xl tracking-wide text-left border-l-2 border-aurora-blue py-0.5 leading-relaxed"
+                      style={{ textIndent: '-1em', paddingLeft: 'calc(1rem + 1em)' }}
+                    >
                       {activeCategory.quote}
                     </div>
 
