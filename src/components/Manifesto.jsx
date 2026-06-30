@@ -107,7 +107,11 @@ export default function Manifesto({ onPlayVideo }) {
                   
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
                   <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-[280px] md:w-[340px] pointer-events-none opacity-0 translate-y-2 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-300 ease-out z-[99]">
-                    <span className="block backdrop-blur-xl bg-zinc-950/95 border border-aurora-blue/45 rounded-sm p-3 shadow-[0_20px_40px_rgba(0,0,0,0.85),_0_0_25px_rgba(212,175,55,0.18)]">
+                    <span className="block backdrop-blur-xl bg-zinc-950/90 border border-white/10 rounded-sm p-3 shadow-[0_20px_40px_rgba(0,0,0,0.85),_0_0_25px_rgba(255,255,255,0.03)] relative overflow-hidden">
+                      {/* 玻璃邊緣高光反光 */}
+                      <span className="absolute top-0 right-[15%] w-28 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent blur-[0.2px] pointer-events-none z-10" />
+                      <span className="absolute top-[20%] left-0 w-[1px] h-14 bg-gradient-to-b from-transparent via-white/25 to-transparent blur-[0.2px] pointer-events-none z-10" />
+                      
                       {/* 縮圖 */}
                       <img
                         src="/f1.jpg"
@@ -120,8 +124,8 @@ export default function Manifesto({ onPlayVideo }) {
                       </span>
                     </span>
                     {/* 微型指向天線/箭頭 */}
-                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-zinc-950/95" />
-                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-aurora-blue/45 -z-10 translate-y-[1px]" />
+                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-zinc-950/90" />
+                    <span className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-white/10 -z-10 translate-y-[1px]" />
                   </span>
                 </span>{' '}
                 進行 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 <span className="inline-block">SC 播帶</span>，完成這次專案。
