@@ -108,20 +108,15 @@ export default function Manifesto({ onPlayVideo }) {
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
                   <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-[280px] md:w-[340px] pointer-events-none opacity-0 translate-y-2 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-300 ease-out z-[99]">
                     <span className="block backdrop-blur-xl bg-zinc-950/95 border border-aurora-blue/45 rounded-sm p-3 shadow-[0_20px_40px_rgba(0,0,0,0.85),_0_0_25px_rgba(212,175,55,0.18)]">
-                      {/* 頂部 HUD 微標籤 */}
-                      <span className="flex justify-between items-center text-[8px] mono text-zinc-500 tracking-wider uppercase mb-2 border-b border-zinc-900 pb-1.5">
-                        <span>// WORKSPACE_SCHEMATIC: ACTIVE</span>
-                        <span className="text-aurora-blue">FLAME_BATCH_v2026</span>
-                      </span>
                       {/* 縮圖 */}
                       <img
-                        src="/f1.png"
+                        src="/f1.jpg"
                         alt="Autodesk Flame Batch Schematic"
-                        className="w-full aspect-video object-cover border border-zinc-900 rounded-sm"
+                        className="w-full aspect-video object-cover border border-zinc-900 rounded-sm mb-2.5"
                       />
                       {/* 底部小字註解 */}
-                      <span className="block text-[10px] text-zinc-400 leading-relaxed mt-2 mono pl-2 border-l border-aurora-blue/40">
-                        實際專案節點流：去背合成、動態追蹤與 Action 三維物理光影匹配
+                      <span className="block text-[10px] text-zinc-300 leading-relaxed mono pl-2 border-l-2 border-aurora-blue">
+                        實際專案Batch節點介面
                       </span>
                     </span>
                     {/* 微型指向天線/箭頭 */}
