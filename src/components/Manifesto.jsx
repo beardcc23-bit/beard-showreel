@@ -107,8 +107,12 @@ export default function Manifesto({ onPlayVideo }) {
               <p>
                 面對 AI 浪潮，我不斷學習並掌握 <span className="inline-block">AI 技能</span>，將智慧輔助技術融入傳統合成流程。藉由更高的效率與敏銳的視覺直覺，探索影音創作的全新視野。
               </p>
-              <p className="border-l-2 border-aurora-blue pl-6 py-2 text-zinc-200">
-                「細心雕琢每一格畫面，在極限的時程裡，成為替導演與客戶<span className="inline-block">解決問題的人。</span>」
+              <p 
+                className="border-l-2 border-aurora-blue py-2 text-zinc-200 text-sm sm:text-base leading-relaxed"
+                style={{ textIndent: '-1em', paddingLeft: 'calc(1.5rem + 1em)' }}
+              >
+                「細心雕琢每一格畫面，在極限的時程裡，<br className="block sm:hidden" />
+                成為替導演與客戶解決問題的人。」
               </p>
             </div>
           </div>
