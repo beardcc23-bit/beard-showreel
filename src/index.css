@@ -188,10 +188,11 @@ body {
   background-position: center;
   z-index: -1; /* 設在背景層 */
   pointer-events: none;
-  /* 科技感濾鏡：去色、轉為琥珀金調、極低亮度與透明度，使其融入暗水泥背景 */
-  filter: grayscale(100%) sepia(100%) saturate(160%) hue-rotate(5deg) brightness(0.28) contrast(1.15) opacity(0.045);
-  mask-image: radial-gradient(circle at center, black 15%, transparent 75%);
-  -webkit-mask-image: radial-gradient(circle at center, black 15%, transparent 75%);
+  mix-blend-mode: screen; /* 核心：濾掉截圖黑底，只保留亮部線條 */
+  /* 調整濾鏡以提升可見度，呈現高質感暗金色 */
+  filter: grayscale(100%) sepia(100%) saturate(180%) hue-rotate(5deg) brightness(0.65) opacity(0.18);
+  mask-image: radial-gradient(circle at center, black 25%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at center, black 25%, transparent 85%);
   transition: var(--theme-transition);
 }
 
