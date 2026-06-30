@@ -94,10 +94,6 @@ export default function Modal({ isOpen, onClose, type, data }) {
           ) : type === 'image' ? (
             /* 單張圖片展示模式 (例如 Flame 節點解密) */
             <div className="p-4 md:p-6 flex flex-col bg-[#121314] rounded-lg">
-              <div className="flex justify-between items-center text-[10px] mb-3 border-b border-zinc-900 pb-2.5 mono text-zinc-500">
-                <span>// AUTODESK FLAME WORKSPACE</span>
-                <span className="text-aurora-blue font-bold">LIVE SCHEMATIC</span>
-              </div>
               <div className="w-full overflow-hidden border border-zinc-900 rounded-sm mb-3.5">
                 <img
                   src={data.imageUrl}
