@@ -4,6 +4,7 @@ export default function CursorGlow() {
   const glowRef = useRef(null);
   const dotRef = useRef(null);
   const [isMobile, setIsMobile] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
 
   // 在 ref 中緩存滑鼠與 hover 狀態，避免頻繁更新 React state 導致重複 render
   const mouseCoords = useRef({ x: 0, y: 0 });
@@ -97,15 +98,31 @@ export default function CursorGlow() {
       }
     };
 
+    const handleHideCursor = () => {
+      setIsHidden(true);
+      document.body.classList.remove('custom-cursor');
+    };
+
+    const handleShowCursor = () => {
+      setIsHidden(false);
+      if (window.innerWidth >= 768) {
+        document.body.classList.add('custom-cursor');
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseover', handleMouseOver);
     window.addEventListener('mouseout', handleMouseOut);
+    window.addEventListener('hide-custom-cursor', handleHideCursor);
+    window.addEventListener('show-custom-cursor', handleShowCursor);
 
     return () => {
       window.removeEventListener('resize', checkMobile);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
       window.removeEventListener('mouseout', handleMouseOut);
+      window.removeEventListener('hide-custom-cursor', handleHideCursor);
+      window.removeEventListener('show-custom-cursor', handleShowCursor);
       cancelAnimationFrame(animationFrameId);
       document.body.classList.remove('custom-cursor');
     };
@@ -119,6 +136,10 @@ export default function CursorGlow() {
       <div
         ref={glowRef}
         className="cursor-glow-element"
+        style={{
+          opacity: isHidden ? 0 : 1,
+          transition: 'opacity 0.25s ease, width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
       />
       {/* 游標核心同心圓環 (45度開口反向旋轉) */}
       <div
@@ -129,7 +150,8 @@ export default function CursorGlow() {
           width: '32px',
           height: '32px',
           transform: 'translate3d(0,0,0) translate(-50%, -50%) scale(1)',
-          transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease',
+          opacity: isHidden ? 0 : 1,
         }}
       >
         <svg width="32" height="32" viewBox="0 0 32 32" className="overflow-visible">

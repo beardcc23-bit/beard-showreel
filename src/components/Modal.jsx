@@ -9,9 +9,11 @@ export default function Modal({ isOpen, onClose, type, data }) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
+      window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
     return () => {
       document.body.style.overflow = 'unset';
+      window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     };
   }, [isOpen]);
 
@@ -54,13 +56,17 @@ export default function Modal({ isOpen, onClose, type, data }) {
 
           {type === 'video' ? (
             /* 影片播放模式 */
-            <div className={`bg-black mx-auto overflow-hidden w-full ${
-              data.aspect === 'portrait'
-                ? 'aspect-[9/16] h-[80vh]'
-                : data.aspect === 'square'
-                ? 'aspect-square h-[70vh] md:h-[75vh]'
-                : 'aspect-video'
-            }`}>
+            <div 
+              onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
+              onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
+              className={`bg-black mx-auto overflow-hidden w-full ${
+                data.aspect === 'portrait'
+                  ? 'aspect-[9/16] h-[80vh]'
+                  : data.aspect === 'square'
+                  ? 'aspect-square h-[70vh] md:h-[75vh]'
+                  : 'aspect-video'
+              }`}
+            >
                {data.isFacebook ? (
                 <iframe
                   src={data.videoUrl 
