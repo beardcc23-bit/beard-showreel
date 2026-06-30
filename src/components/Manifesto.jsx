@@ -105,7 +105,7 @@ export default function Manifesto({ onPlayVideo }) {
                     Autodesk Flame
                   </span>
                   {/* 下方金色線條與一直流動的劃線提示 */}
-                  <span className="absolute -bottom-0.5 left-0 w-full h-[1.5px] flowing-laser-line" />
+                  <span className="absolute bottom-0 left-0 w-full h-[1.5px] flowing-laser-line" />
                   
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
                   <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-[280px] md:w-[340px] pointer-events-none opacity-0 translate-y-2 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-300 ease-out z-[99]">
