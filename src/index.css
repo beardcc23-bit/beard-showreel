@@ -198,6 +198,24 @@ body {
   animation: none; /* 停止動畫，回歸靜態實線 */
 }
 
+/* 播放金色三角形呼吸慢慢放大提示動態 */
+@keyframes play-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(212, 175, 55, 0));
+  }
+  50% {
+    transform: scale(1.22);
+    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.5));
+  }
+}
+
+.play-triangle-pulse {
+  display: inline-block;
+  transform-origin: center;
+  animation: play-pulse 2.4s ease-in-out infinite;
+}
+
 /* 幾何軌道容器與動畫 - 提升 z-index 確保在背景層之上、內容層之下 */
 .orbit-container {
   position: fixed;

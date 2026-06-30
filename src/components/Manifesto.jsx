@@ -287,7 +287,7 @@ export default function Manifesto({ onPlayVideo }) {
                                 : 'text-aurora-blue'
                                 }`}
                             >
-                              <Play size={10} fill="currentColor" className="text-aurora-blue group-hover/title:scale-110 transition-transform duration-200" />
+                              <Play size={10} fill="currentColor" className="text-aurora-blue play-triangle-pulse group-hover/title:!scale-125 transition-transform duration-200" />
                               <span className={`whitespace-nowrap ${hasVideo ? 'group-hover/title:underline' : ''}`}>
                                 {param.key}
                               </span>

@@ -700,7 +700,7 @@ const categories = [
               style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
               className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
             >
-              <Play size={8} fill="currentColor" /> Play
+              <Play size={8} fill="currentColor" className="play-triangle-pulse" /> Play
             </div>
           ) : null}
         </div>
