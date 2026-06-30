@@ -205,8 +205,8 @@ body {
     filter: drop-shadow(0 0 0px rgba(212, 175, 55, 0));
   }
   50% {
-    transform: scale(1.22);
-    filter: drop-shadow(0 0 3px rgba(212, 175, 55, 0.5));
+    transform: scale(1.45);
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.65));
   }
 }
 
