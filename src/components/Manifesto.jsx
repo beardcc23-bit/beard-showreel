@@ -101,9 +101,11 @@ export default function Manifesto({ onPlayVideo }) {
               <p>
                 作為台灣俗稱的 <span className="inline-block">D1 技師</span> <span className="inline-block">(VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用{' '}
                 <span className="relative inline-block group/flame cursor-pointer">
-                  <span className="text-aurora-blue font-bold border-b border-dashed border-aurora-blue/60 group-hover/flame:border-solid transition-all duration-300">
+                  <span className="text-white group-hover/flame:text-aurora-blue font-bold transition-colors duration-300">
                     Autodesk Flame
                   </span>
+                  {/* 下方金色線條與連續劃線動態 */}
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-[1.5px] bg-aurora-blue transition-all duration-300 group-hover/flame:w-full" />
                   
                   {/* 浮動的 HUD 節點圖預覽卡片 */}
                   <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3.5 w-[280px] md:w-[340px] pointer-events-none opacity-0 translate-y-2 scale-95 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 group-hover/flame:scale-100 transition-all duration-300 ease-out z-[99]">
