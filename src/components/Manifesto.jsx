@@ -20,7 +20,7 @@ const lawCategories = [
       {
         key: '活沛多',
         value: '利用 AI 生成模型將實拍人物轉譯為微縮比例小人，並無縫融入與其他虛擬 AI 角色之間的跨次元互動。',
-        videoId: 'TRqUVCCZwRU'
+        videoId: 'Y4CG2QNa5hs'
       }
     ]
   },
