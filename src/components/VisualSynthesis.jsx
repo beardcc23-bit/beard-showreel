@@ -32,7 +32,8 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       if (window.innerWidth < 768) {
         window.location.href = item.url;
       } else {
-        window.open(item.url, '_blank');
+        const newWindow = window.open(item.url, '_blank');
+        if (newWindow) newWindow.opener = null;
       }
     } else if (item.videoId) {
       onPlayVideo(item.videoId, false, item.aspect);
@@ -40,7 +41,8 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       if (window.innerWidth < 768) {
         window.location.href = item.url;
       } else {
-        window.open(item.url, '_blank');
+        const newWindow = window.open(item.url, '_blank');
+        if (newWindow) newWindow.opener = null;
       }
     }
   };

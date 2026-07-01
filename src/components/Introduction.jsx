@@ -9,6 +9,8 @@ function AnimatedCounter({ value, trigger, duration = 1.5 }) {
     if (!trigger) return;
 
     let startTime = null;
+    let animationFrameId = null;
+
     const step = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
@@ -16,13 +18,19 @@ function AnimatedCounter({ value, trigger, duration = 1.5 }) {
       setCount(Math.floor(easeProgress * value));
 
       if (progress < 1) {
-        window.requestAnimationFrame(step);
+        animationFrameId = window.requestAnimationFrame(step);
       } else {
         setCount(value);
       }
     };
 
-    window.requestAnimationFrame(step);
+    animationFrameId = window.requestAnimationFrame(step);
+
+    return () => {
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, [trigger, value, duration]);
 
   return <span>{count}</span>;

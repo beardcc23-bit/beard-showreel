@@ -21,8 +21,8 @@ export default function Navigation() {
     
     setIsOpen(false); // 關閉行動版選單
 
-    const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 85;
-    const startPosition = window.pageYOffset;
+    const targetPosition = element.getBoundingClientRect().top + window.scrollY - 85;
+    const startPosition = window.scrollY;
     const distance = targetPosition - startPosition;
     const duration = 400; // 400ms 高速直達
     let startTime = null;
