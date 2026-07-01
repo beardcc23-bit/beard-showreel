@@ -31,21 +31,21 @@ export default function App() {
   }, []);
 
 
-  const handleOpenVideoModal = (videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
+  const handleOpenVideoModal = React.useCallback((videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
     setModalState({
       isOpen: true,
       type: 'video',
       data: { videoId, isFacebook, aspect, videoUrl },
     });
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = React.useCallback(() => {
     setModalState({
       isOpen: false,
       type: null,
       data: null,
     });
-  };
+  }, []);
 
   return (
     <div className="relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden">

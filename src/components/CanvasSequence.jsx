@@ -152,6 +152,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen }) {
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      loadedImagesRef.current = [];
     };
   }, [isLoading, isPlaying, isModalOpen]);
 
