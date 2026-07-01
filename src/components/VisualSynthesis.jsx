@@ -110,12 +110,6 @@ const categories = [
         "videoId": "qJqmBWZxbdo"
       },
       {
-        "name": "活沛多",
-        "bgImage": "/vfx/A/A-021.png",
-        "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
-        "videoId": "Y4CG2QNa5hs"
-      },
-      {
         "name": "黑松茶花",
         "bgImage": "/vfx/A/A-022.png",
         "url": "https://www.youtube.com/watch?v=cKbH-CxdjxY",
@@ -147,580 +141,580 @@ const categories = [
   },
   {
     "id": "tech",
-        "name": "3C與家電",
-        "items": [
-          {
-            "name": "Panasonic 溫水洗淨便座",
-            "bgImage": "/vfx/B/B-01.png",
-            "url": "https://www.youtube.com/watch?v=SMCldr-5kbg",
-            "videoId": "SMCldr-5kbg"
-          },
-          {
-            "name": "Panasonic Viera 電視",
-            "bgImage": "/vfx/B/B-02.png",
-            "url": "https://www.youtube.com/watch?v=J8IkANYZD3s",
-            "videoId": "J8IkANYZD3s"
-          },
-          {
-            "name": "Panasonic 蒸氣電熨斗",
-            "bgImage": "/vfx/B/B-03.png",
-            "url": "https://www.facebook.com/watch/?v=844958797010401",
-            "videoId": "844958797010401",
-            "isFacebook": true
-          },
-          {
-            "name": "Panasonic W音波電動牙刷",
-            "bgImage": "/vfx/B/B-04.png",
-            "url": "https://www.facebook.com/PanasonicBeautyTaiwan/videos/1352504146494183/",
-            "videoId": "1352504146494183",
-            "isFacebook": true
-          },
-          {
-            "name": "Panasonic 吸頂燈",
-            "bgImage": "/vfx/B/B-05.png",
-            "url": "https://www.facebook.com/PanasonicTaiwan/videos/634112755292450/",
-            "videoId": "634112755292450",
-            "isFacebook": true
-          },
-          {
-            "name": "Panasonic 冷萃咖啡機",
-            "bgImage": "/vfx/B/B-05_coffee.png",
-            "url": "https://www.facebook.com/PanasonicCooking/videos/1251224095275421/?locale=ms_MY",
-            "videoId": "1251224095275421",
-            "isFacebook": true
-          },
-          {
-            "name": "Samsung Galaxy S22",
-            "bgImage": "/vfx/B/B-06.png",
-            "url": "https://www.youtube.com/watch?v=UkSewV5ScR0",
-            "videoId": "UkSewV5ScR0"
-          },
-          {
-            "name": "Samsung Z Fold2 / Z Flip2",
-            "bgImage": "/vfx/B/B-07.png",
-            "url": "https://www.facebook.com/watch/?v=1046986065709266",
-            "videoId": "1046986065709266",
-            "isFacebook": true
-          },
-          {
-            "name": "Samsung Z Fold3 / Z Flip3",
-            "bgImage": "/vfx/B/B-08.png",
-            "url": "https://www.facebook.com/watch/?v=558217842125093",
-            "videoId": "558217842125093",
-            "isFacebook": true
-          },
-          {
-            "name": "Samsung Z Fold4 / Z Flip4",
-            "bgImage": "/vfx/B/B-09.png"
-          },
-          {
-            "name": "Samsung Galaxy Tab S11 Ultra",
-            "bgImage": "/vfx/B/B-10.png",
-            "url": "https://www.facebook.com/reel/1338163857656555",
-            "videoId": "1338163857656555",
-            "isFacebook": true,
-            "aspect": "portrait"
-          },
-          {
-            "name": "Sony Xperia",
-            "bgImage": "/vfx/B/B-11.png"
-          },
-          {
-            "name": "Tokuyo 按摩椅",
-            "bgImage": "/vfx/B/B-12.png",
-            "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
-            "videoId": "_SENfBsNjgE"
-          },
-          {
-            "name": "三菱重工空調",
-            "bgImage": "/vfx/B/B-13.png",
-            "url": "https://www.youtube.com/watch?v=fanfOOV80ok",
-            "videoId": "fanfOOV80ok"
-          },
-          {
-            "name": "三菱電機",
-            "bgImage": "/vfx/B/B-14.png",
-            "url": "https://www.facebook.com/watch/?v=824057254764949",
-            "videoId": "824057254764949",
-            "isFacebook": true
-          },
-          {
-            "name": "中華電信 企業形象影片",
-            "bgImage": "/vfx/B/B-15.png"
-          }
-        ]
+    "name": "3C與家電",
+    "items": [
+      {
+        "name": "Panasonic 溫水洗淨便座",
+        "bgImage": "/vfx/B/B-01.png",
+        "url": "https://www.youtube.com/watch?v=SMCldr-5kbg",
+        "videoId": "SMCldr-5kbg"
       },
       {
-        "id": "vehicle",
-        "name": "交通工具",
-        "items": [
-          {
-            "name": "Audi",
-            "bgImage": "/vfx/C/C-01.png",
-            "url": "https://www.youtube.com/watch?v=vgf14stUB0w",
-            "videoId": "vgf14stUB0w"
-          },
-          {
-            "name": "Foxtron Caviar",
-            "bgImage": "/vfx/C/C-02.png",
-            "url": "https://youtu.be/pCBQA1vEDig?si=lbbvGmTm90P5Vx4P",
-            "videoId": "pCBQA1vEDig"
-          },
-          {
-            "name": "Gogoro EZZY",
-            "bgImage": "/vfx/C/C-03.png",
-            "url": "https://www.youtube.com/watch?v=4apkzFFsV4E",
-            "videoId": "4apkzFFsV4E"
-          },
-          {
-            "name": "Gogoro Pulse",
-            "bgImage": "/vfx/C/C-04.png",
-            "url": "https://www.youtube.com/watch?v=Wyijlye4kMg",
-            "videoId": "Wyijlye4kMg"
-          },
-          {
-            "name": "Gogoro JEGO",
-            "bgImage": "/vfx/C/C-05.png",
-            "url": "https://www.youtube.com/watch?v=54Yr36d251s",
-            "videoId": "54Yr36d251s"
-          },
-          {
-            "name": "Škoda Kodiaq",
-            "bgImage": "/vfx/C/C-06.png",
-            "url": "https://www.youtube.com/watch?v=I8jdO9GQVkM",
-            "videoId": "I8jdO9GQVkM"
-          },
-          {
-            "name": "Mazda",
-            "bgImage": "/vfx/C/C-07.png",
-            "url": "https://www.youtube.com/watch?v=V7t6AvjDl80",
-            "videoId": "V7t6AvjDl80"
-          },
-          {
-            "name": "Momentum Bicycles",
-            "bgImage": "/vfx/C/C-08.png",
-            "url": "https://www.youtube.com/watch?v=iIdgx-eoAT0",
-            "videoId": "iIdgx-eoAT0"
-          },
-          {
-            "name": "中華航空",
-            "bgImage": "/vfx/C/C-09.png",
-            "url": "https://www.youtube.com/watch?v=8YC6qYvByU8",
-            "videoId": "8YC6qYvByU8"
-          },
-          {
-            "name": "長榮航空",
-            "bgImage": "/vfx/C/C-10.png",
-            "url": "https://www.youtube.com/watch?v=bQZxUBpimgY",
-            "videoId": "bQZxUBpimgY"
-          },
-          {
-            "name": "長榮航空 Bizfam",
-            "bgImage": "/vfx/C/C-11.png",
-            "url": "https://www.facebook.com/evaairwayscorp.tw/videos/668508182730128/",
-            "videoId": "668508182730128",
-            "isFacebook": true
-          },
-          {
-            "name": "長榮航太",
-            "bgImage": "/vfx/C/C-12.png",
-            "url": "https://www.youtube.com/watch?v=yuUHorteLAw",
-            "videoId": "yuUHorteLAw"
-          }
-        ]
+        "name": "Panasonic Viera 電視",
+        "bgImage": "/vfx/B/B-02.png",
+        "url": "https://www.youtube.com/watch?v=J8IkANYZD3s",
+        "videoId": "J8IkANYZD3s"
       },
       {
-        "id": "lifestyle",
-        "name": "生活與百貨",
-        "items": [
-          {
-            "name": "Ariel 抗菌洗衣精",
-            "bgImage": "/vfx/D/D-01.png"
-          },
-          {
-            "name": "Foodpanda",
-            "bgImage": "/vfx/D/D-02.png"
-          },
-          {
-            "name": "HOLA",
-            "bgImage": "/vfx/D/D-03.png",
-            "url": "https://www.youtube.com/watch?v=Q9LzOnPCeNY",
-            "videoId": "Q9LzOnPCeNY"
-          },
-          {
-            "name": "HOLA",
-            "bgImage": "/vfx/D/D-04.png",
-            "url": "https://www.youtube.com/watch?v=j8XBx4yFsN8",
-            "videoId": "j8XBx4yFsN8"
-          },
-          {
-            "name": "LaLaport 南港",
-            "bgImage": "/vfx/D/D-05.png",
-            "url": "https://www.youtube.com/watch?v=tDANOqHSnTE",
-            "videoId": "tDANOqHSnTE"
-          },
-          {
-            "name": "UberEats",
-            "bgImage": "/vfx/D/D-06.png"
-          },
-          {
-            "name": "五月花極上系列",
-            "bgImage": "/vfx/D/D-07.png",
-            "url": "https://www.youtube.com/watch?v=Dr7e8rl7spg",
-            "videoId": "Dr7e8rl7spg"
-          },
-          {
-            "name": "舒潔 喀什米爾衛生紙",
-            "bgImage": "/vfx/D/D-08.png",
-            "url": "https://www.youtube.com/watch?v=nFl6OMheFho",
-            "videoId": "nFl6OMheFho"
-          },
-          {
-            "name": "東和鋼鐵",
-            "bgImage": "/vfx/D/D-09.png",
-            "url": "https://www.youtube.com/watch?v=rYPjfcAH-rc",
-            "videoId": "rYPjfcAH-rc"
-          },
-          {
-            "name": "東和鋼鐵",
-            "bgImage": "/vfx/D/D-10.png",
-            "url": "https://www.youtube.com/watch?v=F7SOWrCCJyM",
-            "videoId": "F7SOWrCCJyM"
-          },
-          {
-            "name": "東和鋼鐵",
-            "bgImage": "/vfx/D/D-11.png",
-            "url": "https://www.youtube.com/watch?v=UFPNdAaG0_M",
-            "videoId": "UFPNdAaG0_M"
-          },
-          {
-            "name": "犀牛盾",
-            "bgImage": "/vfx/D/D-12.png",
-            "url": "https://www.youtube.com/watch?v=yjl03-QCzbM",
-            "videoId": "yjl03-QCzbM"
-          },
-          {
-            "name": "新光三越",
-            "bgImage": "/vfx/D/D-13.png",
-            "url": "https://www.youtube.com/watch?v=xS3VLzTJxs0",
-            "videoId": "xS3VLzTJxs0"
-          },
-          {
-            "name": "新光三越",
-            "bgImage": "/vfx/D/D-14.png",
-            "url": "https://www.youtube.com/watch?v=7bpKC3naivA",
-            "videoId": "7bpKC3naivA"
-          },
-          {
-            "name": "新光三越",
-            "bgImage": "/vfx/D/D-15.png",
-            "url": "https://www.youtube.com/watch?v=QC2Adq-3lOc",
-            "videoId": "QC2Adq-3lOc"
-          },
-          {
-            "name": "錦鋐氣密窗",
-            "bgImage": "/vfx/D/D-16.png",
-            "url": "https://www.youtube.com/watch?v=BOj8-iDaB0s",
-            "videoId": "BOj8-iDaB0s"
-          },
-          {
-            "name": "魔術靈",
-            "bgImage": "/vfx/D/D-17.png"
-          }
-        ]
+        "name": "Panasonic 蒸氣電熨斗",
+        "bgImage": "/vfx/B/B-03.png",
+        "url": "https://www.facebook.com/watch/?v=844958797010401",
+        "videoId": "844958797010401",
+        "isFacebook": true
       },
       {
-        "id": "beauty",
-        "name": "美妝與健康",
-        "items": [
-          {
-            "name": "1028 睫毛膏",
-            "bgImage": "/vfx/E/E-01.png",
-            "url": "https://www.youtube.com/watch?v=pHGEKlXxdgY",
-            "videoId": "pHGEKlXxdgY"
-          },
-          {
-            "name": "Acuu-Chek 羅氏血糖機",
-            "bgImage": "/vfx/E/E-02.png",
-            "url": "https://www.youtube.com/watch?v=HUaASbBDOSM",
-            "videoId": "HUaASbBDOSM"
-          },
-          {
-            "name": "Bifesta 碧菲絲特",
-            "bgImage": "/vfx/E/E-03.png",
-            "url": "https://www.youtube.com/shorts/jPH0atsz3UY",
-            "videoId": "jPH0atsz3UY"
-          },
-          {
-            "name": "Calm Night Day 淨日夜沐浴露",
-            "bgImage": "/vfx/E/E-04.png",
-            "url": "https://www.youtube.com/watch?v=_ociCDswXUI",
-            "videoId": "_ociCDswXUI"
-          },
-          {
-            "name": "EMSCULPT 肌動減脂",
-            "bgImage": "/vfx/E/E-05.png",
-            "url": "https://www.youtube.com/watch?v=SJqwyPXT1CI",
-            "videoId": "SJqwyPXT1CI"
-          },
-          {
-            "name": "LUX 髮的補給",
-            "bgImage": "/vfx/E/E-06.png",
-            "url": "https://www.facebook.com/watch/?v=822528356385191",
-            "videoId": "822528356385191",
-            "isFacebook": true
-          },
-          {
-            "name": "MAMA 永恆光燦系列",
-            "bgImage": "/vfx/E/E-07.png"
-          },
-          {
-            "name": "TKLAB",
-            "bgImage": "/vfx/E/E-08.png",
-            "url": "https://www.facebook.com/TKLAB.tw/videos/1495921932163292",
-            "videoId": "1495921932163292",
-            "isFacebook": true,
-            "aspect": "square"
-          },
-          {
-            "name": "活沛多",
-            "bgImage": "/vfx/A/A-014.png",
-            "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
-            "videoId": "Y4CG2QNa5hs"
-          },
-          {
-            "name": "大本山 益生菌",
-            "bgImage": "/vfx/E/E-16_dabenshan.png",
-            "url": "https://www.youtube.com/watch?v=llWjKbg46OM",
-            "videoId": "llWjKbg46OM"
-          },
-          {
-            "name": "三得利 蜂王乳+芝麻明E",
-            "bgImage": "/vfx/E/E-09.png"
-          },
-          {
-            "name": "三得利 蜜露珂娜",
-            "bgImage": "/vfx/E/E-10.png"
-          },
-          {
-            "name": "三得利 密得絲",
-            "bgImage": "/vfx/E/E-11.png"
-          },
-          {
-            "name": "舒潔 女性濕式衛生紙",
-            "bgImage": "/vfx/E/E-12.png",
-            "url": "https://www.youtube.com/watch?v=YG70M6HajCU",
-            "videoId": "YG70M6HajCU"
-          },
-          {
-            "name": "蕾妮亞",
-            "bgImage": "/vfx/E/E-13.png",
-            "url": "https://www.instagram.com/reels/DLjzvwEyK6A/"
-          },
-          {
-            "name": "義美生醫 鈣D加",
-            "bgImage": "/vfx/E/E-14_imei.png",
-            "url": "https://www.youtube.com/watch?v=bbl9tJP92IY",
-            "videoId": "bbl9tJP92IY"
-          },
-          {
-            "name": "台灣武田合利他命 A25",
-            "bgImage": "/vfx/E/E-15_alinamin.png"
-          }
-        ]
+        "name": "Panasonic W音波電動牙刷",
+        "bgImage": "/vfx/B/B-04.png",
+        "url": "https://www.facebook.com/PanasonicBeautyTaiwan/videos/1352504146494183/",
+        "videoId": "1352504146494183",
+        "isFacebook": true
       },
       {
-        "id": "finance",
-        "name": "金融與保險",
-        "items": [
-          {
-            "name": "中國信託 點燃生命之火",
-            "bgImage": "/vfx/F/F-01.png",
-            "url": "https://www.youtube.com/watch?v=u1uWyX51Prc&list=PLfRfUZjsbf4RuYO75RLGDmhQ3hhbX0Ul5&index=37",
-            "videoId": "u1uWyX51Prc"
-          },
-          {
-            "name": "台灣Pay",
-            "bgImage": "/vfx/F/F-02.png",
-            "url": "https://www.youtube.com/watch?v=gsQScjFurQs",
-            "videoId": "gsQScjFurQs"
-          },
-          {
-            "name": "台灣Pay",
-            "bgImage": "/vfx/F/F-03.png",
-            "url": "https://www.youtube.com/watch?v=ckgbItI0kaw",
-            "videoId": "ckgbItI0kaw"
-          },
-          {
-            "name": "安聯人壽",
-            "bgImage": "/vfx/F/F-04.png",
-            "url": "https://www.facebook.com/AllianzTaiwanLife/videos/1014825593450292/",
-            "videoId": "1014825593450292",
-            "isFacebook": true
-          },
-          {
-            "name": "復華投信",
-            "bgImage": "/vfx/F/F-05.png",
-            "url": "https://www.youtube.com/watch?v=8OiOhQbAvHg",
-            "videoId": "8OiOhQbAvHg"
-          },
-          {
-            "name": "富達投信",
-            "bgImage": "/vfx/F/F-06.png",
-            "url": "https://www.youtube.com/watch?v=QILBfZPs-Fo",
-            "videoId": "QILBfZPs-Fo"
-          },
-          {
-            "name": "遠雄人壽",
-            "bgImage": "/vfx/F/F-07.png",
-            "url": "https://www.youtube.com/watch?v=0OEmLKIjAtk",
-            "videoId": "0OEmLKIjAtk"
-          },
-          {
-            "name": "渣打銀行",
-            "bgImage": "/vfx/F/F-08.png",
-            "url": "https://www.youtube.com/watch?v=OBTrK1ukstc",
-            "videoId": "OBTrK1ukstc"
-          },
-          {
-            "name": "磊山保經",
-            "bgImage": "/vfx/F/F-09.png",
-            "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
-            "videoId": "Rwrn87N2PUc"
-          },
-          {
-            "name": "國泰世華 財富管理",
-            "bgImage": "/vfx/F/F-09_cathay.png"
-          },
-          {
-            "name": "臺灣證券交易所",
-            "bgImage": "/vfx/F/F-10_twse.png"
-          }
-        ]
+        "name": "Panasonic 吸頂燈",
+        "bgImage": "/vfx/B/B-05.png",
+        "url": "https://www.facebook.com/PanasonicTaiwan/videos/634112755292450/",
+        "videoId": "634112755292450",
+        "isFacebook": true
+      },
+      {
+        "name": "Panasonic 冷萃咖啡機",
+        "bgImage": "/vfx/B/B-05_coffee.png",
+        "url": "https://www.facebook.com/PanasonicCooking/videos/1251224095275421/?locale=ms_MY",
+        "videoId": "1251224095275421",
+        "isFacebook": true
+      },
+      {
+        "name": "Samsung Galaxy S22",
+        "bgImage": "/vfx/B/B-06.png",
+        "url": "https://www.youtube.com/watch?v=UkSewV5ScR0",
+        "videoId": "UkSewV5ScR0"
+      },
+      {
+        "name": "Samsung Z Fold2 / Z Flip2",
+        "bgImage": "/vfx/B/B-07.png",
+        "url": "https://www.facebook.com/watch/?v=1046986065709266",
+        "videoId": "1046986065709266",
+        "isFacebook": true
+      },
+      {
+        "name": "Samsung Z Fold3 / Z Flip3",
+        "bgImage": "/vfx/B/B-08.png",
+        "url": "https://www.facebook.com/watch/?v=558217842125093",
+        "videoId": "558217842125093",
+        "isFacebook": true
+      },
+      {
+        "name": "Samsung Z Fold4 / Z Flip4",
+        "bgImage": "/vfx/B/B-09.png"
+      },
+      {
+        "name": "Samsung Galaxy Tab S11 Ultra",
+        "bgImage": "/vfx/B/B-10.png",
+        "url": "https://www.facebook.com/reel/1338163857656555",
+        "videoId": "1338163857656555",
+        "isFacebook": true,
+        "aspect": "portrait"
+      },
+      {
+        "name": "Sony Xperia",
+        "bgImage": "/vfx/B/B-11.png"
+      },
+      {
+        "name": "Tokuyo 按摩椅",
+        "bgImage": "/vfx/B/B-12.png",
+        "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
+        "videoId": "_SENfBsNjgE"
+      },
+      {
+        "name": "三菱重工空調",
+        "bgImage": "/vfx/B/B-13.png",
+        "url": "https://www.youtube.com/watch?v=fanfOOV80ok",
+        "videoId": "fanfOOV80ok"
+      },
+      {
+        "name": "三菱電機",
+        "bgImage": "/vfx/B/B-14.png",
+        "url": "https://www.facebook.com/watch/?v=824057254764949",
+        "videoId": "824057254764949",
+        "isFacebook": true
+      },
+      {
+        "name": "中華電信 企業形象影片",
+        "bgImage": "/vfx/B/B-15.png"
       }
-    ];
+    ]
+  },
+  {
+    "id": "vehicle",
+    "name": "交通工具",
+    "items": [
+      {
+        "name": "Audi",
+        "bgImage": "/vfx/C/C-01.png",
+        "url": "https://www.youtube.com/watch?v=vgf14stUB0w",
+        "videoId": "vgf14stUB0w"
+      },
+      {
+        "name": "Foxtron Caviar",
+        "bgImage": "/vfx/C/C-02.png",
+        "url": "https://youtu.be/pCBQA1vEDig?si=lbbvGmTm90P5Vx4P",
+        "videoId": "pCBQA1vEDig"
+      },
+      {
+        "name": "Gogoro EZZY",
+        "bgImage": "/vfx/C/C-03.png",
+        "url": "https://www.youtube.com/watch?v=4apkzFFsV4E",
+        "videoId": "4apkzFFsV4E"
+      },
+      {
+        "name": "Gogoro Pulse",
+        "bgImage": "/vfx/C/C-04.png",
+        "url": "https://www.youtube.com/watch?v=Wyijlye4kMg",
+        "videoId": "Wyijlye4kMg"
+      },
+      {
+        "name": "Gogoro JEGO",
+        "bgImage": "/vfx/C/C-05.png",
+        "url": "https://www.youtube.com/watch?v=54Yr36d251s",
+        "videoId": "54Yr36d251s"
+      },
+      {
+        "name": "Škoda Kodiaq",
+        "bgImage": "/vfx/C/C-06.png",
+        "url": "https://www.youtube.com/watch?v=I8jdO9GQVkM",
+        "videoId": "I8jdO9GQVkM"
+      },
+      {
+        "name": "Mazda",
+        "bgImage": "/vfx/C/C-07.png",
+        "url": "https://www.youtube.com/watch?v=V7t6AvjDl80",
+        "videoId": "V7t6AvjDl80"
+      },
+      {
+        "name": "Momentum Bicycles",
+        "bgImage": "/vfx/C/C-08.png",
+        "url": "https://www.youtube.com/watch?v=iIdgx-eoAT0",
+        "videoId": "iIdgx-eoAT0"
+      },
+      {
+        "name": "中華航空",
+        "bgImage": "/vfx/C/C-09.png",
+        "url": "https://www.youtube.com/watch?v=8YC6qYvByU8",
+        "videoId": "8YC6qYvByU8"
+      },
+      {
+        "name": "長榮航空",
+        "bgImage": "/vfx/C/C-10.png",
+        "url": "https://www.youtube.com/watch?v=bQZxUBpimgY",
+        "videoId": "bQZxUBpimgY"
+      },
+      {
+        "name": "長榮航空 Bizfam",
+        "bgImage": "/vfx/C/C-11.png",
+        "url": "https://www.facebook.com/evaairwayscorp.tw/videos/668508182730128/",
+        "videoId": "668508182730128",
+        "isFacebook": true
+      },
+      {
+        "name": "長榮航太",
+        "bgImage": "/vfx/C/C-12.png",
+        "url": "https://www.youtube.com/watch?v=yuUHorteLAw",
+        "videoId": "yuUHorteLAw"
+      }
+    ]
+  },
+  {
+    "id": "lifestyle",
+    "name": "生活與百貨",
+    "items": [
+      {
+        "name": "Ariel 抗菌洗衣精",
+        "bgImage": "/vfx/D/D-01.png"
+      },
+      {
+        "name": "Foodpanda",
+        "bgImage": "/vfx/D/D-02.png"
+      },
+      {
+        "name": "HOLA",
+        "bgImage": "/vfx/D/D-03.png",
+        "url": "https://www.youtube.com/watch?v=Q9LzOnPCeNY",
+        "videoId": "Q9LzOnPCeNY"
+      },
+      {
+        "name": "HOLA",
+        "bgImage": "/vfx/D/D-04.png",
+        "url": "https://www.youtube.com/watch?v=j8XBx4yFsN8",
+        "videoId": "j8XBx4yFsN8"
+      },
+      {
+        "name": "LaLaport 南港",
+        "bgImage": "/vfx/D/D-05.png",
+        "url": "https://www.youtube.com/watch?v=tDANOqHSnTE",
+        "videoId": "tDANOqHSnTE"
+      },
+      {
+        "name": "UberEats",
+        "bgImage": "/vfx/D/D-06.png"
+      },
+      {
+        "name": "五月花極上系列",
+        "bgImage": "/vfx/D/D-07.png",
+        "url": "https://www.youtube.com/watch?v=Dr7e8rl7spg",
+        "videoId": "Dr7e8rl7spg"
+      },
+      {
+        "name": "舒潔 喀什米爾衛生紙",
+        "bgImage": "/vfx/D/D-08.png",
+        "url": "https://www.youtube.com/watch?v=nFl6OMheFho",
+        "videoId": "nFl6OMheFho"
+      },
+      {
+        "name": "東和鋼鐵",
+        "bgImage": "/vfx/D/D-09.png",
+        "url": "https://www.youtube.com/watch?v=rYPjfcAH-rc",
+        "videoId": "rYPjfcAH-rc"
+      },
+      {
+        "name": "東和鋼鐵",
+        "bgImage": "/vfx/D/D-10.png",
+        "url": "https://www.youtube.com/watch?v=F7SOWrCCJyM",
+        "videoId": "F7SOWrCCJyM"
+      },
+      {
+        "name": "東和鋼鐵",
+        "bgImage": "/vfx/D/D-11.png",
+        "url": "https://www.youtube.com/watch?v=UFPNdAaG0_M",
+        "videoId": "UFPNdAaG0_M"
+      },
+      {
+        "name": "犀牛盾",
+        "bgImage": "/vfx/D/D-12.png",
+        "url": "https://www.youtube.com/watch?v=yjl03-QCzbM",
+        "videoId": "yjl03-QCzbM"
+      },
+      {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-13.png",
+        "url": "https://www.youtube.com/watch?v=xS3VLzTJxs0",
+        "videoId": "xS3VLzTJxs0"
+      },
+      {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-14.png",
+        "url": "https://www.youtube.com/watch?v=7bpKC3naivA",
+        "videoId": "7bpKC3naivA"
+      },
+      {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-15.png",
+        "url": "https://www.youtube.com/watch?v=QC2Adq-3lOc",
+        "videoId": "QC2Adq-3lOc"
+      },
+      {
+        "name": "錦鋐氣密窗",
+        "bgImage": "/vfx/D/D-16.png",
+        "url": "https://www.youtube.com/watch?v=BOj8-iDaB0s",
+        "videoId": "BOj8-iDaB0s"
+      },
+      {
+        "name": "魔術靈",
+        "bgImage": "/vfx/D/D-17.png"
+      }
+    ]
+  },
+  {
+    "id": "beauty",
+    "name": "美妝與健康",
+    "items": [
+      {
+        "name": "1028 睫毛膏",
+        "bgImage": "/vfx/E/E-01.png",
+        "url": "https://www.youtube.com/watch?v=pHGEKlXxdgY",
+        "videoId": "pHGEKlXxdgY"
+      },
+      {
+        "name": "Acuu-Chek 羅氏血糖機",
+        "bgImage": "/vfx/E/E-02.png",
+        "url": "https://www.youtube.com/watch?v=HUaASbBDOSM",
+        "videoId": "HUaASbBDOSM"
+      },
+      {
+        "name": "Bifesta 碧菲絲特",
+        "bgImage": "/vfx/E/E-03.png",
+        "url": "https://www.youtube.com/shorts/jPH0atsz3UY",
+        "videoId": "jPH0atsz3UY"
+      },
+      {
+        "name": "Calm Night Day 淨日夜沐浴露",
+        "bgImage": "/vfx/E/E-04.png",
+        "url": "https://www.youtube.com/watch?v=_ociCDswXUI",
+        "videoId": "_ociCDswXUI"
+      },
+      {
+        "name": "EMSCULPT 肌動減脂",
+        "bgImage": "/vfx/E/E-05.png",
+        "url": "https://www.youtube.com/watch?v=SJqwyPXT1CI",
+        "videoId": "SJqwyPXT1CI"
+      },
+      {
+        "name": "LUX 髮的補給",
+        "bgImage": "/vfx/E/E-06.png",
+        "url": "https://www.facebook.com/watch/?v=822528356385191",
+        "videoId": "822528356385191",
+        "isFacebook": true
+      },
+      {
+        "name": "MAMA 永恆光燦系列",
+        "bgImage": "/vfx/E/E-07.png"
+      },
+      {
+        "name": "TKLAB",
+        "bgImage": "/vfx/E/E-08.png",
+        "url": "https://www.facebook.com/TKLAB.tw/videos/1495921932163292",
+        "videoId": "1495921932163292",
+        "isFacebook": true,
+        "aspect": "square"
+      },
+      {
+        "name": "活沛多",
+        "bgImage": "/vfx/A/A-014.png",
+        "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
+        "videoId": "Y4CG2QNa5hs"
+      },
+      {
+        "name": "大本山 益生菌",
+        "bgImage": "/vfx/E/E-16_dabenshan.png",
+        "url": "https://www.youtube.com/watch?v=llWjKbg46OM",
+        "videoId": "llWjKbg46OM"
+      },
+      {
+        "name": "三得利 蜂王乳+芝麻明E",
+        "bgImage": "/vfx/E/E-09.png"
+      },
+      {
+        "name": "三得利 蜜露珂娜",
+        "bgImage": "/vfx/E/E-10.png"
+      },
+      {
+        "name": "三得利 密得絲",
+        "bgImage": "/vfx/E/E-11.png"
+      },
+      {
+        "name": "舒潔 女性濕式衛生紙",
+        "bgImage": "/vfx/E/E-12.png",
+        "url": "https://www.youtube.com/watch?v=YG70M6HajCU",
+        "videoId": "YG70M6HajCU"
+      },
+      {
+        "name": "蕾妮亞",
+        "bgImage": "/vfx/E/E-13.png",
+        "url": "https://www.instagram.com/reels/DLjzvwEyK6A/"
+      },
+      {
+        "name": "義美生醫 鈣D加",
+        "bgImage": "/vfx/E/E-14_imei.png",
+        "url": "https://www.youtube.com/watch?v=bbl9tJP92IY",
+        "videoId": "bbl9tJP92IY"
+      },
+      {
+        "name": "台灣武田合利他命 A25",
+        "bgImage": "/vfx/E/E-15_alinamin.png"
+      }
+    ]
+  },
+  {
+    "id": "finance",
+    "name": "金融與保險",
+    "items": [
+      {
+        "name": "中國信託 點燃生命之火",
+        "bgImage": "/vfx/F/F-01.png",
+        "url": "https://www.youtube.com/watch?v=u1uWyX51Prc&list=PLfRfUZjsbf4RuYO75RLGDmhQ3hhbX0Ul5&index=37",
+        "videoId": "u1uWyX51Prc"
+      },
+      {
+        "name": "台灣Pay",
+        "bgImage": "/vfx/F/F-02.png",
+        "url": "https://www.youtube.com/watch?v=gsQScjFurQs",
+        "videoId": "gsQScjFurQs"
+      },
+      {
+        "name": "台灣Pay",
+        "bgImage": "/vfx/F/F-03.png",
+        "url": "https://www.youtube.com/watch?v=ckgbItI0kaw",
+        "videoId": "ckgbItI0kaw"
+      },
+      {
+        "name": "安聯人壽",
+        "bgImage": "/vfx/F/F-04.png",
+        "url": "https://www.facebook.com/AllianzTaiwanLife/videos/1014825593450292/",
+        "videoId": "1014825593450292",
+        "isFacebook": true
+      },
+      {
+        "name": "復華投信",
+        "bgImage": "/vfx/F/F-05.png",
+        "url": "https://www.youtube.com/watch?v=8OiOhQbAvHg",
+        "videoId": "8OiOhQbAvHg"
+      },
+      {
+        "name": "富達投信",
+        "bgImage": "/vfx/F/F-06.png",
+        "url": "https://www.youtube.com/watch?v=QILBfZPs-Fo",
+        "videoId": "QILBfZPs-Fo"
+      },
+      {
+        "name": "遠雄人壽",
+        "bgImage": "/vfx/F/F-07.png",
+        "url": "https://www.youtube.com/watch?v=0OEmLKIjAtk",
+        "videoId": "0OEmLKIjAtk"
+      },
+      {
+        "name": "渣打銀行",
+        "bgImage": "/vfx/F/F-08.png",
+        "url": "https://www.youtube.com/watch?v=OBTrK1ukstc",
+        "videoId": "OBTrK1ukstc"
+      },
+      {
+        "name": "磊山保經",
+        "bgImage": "/vfx/F/F-09.png",
+        "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
+        "videoId": "Rwrn87N2PUc"
+      },
+      {
+        "name": "國泰世華 財富管理",
+        "bgImage": "/vfx/F/F-09_cathay.png"
+      },
+      {
+        "name": "臺灣證券交易所",
+        "bgImage": "/vfx/F/F-10_twse.png"
+      }
+    ]
+  }
+];
 
-    const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
-      const hasVideo = !!item.videoId || !!item.url;
-      const [isImageLoaded, setIsImageLoaded] = useState(false);
-      const innerRef = React.useRef(null);
+const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
+  const hasVideo = !!item.videoId || !!item.url;
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const innerRef = React.useRef(null);
 
-      const setRefs = (node) => {
-        innerRef.current = node;
-        if (typeof ref === 'function') {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      };
+  const setRefs = (node) => {
+    innerRef.current = node;
+    if (typeof ref === 'function') {
+      ref(node);
+    } else if (ref) {
+      ref.current = node;
+    }
+  };
 
-      const handleMouseMove = (e) => {
-        if (!innerRef.current) return;
-        const rect = innerRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        innerRef.current.style.setProperty('--mouse-x', `${x}px`);
-        innerRef.current.style.setProperty('--mouse-y', `${y}px`);
-      };
+  const handleMouseMove = (e) => {
+    if (!innerRef.current) return;
+    const rect = innerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    innerRef.current.style.setProperty('--mouse-x', `${x}px`);
+    innerRef.current.style.setProperty('--mouse-y', `${y}px`);
+  };
 
-      const handleClick = () => {
-        if (!hasVideo) return;
-        if (item.isFacebook && item.url) {
-          if (window.innerWidth < 768) {
-            window.location.href = item.url;
-          } else {
-            window.open(item.url, '_blank');
-          }
-        } else if (item.videoId) {
-          onPlayVideo(item.videoId, false, item.aspect);
-        } else if (item.url) {
-          if (window.innerWidth < 768) {
-            window.location.href = item.url;
-          } else {
-            window.open(item.url, '_blank');
-          }
-        }
-      };
+  const handleClick = () => {
+    if (!hasVideo) return;
+    if (item.isFacebook && item.url) {
+      if (window.innerWidth < 768) {
+        window.location.href = item.url;
+      } else {
+        window.open(item.url, '_blank');
+      }
+    } else if (item.videoId) {
+      onPlayVideo(item.videoId, false, item.aspect);
+    } else if (item.url) {
+      if (window.innerWidth < 768) {
+        window.location.href = item.url;
+      } else {
+        window.open(item.url, '_blank');
+      }
+    }
+  };
 
-      return (
-        <div
-          ref={setRefs}
-          onMouseMove={handleMouseMove}
-          onClick={handleClick}
-          className={`prism-border p-3.5 rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] ${hasVideo
-            ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1'
-            : 'bg-white/[0.01] border-white/8'
-            }`}
-          style={{
-            '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
-          }}
-        >
-          {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
-          {item.bgImage && (
-            <div className="absolute inset-0 z-0 overflow-hidden rounded-sm">
-              {!isImageLoaded && (
-                <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-aurora-blue/5 filter blur-md" />
-                </div>
-              )}
-              <img
-                src={item.bgImage}
-                alt={`${item.name} background`}
-                loading="lazy"
-                onLoad={() => setIsImageLoaded(true)}
-                className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
-                  }`}
-              />
-              {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
-              <div className="absolute inset-0 bg-black/10 backdrop-blur-none md:backdrop-blur-[1px] group-hover:backdrop-blur-none group-hover:bg-black/5 transition-all duration-300" />
-              {/* 漸層遮罩：滑鼠移入時變淡，釋放圖片色彩 */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25 group-hover:from-black/85 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300" />
+  return (
+    <div
+      ref={setRefs}
+      onMouseMove={handleMouseMove}
+      onClick={handleClick}
+      className={`prism-border p-3.5 rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] ${hasVideo
+        ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1'
+        : 'bg-white/[0.01] border-white/8'
+        }`}
+      style={{
+        '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
+      }}
+    >
+      {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
+      {item.bgImage && (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-sm">
+          {!isImageLoaded && (
+            <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-aurora-blue/5 filter blur-md" />
             </div>
           )}
-
-          {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage) */}
-          {hasVideo && !item.bgImage && (
-            <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-          )}
-
-          <div className="relative z-10">
-            <div
-              style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.3)' }}
-              className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${hasVideo
-                ? 'text-zinc-100 group-hover:text-white font-semibold'
-                : 'text-zinc-200 font-semibold'
-                }`}
-            >
-              {item.name}
-            </div>
-          </div>
-
-          {hasVideo ? (
-            <div
-              style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
-              className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
-            >
-              <Play size={8} fill="currentColor" className="play-triangle-pulse" /> Play
-            </div>
-          ) : null}
+          <img
+            src={item.bgImage}
+            alt={`${item.name} background`}
+            loading="lazy"
+            onLoad={() => setIsImageLoaded(true)}
+            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+              }`}
+          />
+          {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
+          <div className="absolute inset-0 bg-black/10 backdrop-blur-none md:backdrop-blur-[1px] group-hover:backdrop-blur-none group-hover:bg-black/5 transition-all duration-300" />
+          {/* 漸層遮罩：滑鼠移入時變淡，釋放圖片色彩 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25 group-hover:from-black/85 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300" />
         </div>
-      );
-    }));
+      )}
 
-    BrandCard.displayName = 'BrandCard';
+      {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage) */}
+      {hasVideo && !item.bgImage && (
+        <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      )}
 
-    export default function VisualSynthesis({ onPlayVideo }) {
-    const [activeTab, setActiveTab] = useState('food');
+      <div className="relative z-10">
+        <div
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.3)' }}
+          className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${hasVideo
+            ? 'text-zinc-100 group-hover:text-white font-semibold'
+            : 'text-zinc-200 font-semibold'
+            }`}
+        >
+          {item.name}
+        </div>
+      </div>
 
-    const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
+      {hasVideo ? (
+        <div
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
+          className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1"
+        >
+          <Play size={8} fill="currentColor" className="play-triangle-pulse" /> Play
+        </div>
+      ) : null}
+    </div>
+  );
+}));
 
-    return(
-    <section id = "vfx" className = "max-w-6xl mx-auto px-8 py-24 relative" >
-        {/* 背景點綴網格 */ }
-        < div className = "absolute inset-0 grid-bg opacity-10 pointer-events-none" />
+BrandCard.displayName = 'BrandCard';
 
-          {/* 區段標頭 */ }
-          < div className = "text-center mb-16 relative z-10" >
+export default function VisualSynthesis({ onPlayVideo }) {
+  const [activeTab, setActiveTab] = useState('food');
+
+  const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
+
+  return (
+    <section id="vfx" className="max-w-6xl mx-auto px-8 py-24 relative" >
+      {/* 背景點綴網格 */}
+      < div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
+
+      {/* 區段標頭 */}
+      < div className="text-center mb-16 relative z-10" >
         <h2 className="text-[48px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
           ADVER<span className="text-aurora-blue">TISING</span>
         </h2>
@@ -729,56 +723,56 @@ const categories = [
         </p>
       </div >
 
-  {/* 分類切換 Tab */ }
-  < div className = "grid grid-cols-3 gap-2 max-w-xl lg:max-w-5xl mx-auto px-4 lg:flex lg:flex-row lg:flex-nowrap lg:justify-center lg:gap-4 mb-12 relative z-10" >
-  {
-    categories.map((tab) => {
-      const engMap = {
-        food: 'FOOD & BEV',
-        tech: 'TECH & TELECOM',
-        vehicle: 'AUTO & TRAVEL',
-        lifestyle: 'LIFESTYLE',
-        beauty: 'BEAUTY & HEALTH',
-        finance: 'FINANCE & INS'
-      };
-      const engName = engMap[tab.id] || tab.id.toUpperCase();
-      return (
-        <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
-          className={`hud-btn px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none ${activeTab === tab.id ? 'is-active' : ''}`}
-        >
-          <span className={`hud-eng text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === tab.id ? '' : 'text-zinc-500'
-            }`}>{engName}</span>
-          <span className="hud-zht text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
-        </button>
-      );
-    })
-  }
+      {/* 分類切換 Tab */}
+      < div className="grid grid-cols-3 gap-2 max-w-xl lg:max-w-5xl mx-auto px-4 lg:flex lg:flex-row lg:flex-nowrap lg:justify-center lg:gap-4 mb-12 relative z-10" >
+        {
+          categories.map((tab) => {
+            const engMap = {
+              food: 'FOOD & BEV',
+              tech: 'TECH & TELECOM',
+              vehicle: 'AUTO & TRAVEL',
+              lifestyle: 'LIFESTYLE',
+              beauty: 'BEAUTY & HEALTH',
+              finance: 'FINANCE & INS'
+            };
+            const engName = engMap[tab.id] || tab.id.toUpperCase();
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`hud-btn px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none ${activeTab === tab.id ? 'is-active' : ''}`}
+              >
+                <span className={`hud-eng text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === tab.id ? '' : 'text-zinc-500'
+                  }`}>{engName}</span>
+                <span className="hud-zht text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
+              </button>
+            );
+          })
+        }
       </div >
 
-  {/* 品牌卡片 Grid - 6 個類別各自靜態預渲染，透過 display 與 CSS 動畫切換，達到 0 毫秒 JS 阻塞 */ }
-  < div className = "relative z-10 min-h-[300px]" >
-  {
-    categories.map((category) => {
-      const isActive = category.id === activeTab;
-      return (
-        <div
-          key={category.id}
-          className={`grid grid-cols-3 md:grid-cols-5 gap-3 ${isActive ? 'tab-content-active' : 'tab-content-hidden'
-            }`}
-        >
-          {category.items.map((item, index) => (
-            <BrandCard
-              key={`${category.id}-${item.name}-${index}`}
-              item={item}
-              onPlayVideo={onPlayVideo}
-            />
-          ))}
-        </div>
-      );
-    })
-  }
+      {/* 品牌卡片 Grid - 6 個類別各自靜態預渲染，透過 display 與 CSS 動畫切換，達到 0 毫秒 JS 阻塞 */}
+      < div className="relative z-10 min-h-[300px]" >
+        {
+          categories.map((category) => {
+            const isActive = category.id === activeTab;
+            return (
+              <div
+                key={category.id}
+                className={`grid grid-cols-3 md:grid-cols-5 gap-3 ${isActive ? 'tab-content-active' : 'tab-content-hidden'
+                  }`}
+              >
+                {category.items.map((item, index) => (
+                  <BrandCard
+                    key={`${category.id}-${item.name}-${index}`}
+                    item={item}
+                    onPlayVideo={onPlayVideo}
+                  />
+                ))}
+              </div>
+            );
+          })
+        }
       </div >
     </section >
   );
