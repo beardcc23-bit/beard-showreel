@@ -85,6 +85,10 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen }) {
       setImages([...loadedImagesRef.current]);
       setBgPreloadComplete(true);
     };
+
+    return () => {
+      loadedImagesRef.current = [];
+    };
   }, []);
 
   useEffect(() => {
@@ -152,7 +156,6 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen }) {
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      loadedImagesRef.current = [];
     };
   }, [isLoading, isPlaying, isModalOpen]);
 
