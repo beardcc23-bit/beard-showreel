@@ -7,6 +7,7 @@ import Manifesto from './components/Manifesto';
 import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
 import Modal from './components/Modal';
+import AIChatAssistant from './components/AIChatAssistant';
 
 export default function App() {
   const [modalState, setModalState] = useState({
@@ -116,6 +117,9 @@ export default function App() {
         type={modalState.type}
         data={modalState.data}
       />
+
+      {/* AI 導覽助理 */}
+      <AIChatAssistant />
     </div>
   );
 }
