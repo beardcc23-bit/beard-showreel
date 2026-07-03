@@ -12,7 +12,9 @@ export default function CursorGlow() {
 
   useEffect(() => {
     const checkMobile = () => {
-      const isMobileDevice = window.innerWidth < 768;
+      const isMobileDevice = window.innerWidth < 768 || 
+                             ('ontouchstart' in window) || 
+                             (navigator.maxTouchPoints > 0);
       setIsMobile(isMobileDevice);
       if (!isMobileDevice) {
         document.body.classList.add('custom-cursor');

@@ -752,4 +752,33 @@ body {
   letter-spacing: 0.2em !important;
 }
 
+/* ==========================================================================
+   無障礙焦點環與減少動態偏好優化 (Accessibility Focus & Reduced Motion)
+   ========================================================================== */
+.hud-btn:focus-visible {
+  outline: none;
+  border-color: var(--color-aurora-blue) !important;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2);
+}
+.hud-btn:focus-visible::before,
+.hud-btn:focus-visible::after {
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring-outer,
+  .ring-middle,
+  .ring-inner,
+  .crystal,
+  .play-triangle-pulse,
+  .glow-border {
+    animation: none !important;
+    transition: none !important;
+  }
+  .crystal {
+    transform: translateY(0) rotate(0deg) !important;
+  }
+}
+
 

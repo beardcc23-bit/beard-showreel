@@ -3,10 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Cpu, Zap, Award } from 'lucide-react';
 
 export default function Modal({ isOpen, onClose, type, data }) {
+  const [iframeLoading, setIframeLoading] = React.useState(true);
+
   // 當 Modal 開啟時，禁止背景 scroll
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      setIframeLoading(true); // 開啟時重設為載入中狀態
     } else {
       document.body.style.overflow = 'unset';
       window.dispatchEvent(new CustomEvent('show-custom-cursor'));
@@ -61,7 +64,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
             <div 
               onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
               onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
-              className={`bg-black mx-auto overflow-hidden w-full ${
+              className={`bg-black mx-auto overflow-hidden w-full relative ${
                 data.aspect === 'portrait'
                   ? 'aspect-[9/16] h-[80vh]'
                   : data.aspect === 'square'
@@ -69,6 +72,15 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   : 'aspect-video'
               }`}
             >
+               {/* 科技質感載入骨架屏 */}
+               {iframeLoading && (
+                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-md z-10">
+                   <div className="w-9 h-9 rounded-full border border-aurora-blue/25 border-t-aurora-blue animate-spin mb-4" />
+                   <span className="mono text-[8px] text-aurora-blue tracking-[0.35em] uppercase animate-pulse">
+                     CONNECTING MEDIA NODE...
+                   </span>
+                 </div>
+               )}
                {data.isFacebook ? (
                 <iframe
                   src={data.videoUrl 
@@ -78,7 +90,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   frameBorder="0"
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                   allowFullScreen
-                  className="w-full h-full"
+                  onLoad={() => setIframeLoading(false)}
+                  className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                 ></iframe>
               ) : (
                 <iframe
@@ -87,7 +100,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
-                  className="w-full h-full"
+                  onLoad={() => setIframeLoading(false)}
+                  className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                 ></iframe>
               )}
             </div>
