@@ -49,7 +49,7 @@ export default function Navigation() {
         <div className="flex items-center gap-4 md:gap-6">
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 text-white-or-black hover:text-aurora-blue transition focus:outline-none"
+            className="md:hidden p-2.5 text-white-or-black hover:text-aurora-blue transition focus:outline-none"
             aria-label="Toggle Menu"
           >
             <Menu size={24} />
@@ -119,7 +119,7 @@ export default function Navigation() {
                   onClick={(e) => handleScroll(e, item.href)}
                   className="text-xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
                 >
-                  <span className="text-[9px] text-zinc-500 font-medium tracking-widest mono mb-1">{item.eng}</span>
+                  <span className="text-[9px] text-zinc-400 font-medium tracking-widest mono mb-1">{item.eng}</span>
                   {item.name}
                 </a>
               ))}
