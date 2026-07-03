@@ -17,6 +17,7 @@ export default function App() {
     type: null, // 'project' | 'video'
     data: null,
   });
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   React.useEffect(() => {
     const handleOpenImage = (e) => {
@@ -56,6 +57,29 @@ export default function App() {
     };
   }, []);
 
+  // 實作幾何軌道背景的滑鼠三維視差傾斜 (Lens Parallax)
+  React.useEffect(() => {
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouch) return;
+
+    const orbit = document.querySelector('.orbit-container');
+    if (!orbit) return;
+
+    const handleMouseMove = (e) => {
+      const { clientX, clientY } = e;
+      const xPercent = (clientX / window.innerWidth - 0.5) * 2; // -1 到 1
+      const yPercent = (clientY / window.innerHeight - 0.5) * 2; // -1 到 1
+
+      // 幾何軌道進行平滑的三維傾斜與位移 (加入 calc 以維持置中)
+      orbit.style.transform = `translate3d(calc(-50% + ${xPercent * 18}px), calc(-50% + ${yPercent * 15}px), 0) rotateX(${-yPercent * 12}deg) rotateY(${xPercent * 12}deg)`;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
 
   const handleOpenVideoModal = React.useCallback((videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
     setModalState({
@@ -74,7 +98,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden">
+    <div className={`relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden ${isPageLoaded ? 'is-loaded' : 'is-loading'}`}>
       {/* 全域大氣粒子與星空背景 */}
       <SpaceParticles />
 
@@ -107,7 +131,7 @@ export default function App() {
       {/* 主頁面區段 */}
       <main>
         {/* 首頁 Hero 區 (純全屏 Canvas 序列播放，無重疊文字) */}
-        <Hero onPlayVideo={handleOpenVideoModal} isModalOpen={modalState.isOpen} />
+        <Hero onPlayVideo={handleOpenVideoModal} isModalOpen={modalState.isOpen} onLoaded={() => setIsPageLoaded(true)} />
 
         {/* 開場介紹區段 (S Y S T E M _ S T A T U S : O P T I M A L 及精雕文案與按鈕) */}
         <Introduction onPlayVideo={handleOpenVideoModal} />

@@ -133,6 +133,16 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 {/* 電影感網格與光暈背景 */}
                 <div className="absolute inset-0 grid-bg opacity-40" />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-core via-transparent to-transparent z-10" />
+                
+                {/* Nuke/Flame 節點式合成連結線 (裝飾性 Compositing Node Pipes) */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-25 z-0">
+                  <path d="M -20 40 L 120 40 L 170 120 L 320 120" fill="none" stroke="#D4AF37" strokeWidth="1.5" className="node-pipe" />
+                  <path d="M 180 -20 L 180 80 L 260 160 L 400 160" fill="none" stroke="#00ffff" strokeWidth="1" className="node-pipe-fast" />
+                  <circle cx="120" cy="40" r="3" fill="#D4AF37" />
+                  <circle cx="170" cy="120" r="3" fill="#D4AF37" />
+                  <circle cx="180" cy="80" r="2.5" fill="#00ffff" />
+                  <circle cx="260" cy="160" r="2.5" fill="#00ffff" />
+                </svg>
                 <div
                   className="absolute w-[400px] h-[400px] rounded-full filter blur-[100px] opacity-20 pointer-events-none animate-pulse"
                   style={{

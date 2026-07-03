@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function CanvasSequence({ onPlayVideo, isModalOpen }) {
+export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   const canvasRef = useRef(null);
   const currentFrameRef = useRef(0);
   const loadedImagesRef = useRef([]);
@@ -33,6 +33,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen }) {
       loadedImagesRef.current[0] = firstImg;
       setImages([...loadedImagesRef.current]);
       setIsLoading(false);
+      if (onLoaded) onLoaded();
       setLoadProgress(1);
       
       // 接著在背景非同步分批加載剩餘 144 張圖片
@@ -42,6 +43,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen }) {
     firstImg.onerror = () => {
       // 容錯防卡死
       setIsLoading(false);
+      if (onLoaded) onLoaded();
       preloadRemainingFrames(folderName);
     };
 

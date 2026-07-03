@@ -2,6 +2,16 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshTransmissionMaterial } from '@react-three/drei';
 
+function CameraRig() {
+  useFrame((state) => {
+    // 讓相機位置隨滑鼠座標進行平滑偏移 (模擬後期 3D 攝影機視差)
+    state.camera.position.x += (state.pointer.x * 1.5 - state.camera.position.x) * 0.05;
+    state.camera.position.y += (state.pointer.y * 1.2 - state.camera.position.y) * 0.05;
+    state.camera.lookAt(0, 0, 0);
+  });
+  return null;
+}
+
 function Crystal({ position, scale, speed, floatRange, rotationSpeed, geometryType }) {
   const meshRef = useRef();
   const initialY = position[1];
@@ -97,7 +107,8 @@ export default function RefractiveCrystals() {
         gl={{ alpha: true, antialias: true }}
         style={{ width: '100%', height: '100%' }}
       >
-        {/* 背景透明與光線控制 */}
+        {/* 相機視差與背景透明控制 */}
+        <CameraRig />
         <ambientLight intensity={0.4} />
         <pointLight position={[-10, 10, 10]} intensity={1.5} color="#ffe082" />
         <pointLight position={[10, -10, -10]} intensity={1.0} color="#00ffff" />

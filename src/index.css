@@ -221,7 +221,8 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0) scale(0.65); /* 初始縮小，等待科技自檢啟動 */
+  opacity: 0; /* 初始隱藏 */
   width: 1400px;
   height: 1400px;
   display: flex;
@@ -229,6 +230,13 @@ body {
   align-items: center;
   z-index: 0; /* 設為 0 確保它在背景上方、且不被遮蔽 */
   pointer-events: none;
+  transform-style: preserve-3d;
+  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out;
+}
+
+.is-loaded .orbit-container {
+  transform: translate3d(-50%, -50%, 0) scale(1);
+  opacity: 1;
 }
 
 .orbit-ring {
@@ -360,6 +368,31 @@ body {
   box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
   border-radius: 9999px;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.prism-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 30%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: button-shine 6s infinite ease-in-out;
+}
+
+@keyframes button-shine {
+  0% { left: -60%; }
+  15% { left: 140%; }
+  100% { left: 140%; }
 }
 
 .prism-button:hover {
@@ -774,6 +807,23 @@ html.lenis body {
 
 .lenis.lenis-smooth iframe {
   pointer-events: none;
+}
+
+/* ==========================================================================
+   Nuke/Flame 節點式合成連結線動畫 (Node Compositing Pipes Animation)
+   ========================================================================== */
+.node-pipe {
+  stroke-dasharray: 6 12;
+  animation: node-pipe-flow 3s linear infinite;
+}
+.node-pipe-fast {
+  stroke-dasharray: 4 10;
+  animation: node-pipe-flow 1.5s linear infinite;
+}
+@keyframes node-pipe-flow {
+  to {
+    stroke-dashoffset: -36;
+  }
 }
 
 
