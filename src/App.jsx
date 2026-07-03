@@ -9,7 +9,6 @@ import Contact from './components/Contact';
 import Modal from './components/Modal';
 import RefractiveCrystals from './components/RefractiveCrystals';
 import Lenis from 'lenis';
-import SpaceParticles from './components/SpaceParticles';
 
 export default function App() {
   const [modalState, setModalState] = useState({
@@ -99,8 +98,6 @@ export default function App() {
 
   return (
     <div className={`relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden ${isPageLoaded ? 'is-loaded' : 'is-loading'}`}>
-      {/* 全域大氣粒子與星空背景 */}
-      <SpaceParticles />
 
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />

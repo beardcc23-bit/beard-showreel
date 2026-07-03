@@ -38,18 +38,18 @@ function Crystal({ position, scale, speed, floatRange, rotationSpeed, geometryTy
       )}
       <MeshTransmissionMaterial
         backside
-        samples={8}
-        resolution={256}
+        samples={4}
+        resolution={128}
         transmission={1.0}
         roughness={0.08}
         clearcoat={1.0}
         clearcoatRoughness={0.05}
         ior={1.6} // 玻璃與水晶折射率
         thickness={1.3} // 水晶厚度
-        chromaticAberration={0.08} // 光學色散（彩虹邊緣，後期合成技師的最愛）
-        anisotropicBlur={0.05}
-        distortion={0.1}
-        distortionScale={0.2}
+        chromaticAberration={0.06} // 微調色散，降低邊緣計算
+        anisotropicBlur={0.0}
+        distortion={0.0} // 關閉扭曲計算，大幅釋放 GPU
+        distortionScale={0.0}
         temporalDistortion={0.0}
         color="#ffffff"
       />
