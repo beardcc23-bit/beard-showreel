@@ -8,6 +8,8 @@ import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
 import Modal from './components/Modal';
 import RefractiveCrystals from './components/RefractiveCrystals';
+import Lenis from 'lenis';
+import SpaceParticles from './components/SpaceParticles';
 
 export default function App() {
   const [modalState, setModalState] = useState({
@@ -31,6 +33,29 @@ export default function App() {
     };
   }, []);
 
+  // 初始化 Lenis 電影級平滑滾動
+  React.useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // 經典指數緩動
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
 
   const handleOpenVideoModal = React.useCallback((videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
     setModalState({
@@ -50,6 +75,9 @@ export default function App() {
 
   return (
     <div className="relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden">
+      {/* 全域大氣粒子與星空背景 */}
+      <SpaceParticles />
+
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />
       <div className="grid-bg" />
