@@ -56,7 +56,7 @@ export default function App() {
     };
   }, []);
 
-  // 實作幾何軌道背景的滑鼠三維視差傾斜 (Lens Parallax)
+  // 實作幾何軌道背景的滑鼠三維視差傾斜 (Lens Parallax) - 採用 rAF + Lerp 進行效能調優
   React.useEffect(() => {
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     if (isTouch) return;
@@ -64,18 +64,35 @@ export default function App() {
     const orbit = document.querySelector('.orbit-container');
     if (!orbit) return;
 
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e;
-      const xPercent = (clientX / window.innerWidth - 0.5) * 2; // -1 到 1
-      const yPercent = (clientY / window.innerHeight - 0.5) * 2; // -1 到 1
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let animationFrameId = null;
 
-      // 幾何軌道進行平滑的三維傾斜與位移 (加入 calc 以維持置中)
-      orbit.style.transform = `translate3d(calc(-50% + ${xPercent * 18}px), calc(-50% + ${yPercent * 15}px), 0) rotateX(${-yPercent * 12}deg) rotateY(${xPercent * 12}deg)`;
+    const handleMouseMove = (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 到 1
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2; // -1 到 1
+    };
+
+    const updateParallax = () => {
+      // 透過 lerp (線性插值) 讓位移極致平滑，並降低 CPU 每幀繪製的計算抖動
+      currentX += (mouseX - currentX) * 0.08;
+      currentY += (mouseY - currentY) * 0.08;
+
+      orbit.style.transform = `translate3d(calc(-50% + ${currentX * 18}px), calc(-50% + ${currentY * 15}px), 0) rotateX(${-currentY * 12}deg) rotateY(${currentX * 12}deg)`;
+
+      animationFrameId = requestAnimationFrame(updateParallax);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    animationFrameId = requestAnimationFrame(updateParallax);
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, []);
 

@@ -152,7 +152,7 @@ export default function CursorGlow() {
           width: '32px',
           height: '32px',
           transform: 'translate3d(0,0,0) translate(-50%, -50%) scale(1)',
-          transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease',
+          transition: 'opacity 0.25s ease', // 移除 transform transition，避免與 rAF 每一幀的 translate3d 發生衝突與粘滯延遲
           opacity: isHidden ? 0 : 1,
         }}
       >
