@@ -5,6 +5,7 @@ import { categories } from '../data/portfolio';
 
 const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const hasVideo = !!item.videoId || !!item.url;
+  const CardElement = hasVideo ? 'button' : 'div';
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
 
@@ -55,7 +56,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   };
 
   return (
-    <button
+    <CardElement
       ref={setRefs}
       onMouseMove={handleMouseMove}
       onClick={handleClick}
@@ -119,7 +120,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
           <Play size={8} fill="currentColor" className="play-triangle-pulse" /> Play
         </div>
       ) : null}
-    </button>
+    </CardElement>
   );
 }));
 
