@@ -280,36 +280,7 @@ body {
   to { transform: rotate(-360deg); }
 }
 
-/* 漂浮水晶 - 提升高透玻璃感 */
-.crystal {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.18); /* 更亮的外框線 */
-  border-radius: 4px;
-  box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  animation: float-crystal 12s infinite ease-in-out;
-}
-
-.crystal-1 { width: 20px; height: 20px; top: 15%; left: 10%; transform: rotate(25deg); }
-.crystal-2 { width: 30px; height: 30px; bottom: 20%; left: 15%; transform: rotate(55deg); animation-delay: 2s; }
-.crystal-3 { width: 16px; height: 16px; top: 25%; right: 18%; transform: rotate(-15deg); animation-delay: 4s; }
-.crystal-4 { width: 40px; height: 40px; bottom: 10%; right: 12%; transform: rotate(105deg); animation-delay: 1s; }
-.crystal-5 { width: 10px; height: 10px; top: 48%; left: 8%; transform: rotate(80deg); animation-delay: 5s; }
-.crystal-6 { width: 24px; height: 24px; top: 18%; right: 35%; transform: rotate(40deg); animation-delay: 3s; }
-.crystal-7 { width: 12px; height: 12px; bottom: 28%; left: 25%; transform: rotate(-35deg); animation-delay: 1.5s; }
-.crystal-8 { width: 34px; height: 34px; top: 50%; right: 8%; transform: rotate(15deg); animation-delay: 4.5s; }
-.crystal-9 { width: 18px; height: 18px; bottom: 45%; left: 22%; transform: rotate(70deg); animation-delay: 0.5s; }
-.crystal-10 { width: 22px; height: 22px; top: 8%; left: 45%; transform: rotate(-60deg); animation-delay: 6s; }
-
-@keyframes float-crystal {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-75px) rotate(45deg); } /* 大幅增加上下漂浮位移與旋轉幅度，提升太空零重力漂動感 */
-  100% { transform: translateY(0) rotate(0deg); }
-}
+/* 3D 物理折射水晶已取代舊有 2D HTML 水晶，相關平面動畫樣式已移除 */
 
 /* 霓虹光暈 */
 .lens-flare {

@@ -7,6 +7,7 @@ import Manifesto from './components/Manifesto';
 import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
 import Modal from './components/Modal';
+import RefractiveCrystals from './components/RefractiveCrystals';
 
 export default function App() {
   const [modalState, setModalState] = useState({
@@ -58,26 +59,16 @@ export default function App() {
       <div className="lens-flare flare-2" />
       <div className="lens-flare flare-3" />
       
-      {/* 旋轉幾何軌道與漂浮水晶 */}
+      {/* 旋轉幾何軌道 */}
       <div className="orbit-container">
         <div className="orbit-ring ring-outer" />
         <div className="orbit-ring ring-middle" />
         <div className="orbit-ring ring-inner" />
         <div className="orbit-ring ring-diagonal" />
-        
-        {/* 漂浮玻璃晶體粒子 */}
-        <div className="crystal crystal-1" />
-        <div className="crystal crystal-2" />
-        <div className="crystal crystal-3" />
-        <div className="crystal crystal-4" />
-        <div className="crystal crystal-5" />
-        {/* 網頁版限定的額外漂浮晶體 (防止手機版卡頓) */}
-        <div className="crystal crystal-6 hidden md:block" />
-        <div className="crystal crystal-7 hidden md:block" />
-        <div className="crystal crystal-8 hidden md:block" />
-        <div className="crystal crystal-9 hidden md:block" />
-        <div className="crystal crystal-10 hidden md:block" />
       </div>
+
+      {/* 3D 物理折射水晶背景 */}
+      <RefractiveCrystals />
 
       {/* 高科技滑鼠光暈 */}
       <CursorGlow />
