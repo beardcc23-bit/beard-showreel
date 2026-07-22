@@ -271,7 +271,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-8 h-8 text-white ml-1"
+                  className="w-8 h-8 text-white translate-x-[1px]"
                 >
                   <path d="M8 5.14v14c0 .86.94 1.36 1.66.88l10-7a1 1 0 000-1.76l-10-7A1 1 0 008 5.14z" />
                 </svg>
