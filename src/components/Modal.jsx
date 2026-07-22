@@ -127,6 +127,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 <img
                   src={data.imageUrl}
                   alt={data.title}
+                  decoding="async"
                   className="w-full aspect-video object-cover"
                 />
               </div>

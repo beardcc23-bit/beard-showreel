@@ -135,6 +135,7 @@ export default function Manifesto({ onPlayVideo }) {
                         <img
                           src="/f1.jpg"
                           alt="Autodesk Flame Batch Schematic"
+                          decoding="async"
                           className="w-full h-full object-cover grayscale-[10%] group-hover/flame:grayscale-0 transition-all duration-700"
                         />
                         {/* 科技感顯示器網格掃描線 overlay */}

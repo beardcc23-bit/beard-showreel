@@ -183,6 +183,7 @@ export default function Introduction({ onPlayVideo }) {
                 <img
                   src="/avatar.jpg"
                   alt="Beard"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               </div>

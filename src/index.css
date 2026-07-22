@@ -863,4 +863,42 @@ html.lenis body {
   contain-intrinsic-size: 800px;
 }
 
+/* ==========================================================================
+   GPU 硬體加速與圖層隔離 (Hardware Acceleration & Layer Isolation)
+   ========================================================================== */
+.orbit-container,
+.orbit-ring,
+.crystal,
+.lens-flare,
+.gold-flow-border,
+.prism-border {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ==========================================================================
+   Tab 內容切換流暢過渡動畫 (Tab Content Fluid Transition)
+   ========================================================================== */
+.tab-content-active {
+  display: grid;
+  animation: tab-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.tab-content-hidden {
+  display: none;
+}
+
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
