@@ -145,7 +145,7 @@ export default function Navigation() {
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleScroll(e, item.href)}
-                  className="text-xl font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
+                  className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-300 flex flex-col"
                 >
                   <span className="text-[9px] text-zinc-400 font-medium tracking-widest mono mb-1">{item.eng}</span>
                   {item.name}
@@ -158,7 +158,7 @@ export default function Navigation() {
                 className="hud-btn is-active w-fit px-6 py-3.5 flex flex-col items-start justify-center leading-none mt-2 -ml-6"
               >
                 <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">Establish Connection</span>
-                <span className="hud-zht text-xl font-normal uppercase tracking-widest">建立聯繫</span>
+                <span className="hud-zht text-base font-normal uppercase tracking-widest">建立聯繫</span>
               </a>
             </motion.div>
           </>
