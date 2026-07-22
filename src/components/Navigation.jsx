@@ -43,6 +43,30 @@ export default function Navigation() {
     requestAnimationFrame(animateScroll);
   };
 
+  const scrollToTop = (e) => {
+    if (e) e.preventDefault();
+    setIsOpen(false);
+    const startPosition = window.scrollY;
+    const distance = -startPosition;
+    const duration = 400; // 400ms 高速直達頂端
+    let startTime = null;
+
+    const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+    const animateScroll = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const percent = Math.min(progress / duration, 1);
+      const easedPercent = easeInOutCubic(percent);
+      window.scrollTo(0, startPosition + distance * easedPercent);
+      if (progress < duration) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
+  };
+
   return (
     <>
       <nav className="fixed top-0 w-full z-50 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center backdrop-blur-xl border-b border-border bg-bg-core/40 transition-colors duration-500">
@@ -54,9 +78,13 @@ export default function Navigation() {
           >
             <Menu size={24} />
           </button>
-          <div className="text-xl font-black tracking-tighter font-space-mono text-white-or-black">
+          <button
+            onClick={scrollToTop}
+            className="text-xl font-black tracking-tighter font-space-mono text-white-or-black hover:opacity-80 transition-opacity focus:outline-none cursor-pointer text-left"
+            aria-label="Scroll to top"
+          >
             Beard<span className="text-aurora-blue"> Showreel</span>
-          </div>
+          </button>
         </div>
         
         <div className="hidden md:flex items-center space-x-12">
