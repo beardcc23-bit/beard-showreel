@@ -56,7 +56,7 @@ export default function Contact() {
               className="group flex items-center gap-4 px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer"
               title="點擊複製並開啟郵件"
             >
-              <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center ${copied ? 'bg-prism-green text-black' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
+              <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(0,255,255,0.35)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
                 {copied ? <Check size={18} /> : <Mail size={18} />}
               </span>
 
@@ -75,7 +75,7 @@ export default function Contact() {
                 className="ml-2 p-1.5 text-zinc-500 hover:text-white transition-colors duration-200"
                 aria-label="Copy email address"
               >
-                {copied ? <Check size={16} className="text-prism-green" /> : <Copy size={16} />}
+                {copied ? <Check size={16} className="text-aurora-blue" /> : <Copy size={16} />}
               </button>
             </a>
           </div>
@@ -88,11 +88,11 @@ export default function Contact() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
-                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-950/90 border border-prism-green/50 text-prism-green shadow-[0_0_15px_rgba(46,204,113,0.2)] select-none"
+                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950/95 border border-aurora-blue/40 text-aurora-blue shadow-[0_0_20px_rgba(0,255,255,0.18)] backdrop-blur-xl select-none"
               >
                 <Check size={12} />
                 <span className="mono text-[10px] uppercase tracking-widest font-black">
-                  COPIED TO CLIPBOARD // 成功複製 Email
+                  COPIED TO CLIPBOARD // 成功複製 EMAIL
                 </span>
               </motion.div>
             )}
