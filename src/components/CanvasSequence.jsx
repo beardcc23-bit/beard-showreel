@@ -20,7 +20,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     const isMobile = window.innerWidth < 768;
     const folderName = isMobile ? 'png-0-mobile' : 'png-0';
     const basePath = import.meta.env.BASE_URL;
-    const firstFrameSrc = `${basePath}${folderName}/png-0_00000000.png?v=2`;
+    const firstFrameSrc = `${basePath}${folderName}/png-0_00000000.webp?v=3`;
     
     // 初始化 ref 陣列長度
     loadedImagesRef.current = new Array(frameCount);
@@ -56,7 +56,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       const loadFrame = (index) => {
         return new Promise((resolve) => {
           const img = new Image();
-          img.src = `${basePath}${activeFolder}/png-0_${String(index).padStart(8, '0')}.png?v=2`;
+          img.src = `${basePath}${activeFolder}/png-0_${String(index).padStart(8, '0')}.webp?v=3`;
           img.onload = () => {
             loadedImagesRef.current[index] = img;
             resolve();

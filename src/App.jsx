@@ -6,8 +6,9 @@ import Introduction from './components/Introduction';
 import Manifesto from './components/Manifesto';
 import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
-import Modal from './components/Modal';
 import Lenis from 'lenis';
+
+const Modal = React.lazy(() => import('./components/Modal'));
 
 export default function App() {
   const [modalState, setModalState] = useState({
@@ -179,12 +180,14 @@ export default function App() {
       </footer>
 
       {/* 全域狀態驅動互動彈窗 */}
-      <Modal
-        isOpen={modalState.isOpen}
-        onClose={handleCloseModal}
-        type={modalState.type}
-        data={modalState.data}
-      />
+      <React.Suspense fallback={null}>
+        <Modal
+          isOpen={modalState.isOpen}
+          onClose={handleCloseModal}
+          type={modalState.type}
+          data={modalState.data}
+        />
+      </React.Suspense>
     </div>
   );
 }

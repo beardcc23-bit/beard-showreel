@@ -855,4 +855,12 @@ html.lenis body {
   }
 }
 
+/* ==========================================================================
+   長頁面繪製與排版效能優化 (Content Visibility Optimization)
+   ========================================================================== */
+#vfx, #about, #contact {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+
 
