@@ -5,26 +5,41 @@ import { X, Cpu, Zap, Award } from 'lucide-react';
 export default function Modal({ isOpen, onClose, type, data }) {
   const [iframeLoading, setIframeLoading] = React.useState(true);
 
-  // 當 Modal 開啟時，禁止背景 scroll
+  // 當 Modal 開啟時，禁止背景 scroll 並且監聽 Escape 按鈕
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       setIframeLoading(true); // 開啟時重設為載入中狀態
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = 'unset';
+        window.removeEventListener('keydown', handleKeyDown);
+        window.dispatchEvent(new CustomEvent('show-custom-cursor'));
+      };
     } else {
       document.body.style.overflow = 'unset';
       window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.dispatchEvent(new CustomEvent('show-custom-cursor'));
-    };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !data) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8">
+      <div 
+        role="dialog"
+        aria-modal="true"
+        aria-label={data.title || "Media Player Modal"}
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
+      >
         {/* 遮罩層 */}
         <motion.div
           initial={{ opacity: 0 }}

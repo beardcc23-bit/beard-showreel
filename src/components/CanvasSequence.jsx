@@ -5,7 +5,6 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   const canvasRef = useRef(null);
   const currentFrameRef = useRef(0);
   const loadedImagesRef = useRef([]);
-  const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // 代表第一幀是否載入完成（首頁解鎖）
   const [bgPreloadComplete, setBgPreloadComplete] = useState(false); // 背景其餘影格是否預載完畢
   const [loadProgress, setLoadProgress] = useState(0);
@@ -17,6 +16,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   const frameInterval = 1000 / fps;
 
   useEffect(() => {
+    let isCancelled = false;
     const isMobile = window.innerWidth < 768;
     const folderName = isMobile ? 'png-0-mobile' : 'png-0';
     const basePath = import.meta.env.BASE_URL;
@@ -29,9 +29,9 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     firstImg.src = firstFrameSrc;
     
     firstImg.onload = () => {
+      if (isCancelled) return;
       // 第一幀載入成功，立即初始化並結束全螢幕 loading，使首頁解鎖
       loadedImagesRef.current[0] = firstImg;
-      setImages([...loadedImagesRef.current]);
       setIsLoading(false);
       if (onLoaded) onLoaded();
       setLoadProgress(1);
@@ -41,6 +41,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     };
 
     firstImg.onerror = () => {
+      if (isCancelled) return;
       // 容錯防卡死
       setIsLoading(false);
       if (onLoaded) onLoaded();
@@ -67,9 +68,10 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       };
 
       const worker = async () => {
-        while (nextIndex < frameCount) {
+        while (nextIndex < frameCount && !isCancelled) {
           const currentIndex = nextIndex++;
           await loadFrame(currentIndex);
+          if (isCancelled) return;
           loadedCount++;
           const progress = Math.round((loadedCount / frameCount) * 100);
           setLoadProgress(progress);
@@ -83,12 +85,13 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       }
       await Promise.all(workers);
       
-      // 背景加載完畢，更新全數 images 並關閉進度條
-      setImages([...loadedImagesRef.current]);
-      setBgPreloadComplete(true);
+      if (!isCancelled) {
+        setBgPreloadComplete(true);
+      }
     };
 
     return () => {
+      isCancelled = true;
       loadedImagesRef.current = [];
     };
   }, []);
