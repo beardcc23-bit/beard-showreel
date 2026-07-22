@@ -5,7 +5,10 @@ export const categories = [
     "items": [
       {
         "name": "Extra",
-        "bgImage": "/vfx/A/A-001.webp"
+        "bgImage": "/vfx/A/A-001.webp",
+        "url": "https://www.youtube.com/shorts/n3c3DDBMUnA",
+        "videoId": "n3c3DDBMUnA",
+        "aspect": "portrait"
       },
       {
         "name": "Johnnie Walker",
