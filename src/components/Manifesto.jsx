@@ -76,11 +76,11 @@ export default function Manifesto({ onPlayVideo }) {
   const activeCategory = lawCategories.find(cat => cat.id === activeTab) || lawCategories[0];
 
   return (
-    <section id="about" className="max-w-6xl mx-auto px-8 py-36 relative">
-      {/* 網格裝飾背景 */}
+    <section id="about" className="w-full relative py-36 overflow-hidden">
+      {/* 滿版網格與漸層裝飾背景 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
-      <div className="relative z-10">
+      <div className="max-w-6xl mx-auto px-8 relative z-10">
         {/* 頂部：標題區 */}
         <div className="text-center mb-20 relative z-10">
           <h2 className="text-[48px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">

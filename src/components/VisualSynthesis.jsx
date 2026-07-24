@@ -140,24 +140,24 @@ export default function VisualSynthesis({ onPlayVideo }) {
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
   return (
-    <section id="vfx" className="max-w-6xl mx-auto px-8 py-24 relative" >
-      {/* 背景點綴網格 */}
-      < div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
+    <section id="vfx" className="w-full relative py-24 overflow-hidden">
+      {/* 滿版背景點綴網格 */}
+      <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
-      {/* 區段標頭 */}
-      < div className="text-center mb-16 relative z-10" >
-        <h2 className="text-[48px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
-          ADVER<span className="text-aurora-blue">TISING</span>
-        </h2>
-        <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
-          近期參與的廣告專案。
-        </p>
-      </div >
+      <div className="max-w-6xl mx-auto px-8 relative z-10">
+        {/* 區段標頭 */}
+        <div className="text-center mb-16 relative z-10">
+          <h2 className="text-[48px] md:text-9xl font-black tracking-tighter uppercase mb-8 glow-title text-white">
+            ADVER<span className="text-aurora-blue">TISING</span>
+          </h2>
+          <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
+            近期參與的廣告專案。
+          </p>
+        </div>
 
-      {/* 分類切換 Tab */}
-      < div className="grid grid-cols-3 gap-2 max-w-xl lg:max-w-5xl mx-auto px-4 lg:flex lg:flex-row lg:flex-nowrap lg:justify-center lg:gap-4 mb-12 relative z-10" >
-        {
-          categories.map((tab) => {
+        {/* 分類切換 Tab */}
+        <div className="grid grid-cols-3 gap-2 max-w-xl lg:max-w-5xl mx-auto px-4 lg:flex lg:flex-row lg:flex-nowrap lg:justify-center lg:gap-4 mb-12 relative z-10">
+          {categories.map((tab) => {
             const engMap = {
               food: 'FOOD & BEV',
               tech: 'TECH & TELECOM',
@@ -178,14 +178,12 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 <span className="hud-zht text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
               </button>
             );
-          })
-        }
-      </div >
+          })}
+        </div>
 
-      {/* 品牌卡片 Grid - 6 個類別各自靜態預渲染，透過 display 與 CSS 動畫切換，達到 0 毫秒 JS 阻塞 */}
-      < div className="relative z-10 min-h-[300px]" >
-        {
-          categories.map((category) => {
+        {/* 品牌卡片 Grid - 6 個類別各自靜態預渲染，透過 display 與 CSS 動畫切換，達到 0 毫秒 JS 阻塞 */}
+        <div className="relative z-10 min-h-[300px]">
+          {categories.map((category) => {
             const isActive = category.id === activeTab;
             return (
               <div
@@ -202,9 +200,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 ))}
               </div>
             );
-          })
-        }
-      </div >
-    </section >
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
