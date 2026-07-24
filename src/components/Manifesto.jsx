@@ -76,7 +76,7 @@ export default function Manifesto({ onPlayVideo }) {
   const activeCategory = lawCategories.find(cat => cat.id === activeTab) || lawCategories[0];
 
   return (
-    <section id="about" className="w-full relative py-36 overflow-hidden">
+    <section id="about" className="w-full relative py-36">
       {/* 滿版網格與漸層裝飾背景 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
