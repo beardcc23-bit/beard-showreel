@@ -5,6 +5,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   const canvasRef = useRef(null);
   const currentFrameRef = useRef(0);
   const loadedImagesRef = useRef([]);
+  const isPlayingRef = useRef(true);
   const [isLoading, setIsLoading] = useState(true); // 代表第一幀是否載入完成（首頁解鎖）
   const [bgPreloadComplete, setBgPreloadComplete] = useState(false); // 背景其餘影格是否預載完畢
   const [loadProgress, setLoadProgress] = useState(0);
@@ -14,6 +15,11 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   const frameCount = 145; // png-0_00000000.png ~ png-0_00000144.png
   const fps = 30;
   const frameInterval = 1000 / fps;
+
+  // 同步 state 與 ref
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -113,8 +119,8 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     const ctx = canvas.getContext('2d');
     
     // 設定畫布解析度匹配原始高畫質尺寸 (1504x832)
-    canvas.width = 1504;
-    canvas.height = 832;
+    if (canvas.width !== 1504) canvas.width = 1504;
+    if (canvas.height !== 832) canvas.height = 832;
 
     let animationFrameId;
     let lastFrameTime = performance.now();
@@ -149,17 +155,26 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
       };
 
-      // 只要在畫面中 (isIntersecting)、isPlaying 為 true 且 Modal 關閉，才進行播放運算
-      if (isIntersecting && isPlaying && !isModalOpen) {
-        const deltaTime = now - lastFrameTime;
-        if (deltaTime >= frameInterval) {
+      // 只要在畫面中 (isIntersecting) 且 Modal 關閉，才繪製
+      if (isIntersecting && !isModalOpen) {
+        if (isPlayingRef.current) {
+          const deltaTime = now - lastFrameTime;
+          if (deltaTime >= frameInterval) {
+            const img = loadedImagesRef.current[currentFrameRef.current];
+            if (img && img.complete) {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              drawImageProp(img);
+            }
+            currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
+            lastFrameTime = now - (deltaTime % frameInterval);
+          }
+        } else {
+          // 當暫停 (isPlaying == false) 時，持續維護當前影格繪製，避免畫面變黑
           const img = loadedImagesRef.current[currentFrameRef.current];
           if (img && img.complete) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawImageProp(img);
           }
-          currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
-          lastFrameTime = now - (deltaTime % frameInterval);
         }
       }
 
@@ -172,7 +187,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       observer.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isLoading, isPlaying, isModalOpen]);
+  }, [isLoading, isModalOpen]);
 
   const handleMouseEnter = () => {
     setIsPlaying(false);
@@ -255,46 +270,43 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
           scale: isLoading ? 0.95 : 1 
         }}
         transition={{ duration: 1, ease: 'easeOut' }}
-        className={`w-full md:w-[1000px] md:max-w-[90vw] aspect-[5/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-none md:rounded-sm relative overflow-hidden border-y border-zinc-800 md:border md:border-zinc-800 transition-all duration-300 z-10 ${
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={() => onPlayVideo('s6s2p87fPdA')}
+        className={`w-full md:w-[1000px] md:max-w-[90vw] aspect-[5/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-none md:rounded-sm relative overflow-hidden border-y border-zinc-800 md:border md:border-zinc-800 transition-all duration-300 z-10 cursor-pointer ${
           isLoading ? 'pointer-events-none' : 'pointer-events-auto'
         }`}
       >
         <div className="w-full h-full overflow-hidden relative">
           <canvas ref={canvasRef} className="w-full h-full block pointer-events-none object-cover" />
-          <div className="glow-border" />
-        </div>
-
-        {/* 置中獨立感應區 */}
-        {!isLoading && (
-          <div
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => onPlayVideo('s6s2p87fPdA')}
-            className="absolute inset-0 m-auto w-[260px] h-[160px] z-20 flex flex-col items-center justify-center cursor-pointer pointer-events-auto"
-          >
-            {/* 播放按鈕與提示字 */}
-            <div className="relative z-10 flex flex-col items-center pointer-events-none">
-              <div className={`w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all duration-300 transform ${
-                showOverlay ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
-              }`}>
+          
+          {/* Hover 滿版微暗調半透明 Overlay，凸顯 YT 紅色按鈕但不擋住畫格內容 */}
+          <div className={`absolute inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity duration-300 pointer-events-none flex flex-col items-center justify-center ${
+            showOverlay ? 'opacity-100' : 'opacity-0'
+          }`}>
+            <div className={`flex flex-col items-center transform transition-all duration-300 ${
+              showOverlay ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+            }`}>
+              {/* YouTube 紅色播放按鈕 */}
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-red-600 flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)] hover:bg-red-500 transition-colors duration-200">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-8 h-8 text-white translate-x-[1px]"
+                  className="w-8 h-8 md:w-10 md:h-10 text-white translate-x-[2px]"
                 >
                   <path d="M8 5.14v14c0 .86.94 1.36 1.66.88l10-7a1 1 0 000-1.76l-10-7A1 1 0 008 5.14z" />
                 </svg>
               </div>
 
-              <span className={`mono text-[9px] text-white uppercase tracking-[0.3em] mt-4 font-black transition-all duration-300 ${
-                showOverlay ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'
-              }`}>
+              <span className="mono text-[10px] md:text-xs text-white uppercase tracking-[0.3em] mt-4 font-black drop-shadow-md">
                 Click to View Full Reel
               </span>
             </div>
           </div>
-        )}
+
+          <div className="glow-border pointer-events-none" />
+        </div>
 
         {/* 右上角極微型背景加載進度指示器（精緻細節，當加載完畢後淡出消失） */}
         {!bgPreloadComplete && !isLoading && (
