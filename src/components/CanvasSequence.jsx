@@ -111,6 +111,34 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     };
   }, []);
 
+  // 獨立單張影格繪製函式（用於暫停時單次補劃或初始化）
+  const drawCurrentFrame = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const img = loadedImagesRef.current[currentFrameRef.current];
+    if (img && img.complete) {
+      const imgRatio = img.width / img.height;
+      const canvasRatio = canvas.width / canvas.height;
+      let drawWidth, drawHeight, drawX, drawY;
+
+      if (imgRatio > canvasRatio) {
+        drawHeight = canvas.height;
+        drawWidth = canvas.height * imgRatio;
+        drawX = (canvas.width - drawWidth) / 2;
+        drawY = 0;
+      } else {
+        drawWidth = canvas.width;
+        drawHeight = canvas.width / imgRatio;
+        drawX = 0;
+        drawY = (canvas.height - drawHeight) / 2;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+    }
+  };
+
   useEffect(() => {
     if (isLoading) return;
 
@@ -126,68 +154,53 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     let lastFrameTime = performance.now();
     let isIntersecting = true;
 
+    // 先繪製一次當前影格（防白屏/黑屏）
+    drawCurrentFrame();
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         isIntersecting = entry.isIntersecting;
+        if (isIntersecting && isPlaying && !isModalOpen) {
+          // 重新進入視域時若為播放狀態則啟動 rAF
+          if (!animationFrameId) {
+            lastFrameTime = performance.now();
+            animationFrameId = requestAnimationFrame(render);
+          }
+        }
       },
       { threshold: 0.05 }
     );
     observer.observe(canvas);
 
     const render = (now) => {
-      const drawImageProp = (img) => {
-        const imgRatio = img.width / img.height;
-        const canvasRatio = canvas.width / canvas.height;
-        let drawWidth, drawHeight, drawX, drawY;
+      // 若非播放狀態、或打開 Modal，停止繼續請求下一幀 (Stop Ticking)
+      if (!isIntersecting || !isPlaying || isModalOpen) {
+        animationFrameId = null;
+        return;
+      }
 
-        if (imgRatio > canvasRatio) {
-          drawHeight = canvas.height;
-          drawWidth = canvas.height * imgRatio;
-          drawX = (canvas.width - drawWidth) / 2;
-          drawY = 0;
-        } else {
-          drawWidth = canvas.width;
-          drawHeight = canvas.width / imgRatio;
-          drawX = 0;
-          drawY = (canvas.height - drawHeight) / 2;
-        }
-
-        ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-      };
-
-      // 只要在畫面中 (isIntersecting) 且 Modal 關閉，才繪製
-      if (isIntersecting && !isModalOpen) {
-        if (isPlayingRef.current) {
-          const deltaTime = now - lastFrameTime;
-          if (deltaTime >= frameInterval) {
-            const img = loadedImagesRef.current[currentFrameRef.current];
-            if (img && img.complete) {
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              drawImageProp(img);
-            }
-            currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
-            lastFrameTime = now - (deltaTime % frameInterval);
-          }
-        } else {
-          // 當暫停 (isPlaying == false) 時，持續維護當前影格繪製，避免畫面變黑
-          const img = loadedImagesRef.current[currentFrameRef.current];
-          if (img && img.complete) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawImageProp(img);
-          }
-        }
+      const deltaTime = now - lastFrameTime;
+      if (deltaTime >= frameInterval) {
+        drawCurrentFrame();
+        currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
+        lastFrameTime = now - (deltaTime % frameInterval);
       }
 
       animationFrameId = requestAnimationFrame(render);
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    // 只有在 isPlaying = true 且未開啟 Modal 時才啟動 rAF 迴圈
+    if (isPlaying && !isModalOpen) {
+      animationFrameId = requestAnimationFrame(render);
+    }
 
     return () => {
       observer.disconnect();
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
-  }, [isLoading, isModalOpen]);
+  }, [isLoading, isPlaying, isModalOpen]);
 
   const handleMouseEnter = () => {
     setIsPlaying(false);
