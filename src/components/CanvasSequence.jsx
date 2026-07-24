@@ -109,6 +109,15 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
     let animationFrameId;
     let lastFrameTime = performance.now();
+    let isIntersecting = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(canvas);
 
     const render = (now) => {
       const drawImageProp = (img) => {
@@ -131,35 +140,27 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
         ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
       };
 
-      // 只要 isPlaying 為 true 且 Modal 關閉，我們就持續進行播放運算
-      if (isPlaying && !isModalOpen) {
+      // 只要在畫面中 (isIntersecting)、isPlaying 為 true 且 Modal 關閉，才進行播放運算
+      if (isIntersecting && isPlaying && !isModalOpen) {
         const deltaTime = now - lastFrameTime;
         if (deltaTime >= frameInterval) {
           const img = loadedImagesRef.current[currentFrameRef.current];
-          // 只有當前圖片下載完成且可用時，才繪製它
           if (img && img.complete) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawImageProp(img);
           }
-          // 無論圖片是否載入成功，都繼續前進到下一影格，確保流暢播放
-          // 因為不呼叫 clearRect，所以如果當前幀沒下載好，會直接保留上一幀的畫面，防止閃爍
           currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
           lastFrameTime = now - (deltaTime % frameInterval);
         }
-      } else {
-        // 暫停時，繪製當前影格或首幀，防止畫面空白
-        const img = loadedImagesRef.current[currentFrameRef.current] || loadedImagesRef.current[0];
-        if (img && img.complete) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawImageProp(img);
-        }
       }
+
       animationFrameId = requestAnimationFrame(render);
     };
 
     animationFrameId = requestAnimationFrame(render);
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, [isLoading, isPlaying, isModalOpen]);

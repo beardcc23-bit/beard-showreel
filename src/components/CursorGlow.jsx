@@ -27,25 +27,25 @@ export default function CursorGlow() {
     window.addEventListener('resize', checkMobile);
 
     let animationFrameId = null;
+    let isTicking = false;
 
-    // 使用 requestAnimationFrame 同步瀏覽器重繪幀率，完全由 GPU/Ref 驅動
-    const updateCursorPosition = () => {
+    const render = () => {
       if (glowRef.current && dotRef.current) {
         const { x, y } = mouseCoords.current;
-        // 使用 translate3d 啟用 GPU 硬體加速，避開 Reflow/Layout，直接進行 Composite 渲染
         glowRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-        
         dotRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(1)`;
       }
-      animationFrameId = requestAnimationFrame(updateCursorPosition);
+      isTicking = false;
     };
 
     const handleMouseMove = (e) => {
       mouseCoords.current.x = e.clientX;
       mouseCoords.current.y = e.clientY;
+      if (!isTicking) {
+        isTicking = true;
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
-
-    animationFrameId = requestAnimationFrame(updateCursorPosition);
 
     const handleMouseOver = (e) => {
       const target = e.target;

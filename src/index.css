@@ -148,7 +148,7 @@ body {
 .mono { font-family: 'Source Code Pro', monospace; }
 .font-space-mono { font-family: 'Space Mono', monospace; }
 
-/* 水泥背景與噪點 overlay */
+/* 水泥背景與輕量質感 overlay */
 .mist-bg {
   position: fixed;
   inset: 0;
@@ -160,11 +160,10 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.07; /* 降低對比，讓噪點更隱約高雅 */
+  opacity: 0.03;
   pointer-events: none;
   z-index: -1;
-  /* 增加 baseFrequency 至 1.8 讓噪點變為極細微的磨砂粉末感，並將 numOctaves 降為 1 降低 GPU 負擔 */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
 }
 
 .grid-bg {
@@ -232,6 +231,7 @@ body {
   pointer-events: none;
   transform-style: preserve-3d;
   transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out;
+  will-change: transform;
 }
 
 .is-loaded .orbit-container {
@@ -300,6 +300,7 @@ body {
     0 10px 30px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   animation: float-crystal 12s infinite ease-in-out;
+  will-change: transform;
 }
 
 .crystal-1 { width: 20px; height: 20px; top: 15%; left: 10%; transform: rotate(25deg); }
@@ -325,8 +326,9 @@ body {
   border-radius: 50%;
   pointer-events: none;
   z-index: -1;
-  filter: blur(100px);
+  filter: blur(80px);
   opacity: 0.15;
+  will-change: transform;
 }
 .flare-1 {
   width: 600px;
