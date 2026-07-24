@@ -43,6 +43,7 @@ export default function App() {
       smoothWheel: true,
       wheelMultiplier: 1.0,
     });
+    window.lenis = lenis;
 
     let rafId = null;
 
@@ -55,6 +56,7 @@ export default function App() {
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
+      window.lenis = null;
       lenis.destroy();
     };
   }, []);

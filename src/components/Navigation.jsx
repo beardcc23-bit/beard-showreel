@@ -21,6 +21,11 @@ export default function Navigation() {
     
     setIsOpen(false); // 關閉行動版選單
 
+    if (window.lenis) {
+      window.lenis.scrollTo(element, { offset: -85 });
+      return;
+    }
+
     const targetPosition = element.getBoundingClientRect().top + window.scrollY - 85;
     const startPosition = window.scrollY;
     const distance = targetPosition - startPosition;
@@ -46,6 +51,10 @@ export default function Navigation() {
   const scrollToTop = (e) => {
     if (e) e.preventDefault();
     setIsOpen(false);
+    if (window.lenis) {
+      window.lenis.scrollTo(0);
+      return;
+    }
     const startPosition = window.scrollY;
     const distance = -startPosition;
     const duration = 400; // 400ms 高速直達頂端

@@ -98,6 +98,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                )}
                {data.isFacebook ? (
                 <iframe
+                  key={data.videoUrl || data.videoId}
                   src={data.videoUrl 
                     ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(data.videoUrl)}&show_text=0&t=0&autoplay=1`
                     : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${data.videoId}&show_text=0&t=0&autoplay=1`}
@@ -110,6 +111,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 ></iframe>
               ) : (
                 <iframe
+                  key={data.videoId}
                   src={`https://www.youtube.com/embed/${data.videoId}?autoplay=1`}
                   title="YouTube Video Player"
                   frameBorder="0"

@@ -18,13 +18,20 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     }
   };
 
+  const rafRef = React.useRef(null);
   const handleMouseMove = (e) => {
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    innerRef.current.style.setProperty('--mouse-x', `${x}px`);
-    innerRef.current.style.setProperty('--mouse-y', `${y}px`);
+    if (rafRef.current) return;
+    rafRef.current = requestAnimationFrame(() => {
+      if (innerRef.current) {
+        innerRef.current.style.setProperty('--mouse-x', `${x}px`);
+        innerRef.current.style.setProperty('--mouse-y', `${y}px`);
+      }
+      rafRef.current = null;
+    });
   };
 
   const handleClick = () => {
