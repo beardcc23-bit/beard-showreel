@@ -283,10 +283,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
           scale: isLoading ? 0.95 : 1 
         }}
         transition={{ duration: 1, ease: 'easeOut' }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onClick={() => onPlayVideo('s6s2p87fPdA')}
-        className={`w-full md:w-[1000px] md:max-w-[90vw] aspect-[5/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-none md:rounded-sm relative overflow-hidden border-y border-zinc-800 md:border md:border-zinc-800 transition-all duration-300 z-10 cursor-pointer ${
+        className={`w-full md:w-[1000px] md:max-w-[90vw] aspect-[5/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-none md:rounded-sm relative overflow-hidden border-y border-zinc-800 md:border md:border-zinc-800 transition-all duration-300 z-10 ${
           isLoading ? 'pointer-events-none' : 'pointer-events-auto'
         }`}
       >
@@ -317,6 +314,16 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
               </span>
             </div>
           </div>
+
+          {/* 置中獨立感應區：為畫框中心 50% 比例大小 (w-1/2 h-1/2) */}
+          {!isLoading && (
+            <div
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => onPlayVideo('s6s2p87fPdA')}
+              className="absolute inset-0 m-auto w-1/2 h-1/2 z-20 cursor-pointer pointer-events-auto flex items-center justify-center"
+            />
+          )}
 
           <div className="glow-border pointer-events-none" />
         </div>
