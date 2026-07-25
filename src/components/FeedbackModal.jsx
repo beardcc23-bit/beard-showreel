@@ -157,7 +157,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                       Feedback / 留下回饋
                     </h3>
                     <p className="text-xs text-zinc-400">
-                      歡迎分享您的任何想法、合作提議或優化建議
+                      歡迎分享您的任何想法或優化建議
                     </p>
                   </div>
                 </div>
