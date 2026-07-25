@@ -8,10 +8,11 @@ export default function Contact() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const email = 'beard.cc23@gmail.com';
 
-  // 部署好的 Google Apps Script Web App URL
+  // 部署好的 Google Apps Script Web App URL (第2版最新網址)
   const GAS_SCRIPT_URL =
     import.meta.env.VITE_GAS_SCRIPT_URL ||
-    'https://script.google.com/macros/s/AKfycbyEj8UwVUSRVhB1XdCK0CXBskkBhz40Epcj58iV2dpW2-XJevAouYIgbNht5Z6Xko0u/exec';
+    'https://script.google.com/macros/s/AKfycbzGfrzydCRIA2WBb0jFtb_Dulc8w1hIk0atBZc1JtCsdSxD9gBziq2hpRuC8mrt4KSw/exec';
+
 
   const handleCopyEmail = (e) => {
     // 寫入剪貼簿
