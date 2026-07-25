@@ -57,12 +57,12 @@ export default function Contact() {
           className="flex flex-col items-center justify-center gap-6"
         >
           <div className="flex flex-wrap items-center justify-center gap-4">
-            {/* 信件直接發送 Email 按鈕 */}
-            <a
-              href={`mailto:${email}`}
+            {/* Email 複製按鈕 (不觸發預設郵件軟體彈窗) */}
+            <button
+              type="button"
               onClick={handleCopyEmail}
-              className="group flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start"
-              title="點擊複製並開啟郵件"
+              className="group flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start text-left"
+              title="點擊複製 Email 地址"
             >
               <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center shrink-0 ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(0,255,255,0.35)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
                 {copied ? <Check size={18} /> : <Mail size={18} />}
@@ -71,7 +71,7 @@ export default function Contact() {
               <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300 truncate">
                 {email}
               </span>
-            </a>
+            </button>
 
             {/* 回饋按鈕 */}
             <button
