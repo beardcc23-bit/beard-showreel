@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle2, AlertCircle, Loader2, MessageSquareText } from 'lucide-react';
 
@@ -70,13 +71,14 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     }
   };
 
-  return (
+  // 使用 React Portal 傳送至 document.body 脫離父層 transform 限制
+  return ReactDOM.createPortal(
     <AnimatePresence>
       {isOpen && (
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
           onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
           onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
         >
@@ -86,24 +88,25 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/85 backdrop-blur-md cursor-pointer"
+            className="fixed inset-0 bg-black/85 backdrop-blur-md cursor-pointer z-0"
           />
 
-          {/* Modal 主體 */}
+          {/* Modal 主體卡片 */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 30 }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 30 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="relative w-full max-w-lg rounded-xl bg-zinc-950 border border-zinc-800 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.9)] z-10 overflow-hidden text-left"
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-lg rounded-xl bg-zinc-950 border border-zinc-800 p-6 sm:p-8 shadow-[0_0_80px_rgba(0,0,0,0.95)] z-10 overflow-hidden text-left my-auto"
           >
-            {/* 科技細節頂部線條 */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-aurora-blue/60 to-transparent" />
+            {/* 頂部發光飾條 */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aurora-blue to-transparent" />
 
             {/* 關閉按鈕 */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-colors duration-200"
+              type="button"
+              className="absolute top-4 right-4 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors duration-200 cursor-pointer z-20"
               aria-label="Close Modal"
             >
               <X size={18} />
@@ -197,7 +200,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-sm text-xs mono uppercase tracking-wider text-zinc-400 hover:text-white transition-colors duration-200"
+                    className="px-5 py-2.5 rounded-sm text-xs mono uppercase tracking-wider text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -225,6 +228,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
