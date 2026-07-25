@@ -89,15 +89,16 @@ export default function Contact() {
             {/* 回饋按鈕 */}
             <button
               onClick={() => setIsFeedbackOpen(true)}
-              className="group flex items-center gap-3 px-6 py-4 rounded-sm bg-aurora-blue/10 border border-aurora-blue/30 hover:border-aurora-blue hover:bg-aurora-blue/20 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer text-aurora-blue"
+              className="group flex items-center gap-4 px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer"
             >
               <span className="p-2.5 rounded-sm bg-aurora-blue text-black flex items-center justify-center group-hover:bg-white transition-colors duration-300">
                 <MessageSquareText size={18} />
               </span>
-              <span className="mono text-sm sm:text-base tracking-wider font-semibold">
-                LEAVE FEEDBACK // 留下回饋
+              <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300">
+                FEEDBACK / 留下回饋
               </span>
             </button>
+
           </div>
 
           {/* 複製成功 HUD Toast 視覺提示 */}
