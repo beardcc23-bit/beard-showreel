@@ -137,19 +137,16 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 transition={{ type: 'spring', damping: 20 }}
                 className="py-12 text-center flex flex-col items-center justify-center"
               >
-                {/* 雙層發光脈衝波紋 */}
+                {/* 雙層黃光發光脈衝波紋 */}
                 <div className="relative mb-6">
-                  <div className="absolute inset-0 rounded-full bg-aurora-blue/20 animate-ping duration-1000 pointer-events-none" />
-                  <div className="w-16 h-16 rounded-full bg-aurora-blue/10 border border-aurora-blue/50 flex items-center justify-center text-aurora-blue shadow-[0_0_35px_rgba(0,255,255,0.35)] relative z-10">
+                  <div className="absolute inset-0 rounded-full bg-amber-400/20 animate-ping duration-1000 pointer-events-none" />
+                  <div className="w-16 h-16 rounded-full bg-amber-400/10 border border-amber-400/50 flex items-center justify-center text-amber-400 shadow-[0_0_35px_rgba(251,191,36,0.45)] relative z-10">
                     <CheckCircle2 size={32} />
                   </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest mono">
-                  FEEDBACK RECEIVED
+                <h3 className="text-xl font-bold text-white tracking-wider">
+                  感謝你的回饋
                 </h3>
-                <p className="text-zinc-400 text-sm max-w-xs leading-relaxed font-light">
-                  感謝您的寶貴建議！訊息已成功發送並同步通知至信箱。
-                </p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5" noValidate>

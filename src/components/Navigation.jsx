@@ -14,38 +14,39 @@ export default function Navigation() {
   ];
 
   const handleScroll = (e, href) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
     if (!element) return;
     
     setIsOpen(false); // 關閉行動版選單
 
-    if (window.lenis) {
-      window.lenis.scrollTo(element, { offset: -85 });
-      return;
-    }
-
-    const targetPosition = element.getBoundingClientRect().top + window.scrollY - 85;
-    const startPosition = window.scrollY;
-    const distance = targetPosition - startPosition;
-    const duration = 400; // 400ms 高速直達
-    let startTime = null;
-
-    const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-
-    const animateScroll = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-      const percent = Math.min(progress / duration, 1);
-      const easedPercent = easeInOutCubic(percent);
-      window.scrollTo(0, startPosition + distance * easedPercent);
-      if (progress < duration) {
-        requestAnimationFrame(animateScroll);
+    setTimeout(() => {
+      if (window.lenis) {
+        window.lenis.scrollTo(element, { offset: -85 });
       }
-    };
 
-    requestAnimationFrame(animateScroll);
+      const targetPosition = element.getBoundingClientRect().top + window.scrollY - 85;
+      const startPosition = window.scrollY;
+      const distance = targetPosition - startPosition;
+      const duration = 400; // 400ms 高速直達
+      let startTime = null;
+
+      const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+      const animateScroll = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
+        const percent = Math.min(progress / duration, 1);
+        const easedPercent = easeInOutCubic(percent);
+        window.scrollTo(0, startPosition + distance * easedPercent);
+        if (progress < duration) {
+          requestAnimationFrame(animateScroll);
+        }
+      };
+
+      requestAnimationFrame(animateScroll);
+    }, 100);
   };
 
   const scrollToTop = (e) => {
