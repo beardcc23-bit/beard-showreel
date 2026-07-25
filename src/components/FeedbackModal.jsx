@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, CheckCircle2, AlertCircle, Loader2, MessageSquareText } from 'lucide-react';
+import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -53,7 +53,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
     if (!scriptUrl) {
       setStatus('error');
-      setErrorMessage('未設定 Google Apps Script Web App URL');
+      setErrorMessage('未設定後端 API 網址');
       return;
     }
 
@@ -81,7 +81,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       setTimeout(() => {
         setStatus('idle');
         onClose();
-      }, 2200);
+      }, 2500);
     } catch (err) {
       console.error('Feedback submission error:', err);
       setStatus('error');
@@ -96,125 +96,151 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none"
           onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
           onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
         >
-          {/* 背景遮罩 */}
+          {/* 高級暗黑毛玻璃背景遮罩 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/85 backdrop-blur-md cursor-pointer z-0"
+            className="fixed inset-0 bg-black/85 backdrop-blur-xl cursor-pointer z-0"
           />
 
-          {/* Modal 主體卡片 */}
+          {/* Modal 主體奢華卡片 */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.94, y: 25 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-lg rounded-xl bg-zinc-950 border border-zinc-800 p-6 sm:p-8 shadow-[0_0_80px_rgba(0,0,0,0.95)] z-10 overflow-hidden text-left my-auto"
+            exit={{ opacity: 0, scale: 0.94, y: 25 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+            className="relative w-full max-w-lg rounded-2xl bg-zinc-950/95 border border-white/10 p-6 sm:p-8 shadow-[0_0_90px_rgba(0,0,0,0.95)] z-10 overflow-hidden text-left my-auto backdrop-blur-2xl"
           >
-            {/* 頂部發光飾條 */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aurora-blue to-transparent" />
+            {/* 頂部極細藍色漸層飾條 */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aurora-blue to-transparent opacity-80" />
 
-            {/* 關閉按鈕 */}
+            {/* 關閉按鈕 (Hover 微妙旋轉動態) */}
             <button
               onClick={onClose}
               type="button"
-              className="absolute top-4 right-4 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors duration-200 cursor-pointer z-20"
+              className="group absolute top-5 right-5 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300 cursor-pointer z-20"
               aria-label="Close Modal"
             >
-              <X size={18} />
+              <X size={18} className="transition-transform duration-300 group-hover:rotate-90" />
             </button>
 
             {status === 'success' ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="py-10 text-center flex flex-col items-center justify-center"
+                transition={{ type: 'spring', damping: 20 }}
+                className="py-12 text-center flex flex-col items-center justify-center"
               >
-                <div className="w-16 h-16 rounded-full bg-aurora-blue/10 border border-aurora-blue/40 flex items-center justify-center text-aurora-blue mb-4 shadow-[0_0_30px_rgba(0,255,255,0.25)]">
-                  <CheckCircle2 size={32} />
+                {/* 雙層發光脈衝波紋 */}
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 rounded-full bg-aurora-blue/20 animate-ping duration-1000 pointer-events-none" />
+                  <div className="w-16 h-16 rounded-full bg-aurora-blue/10 border border-aurora-blue/50 flex items-center justify-center text-aurora-blue shadow-[0_0_35px_rgba(0,255,255,0.35)] relative z-10">
+                    <CheckCircle2 size={32} />
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">
-                  Feedback Received
+                <h3 className="text-xl font-black text-white mb-2 uppercase tracking-widest mono">
+                  FEEDBACK RECEIVED
                 </h3>
-                <p className="text-zinc-400 text-sm max-w-xs leading-relaxed">
-                  感謝你的寶貴建議！訊息已成功傳送並同步通知至信箱。
+                <p className="text-zinc-400 text-sm max-w-xs leading-relaxed font-light">
+                  感謝您的寶貴建議！訊息已成功發送並同步通知至信箱。
                 </p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                <div className="mb-2">
-                  <h3 className="text-xl font-bold text-white tracking-tight uppercase">
+                {/* Header 區塊 */}
+                <div className="mb-6">
+                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase glow-title">
                     Feedback / 留下回饋
                   </h3>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <p className="text-xs text-zinc-400 mt-1.5 font-light">
                     歡迎分享您的任何想法或優化建議
                   </p>
                 </div>
 
+                {/* 稱呼欄位 */}
                 <div>
-                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Name / 您的稱呼 <span className="text-aurora-blue">*</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-[11px] mono font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                      Name / 您的稱呼
+                    </label>
+                    <span className="mono text-[9px] uppercase tracking-wider text-aurora-blue/90 font-bold">
+                      (REQUIRED)
+                    </span>
+                  </div>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="例如：Alex Chen"
-                    className="w-full rounded-sm bg-zinc-900/90 border border-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue transition-colors duration-200"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-300"
                   />
                 </div>
 
+                {/* Email / LINE 欄位 */}
                 <div>
-                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    EMAIL / LINE
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-[11px] mono font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                      Email / LINE
+                    </label>
+                    <span className="mono text-[9px] uppercase tracking-wider text-zinc-500">
+                      (OPTIONAL)
+                    </span>
+                  </div>
                   <input
                     type="text"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="name@example.com 或 LINE ID (選填)"
-                    className="w-full rounded-sm bg-zinc-900/90 border border-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue transition-colors duration-200"
+                    placeholder="name@example.com 或 LINE ID"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-300"
                   />
                 </div>
 
+                {/* 留言內容欄位 */}
                 <div>
-                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Message / 回饋內容 <span className="text-aurora-blue">*</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-[11px] mono font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                      Message / 回饋內容
+                    </label>
+                    <span className="mono text-[9px] uppercase tracking-wider text-aurora-blue/90 font-bold">
+                      (REQUIRED)
+                    </span>
+                  </div>
                   <textarea
                     name="message"
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="請輸入您的寶貴建議..."
-                    className="w-full rounded-sm bg-zinc-900/90 border border-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue transition-colors duration-200 resize-none"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-300 resize-none"
                   />
                 </div>
 
+                {/* 錯誤提示氣泡 */}
                 {status === 'error' && (
                   <motion.div
-                    initial={{ opacity: 0, y: -5 }}
+                    initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 p-3 rounded-sm bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs"
+                    className="flex items-center gap-2.5 p-3.5 rounded-md bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs backdrop-blur-md"
                   >
-                    <AlertCircle size={16} className="shrink-0 text-rose-400" />
+                    <AlertCircle size={15} className="shrink-0 text-rose-400" />
                     <span>{errorMessage || '連線失敗，請檢查網路或稍後再試。'}</span>
                   </motion.div>
                 )}
 
-                <div className="flex items-center justify-end gap-3 pt-2">
+                {/* Action 按鈕組 */}
+                <div className="flex items-center justify-end gap-3 pt-3">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-sm text-xs mono uppercase tracking-wider text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer"
+                    className="px-5 py-2.5 rounded-md text-xs mono uppercase tracking-wider text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer active:scale-95"
                   >
                     Cancel
                   </button>
@@ -222,7 +248,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-sm bg-aurora-blue text-black font-semibold text-xs mono uppercase tracking-wider hover:bg-white transition-all duration-300 disabled:opacity-50 shadow-[0_0_15px_rgba(0,255,255,0.25)] cursor-pointer"
+                    className="group relative flex items-center gap-2 px-6 py-2.5 rounded-md bg-aurora-blue text-black font-bold text-xs mono uppercase tracking-wider hover:bg-white transition-all duration-300 disabled:opacity-50 shadow-[0_0_20px_rgba(0,255,255,0.25)] hover:shadow-[0_0_25px_rgba(0,255,255,0.45)] cursor-pointer active:scale-[0.97]"
                   >
                     {status === 'submitting' ? (
                       <>
@@ -231,7 +257,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                       </>
                     ) : (
                       <>
-                        <Send size={14} />
+                        <Send size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                         <span>Submit Feedback</span>
                       </>
                     )}
