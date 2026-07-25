@@ -8,9 +8,10 @@ export default function Contact() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const email = 'beard.cc23@gmail.com';
 
-  // 填入您部署後的 Google Apps Script Web App URL
-  // 例如: 'https://script.google.com/macros/s/AKfycb.../exec'
-  const GAS_SCRIPT_URL = import.meta.env.VITE_GAS_SCRIPT_URL || '';
+  // 部署好的 Google Apps Script Web App URL
+  const GAS_SCRIPT_URL =
+    import.meta.env.VITE_GAS_SCRIPT_URL ||
+    'https://script.google.com/macros/s/AKfycbyEj8UwVUSRVhB1XdCK0CXBskkBhz40Epcj58iV2dpW2-XJevAouYIgbNht5Z6Xko0u/exec';
 
   const handleCopyEmail = (e) => {
     // 寫入剪貼簿
