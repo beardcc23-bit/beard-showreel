@@ -61,46 +61,32 @@ export default function Contact() {
             <a
               href={`mailto:${email}`}
               onClick={handleCopyEmail}
-              className="group flex items-center gap-4 px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer"
+              className="group flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start"
               title="點擊複製並開啟郵件"
             >
-              <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(0,255,255,0.35)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
+              <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center shrink-0 ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(0,255,255,0.35)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
                 {copied ? <Check size={18} /> : <Mail size={18} />}
               </span>
 
-              <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300">
+              <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300 truncate">
                 {email}
               </span>
-
-              {/* 複製小圖示 */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleCopyEmail(e);
-                }}
-                className="ml-2 p-1.5 text-zinc-500 hover:text-white transition-colors duration-200"
-                aria-label="Copy email address"
-              >
-                {copied ? <Check size={16} className="text-aurora-blue" /> : <Copy size={16} />}
-              </button>
             </a>
 
             {/* 回饋按鈕 */}
             <button
               onClick={() => setIsFeedbackOpen(true)}
-              className="group flex items-center gap-4 px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer"
+              className="group flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start"
             >
-              <span className="p-2.5 rounded-sm bg-aurora-blue text-black flex items-center justify-center group-hover:bg-white transition-colors duration-300">
+              <span className="p-2.5 rounded-sm bg-aurora-blue text-black flex items-center justify-center shrink-0 group-hover:bg-white transition-colors duration-300">
                 <MessageSquareText size={18} />
               </span>
-              <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300">
+              <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300 whitespace-nowrap">
                 FEEDBACK / 留下回饋
               </span>
             </button>
-
           </div>
+
 
           {/* 複製成功 HUD Toast 視覺提示 */}
           <AnimatePresence>
