@@ -165,14 +165,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 {/* 稱呼欄位 */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-[11px] mono font-semibold uppercase tracking-[0.18em] text-zinc-300">
-                      Name / 您的稱呼
-                    </label>
-                    <span className="mono text-[9px] uppercase tracking-wider text-aurora-blue/90 font-bold">
-                      (REQUIRED)
-                    </span>
-                  </div>
+                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
+                    Name / 您的稱呼 <span className="text-aurora-blue">*</span>
+                  </label>
                   <input
                     type="text"
                     name="name"
@@ -185,14 +180,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 {/* Email / LINE 欄位 */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-[11px] mono font-semibold uppercase tracking-[0.18em] text-zinc-300">
-                      Email / LINE
-                    </label>
-                    <span className="mono text-[9px] uppercase tracking-wider text-zinc-500">
-                      (OPTIONAL)
-                    </span>
-                  </div>
+                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
+                    Email / LINE
+                  </label>
                   <input
                     type="text"
                     name="email"
@@ -205,14 +195,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 {/* 留言內容欄位 */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-[11px] mono font-semibold uppercase tracking-[0.18em] text-zinc-300">
-                      Message / 回饋內容
-                    </label>
-                    <span className="mono text-[9px] uppercase tracking-wider text-aurora-blue/90 font-bold">
-                      (REQUIRED)
-                    </span>
-                  </div>
+                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
+                    Message / 回饋內容 <span className="text-aurora-blue">*</span>
+                  </label>
                   <textarea
                     name="message"
                     rows={4}
