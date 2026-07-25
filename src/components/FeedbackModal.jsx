@@ -61,26 +61,22 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     setErrorMessage('');
 
     try {
-      const response = await fetch(scriptUrl, {
+      // 使用 mode: 'no-cors' 避免 Google Apps Script 302 跨網域重定向被瀏覽器攔截
+      await fetch(scriptUrl, {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'text/plain;charset=utf-8',
         },
         body: JSON.stringify(formData),
       });
 
-      const resData = await response.json();
-
-      if (resData.status === 'success') {
-        setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
-        setTimeout(() => {
-          setStatus('idle');
-          onClose();
-        }, 2200);
-      } else {
-        throw new Error(resData.message || '傳送失敗，請稍後再試');
-      }
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setTimeout(() => {
+        setStatus('idle');
+        onClose();
+      }, 2200);
     } catch (err) {
       console.error('Feedback submission error:', err);
       setStatus('error');
@@ -210,7 +206,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     className="flex items-center gap-2 p-3 rounded-sm bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs"
                   >
                     <AlertCircle size={16} className="shrink-0 text-rose-400" />
-                    <span>{errorMessage || '請完成必填欄位後再試！'}</span>
+                    <span>{errorMessage || '連線失敗，請檢查網路或稍後再試。'}</span>
                   </motion.div>
                 )}
 
