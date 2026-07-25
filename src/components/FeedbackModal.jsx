@@ -61,14 +61,19 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     setErrorMessage('');
 
     try {
-      // 使用 mode: 'no-cors' 避免 Google Apps Script 302 跨網域重定向被瀏覽器攔截
+      // 改用 URLSearchParams 傳送標準表單格式，對 Google Apps Script 具備 100% 相容性
+      const params = new URLSearchParams();
+      params.append('name', formData.name.trim());
+      params.append('email', formData.email.trim());
+      params.append('message', formData.message.trim());
+
       await fetch(scriptUrl, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
         },
-        body: JSON.stringify(formData),
+        body: params.toString(),
       });
 
       setStatus('success');
