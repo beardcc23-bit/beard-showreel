@@ -29,10 +29,27 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (status === 'error') {
+      setStatus('idle');
+      setErrorMessage('');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 檢查必填項目 (姓名與留言)
+    if (!formData.name || !formData.name.trim()) {
+      setStatus('error');
+      setErrorMessage('請填寫您的稱呼 / 姓名！');
+      return;
+    }
+
+    if (!formData.message || !formData.message.trim()) {
+      setStatus('error');
+      setErrorMessage('請填寫回饋內容！');
+      return;
+    }
 
     if (!scriptUrl) {
       setStatus('error');
@@ -129,7 +146,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="p-2.5 rounded-sm bg-aurora-blue/10 border border-aurora-blue/30 text-aurora-blue">
                     <MessageSquareText size={20} />
@@ -146,12 +163,11 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 <div>
                   <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Name / 您的稱呼
+                    Name / 您的稱呼 <span className="text-aurora-blue">*</span>
                   </label>
                   <input
                     type="text"
                     name="name"
-                    required
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="例如：Alex Chen"
@@ -161,26 +177,24 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 <div>
                   <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Email / 聯絡信箱
+                    EMAIL / LINE
                   </label>
                   <input
-                    type="email"
+                    type="text"
                     name="email"
-                    required
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="name@example.com"
+                    placeholder="name@example.com 或 LINE ID (選填)"
                     className="w-full rounded-sm bg-zinc-900/90 border border-zinc-800 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue transition-colors duration-200"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Message / 回饋內容
+                    Message / 回饋內容 <span className="text-aurora-blue">*</span>
                   </label>
                   <textarea
                     name="message"
-                    required
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
@@ -190,10 +204,14 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 </div>
 
                 {status === 'error' && (
-                  <div className="flex items-center gap-2 p-3 rounded-sm bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs">
-                    <AlertCircle size={16} className="shrink-0" />
-                    <span>{errorMessage || '傳送失敗，請直接寄信至 beard.cc23@gmail.com'}</span>
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-2 p-3 rounded-sm bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs"
+                  >
+                    <AlertCircle size={16} className="shrink-0 text-rose-400" />
+                    <span>{errorMessage || '請完成必填欄位後再試！'}</span>
+                  </motion.div>
                 )}
 
                 <div className="flex items-center justify-end gap-3 pt-2">
