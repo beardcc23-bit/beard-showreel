@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Copy, Check } from 'lucide-react';
+import { Mail, Copy, Check, MessageSquareText } from 'lucide-react';
+import FeedbackModal from './FeedbackModal';
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const email = 'beard.cc23@gmail.com';
+
+  // 填入您部署後的 Google Apps Script Web App URL
+  // 例如: 'https://script.google.com/macros/s/AKfycb.../exec'
+  const GAS_SCRIPT_URL = import.meta.env.VITE_GAS_SCRIPT_URL || '';
 
   const handleCopyEmail = (e) => {
     // 寫入剪貼簿
@@ -38,7 +44,7 @@ export default function Contact() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-zinc-300 mb-16 font-light text-sm sm:text-lg max-w-xl mx-auto leading-relaxed"
         >
-          隨時歡迎來信交流，探討影像的更多可能。
+          隨時歡迎來信交流，探討影像與設計的更多可能。
         </motion.p>
 
         <motion.div
@@ -46,9 +52,9 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col items-center justify-center gap-4"
+          className="flex flex-col items-center justify-center gap-6"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             {/* 信件直接發送 Email 按鈕 */}
             <a
               href={`mailto:${email}`}
@@ -78,6 +84,19 @@ export default function Contact() {
                 {copied ? <Check size={16} className="text-aurora-blue" /> : <Copy size={16} />}
               </button>
             </a>
+
+            {/* 回饋按鈕 */}
+            <button
+              onClick={() => setIsFeedbackOpen(true)}
+              className="group flex items-center gap-3 px-6 py-4 rounded-sm bg-aurora-blue/10 border border-aurora-blue/30 hover:border-aurora-blue hover:bg-aurora-blue/20 transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer text-aurora-blue"
+            >
+              <span className="p-2.5 rounded-sm bg-aurora-blue text-black flex items-center justify-center group-hover:bg-white transition-colors duration-300">
+                <MessageSquareText size={18} />
+              </span>
+              <span className="mono text-sm sm:text-base tracking-wider font-semibold">
+                LEAVE FEEDBACK // 留下回饋
+              </span>
+            </button>
           </div>
 
           {/* 複製成功 HUD Toast 視覺提示 */}
@@ -99,6 +118,14 @@ export default function Contact() {
           </AnimatePresence>
         </motion.div>
       </div>
+
+      {/* 回饋 Modal 彈窗 */}
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+        scriptUrl={GAS_SCRIPT_URL}
+      />
     </section>
   );
 }
+
