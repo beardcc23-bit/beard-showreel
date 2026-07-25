@@ -148,18 +148,13 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2.5 rounded-sm bg-aurora-blue/10 border border-aurora-blue/30 text-aurora-blue">
-                    <MessageSquareText size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white tracking-tight uppercase">
-                      Feedback / 留下回饋
-                    </h3>
-                    <p className="text-xs text-zinc-400">
-                      歡迎分享您的任何想法或優化建議
-                    </p>
-                  </div>
+                <div className="mb-2">
+                  <h3 className="text-xl font-bold text-white tracking-tight uppercase">
+                    Feedback / 留下回饋
+                  </h3>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    歡迎分享您的任何想法或優化建議
+                  </p>
                 </div>
 
                 <div>
