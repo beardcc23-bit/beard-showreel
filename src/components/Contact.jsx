@@ -34,7 +34,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-[32px] sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase mb-12 md:mb-16 glow-title text-center mx-auto whitespace-nowrap"
+          className="text-[clamp(2.2rem,8.5vw,8.5rem)] font-black tracking-tighter uppercase mb-12 md:mb-16 glow-title text-center mx-auto whitespace-nowrap"
         >
           Let's <span className="text-aurora-blue">Connect</span>
         </motion.h2>
