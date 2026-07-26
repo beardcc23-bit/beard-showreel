@@ -8,7 +8,11 @@ export default function Modal({ isOpen, onClose, type, data }) {
   // 當 Modal 開啟時，禁止背景 scroll 並且監聽 Escape 按鈕
   useEffect(() => {
     if (isOpen) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
       setIframeLoading(true); // 開啟時重設為載入中狀態
 
       const handleKeyDown = (e) => {
@@ -21,11 +25,13 @@ export default function Modal({ isOpen, onClose, type, data }) {
 
       return () => {
         document.body.style.overflow = 'unset';
+        document.body.style.paddingRight = '0px';
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
     } else {
       document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
       window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
   }, [isOpen, onClose]);
@@ -106,6 +112,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   frameBorder="0"
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                   allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
                   onLoad={() => setIframeLoading(false)}
                   className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                 ></iframe>
@@ -117,6 +124,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
                   onLoad={() => setIframeLoading(false)}
                   className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                 ></iframe>
