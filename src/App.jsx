@@ -188,7 +188,7 @@ export default function App() {
       </main>
 
       {/* 頁尾 */}
-      <footer className="py-20 text-center text-zinc-700 mono text-[6px] uppercase tracking-[0.4em]">
+      <footer className="py-20 text-center text-zinc-400 mono text-[10px] uppercase tracking-[0.4em]">
         &copy; 2026 Beard Chou // SYSTEM SECURED
       </footer>
 

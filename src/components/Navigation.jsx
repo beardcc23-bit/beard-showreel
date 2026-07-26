@@ -21,32 +21,31 @@ export default function Navigation() {
     
     setIsOpen(false); // 關閉行動版選單
 
-    setTimeout(() => {
-      if (window.lenis) {
-        window.lenis.scrollTo(element, { offset: -85 });
+    if (window.lenis) {
+      window.lenis.scrollTo(element, { offset: -85 });
+      return;
+    }
+
+    const targetPosition = element.getBoundingClientRect().top + window.scrollY - 85;
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    const duration = 400; // 400ms 高速直達
+    let startTime = null;
+
+    const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+    const animateScroll = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const percent = Math.min(progress / duration, 1);
+      const easedPercent = easeInOutCubic(percent);
+      window.scrollTo(0, startPosition + distance * easedPercent);
+      if (progress < duration) {
+        requestAnimationFrame(animateScroll);
       }
+    };
 
-      const targetPosition = element.getBoundingClientRect().top + window.scrollY - 85;
-      const startPosition = window.scrollY;
-      const distance = targetPosition - startPosition;
-      const duration = 400; // 400ms 高速直達
-      let startTime = null;
-
-      const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-
-      const animateScroll = (timestamp) => {
-        if (!startTime) startTime = timestamp;
-        const progress = timestamp - startTime;
-        const percent = Math.min(progress / duration, 1);
-        const easedPercent = easeInOutCubic(percent);
-        window.scrollTo(0, startPosition + distance * easedPercent);
-        if (progress < duration) {
-          requestAnimationFrame(animateScroll);
-        }
-      };
-
-      requestAnimationFrame(animateScroll);
-    }, 100);
+    requestAnimationFrame(animateScroll);
   };
 
   const scrollToTop = (e) => {
@@ -83,15 +82,15 @@ export default function Navigation() {
         <div className="flex items-center gap-4 md:gap-6">
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2.5 text-white-or-black hover:text-aurora-blue transition focus:outline-none"
-            aria-label="Toggle Menu"
+            className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white-or-black hover:text-aurora-blue transition focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
+            aria-label="Toggle Navigation Menu"
           >
             <Menu size={24} />
           </button>
           <button
             onClick={scrollToTop}
-            className="text-xl font-black tracking-tighter font-space-mono text-white-or-black hover:opacity-80 transition-opacity focus:outline-none cursor-pointer text-left"
-            aria-label="Scroll to top"
+            className="text-xl font-black tracking-tighter font-space-mono text-white-or-black hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue cursor-pointer text-left rounded-sm"
+            aria-label="Beard Showreel - Scroll to top"
           >
             Beard<span className="text-aurora-blue"> Showreel</span>
           </button>
@@ -104,7 +103,7 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 onClick={(e) => handleScroll(e, item.href)}
-                className="hover:text-aurora-blue transition duration-300 relative group flex items-center"
+                className="hover:text-aurora-blue transition duration-300 relative group flex items-center focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
               >
                 <span className="text-xs font-normal tracking-wider">{item.name}</span>
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
@@ -115,7 +114,7 @@ export default function Navigation() {
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hud-btn is-active px-5 py-3 flex items-center justify-center text-center leading-none"
+            className="hud-btn is-active px-5 py-3 flex items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
           >
             <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </a>
