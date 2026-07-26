@@ -908,4 +908,18 @@ html.lenis body {
   }
 }
 
+/* ==========================================================================
+   GPU Hardware Acceleration & Micro-Interaction Optimization (Web Vitals)
+   ========================================================================== */
+.orbit-container,
+.crystal,
+.lens-flare,
+.hud-btn,
+.tech-card {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+
 
