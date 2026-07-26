@@ -1,6 +1,7 @@
 # 專案 Agent 規則與創作者資訊
 
 - **創作者基本資訊**：
+  * 偏好稱呼：Beard
   * 中文姓名：周威全
   * 英文名稱：Beard Chou
   * 所在地區：台灣台北 (Taipei, Taiwan)
