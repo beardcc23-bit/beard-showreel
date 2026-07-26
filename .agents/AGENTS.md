@@ -1,4 +1,10 @@
-# 專案 Agent 規則
+# 專案 Agent 規則與創作者資訊
+
+- **創作者基本資訊**：
+  * 中文姓名：周威全
+  * 英文名稱：Beard Chou
+  * 所在地區：台灣台北 (Taipei, Taiwan)
+  * 專業領域：Autodesk Flame 特效合成師 / 視覺總監 (VFX Compositor & Visual Artist)
 
 - **自動測試與 Git 提交推送**：在此專案中，當修改程式碼或文案完成後，請主動執行 `npm run build` 進行編譯與驗證。若編譯成功，不需詢問使用者，請自動執行 `git add`、`git commit`（提交訊息請使用繁體中文台灣用語，並符合 Conventional Commits 規範）及 `git push` 將變更推送至遠端。
 
