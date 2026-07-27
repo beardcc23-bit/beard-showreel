@@ -6,17 +6,22 @@ import Introduction from './components/Introduction';
 import Manifesto from './components/Manifesto';
 import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
-import Lenis from 'lenis';
+import { useLenisScroll } from './hooks/useLenisScroll';
+import { useParallaxOrbit } from './hooks/useParallaxOrbit';
 
 const Modal = React.lazy(() => import('./components/Modal'));
 
 export default function App() {
   const [modalState, setModalState] = useState({
     isOpen: false,
-    type: null, // 'project' | 'video'
+    type: null, // 'project' | 'video' | 'image'
     data: null,
   });
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+
+  // 初始化平滑滾動與 3D 幾何軌道視差 Hooks
+  useLenisScroll();
+  useParallaxOrbit();
 
   React.useEffect(() => {
     const handleOpenImage = (e) => {
@@ -32,86 +37,6 @@ export default function App() {
       window.removeEventListener('open-image-modal', handleOpenImage);
     };
   }, []);
-
-  // 初始化 Lenis 電影級平滑滾動
-  React.useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // 經典指數緩動
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1.0,
-    });
-    window.lenis = lenis;
-
-    let rafId = null;
-
-    function raf(time) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-
-    rafId = requestAnimationFrame(raf);
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      window.lenis = null;
-      lenis.destroy();
-    };
-  }, []);
-
-  // 實作幾何軌道背景的滑鼠三維視差傾斜 (Lens Parallax) - 採用 rAF + Lerp 進行效能調優
-  React.useEffect(() => {
-    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouch) return;
-
-    const orbit = document.querySelector('.orbit-container');
-    if (!orbit) return;
-
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let animationFrameId = null;
-    let isRunning = false;
-
-    const updateParallax = () => {
-      const dx = mouseX - currentX;
-      const dy = mouseY - currentY;
-      
-      currentX += dx * 0.08;
-      currentY += dy * 0.08;
-
-      orbit.style.transform = `translate3d(calc(-50% + ${currentX * 18}px), calc(-50% + ${currentY * 15}px), 0) rotateX(${-currentY * 12}deg) rotateY(${currentX * 12}deg)`;
-
-      // 如果差距仍大於 0.0001 則繼續下一幀插值，否則停止動畫迴圈以節省資源
-      if (Math.abs(dx) > 0.0001 || Math.abs(dy) > 0.0001) {
-        animationFrameId = requestAnimationFrame(updateParallax);
-      } else {
-        isRunning = false;
-      }
-    };
-
-    const handleMouseMove = (e) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 2; // -1 到 1
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 2; // -1 到 1
-      if (!isRunning) {
-        isRunning = true;
-        animationFrameId = requestAnimationFrame(updateParallax);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, []);
-
 
   const handleOpenVideoModal = React.useCallback((videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
     setModalState({
@@ -170,18 +95,17 @@ export default function App() {
 
       {/* 主頁面區段 */}
       <main>
-        {/* 首頁 Hero 區 (純全屏 Canvas 序列播放，無重疊文字) */}
+        {/* 首頁 Hero 區 */}
         <Hero onPlayVideo={handleOpenVideoModal} isModalOpen={modalState.isOpen} onLoaded={() => setIsPageLoaded(true)} />
 
-        {/* 開場介紹區段 (S Y S T E M _ S T A T U S : O P T I M A L 及精雕文案與按鈕) */}
+        {/* 開場介紹區段 */}
         <Introduction onPlayVideo={handleOpenVideoModal} />
 
-        {/* 02 設計宣言 (已整併技能進度條與設計故事) */}
+        {/* 02 設計宣言 */}
         <Manifesto onPlayVideo={handleOpenVideoModal} />
 
-        {/* 03 視覺合成 (VFX 影片卡片列表，支援 state 彈窗播放) */}
+        {/* 03 視覺合成 */}
         <VisualSynthesis onPlayVideo={handleOpenVideoModal} />
-
 
         {/* 聯絡我們 */}
         <Contact />

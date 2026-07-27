@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Copy, Check, MessageSquareText } from 'lucide-react';
+import { Mail, Check, MessageSquareText } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
+import { useClipboard } from '../hooks/useClipboard';
 
 export default function Contact() {
-  const [copied, setCopied] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const email = 'beard.cc23@gmail.com';
+  const { copied, copy } = useClipboard(2500);
 
   // 部署好的 Google Apps Script Web App URL (最新有效部署網址)
   const GAS_SCRIPT_URL =
     'https://script.google.com/macros/s/AKfycbyqnxsdu2s0De5mrIKdmeharnJiy__hLyRyAnhZKzKjEDmXoCjUQYHrlUmmvShbnS7O/exec';
 
-
-
-  const handleCopyEmail = (e) => {
-    // 寫入剪貼簿
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(email);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }
+  const handleCopyEmail = () => {
+    copy(email);
   };
 
   return (
@@ -57,7 +51,7 @@ export default function Contact() {
           className="flex flex-col items-center justify-center gap-6"
         >
           <div className="flex flex-wrap items-center justify-center gap-4">
-            {/* Email 複製按鈕 (不觸發預設郵件軟體彈窗) */}
+            {/* Email 複製按鈕 */}
             <button
               type="button"
               onClick={handleCopyEmail}
@@ -89,7 +83,6 @@ export default function Contact() {
             </button>
           </div>
 
-
           {/* 複製成功 HUD Toast 視覺提示 */}
           <AnimatePresence>
             {copied && (
@@ -119,4 +112,3 @@ export default function Contact() {
     </section>
   );
 }
-

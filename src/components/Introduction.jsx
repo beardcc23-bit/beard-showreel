@@ -1,40 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import RefractionCard from './RefractionCard';
-
-function AnimatedCounter({ value, trigger, duration = 1.5 }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!trigger) return;
-
-    let startTime = null;
-    let animationFrameId = null;
-
-    const step = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      const easeProgress = progress * (2 - progress); // easeOutQuad
-      setCount(Math.floor(easeProgress * value));
-
-      if (progress < 1) {
-        animationFrameId = window.requestAnimationFrame(step);
-      } else {
-        setCount(value);
-      }
-    };
-
-    animationFrameId = window.requestAnimationFrame(step);
-
-    return () => {
-      if (animationFrameId) {
-        window.cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [trigger, value, duration]);
-
-  return <span>{count}</span>;
-}
+import AnimatedCounter from './common/AnimatedCounter';
 
 export default function Introduction({ onPlayVideo }) {
   const statsRef = useRef(null);
@@ -62,7 +29,7 @@ export default function Introduction({ onPlayVideo }) {
               Beard <span className="text-aurora-blue">Chou</span>
             </motion.h2>
 
-            {/* 行動裝置專用照片 (大標題正下方，大螢幕隱藏) */}
+            {/* 行動裝置專用照片 */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -96,8 +63,6 @@ export default function Introduction({ onPlayVideo }) {
               <br />
               <br />
               我習慣將這份對細節的敏銳，投射在螢幕彼端，那雙尋找解答也渴望被美感觸動的眼睛。不論是追求極致視覺的宏大敘事，還是需要嚴謹邏輯的商業落地。在光影與像素之間，創造下一個讓人駐足的瞬間。
-
-
             </motion.p>
 
             {/* 實戰成就數據面板 */}
@@ -170,7 +135,7 @@ export default function Introduction({ onPlayVideo }) {
             </motion.div>
           </div>
 
-          {/* 右側：照片區 (含金色流光) */}
+          {/* 右側：照片區 */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
