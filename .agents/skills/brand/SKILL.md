@@ -11,6 +11,12 @@ metadata:
 
 Brand identity, voice, messaging, asset management, and consistency frameworks.
 
+## Creator Profile Context (Beard Chou / 周威全)
+- **Creator Name**: Beard Chou (周威全)
+- **Role & Persona**: Autodesk Flame 特效合成師 / 視覺總監 (VFX Compositor & Visual Artist)
+- **Location**: 台灣台北 (Taipei, Taiwan)
+- **Core Value & Brand Voice**: 專注於高質感商業廣告與極致視覺感官、感性與理性並存、頂級影像處理與細節美學。對外語氣與文字預設採用繁體中文台灣用語，展現專業、自信與前瞻視野。
+
 ## When to Use
 
 - Brand voice definition and content tone guidance

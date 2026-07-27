@@ -58,68 +58,30 @@ For each art direction option:
    - Max 2 typefaces, single CTA, 4.5:1 contrast ratio
    - Inject brand context via `inject-brand-context.cjs`
 
-2. **Generate visual elements** with `ai-artist` + `ai-multimodal` skills
+2. **Generate visual elements** using native `generate_image` tool or AI Multimodal suite:
 
-   **a) Search prompt inspiration** (6000+ examples in ai-artist):
-   ```bash
-   python3 .claude/skills/ai-artist/scripts/search.py "<banner style keywords>"
-   ```
+   **a) Generate Visual Element with Prompt Engineering**:
+   - Use descriptive style, lighting, mood, composition, and color palette parameters.
+   - For background/hero assets, specify "no text, no letters, no words" (text will be overlaid in HTML step).
+   - Use appropriate aspect ratio matching platform target (e.g. `16:9`, `1:1`, `9:16`).
 
-   **b) Generate with Standard model** (fast, good for backgrounds/patterns):
-   ```bash
-   .claude/skills/.venv/bin/python3 .claude/skills/ai-multimodal/scripts/gemini_batch_process.py \
-     --task generate --model gemini-2.5-flash-image \
-     --prompt "<banner visual prompt>" --aspect-ratio <platform-ratio> \
-     --size 2K --output assets/banners/
-   ```
-
-   **c) Generate with Pro model** (4K, complex illustrations/hero visuals):
-   ```bash
-   .claude/skills/.venv/bin/python3 .claude/skills/ai-multimodal/scripts/gemini_batch_process.py \
-     --task generate --model gemini-3-pro-image-preview \
-     --prompt "<creative banner prompt>" --aspect-ratio <platform-ratio> \
-     --size 4K --output assets/banners/
-   ```
-
-   **When to use which model:**
-   | Use Case | Model | Quality |
-   |----------|-------|---------|
-   | Backgrounds, gradients, patterns | Standard (Flash) | 2K, fast |
-   | Hero illustrations, product shots | Pro | 4K, detailed |
-   | Photorealistic scenes, complex art | Pro | 4K, best quality |
-   | Quick iterations, A/B variants | Standard (Flash) | 2K, fast |
-
-   **Aspect ratios:** `1:1`, `16:9`, `9:16`, `3:4`, `4:3`, `2:3`, `3:2`
-   Match to platform - e.g., Twitter header = `3:1` (use `3:2` closest), Instagram story = `9:16`
-
-   **Pro model prompt tips** (see `ai-artist` references/nano-banana-pro-examples.md):
-   - Be descriptive: style, lighting, mood, composition, color palette
-   - Include art direction: "minimalist flat design", "cyberpunk neon", "editorial photography"
-   - Specify no-text: "no text, no letters, no words" (text overlaid in HTML step)
+   **b) Recommended Tool Call Syntax**:
+   - Use `generate_image` tool with precise prompt engineering:
+     ```json
+     {
+       "Prompt": "<creative banner prompt, minimalist flat design, cyberpunk neon, no text>",
+       "ImageName": "banner_hero_visual"
+     }
+     ```
 
 3. **Compose final banner** — overlay text, CTA, logo on generated visual in HTML/CSS
 
 ### Step 4: Export Banners to Images
 
-After designing HTML banners, export each to PNG using `chrome-devtools` skill:
+After designing HTML banners, export each to PNG using standard browser subagent screenshotting or automated headless tool:
 
-1. **Serve HTML files** via local server (python http.server or similar)
-2. **Screenshot each banner** at exact platform dimensions:
-   ```bash
-   # Export banner to PNG at exact dimensions
-   node .claude/skills/chrome-devtools/scripts/screenshot.js \
-     --url "http://localhost:8765/banner-01-minimalist.html" \
-     --width 1500 --height 500 \
-     --output "assets/banners/{campaign}/{variant}-{size}.png"
-   ```
-3. **Auto-compress** if >5MB (Sharp compression built-in):
-   ```bash
-   # With custom max size threshold
-   node .claude/skills/chrome-devtools/scripts/screenshot.js \
-     --url "http://localhost:8765/banner-02-gradient.html" \
-     --width 1500 --height 500 --max-size 3 \
-     --output "assets/banners/{campaign}/{variant}-{size}.png"
-   ```
+1. **Serve HTML files** via local server (python http.server or Vite dev server).
+2. **Screenshot each banner** at exact platform dimensions using browser tool or screenshot script.
 
 **Output path convention** (per `assets-organizing` skill):
 ```
