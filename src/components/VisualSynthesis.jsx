@@ -257,7 +257,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`hud-btn relative px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
+                className={`hud-btn relative px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
               >
                 {/* 絲滑液態金屬 Tab 高光滑塊 (layoutId 跨元件平滑動畫) */}
                 {isActive && (
