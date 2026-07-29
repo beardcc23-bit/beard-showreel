@@ -300,7 +300,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 scale: 0.93
               }}
               transition={{
-                duration: 0.68,
+                duration: 0.45,
                 ease: [0.16, 1, 0.3, 1]
               }}
               style={{ transformStyle: 'preserve-3d', willChange: 'transform, filter, opacity' }}
