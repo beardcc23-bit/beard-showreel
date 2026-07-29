@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { categories } from '../data/portfolio';
 
 const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const hasVideo = !!item.videoId || !!item.url;
-  const CardElement = hasVideo ? 'button' : 'div';
+  const CardElement = hasVideo ? motion.button : motion.div;
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
+
+  // 物理 Motion values
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const rawRotX = useMotionValue(0);
+  const rawRotY = useMotionValue(0);
+  const rawRotZ = useMotionValue(0);
+  const rawScale = useMotionValue(1);
+
+  // 高感官 Q 彈 Spring 物理參數 (stiffness: 400, damping: 14)
+  const springConfig = { stiffness: 400, damping: 14, mass: 0.5 };
+  const x = useSpring(rawX, springConfig);
+  const y = useSpring(rawY, springConfig);
+  const rotateX = useSpring(rawRotX, springConfig);
+  const rotateY = useSpring(rawRotY, springConfig);
+  const rotateZ = useSpring(rawRotZ, springConfig);
+  const scale = useSpring(rawScale, springConfig);
 
   const setRefs = (node) => {
     innerRef.current = node;
@@ -18,20 +35,68 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     }
   };
 
-  const rafRef = React.useRef(null);
-  const handleMouseMove = (e) => {
+  const handlePointerEnter = (e) => {
+    // 手機/觸控螢幕 (hover: none) 阻斷 Bobble 滑動，避免頁面滾動時干擾視覺與效能
+    if (window.matchMedia('(hover: none)').matches) return;
+
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const enterX = e.clientX - rect.left - rect.width / 2;
+    const dirX = enterX >= 0 ? 1 : -1;
+
+    // 移入時激發強烈的 Q 彈 Bobble 果動
+    rawY.set(-16);
+    rawRotZ.set(dirX * 7);
+    rawScale.set(1.09);
+    rawRotX.set(-10);
+    rawRotY.set(dirX * 10);
+
+    // 100ms 後收斂至 Hover 跟隨態
+    setTimeout(() => {
+      rawY.set(-6);
+      rawRotZ.set(0);
+      rawScale.set(1.04);
+    }, 100);
+  };
+
+  const rafRef = React.useRef(null);
+  const handleMouseMove = (e) => {
+    // 觸控螢幕降級阻斷
+    if (window.matchMedia('(hover: none)').matches) return;
+
+    if (!innerRef.current) return;
+    const rect = innerRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const centerX = mouseX - rect.width / 2;
+    const centerY = mouseY - rect.height / 2;
+
+    // 指針在卡片內移動時帶動 3D 懸浮與微妙 Tilt
+    rawRotX.set((-centerY / rect.height) * 18);
+    rawRotY.set((centerX / rect.width) * 18);
+    rawX.set((centerX / rect.width) * 12);
+    rawY.set((centerY / rect.height) * 10 - 6);
+
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
       if (innerRef.current) {
-        innerRef.current.style.setProperty('--mouse-x', `${x}px`);
-        innerRef.current.style.setProperty('--mouse-y', `${y}px`);
+        innerRef.current.style.setProperty('--mouse-x', `${mouseX}px`);
+        innerRef.current.style.setProperty('--mouse-y', `${mouseY}px`);
       }
       rafRef.current = null;
     });
+  };
+
+  const handlePointerLeave = () => {
+    if (window.matchMedia('(hover: none)').matches) return;
+    // 離開卡片時柔和彈回靜止原位
+    rawX.set(0);
+    rawY.set(0);
+    rawRotX.set(0);
+    rawRotY.set(0);
+    rawRotZ.set(0);
+    rawScale.set(1);
   };
 
   const handleClick = () => {
@@ -65,17 +130,28 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   return (
     <CardElement
       ref={setRefs}
+      onPointerEnter={handlePointerEnter}
       onMouseMove={handleMouseMove}
+      onPointerLeave={handlePointerLeave}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      whileTap={{ scale: 0.96 }}
       tabIndex={hasVideo ? 0 : -1}
       role={hasVideo ? "button" : "presentation"}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border text-left w-full p-3.5 rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
-        ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1'
+      className={`prism-border text-left w-full p-3.5 rounded-sm flex flex-col justify-between transition-colors duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
+        ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]'
         : 'bg-white/[0.01] border-white/8 cursor-default'
         }`}
       style={{
+        x,
+        y,
+        rotateX,
+        rotateY,
+        rotateZ,
+        scale,
+        transformStyle: 'preserve-3d',
+        willChange: 'transform',
         '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
       }}
     >
