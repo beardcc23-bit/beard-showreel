@@ -212,6 +212,15 @@ BrandCard.displayName = 'BrandCard';
 
 export default function VisualSynthesis({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('food');
+  const [direction, setDirection] = useState(1);
+
+  const handleTabChange = (newTabId) => {
+    if (newTabId === activeTab) return;
+    const oldIndex = categories.findIndex((c) => c.id === activeTab);
+    const newIndex = categories.findIndex((c) => c.id === newTabId);
+    setDirection(newIndex > oldIndex ? 1 : -1);
+    setActiveTab(newTabId);
+  };
 
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
@@ -231,7 +240,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
           </p>
         </div>
 
-        {/* 分類切換 Tab */}
+        {/* 分類切換 Tab (帶有 layoutId 絲滑流光滑塊) */}
         <div className="grid grid-cols-3 gap-2 max-w-xl lg:max-w-5xl mx-auto px-4 lg:flex lg:flex-row lg:flex-nowrap lg:justify-center lg:gap-4 mb-12 relative z-10">
           {categories.map((tab) => {
             const engMap = {
@@ -243,40 +252,69 @@ export default function VisualSynthesis({ onPlayVideo }) {
               finance: 'FINANCE & INS'
             };
             const engName = engMap[tab.id] || tab.id.toUpperCase();
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`hud-btn px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none ${activeTab === tab.id ? 'is-active' : ''}`}
+                onClick={() => handleTabChange(tab.id)}
+                className={`hud-btn relative px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
               >
-                <span className={`hud-eng text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === tab.id ? '' : 'text-zinc-500'
+                {/* 絲滑液態金屬 Tab 高光滑塊 (layoutId 跨元件平滑動畫) */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTabGlow"
+                    className="absolute inset-0 rounded-sm bg-aurora-blue/15 border border-aurora-blue/40 shadow-[0_0_20px_rgba(212,175,55,0.2)] pointer-events-none z-0"
+                    transition={{ type: 'spring', stiffness: 450, damping: 30 }}
+                  />
+                )}
+                <span className={`hud-eng relative z-10 text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${isActive ? 'text-aurora-blue font-bold' : 'text-zinc-500'
                   }`}>{engName}</span>
-                <span className="hud-zht text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
+                <span className="hud-zht relative z-10 text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
               </button>
             );
           })}
         </div>
 
-        {/* 品牌卡片 Grid - 6 個類別各自靜態預渲染，透過 display 與 CSS 動畫切換，達到 0 毫秒 JS 阻塞 */}
-        <div className="relative z-10 min-h-[300px]">
-          {categories.map((category) => {
-            const isActive = category.id === activeTab;
-            return (
-              <div
-                key={category.id}
-                className={`grid grid-cols-3 md:grid-cols-5 gap-3 ${isActive ? 'tab-content-active' : 'tab-content-hidden'
-                  }`}
-              >
-                {category.items.map((item, index) => (
-                  <BrandCard
-                    key={`${category.id}-${item.name}-${index}`}
-                    item={item}
-                    onPlayVideo={onPlayVideo}
-                  />
-                ))}
-              </div>
-            );
-          })}
+        {/* 品牌卡片 Grid - 方案三：景深失焦 (Depth Blur) 與 3D 晶片立體翻轉 (Micro Flip) 轉場 */}
+        <div className="relative z-10 min-h-[300px]" style={{ perspective: '1200px' }}>
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={activeTab}
+              custom={direction}
+              initial={{
+                opacity: 0,
+                rotateY: direction * 16,
+                filter: 'blur(6px)',
+                scale: 0.96
+              }}
+              animate={{
+                opacity: 1,
+                rotateY: 0,
+                filter: 'blur(0px)',
+                scale: 1
+              }}
+              exit={{
+                opacity: 0,
+                rotateY: direction * -16,
+                filter: 'blur(6px)',
+                scale: 0.96
+              }}
+              transition={{
+                duration: 0.22,
+                ease: [0.22, 1, 0.36, 1]
+              }}
+              style={{ transformStyle: 'preserve-3d', willChange: 'transform, filter, opacity' }}
+              className="grid grid-cols-3 md:grid-cols-5 gap-3"
+            >
+              {currentCategory.items.map((item, index) => (
+                <BrandCard
+                  key={`${activeTab}-${item.name}-${index}`}
+                  item={item}
+                  onPlayVideo={onPlayVideo}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
