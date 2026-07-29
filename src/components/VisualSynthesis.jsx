@@ -36,6 +36,9 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   };
 
   const handlePointerEnter = (e) => {
+    // 手機/觸控螢幕 (hover: none) 阻斷 Bobble 滑動，避免頁面滾動時干擾視覺與效能
+    if (window.matchMedia('(hover: none)').matches) return;
+
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
     const enterX = e.clientX - rect.left - rect.width / 2;
@@ -58,6 +61,9 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
   const rafRef = React.useRef(null);
   const handleMouseMove = (e) => {
+    // 觸控螢幕降級阻斷
+    if (window.matchMedia('(hover: none)').matches) return;
+
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
@@ -83,6 +89,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   };
 
   const handlePointerLeave = () => {
+    if (window.matchMedia('(hover: none)').matches) return;
     // 離開卡片時柔和彈回靜止原位
     rawX.set(0);
     rawY.set(0);
@@ -128,6 +135,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       onPointerLeave={handlePointerLeave}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      whileTap={{ scale: 0.96 }}
       tabIndex={hasVideo ? 0 : -1}
       role={hasVideo ? "button" : "presentation"}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
