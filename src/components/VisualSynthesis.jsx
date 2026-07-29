@@ -283,9 +283,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
               custom={direction}
               initial={{
                 opacity: 0,
-                rotateY: direction * 16,
-                filter: 'blur(6px)',
-                scale: 0.96
+                rotateY: direction * 20,
+                filter: 'blur(10px)',
+                scale: 0.94
               }}
               animate={{
                 opacity: 1,
@@ -295,13 +295,13 @@ export default function VisualSynthesis({ onPlayVideo }) {
               }}
               exit={{
                 opacity: 0,
-                rotateY: direction * -16,
-                filter: 'blur(6px)',
-                scale: 0.96
+                rotateY: direction * -20,
+                filter: 'blur(10px)',
+                scale: 0.94
               }}
               transition={{
-                duration: 0.22,
-                ease: [0.22, 1, 0.36, 1]
+                duration: 0.42,
+                ease: [0.16, 1, 0.3, 1]
               }}
               style={{ transformStyle: 'preserve-3d', willChange: 'transform, filter, opacity' }}
               className="grid grid-cols-3 md:grid-cols-5 gap-3"
