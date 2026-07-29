@@ -67,7 +67,7 @@ export const categories = [
         "videoId": "8rl7u3SPQpY"
       },
       {
-        "name": "旨醞 鐵板燒",
+        "name": "旨醞 鐵板料理",
         "bgImage": "/vfx/A/A-013.webp",
         "url": "https://www.facebook.com/reel/2203781970428596?locale=zh_TW",
         "videoId": "2203781970428596",
