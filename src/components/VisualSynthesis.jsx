@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, useMotionValue, animate, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { categories } from '../data/portfolio';
 
@@ -9,14 +9,22 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
 
-  // Motion values 用於物理 Bobble Hover 彈跳動效
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotate = useMotionValue(0);
-  const scale = useMotionValue(1);
+  // 物理 Motion values
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const rawRotX = useMotionValue(0);
+  const rawRotY = useMotionValue(0);
+  const rawRotZ = useMotionValue(0);
+  const rawScale = useMotionValue(1);
 
-  const lastPosRef = React.useRef({ x: 0, y: 0, time: 0 });
-  const isAnimatingRef = React.useRef(false);
+  // 高感官 Q 彈 Spring 物理參數 (stiffness: 400, damping: 14)
+  const springConfig = { stiffness: 400, damping: 14, mass: 0.5 };
+  const x = useSpring(rawX, springConfig);
+  const y = useSpring(rawY, springConfig);
+  const rotateX = useSpring(rawRotX, springConfig);
+  const rotateY = useSpring(rawRotY, springConfig);
+  const rotateZ = useSpring(rawRotZ, springConfig);
+  const scale = useSpring(rawScale, springConfig);
 
   const setRefs = (node) => {
     innerRef.current = node;
@@ -27,31 +35,25 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     }
   };
 
-  const triggerBobble = (vx, vy) => {
-    const speed = Math.hypot(vx, vy);
-    // 根據指針移動速度動態計算彈跳強度 (夾值 0.8 ~ 2.5)
-    const intensity = Math.min(Math.max(speed * 0.8, 0.8), 2.5);
-    
-    // 計算彈跳方向
-    const dirX = vx !== 0 ? Math.sign(vx) : (Math.random() > 0.5 ? 1 : -1);
-    const dirY = vy !== 0 ? Math.sign(vy) : -1;
-
-    const moveX = dirX * 8 * intensity;
-    const moveY = dirY * 8 * intensity;
-    const rotDeg = dirX * 3.5 * intensity;
-    const scaleUp = 1 + 0.04 * intensity;
-
-    // 使用物理彈簧曲線 (Spring Physics) 進行彈性跳動與恢復
-    animate(x, [0, moveX, 0], { type: "spring", stiffness: 450, damping: 12 });
-    animate(y, [0, moveY, 0], { type: "spring", stiffness: 450, damping: 12 });
-    animate(rotate, [0, rotDeg, 0], { type: "spring", stiffness: 400, damping: 10 });
-    animate(scale, [1, scaleUp, 1], { type: "spring", stiffness: 500, damping: 14 });
-  };
-
   const handlePointerEnter = (e) => {
-    lastPosRef.current = { x: e.clientX, y: e.clientY, time: performance.now() };
-    // 初次移入時以預設感應強度觸發 Bobble
-    triggerBobble(1.2, -1.2);
+    if (!innerRef.current) return;
+    const rect = innerRef.current.getBoundingClientRect();
+    const enterX = e.clientX - rect.left - rect.width / 2;
+    const dirX = enterX >= 0 ? 1 : -1;
+
+    // 移入時激發強烈的 Q 彈 Bobble 果動
+    rawY.set(-16);
+    rawRotZ.set(dirX * 7);
+    rawScale.set(1.09);
+    rawRotX.set(-10);
+    rawRotY.set(dirX * 10);
+
+    // 100ms 後收斂至 Hover 跟隨態
+    setTimeout(() => {
+      rawY.set(-6);
+      rawRotZ.set(0);
+      rawScale.set(1.04);
+    }, 100);
   };
 
   const rafRef = React.useRef(null);
@@ -61,23 +63,14 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    // 計算滑鼠移動速度
-    const now = performance.now();
-    const dt = (now - lastPosRef.current.time) / 1000;
-    if (dt > 0.01) {
-      const vx = (e.clientX - lastPosRef.current.x) / (dt * 1000);
-      const vy = (e.clientY - lastPosRef.current.y) / (dt * 1000);
-      
-      // 如果移動速度快速且不在連續動畫衝擊中，觸發動態 Bobble
-      if (Math.hypot(vx, vy) > 1.5 && !isAnimatingRef.current) {
-        isAnimatingRef.current = true;
-        triggerBobble(vx, vy);
-        setTimeout(() => {
-          isAnimatingRef.current = false;
-        }, 300);
-      }
-      lastPosRef.current = { x: e.clientX, y: e.clientY, time: now };
-    }
+    const centerX = mouseX - rect.width / 2;
+    const centerY = mouseY - rect.height / 2;
+
+    // 指針在卡片內移動時帶動 3D 懸浮與微妙 Tilt
+    rawRotX.set((-centerY / rect.height) * 18);
+    rawRotY.set((centerX / rect.width) * 18);
+    rawX.set((centerX / rect.width) * 12);
+    rawY.set((centerY / rect.height) * 10 - 6);
 
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
@@ -87,6 +80,16 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       }
       rafRef.current = null;
     });
+  };
+
+  const handlePointerLeave = () => {
+    // 離開卡片時柔和彈回靜止原位
+    rawX.set(0);
+    rawY.set(0);
+    rawRotX.set(0);
+    rawRotY.set(0);
+    rawRotZ.set(0);
+    rawScale.set(1);
   };
 
   const handleClick = () => {
@@ -122,6 +125,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       ref={setRefs}
       onPointerEnter={handlePointerEnter}
       onMouseMove={handleMouseMove}
+      onPointerLeave={handlePointerLeave}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={hasVideo ? 0 : -1}
@@ -134,8 +138,11 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       style={{
         x,
         y,
-        rotate,
+        rotateX,
+        rotateY,
+        rotateZ,
         scale,
+        transformStyle: 'preserve-3d',
         willChange: 'transform',
         '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
       }}
