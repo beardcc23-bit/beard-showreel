@@ -5,9 +5,18 @@ import { categories } from '../data/portfolio';
 
 const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const hasVideo = !!item.videoId || !!item.url;
-  const CardElement = hasVideo ? 'button' : 'div';
+  const CardElement = hasVideo ? motion.button : motion.div;
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
+
+  // Motion values 用於物理 Bobble Hover 彈跳動效
+  const x = motion.useMotionValue(0);
+  const y = motion.useMotionValue(0);
+  const rotate = motion.useMotionValue(0);
+  const scale = motion.useMotionValue(1);
+
+  const lastPosRef = React.useRef({ x: 0, y: 0, time: 0 });
+  const isAnimatingRef = React.useRef(false);
 
   const setRefs = (node) => {
     innerRef.current = node;
@@ -18,17 +27,63 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     }
   };
 
+  const triggerBobble = (vx, vy) => {
+    const speed = Math.hypot(vx, vy);
+    // 根據指針移動速度動態計算彈跳強度 (夾值 0.8 ~ 2.5)
+    const intensity = Math.min(Math.max(speed * 0.8, 0.8), 2.5);
+    
+    // 計算彈跳方向
+    const dirX = vx !== 0 ? Math.sign(vx) : (Math.random() > 0.5 ? 1 : -1);
+    const dirY = vy !== 0 ? Math.sign(vy) : -1;
+
+    const moveX = dirX * 8 * intensity;
+    const moveY = dirY * 8 * intensity;
+    const rotDeg = dirX * 3.5 * intensity;
+    const scaleUp = 1 + 0.04 * intensity;
+
+    // 使用物理彈簧曲線 (Spring Physics) 進行彈性跳動與恢復
+    motion.animate(x, [0, moveX, 0], { type: "spring", stiffness: 450, damping: 12 });
+    motion.animate(y, [0, moveY, 0], { type: "spring", stiffness: 450, damping: 12 });
+    motion.animate(rotate, [0, rotDeg, 0], { type: "spring", stiffness: 400, damping: 10 });
+    motion.animate(scale, [1, scaleUp, 1], { type: "spring", stiffness: 500, damping: 14 });
+  };
+
+  const handlePointerEnter = (e) => {
+    lastPosRef.current = { x: e.clientX, y: e.clientY, time: performance.now() };
+    // 初次移入時以預設感應強度觸發 Bobble
+    triggerBobble(1.2, -1.2);
+  };
+
   const rafRef = React.useRef(null);
   const handleMouseMove = (e) => {
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // 計算滑鼠移動速度
+    const now = performance.now();
+    const dt = (now - lastPosRef.current.time) / 1000;
+    if (dt > 0.01) {
+      const vx = (e.clientX - lastPosRef.current.x) / (dt * 1000);
+      const vy = (e.clientY - lastPosRef.current.y) / (dt * 1000);
+      
+      // 如果移動速度快速且不在連續動畫衝擊中，觸發動態 Bobble
+      if (Math.hypot(vx, vy) > 1.5 && !isAnimatingRef.current) {
+        isAnimatingRef.current = true;
+        triggerBobble(vx, vy);
+        setTimeout(() => {
+          isAnimatingRef.current = false;
+        }, 300);
+      }
+      lastPosRef.current = { x: e.clientX, y: e.clientY, time: now };
+    }
+
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
       if (innerRef.current) {
-        innerRef.current.style.setProperty('--mouse-x', `${x}px`);
-        innerRef.current.style.setProperty('--mouse-y', `${y}px`);
+        innerRef.current.style.setProperty('--mouse-x', `${mouseX}px`);
+        innerRef.current.style.setProperty('--mouse-y', `${mouseY}px`);
       }
       rafRef.current = null;
     });
@@ -65,17 +120,23 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   return (
     <CardElement
       ref={setRefs}
+      onPointerEnter={handlePointerEnter}
       onMouseMove={handleMouseMove}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={hasVideo ? 0 : -1}
       role={hasVideo ? "button" : "presentation"}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border text-left w-full p-3.5 rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
-        ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)] hover:-translate-y-1'
+      className={`prism-border text-left w-full p-3.5 rounded-sm flex flex-col justify-between transition-colors duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
+        ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]'
         : 'bg-white/[0.01] border-white/8 cursor-default'
         }`}
       style={{
+        x,
+        y,
+        rotate,
+        scale,
+        willChange: 'transform',
         '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
       }}
     >
