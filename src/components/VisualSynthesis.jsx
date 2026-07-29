@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, animate, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { categories } from '../data/portfolio';
 
@@ -10,10 +10,10 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const innerRef = React.useRef(null);
 
   // Motion values 用於物理 Bobble Hover 彈跳動效
-  const x = motion.useMotionValue(0);
-  const y = motion.useMotionValue(0);
-  const rotate = motion.useMotionValue(0);
-  const scale = motion.useMotionValue(1);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotate = useMotionValue(0);
+  const scale = useMotionValue(1);
 
   const lastPosRef = React.useRef({ x: 0, y: 0, time: 0 });
   const isAnimatingRef = React.useRef(false);
@@ -42,10 +42,10 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     const scaleUp = 1 + 0.04 * intensity;
 
     // 使用物理彈簧曲線 (Spring Physics) 進行彈性跳動與恢復
-    motion.animate(x, [0, moveX, 0], { type: "spring", stiffness: 450, damping: 12 });
-    motion.animate(y, [0, moveY, 0], { type: "spring", stiffness: 450, damping: 12 });
-    motion.animate(rotate, [0, rotDeg, 0], { type: "spring", stiffness: 400, damping: 10 });
-    motion.animate(scale, [1, scaleUp, 1], { type: "spring", stiffness: 500, damping: 14 });
+    animate(x, [0, moveX, 0], { type: "spring", stiffness: 450, damping: 12 });
+    animate(y, [0, moveY, 0], { type: "spring", stiffness: 450, damping: 12 });
+    animate(rotate, [0, rotDeg, 0], { type: "spring", stiffness: 400, damping: 10 });
+    animate(scale, [1, scaleUp, 1], { type: "spring", stiffness: 500, damping: 14 });
   };
 
   const handlePointerEnter = (e) => {
