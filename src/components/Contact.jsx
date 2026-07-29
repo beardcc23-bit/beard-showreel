@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Check, MessageSquareText } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
+import WaveformScopeCanvas from './WaveformScopeCanvas';
 import { useClipboard } from '../hooks/useClipboard';
 
 export default function Contact() {
@@ -19,7 +20,8 @@ export default function Contact() {
 
   return (
     <section id="contact" className="relative overflow-hidden py-32 bg-bg-core/50">
-      {/* 科技光點背景 */}
+      {/* RGB Waveform Canvas 背景與科技網格 */}
+      <WaveformScopeCanvas />
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-8 text-center relative z-10">
