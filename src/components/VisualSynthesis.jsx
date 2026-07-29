@@ -259,12 +259,12 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 onClick={() => handleTabChange(tab.id)}
                 className={`hud-btn relative px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
               >
-                {/* 絲滑液態金屬 Tab 高光滑塊 (layoutId 跨元件平滑動畫) */}
+                {/* 絲滑液態金屬 Tab 高光滑塊 (layoutId 跨元件平滑動畫 - 純金黃光底色，無白框) */}
                 {isActive && (
                   <motion.div
                     layoutId="activeTabGlow"
-                    className="absolute inset-0 rounded-sm bg-aurora-blue/15 border border-aurora-blue/40 shadow-[0_0_20px_rgba(212,175,55,0.2)] pointer-events-none z-0"
-                    transition={{ type: 'spring', stiffness: 450, damping: 30 }}
+                    className="absolute inset-0 rounded-sm bg-aurora-blue/[0.08] shadow-[0_0_20px_rgba(212,175,55,0.35)] pointer-events-none z-0"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
                 <span className={`hud-eng relative z-10 text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${isActive ? 'text-aurora-blue font-bold' : 'text-zinc-500'
@@ -275,7 +275,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
           })}
         </div>
 
-        {/* 品牌卡片 Grid - 方案三：景深失焦 (Depth Blur) 與 3D 晶片立體翻轉 (Micro Flip) 轉場 */}
+        {/* 品牌卡片 Grid - 方案三：加長景深失焦 (0.68s Cinematic Depth Blur) 與 3D 立體翻轉 */}
         <div className="relative z-10 min-h-[300px]" style={{ perspective: '1200px' }}>
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -283,9 +283,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
               custom={direction}
               initial={{
                 opacity: 0,
-                rotateY: direction * 20,
-                filter: 'blur(10px)',
-                scale: 0.94
+                rotateY: direction * 22,
+                filter: 'blur(12px)',
+                scale: 0.93
               }}
               animate={{
                 opacity: 1,
@@ -295,12 +295,12 @@ export default function VisualSynthesis({ onPlayVideo }) {
               }}
               exit={{
                 opacity: 0,
-                rotateY: direction * -20,
-                filter: 'blur(10px)',
-                scale: 0.94
+                rotateY: direction * -22,
+                filter: 'blur(12px)',
+                scale: 0.93
               }}
               transition={{
-                duration: 0.42,
+                duration: 0.68,
                 ease: [0.16, 1, 0.3, 1]
               }}
               style={{ transformStyle: 'preserve-3d', willChange: 'transform, filter, opacity' }}
