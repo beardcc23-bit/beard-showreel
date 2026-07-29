@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navigation from './components/Navigation';
 import CursorGlow from './components/CursorGlow';
+import TrackingHudCanvas from './components/TrackingHudCanvas';
 import Hero from './components/Hero';
 import Introduction from './components/Introduction';
 import Manifesto from './components/Manifesto';
@@ -87,8 +88,9 @@ export default function App() {
         <div className="crystal crystal-10 hidden md:block" />
       </div>
 
-      {/* 高科技滑鼠光暈 */}
+      {/* 高科技滑鼠光暈與 Flame 追蹤 HUD Canvas */}
       <CursorGlow />
+      <TrackingHudCanvas />
 
       {/* 頂部與行動側邊導覽列 */}
       <Navigation />
