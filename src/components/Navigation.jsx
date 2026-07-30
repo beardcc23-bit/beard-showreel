@@ -141,11 +141,11 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Option 2: 全息稜鏡儀表卡按鈕 (頂部 Bar 右側) */}
+          {/* Option 2: 全息稜鏡儀表卡按鈕 (僅在手機/行動裝置 < 768px 顯示) */}
           <button
             type="button"
             onClick={handleGyroClick}
-            className="hud-btn px-3 py-1.5 flex items-center gap-2 rounded-sm bg-bg-core/80 border border-aurora-blue/50 hover:border-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.25)] active:scale-95 transition-all cursor-pointer"
+            className="md:hidden hud-btn px-3 py-1.5 flex items-center gap-2 rounded-sm bg-bg-core/80 border border-aurora-blue/50 hover:border-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.25)] active:scale-95 transition-all cursor-pointer"
             aria-label="Toggle Gyroscope Orientation Light"
           >
             <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin-slow' : 'opacity-80'}`} />
