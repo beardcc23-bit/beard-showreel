@@ -74,17 +74,17 @@ export default function App() {
         <div className="orbit-ring ring-diagonal" />
         
         {/* 漂浮玻璃晶體粒子 */}
-        <div className="crystal crystal-1" />
-        <div className="crystal crystal-2" />
-        <div className="crystal crystal-3" />
-        <div className="crystal crystal-4" />
-        <div className="crystal crystal-5" />
+        <div className="crystal crystal-1"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-2"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-3"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-4"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-5"><div className="crystal-inner w-full h-full" /></div>
         {/* 網頁版限定的額外漂浮晶體 (防止手機版卡頓) */}
-        <div className="crystal crystal-6 hidden md:block" />
-        <div className="crystal crystal-7 hidden md:block" />
-        <div className="crystal crystal-8 hidden md:block" />
-        <div className="crystal crystal-9 hidden md:block" />
-        <div className="crystal crystal-10 hidden md:block" />
+        <div className="crystal crystal-6 hidden md:block"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-7 hidden md:block"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-8 hidden md:block"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-9 hidden md:block"><div className="crystal-inner w-full h-full" /></div>
+        <div className="crystal crystal-10 hidden md:block"><div className="crystal-inner w-full h-full" /></div>
       </div>
 
       {/* 高科技滑鼠光暈 */}

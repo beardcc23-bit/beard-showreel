@@ -18,10 +18,10 @@ export function useLenisScroll() {
     const handleScroll = (e) => {
       const scrollY = window.scrollY || e.scroll || 0;
 
-      // 三層空間視差位移係數
-      const yFar = scrollY * 0.08;   // Z-Far (背景層 - 極慢)
-      const yMid = scrollY * 0.20;   // Z-Mid (中景軌道層 - 中速)
-      const yNear = scrollY * 0.42;  // Z-Near (前景晶體層 - 快速位移)
+      // 三層空間視差位移係數 (針對 Fixed 背景與手機視區對齊優化)
+      const yFar = scrollY * 0.18;   // Z-Far (背景網格 - 慢速錯開 0.18x)
+      const yMid = scrollY * 0.12;   // Z-Mid (中景軌道 - 緩和滯留 0.12x)
+      const yNear = scrollY * 0.38;  // Z-Near (前景晶體 - 快速掠過 0.38x)
 
       document.documentElement.style.setProperty('--parallax-y-far', `${yFar.toFixed(2)}px`);
       document.documentElement.style.setProperty('--parallax-y-mid', `${yMid.toFixed(2)}px`);

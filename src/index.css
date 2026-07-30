@@ -240,29 +240,28 @@ body {
   animation: hud-pulse-glow 3s ease-in-out infinite;
 }
 
-/* 幾何軌道容器與動畫 - 提升 z-index 確保在背景層之上、內容層之下 */
+/* 幾何軌道容器與 3D Z-Mid 視差 */
 .orbit-container {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate3d(-50%, -50%, 0) scale(0.65); /* 初始縮小，等待科技自檢啟動 */
-  opacity: 0; /* 初始隱藏 */
+  transform: translate3d(-50%, calc(-50% + var(--parallax-y-mid, 0px)), 0) scale(0.65);
+  opacity: 0;
   width: 1400px;
   height: 1400px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 0; /* 設為 0 確保它在背景上方、且不被遮蔽 */
+  z-index: 0;
   pointer-events: none;
   transform-style: preserve-3d;
-  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out;
+  transition: transform 0.1s linear, opacity 1.5s ease-out;
   will-change: transform;
 }
 
 .is-loaded .orbit-container {
-  transform: translate3d(-50%, calc(-50% - var(--parallax-y-mid, 0px)), 0);
+  transform: translate3d(-50%, calc(-50% + var(--parallax-y-mid, 0px)), 0) scale(1);
   opacity: 1;
-  transition: opacity 1.5s ease-out;
 }
 
 .orbit-ring {
@@ -314,9 +313,14 @@ body {
   to { transform: rotate(-360deg); }
 }
 
-/* 漂浮水晶 - 提升高透玻璃感 */
+/* 漂浮水晶 - Z-Near 快速視差位移層 */
 .crystal {
   position: absolute;
+  transform: translate3d(0, calc(-1 * var(--parallax-y-near, 0px)), 0);
+  will-change: transform;
+}
+
+.crystal-inner {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(12px) saturate(120%);
   -webkit-backdrop-filter: blur(12px) saturate(120%);
