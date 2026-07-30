@@ -714,38 +714,34 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：零 GPU VRAM 負擔平滑漸層 (無 blur 濾鏡，100% 永不崩潰) */
+/* 行動裝置效能與氛圍優化：零露底黑邊極速流光引擎 (100% 滿版無黑邊，內部水銀漸層流動) */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
     position: fixed;
-    inset: -30%;
-    width: 160%;
-    height: 160%;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
     z-index: -2;
-    transform: translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
-    transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
+    overflow: hidden;
   }
 
   .mobile-aurora-inner {
     width: 100%;
     height: 100%;
     background: 
-      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.65) 0%, rgba(212, 175, 55, 0) 65%),
-      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.55) 0%, rgba(255, 224, 130, 0) 60%),
-      radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.40) 0%, rgba(255, 82, 82, 0) 65%),
-      radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.35) 0%, rgba(100, 181, 246, 0) 60%);
+      radial-gradient(circle at calc(25% + var(--lx, 0%)) calc(30% + var(--ly, 0%)), rgba(212, 175, 55, 0.75) 0%, rgba(212, 175, 55, 0) 65%),
+      radial-gradient(circle at calc(75% + var(--lx, 0%)) calc(65% + var(--ly, 0%)), rgba(255, 224, 130, 0.65) 0%, rgba(255, 224, 130, 0) 60%),
+      radial-gradient(circle at calc(50% + var(--lx, 0%)) calc(35% + var(--ly, 0%)), rgba(255, 82, 82, 0.45) 0%, rgba(255, 82, 82, 0) 65%),
+      radial-gradient(circle at calc(35% + var(--lx, 0%)) calc(75% + var(--ly, 0%)), rgba(100, 181, 246, 0.40) 0%, rgba(100, 181, 246, 0) 60%);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
-    will-change: transform;
     transition: opacity 0.5s ease;
   }
 
-  /* 啟動重力感應時：暫停背景 7s 自發循環動畫，100% 由手機傾斜方向絕對定位 */
+  /* 啟動重力感應時：暫停 7s Keyframes，100% 由 --lx, --ly 內部座標平滑感應流動 */
   .gyro-active .mobile-aurora-inner {
     animation: none !important;
-    transform: translate(0, 0) scale(1.2) !important;
     opacity: 0.85 !important;
   }
 

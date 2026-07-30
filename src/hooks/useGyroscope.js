@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 /**
- * 直連式防彈重力感應 Hook (Direct DOM Binding)
- * 直接操作 .mobile-aurora-mesh 元素 style.transform，100% 消除 CSS 變數層傳遞失效問題
+ * 零露黑邊極速流光 Engine (Gradient Center Coordinate Positioning)
+ * 背景邊界 100% 固定不變，透過動態漸層中心點座標 (--lx, --ly) 實現極致平滑的水銀重力流動！
  */
 export function useGyroscope() {
-  const [gyroStatus, setGyroStatus] = useState('AUTO_FLOW'); // 'AUTO_FLOW' | 'ACTIVE' | 'DENIED'
+  const [gyroStatus, setGyroStatus] = useState('AUTO_FLOW');
   const isListeningRef = useRef(false);
   const rafIdRef = useRef(null);
 
@@ -13,7 +13,6 @@ export function useGyroscope() {
     if (typeof window === 'undefined') return;
 
     try {
-      const meshElement = document.querySelector('.mobile-aurora-mesh');
       if (document.documentElement) {
         document.documentElement.classList.add('gyro-active');
       }
@@ -22,12 +21,12 @@ export function useGyroscope() {
       let latestY = 0;
       let isTicking = false;
 
-      const applyDirectTransform = () => {
+      const updateGradientCoordinates = () => {
         try {
-          const targetMesh = meshElement || document.querySelector('.mobile-aurora-mesh');
-          if (targetMesh) {
-            // 直連式寫入 transform，不經 CSS 變數，100% 絕對連動
-            targetMesh.style.transform = `translate3d(${latestX}px, ${latestY}px, 0)`;
+          if (document.documentElement) {
+            // 動態控制漸層中心點偏移 (-28% ~ +28%)
+            document.documentElement.style.setProperty('--lx', `${latestX.toFixed(1)}%`);
+            document.documentElement.style.setProperty('--ly', `${latestY.toFixed(1)}%`);
           }
         } catch (e) {
           // 靜默捕捉 DOM 操作
@@ -39,31 +38,30 @@ export function useGyroscope() {
       const handleOrientation = (event) => {
         if (!event) return;
 
-        // 相容不同手機角數據
         const g = typeof event.gamma === 'number' ? event.gamma : 0;
         const b = typeof event.beta === 'number' ? event.beta : 40;
 
         if (!isNaN(g) && !isNaN(b)) {
-          // 直觀對應與安全邊界限制 (-220px ~ +220px)
-          latestX = Math.round(Math.max(-220, Math.min(220, g * 4.5)));
-          latestY = Math.round(Math.max(-240, Math.min(240, (b - 40) * 4.5)));
+          // 直觀百分比位移：手機向左 (g < 0) -> --lx 為負 (光斑向左流)
+          // 手機向下 (b > 40) -> --ly 為正 (光斑向下流)
+          latestX = Math.max(-28, Math.min(28, g * 0.75));
+          latestY = Math.max(-30, Math.min(30, (b - 40) * 0.75));
 
           if (!isTicking) {
             isTicking = true;
-            rafIdRef.current = requestAnimationFrame(applyDirectTransform);
+            rafIdRef.current = requestAnimationFrame(updateGradientCoordinates);
           }
         }
       };
 
       if (!isListeningRef.current) {
-        // 標準陀螺儀事件監聽
         window.addEventListener('deviceorientation', handleOrientation, true);
         isListeningRef.current = true;
       }
       
       setGyroStatus('ACTIVE');
     } catch (err) {
-      console.warn('Gyroscope direct binding fallback:', err);
+      console.warn('Gyroscope gradient positioning fallback:', err);
       setGyroStatus('AUTO_FLOW');
     }
   }, []);
@@ -95,7 +93,6 @@ export function useGyroscope() {
   useEffect(() => {
     window.requestGyroPermission = requestPermission;
 
-    // 非 iOS 13+ 的 Android / 桌面裝置直接自動安全啟用
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission !== 'function'
