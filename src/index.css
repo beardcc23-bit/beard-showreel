@@ -709,7 +709,7 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：極光漸層流光 (光斑面積擴大 2 倍) */
+/* 行動裝置效能與氛圍優化：雙金、淡紅與淡藍高質感流光 */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
@@ -722,8 +722,8 @@ body {
     background: 
       radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.75) 0%, transparent 35%),
       radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.65) 0%, transparent 32%),
-      radial-gradient(circle at 50% 35%, rgba(255, 0, 127, 0.45) 0%, transparent 35%),
-      radial-gradient(circle at 35% 75%, rgba(127, 0, 255, 0.40) 0%, transparent 32%);
+      radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.45) 0%, transparent 35%),
+      radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.38) 0%, transparent 32%);
     filter: blur(40px);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
     will-change: transform, opacity;
