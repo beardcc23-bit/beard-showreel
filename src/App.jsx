@@ -8,6 +8,7 @@ import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
 import { useLenisScroll } from './hooks/useLenisScroll';
 import { useParallaxOrbit } from './hooks/useParallaxOrbit';
+import { useGyroscope } from './hooks/useGyroscope';
 
 const Modal = React.lazy(() => import('./components/Modal'));
 
@@ -19,9 +20,10 @@ export default function App() {
   });
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
-  // 初始化平滑滾動與 3D 幾何軌道視差 Hooks
+  // 初始化平滑滾動、3D 幾何軌道視差與手機水平儀陀螺儀重力流光 Hooks
   useLenisScroll();
   useParallaxOrbit();
+  useGyroscope();
 
   React.useEffect(() => {
     const handleOpenImage = (e) => {
