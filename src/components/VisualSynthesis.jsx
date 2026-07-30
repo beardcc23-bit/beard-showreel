@@ -240,8 +240,8 @@ export default function VisualSynthesis({ onPlayVideo }) {
           </p>
         </div>
 
-        {/* 分類切換 Tab (帶有 layoutId 絲滑流光滑塊) */}
-        <div className="grid grid-cols-3 gap-2 max-w-xl lg:max-w-5xl mx-auto px-4 lg:flex lg:flex-row lg:flex-nowrap lg:justify-center lg:gap-4 mb-12 relative z-10">
+        {/* 分類切換 Tab (行動端順暢橫向滾動與對齊 + layoutId 絲滑流光滑塊) */}
+        <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory justify-start lg:justify-center gap-2 lg:gap-4 max-w-5xl mx-auto px-4 mb-12 relative z-10 py-1">
           {categories.map((tab) => {
             const engMap = {
               food: 'FOOD & BEV',
@@ -257,7 +257,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`hud-btn relative px-1.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
+                className={`snap-center shrink-0 hud-btn relative px-3.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
               >
                 {/* 絲滑液態金屬 Tab 高光滑塊 (layoutId 跨元件平滑動畫 - 純金黃光底色，無白框) */}
                 {isActive && (
@@ -267,7 +267,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className={`hud-eng relative z-10 text-[5px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${isActive ? 'text-aurora-blue font-bold' : 'text-zinc-500'
+                <span className={`hud-eng relative z-10 text-[6px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${isActive ? 'text-aurora-blue font-bold' : 'text-zinc-400'
                   }`}>{engName}</span>
                 <span className="hud-zht relative z-10 text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
               </button>

@@ -89,7 +89,7 @@ export default function Introduction({ onPlayVideo }) {
                     </div>
                     <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Years</span>
                   </div>
-                  <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-2 mono">
+                  <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     後期資歷
                   </div>
                 </div>
@@ -100,7 +100,7 @@ export default function Introduction({ onPlayVideo }) {
                     </div>
                     <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Campaigns</span>
                   </div>
-                  <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-2 mono">
+                  <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     廣告專案
                   </div>
                 </div>
@@ -111,7 +111,7 @@ export default function Introduction({ onPlayVideo }) {
                     </div>
                     <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Versions</span>
                   </div>
-                  <div className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-2 mono">
+                  <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     播放版本
                   </div>
                 </div>
