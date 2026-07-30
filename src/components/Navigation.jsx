@@ -140,12 +140,17 @@ export default function Navigation() {
           <button
             type="button"
             onClick={handleGyroClick}
-            className="md:hidden hud-btn px-3 py-1.5 flex items-center gap-2 rounded-sm bg-bg-core/80 border border-aurora-blue/50 hover:border-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.25)] active:scale-95 transition-all cursor-pointer"
+            className={`md:hidden hud-btn px-3 py-1.5 flex items-center gap-2 rounded-sm bg-bg-core/80 border transition-all cursor-pointer ${
+              isGyroActive
+                ? 'border-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
+                : 'border-white/20 hover:border-aurora-blue/50'
+            }`}
             aria-label="Toggle Gyroscope Orientation Light"
           >
-            <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin-slow' : 'opacity-80'}`} />
-            <span className="hud-zht text-[11px] text-zinc-100 font-medium tracking-wider">
-              重力光影
+            <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin-slow' : 'opacity-70'}`} />
+            <span className="hud-zht text-[11px] text-zinc-100 font-medium tracking-wider flex items-center gap-1.5">
+              {isGyroActive ? '光影連動中' : '重力光影'}
+              {isGyroActive && <span className="w-1.5 h-1.5 rounded-full bg-aurora-blue animate-ping" />}
             </span>
           </button>
 

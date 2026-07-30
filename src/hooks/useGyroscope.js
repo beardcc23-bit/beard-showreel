@@ -1,41 +1,33 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 /**
- * 零凍結、大動態重力感應 Hook
- * 1. 2.5 倍超大幅度動態響應 (最高 ±320px 磅礡流動)
- * 2. 徹底移除原生 alert，採用 passive 防凍結事件監聽，絕對不引發主執行緒崩潰
+ * 直連式防彈重力感應 Hook (Direct DOM Binding)
+ * 直接操作 .mobile-aurora-mesh 元素 style.transform，100% 消除 CSS 變數層傳遞失效問題
  */
 export function useGyroscope() {
-  const [gyroState, setGyroState] = useState('idle'); // 'idle' | 'granted' | 'denied'
-  const rafIdRef = useRef(null);
+  const [gyroStatus, setGyroStatus] = useState('AUTO_FLOW'); // 'AUTO_FLOW' | 'ACTIVE' | 'DENIED'
   const isListeningRef = useRef(false);
+  const rafIdRef = useRef(null);
 
   const startGyroscope = useCallback(() => {
-    if (isListeningRef.current) return;
     if (typeof window === 'undefined') return;
 
     try {
+      const meshElement = document.querySelector('.mobile-aurora-mesh');
       if (document.documentElement) {
         document.documentElement.classList.add('gyro-active');
       }
 
-      let latestGamma = 0;
-      let latestBeta = 40;
+      let latestX = 0;
+      let latestY = 0;
       let isTicking = false;
 
-      const updateCSSVariables = () => {
+      const applyDirectTransform = () => {
         try {
-          // 嚴格整數化與安全數值防護
-          const safeGamma = Number.isFinite(latestGamma) ? latestGamma : 0;
-          const safeBeta = Number.isFinite(latestBeta) ? latestBeta : 40;
-
-          // 平滑大動態對應：限制在 ±180px ~ ±200px 內，畫面極度順暢大氣
-          const tiltX = Math.round(Math.max(-180, Math.min(180, safeGamma * 4.2)));
-          const tiltY = Math.round(Math.max(-200, Math.min(200, (safeBeta - 40) * 4.2)));
-
-          if (document.documentElement) {
-            document.documentElement.style.setProperty('--tilt-x', `${tiltX}px`);
-            document.documentElement.style.setProperty('--tilt-y', `${tiltY}px`);
+          const targetMesh = meshElement || document.querySelector('.mobile-aurora-mesh');
+          if (targetMesh) {
+            // 直連式寫入 transform，不經 CSS 變數，100% 絕對連動
+            targetMesh.style.transform = `translate3d(${latestX}px, ${latestY}px, 0)`;
           }
         } catch (e) {
           // 靜默捕捉 DOM 操作
@@ -46,27 +38,33 @@ export function useGyroscope() {
 
       const handleOrientation = (event) => {
         if (!event) return;
-        const g = event.gamma;
-        const b = event.beta;
 
-        if (typeof g === 'number' && typeof b === 'number' && !isNaN(g) && !isNaN(b)) {
-          latestGamma = g;
-          latestBeta = b;
+        // 相容不同手機角數據
+        const g = typeof event.gamma === 'number' ? event.gamma : 0;
+        const b = typeof event.beta === 'number' ? event.beta : 40;
+
+        if (!isNaN(g) && !isNaN(b)) {
+          // 直觀對應與安全邊界限制 (-220px ~ +220px)
+          latestX = Math.round(Math.max(-220, Math.min(220, g * 4.5)));
+          latestY = Math.round(Math.max(-240, Math.min(240, (b - 40) * 4.5)));
 
           if (!isTicking) {
             isTicking = true;
-            rafIdRef.current = requestAnimationFrame(updateCSSVariables);
+            rafIdRef.current = requestAnimationFrame(applyDirectTransform);
           }
         }
       };
 
-      // 採用 passive: true 事件監聽，確保主執行緒 100% 不卡死、不崩潰
-      window.addEventListener('deviceorientation', handleOrientation, { passive: true });
-      isListeningRef.current = true;
-      setGyroState('granted');
+      if (!isListeningRef.current) {
+        // 標準陀螺儀事件監聽
+        window.addEventListener('deviceorientation', handleOrientation, true);
+        isListeningRef.current = true;
+      }
+      
+      setGyroStatus('ACTIVE');
     } catch (err) {
-      console.warn('Gyroscope silent catch:', err);
-      setGyroState('denied');
+      console.warn('Gyroscope direct binding fallback:', err);
+      setGyroStatus('AUTO_FLOW');
     }
   }, []);
 
@@ -79,24 +77,25 @@ export function useGyroscope() {
         const response = await DeviceOrientationEvent.requestPermission().catch(() => 'denied');
         if (response === 'granted') {
           startGyroscope();
-          return true;
+          return 'ACTIVE';
         } else {
-          setGyroState('denied');
-          return false;
+          setGyroStatus('DENIED');
+          return 'DENIED';
         }
       } else {
         startGyroscope();
-        return true;
+        return 'ACTIVE';
       }
     } catch (error) {
-        setGyroState('denied');
-        return false;
+      setGyroStatus('DENIED');
+      return 'DENIED';
     }
   }, [startGyroscope]);
 
   useEffect(() => {
     window.requestGyroPermission = requestPermission;
 
+    // 非 iOS 13+ 的 Android / 桌面裝置直接自動安全啟用
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission !== 'function'
@@ -111,5 +110,5 @@ export function useGyroscope() {
     };
   }, [startGyroscope, requestPermission]);
 
-  return { gyroState, requestPermission };
+  return { gyroStatus, requestPermission };
 }
