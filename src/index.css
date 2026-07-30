@@ -709,7 +709,7 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：極精緻微型光斑 (面積再減半，大面積透出暗水泥深灰底色) */
+/* 行動裝置效能與氛圍優化：精緻高對比流光 (亮點面積恢復 22%~24%) */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
@@ -720,11 +720,11 @@ body {
     pointer-events: none;
     z-index: -2;
     background: 
-      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.85) 0%, transparent 12%),
-      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.75) 0%, transparent 10%),
-      radial-gradient(circle at 50% 35%, rgba(255, 0, 127, 0.55) 0%, transparent 12%),
-      radial-gradient(circle at 35% 75%, rgba(127, 0, 255, 0.50) 0%, transparent 10%);
-    filter: blur(20px);
+      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.80) 0%, transparent 24%),
+      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.70) 0%, transparent 22%),
+      radial-gradient(circle at 50% 35%, rgba(255, 0, 127, 0.50) 0%, transparent 24%),
+      radial-gradient(circle at 35% 75%, rgba(127, 0, 255, 0.45) 0%, transparent 22%);
+    filter: blur(28px);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
     will-change: transform, opacity;
   }
