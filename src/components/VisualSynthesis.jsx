@@ -307,11 +307,17 @@ export default function VisualSynthesis({ onPlayVideo }) {
               className="grid grid-cols-3 md:grid-cols-5 gap-3"
             >
               {currentCategory.items.map((item, index) => (
-                <BrandCard
+                <motion.div
                   key={`${activeTab}-${item.name}-${index}`}
-                  item={item}
-                  onPlayVideo={onPlayVideo}
-                />
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: index * 0.045, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <BrandCard
+                    item={item}
+                    onPlayVideo={onPlayVideo}
+                  />
+                </motion.div>
               ))}
             </motion.div>
           </AnimatePresence>

@@ -5,7 +5,7 @@ import AnimatedCounter from './common/AnimatedCounter';
 
 export default function Introduction({ onPlayVideo }) {
   const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, { once: true, margin: "-50px" });
+  const statsInView = useInView(statsRef, { once: true, margin: "-30px" });
 
   return (
     <section id="introduction" className="relative min-h-screen flex items-center justify-center py-24 bg-bg-core/60">
@@ -81,7 +81,7 @@ export default function Introduction({ onPlayVideo }) {
                     <div>
                       <AnimatedCounter value={13} trigger={statsInView} />+
                     </div>
-                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Years</span>
+                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Years</span>
                   </div>
                   <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     後期資歷
@@ -92,7 +92,7 @@ export default function Introduction({ onPlayVideo }) {
                     <div>
                       <AnimatedCounter value={300} trigger={statsInView} />+
                     </div>
-                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Campaigns</span>
+                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Campaigns</span>
                   </div>
                   <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     廣告專案
@@ -103,7 +103,7 @@ export default function Introduction({ onPlayVideo }) {
                     <div>
                       <AnimatedCounter value={1000} trigger={statsInView} />+
                     </div>
-                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1">//Versions</span>
+                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Versions</span>
                   </div>
                   <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     播放版本

@@ -218,6 +218,22 @@ body {
   animation: play-pulse 2.4s ease-in-out infinite;
 }
 
+/* 科技感 HUD 標籤微呼吸燈 (Ambient HUD Glow Pulse) */
+@keyframes hud-pulse-glow {
+  0%, 100% {
+    opacity: 0.65;
+    text-shadow: 0 0 2px rgba(212, 175, 55, 0.2);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.65);
+  }
+}
+
+.hud-pulse {
+  animation: hud-pulse-glow 3s ease-in-out infinite;
+}
+
 /* 幾何軌道容器與動畫 - 提升 z-index 確保在背景層之上、內容層之下 */
 .orbit-container {
   position: fixed;
@@ -667,17 +683,24 @@ body {
   display: none !important;
 }
 
-/* 行動裝置效能優化：關閉高耗能背景特效 */
+/* 行動裝置效能與氛圍優化：關閉高耗能全螢幕軌道，保留極輕量光暈與前三顆小晶體漂移 */
 @media (max-width: 768px) {
-  /* 1. 關閉旋轉軌道與帶有 backdrop-filter 的漂浮水晶（手機版最嚴重的卡頓來源） */
   .orbit-container,
-  .crystal {
+  .crystal-4, .crystal-5, .crystal-6, .crystal-7, .crystal-8, .crystal-9, .crystal-10 {
     display: none !important;
   }
 
-  /* 2. 關閉高模糊度（filter: blur）的霓虹光學暈光 */
-  .lens-flare {
+  .flare-1, .flare-2 {
     display: none !important;
+  }
+
+  /* 保留暖金色霧光 (flare-3) 微亮背景，防止純黑單調 */
+  .flare-3 {
+    display: block !important;
+    opacity: 0.1 !important;
+    width: 320px !important;
+    height: 320px !important;
+    filter: blur(60px) !important;
   }
 
   /* 3. 關閉滿版 SVG 動態噪點濾鏡，避免手機瀏覽器滾動時強制重繪 */
@@ -690,7 +713,6 @@ body {
     mask-image: none !important;
     opacity: 0.08 !important;
   }
-
 }
 
 /* ==========================================================================
