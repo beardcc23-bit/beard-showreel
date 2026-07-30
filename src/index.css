@@ -54,9 +54,10 @@
   --orbit-ring-inner: rgba(255, 255, 255, 0.08);
   --orbit-ring-diag: rgba(255, 255, 255, 0.02);
 
-  /* 滾動手勢波紋震盪變數 */
-  --scroll-scale: 1;
-  --scroll-glow: 0;
+  /* 3D Z-Space 三層視差變數 */
+  --parallax-y-far: 0px;
+  --parallax-y-mid: 0px;
+  --parallax-y-near: 0px;
 }
 
 body {
@@ -182,8 +183,8 @@ body {
   z-index: -1;
   mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
-  transform: scale(var(--scroll-scale, 1));
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), var(--theme-transition);
+  transform: translate3d(0, calc(-1 * var(--parallax-y-far, 0px)), 0);
+  will-change: transform;
 }
 
 /* Autodesk Flame 懸浮文字底線流光動畫 */
@@ -259,9 +260,9 @@ body {
 }
 
 .is-loaded .orbit-container {
-  transform: translate3d(-50%, -50%, 0) scale(var(--scroll-scale, 1));
+  transform: translate3d(-50%, calc(-50% - var(--parallax-y-mid, 0px)), 0);
   opacity: 1;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out;
+  transition: opacity 1.5s ease-out;
 }
 
 .orbit-ring {
@@ -689,12 +690,12 @@ body {
   display: none !important;
 }
 
-/* 行動裝置效能與氛圍優化：開啟手機版輕量幾何軌道與全頁網格手勢波紋 */
+/* 行動裝置效能與氛圍優化：開啟手機版 3D Z-Space 三層視差透視 */
 @media (max-width: 768px) {
   .orbit-container {
     display: flex !important;
-    transform: translate3d(-50%, -50%, 0) scale(calc(0.48 * var(--scroll-scale, 1))) !important;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out !important;
+    transform: translate3d(-50%, calc(-50% - var(--parallax-y-mid, 0px)), 0) scale(0.48) !important;
+    transition: opacity 1.5s ease-out !important;
   }
 
   .ring-outer, .ring-diagonal,

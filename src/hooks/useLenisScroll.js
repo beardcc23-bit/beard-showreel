@@ -14,15 +14,18 @@ export function useLenisScroll() {
       smoothWheel: true,
       wheelMultiplier: 1.0,
     });
-    // 監聽滾動速度並動態寫入 CSS 變數，帶動背景幾何重力波紋震盪 (針對手機手勢優化係數)
+    // 3D Z-Space 三層視差透視 (Z-Space Parallax) 計算
     const handleScroll = (e) => {
-      const velocity = Math.abs(e.velocity || 0);
-      // 手勢滾動感應係數 (最大 16% 波紋張力)
-      const scaleBoost = Math.min(velocity * 0.006, 0.16);
-      const glowBoost = Math.min(velocity * 0.08, 0.9);
+      const scrollY = window.scrollY || e.scroll || 0;
 
-      document.documentElement.style.setProperty('--scroll-scale', (1 + scaleBoost).toFixed(4));
-      document.documentElement.style.setProperty('--scroll-glow', glowBoost.toFixed(3));
+      // 三層空間視差位移係數
+      const yFar = scrollY * 0.08;   // Z-Far (背景層 - 極慢)
+      const yMid = scrollY * 0.20;   // Z-Mid (中景軌道層 - 中速)
+      const yNear = scrollY * 0.42;  // Z-Near (前景晶體層 - 快速位移)
+
+      document.documentElement.style.setProperty('--parallax-y-far', `${yFar.toFixed(2)}px`);
+      document.documentElement.style.setProperty('--parallax-y-mid', `${yMid.toFixed(2)}px`);
+      document.documentElement.style.setProperty('--parallax-y-near', `${yNear.toFixed(2)}px`);
     };
 
     lenis.on('scroll', handleScroll);
