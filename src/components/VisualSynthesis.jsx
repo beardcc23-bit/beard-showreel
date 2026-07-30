@@ -240,8 +240,8 @@ export default function VisualSynthesis({ onPlayVideo }) {
           </p>
         </div>
 
-        {/* 分類切換 Tab (行動端順暢橫向滾動與對齊 + layoutId 絲滑流光滑塊) */}
-        <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory justify-start lg:justify-center gap-2 lg:gap-4 max-w-5xl mx-auto px-4 mb-12 relative z-10 py-1">
+        {/* 分類切換 Tab (手機版 2 欄整齊上下排網格 + layoutId 絲滑滑塊) */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:justify-center gap-2.5 lg:gap-4 max-w-5xl mx-auto px-2 md:px-4 mb-12 relative z-10 py-1">
           {categories.map((tab) => {
             const engMap = {
               food: 'FOOD & BEV',
@@ -257,9 +257,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`snap-center shrink-0 hud-btn relative px-3.5 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
+                className={`hud-btn relative px-3 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center w-full min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
               >
-                {/* 絲滑液態金屬 Tab 高光滑塊 (layoutId 跨元件平滑動畫 - 純金黃光底色，無白框) */}
+                {/* 絲滑液態金屬 Tab 高光滑塊 */}
                 {isActive && (
                   <motion.div
                     layoutId="activeTabGlow"
@@ -275,7 +275,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
           })}
         </div>
 
-        {/* 品牌卡片 Grid - 方案三：加長景深失焦 (0.68s Cinematic Depth Blur) 與 3D 立體翻轉 */}
+        {/* 品牌卡片 Grid - 手機版 2 欄 (grid-cols-2) 大卡片經典排版 */}
         <div className="relative z-10 min-h-[300px]" style={{ perspective: '1200px' }}>
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -304,7 +304,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 ease: [0.16, 1, 0.3, 1]
               }}
               style={{ transformStyle: 'preserve-3d', willChange: 'transform, filter, opacity' }}
-              className="grid grid-cols-3 md:grid-cols-5 gap-3"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5"
             >
               {currentCategory.items.map((item, index) => (
                 <motion.div
