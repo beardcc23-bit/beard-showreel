@@ -169,6 +169,20 @@ export default function Navigation() {
                 <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">Establish Connection</span>
                 <span className="hud-zht text-base font-normal uppercase tracking-widest">建立聯繫</span>
               </a>
+
+              {/* 手機水平儀/姿態感應授權按鈕 (100% 喚起 iOS 系統彈窗) */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.requestGyroPermission) {
+                    window.requestGyroPermission();
+                  }
+                }}
+                className="mt-4 px-4 py-3 rounded-sm border border-aurora-blue/40 bg-aurora-blue/10 text-left flex flex-col gap-1 active:scale-95 transition-all cursor-pointer"
+              >
+                <span className="mono text-[8px] text-aurora-blue tracking-widest uppercase font-bold">// TILT SENSOR CONTROL</span>
+                <span className="text-xs text-zinc-100 tracking-wider">開啟手機姿態 / 水平儀流光 ➔</span>
+              </button>
             </motion.div>
           </>
         )}

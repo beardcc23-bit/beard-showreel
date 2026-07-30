@@ -1,17 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 /**
  * 自訂 Hook: 手機水平儀 (DeviceOrientation 陀螺儀) 重力流光
- * 支援 Android 靜默開啟與 iOS Safari (iOS 13+) 第一次互動授權
+ * 導出 requestPermission 確保在 iOS 13+ 上點擊按鈕時 100% 觸發系統授權彈窗
  */
 export function useGyroscope() {
-  useEffect(() => {
-    // 限制只在手機/觸控裝置 (max-width: 768px 或 Touch) 上運行，避免桌機重複執行
-    if (typeof window === 'undefined') return;
+  const [gyroState, setGyroState] = useState('idle'); // 'idle' | 'granted' | 'denied' | 'unsupported'
 
-    let isListening = false;
-
-    // 水平儀數據處理函式
+  const startGyroscope = useCallback(() => {
     const handleOrientation = (event) => {
       const gamma = event.gamma || 0; // 左右傾斜角 (-90 ~ 90 度)
       const beta = event.beta || 0;   // 前後傾斜角 (-180 ~ 180 度)
@@ -24,55 +20,45 @@ export function useGyroscope() {
       document.documentElement.style.setProperty('--tilt-y', `${tiltY.toFixed(1)}px`);
     };
 
-    // 啟動監聽
-    const startGyroscope = () => {
-      if (isListening) return;
-      window.addEventListener('deviceorientation', handleOrientation, true);
-      isListening = true;
-    };
+    window.addEventListener('deviceorientation', handleOrientation, true);
+    setGyroState('granted');
+  }, []);
 
-    // 第一次觸控/點擊隱形自動請求授權 (iOS 相容機制)
-    const handleFirstInteraction = async () => {
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('click', handleFirstInteraction);
-
-      // iOS 13+ 權限請求機制
-      if (
-        typeof DeviceOrientationEvent !== 'undefined' &&
-        typeof DeviceOrientationEvent.requestPermission === 'function'
-      ) {
-        try {
-          const permission = await DeviceOrientationEvent.requestPermission();
-          if (permission === 'granted') {
-            startGyroscope();
-          }
-        } catch (e) {
-          // 授權失敗或拒絕時靜默忽視，維持 7s 自動流光
+  const requestPermission = useCallback(async () => {
+    // 檢查是否為需要授權彈窗的 iOS Safari (iOS 13+)
+    if (
+      typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function'
+    ) {
+      try {
+        const response = await DeviceOrientationEvent.requestPermission();
+        if (response === 'granted') {
+          startGyroscope();
+        } else {
+          setGyroState('denied');
         }
-      } else {
-        // Android 手機與一般瀏覽器直接啟動
-        startGyroscope();
+      } catch (error) {
+        console.warn('Gyroscope permission request error:', error);
+        setGyroState('denied');
       }
-    };
+    } else {
+      // Android 手機或一般瀏覽器：直接啟動
+      startGyroscope();
+    }
+  }, [startGyroscope]);
 
-    // Android / 非 iOS 13 瀏覽器：一進站先嘗試監聽
+  useEffect(() => {
+    // 掛載全域全區觸發函式
+    window.requestGyroPermission = requestPermission;
+
+    // 非 iOS 13 的 Android 手機或桌面瀏覽器：直接自動監聽
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission !== 'function'
     ) {
       startGyroscope();
     }
+  }, [startGyroscope, requestPermission]);
 
-    // 綁定全域第一次點擊/滑動隱形觸發
-    window.addEventListener('touchstart', handleFirstInteraction, { once: true });
-    window.addEventListener('click', handleFirstInteraction, { once: true });
-
-    return () => {
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('click', handleFirstInteraction);
-      if (isListening) {
-        window.removeEventListener('deviceorientation', handleOrientation, true);
-      }
-    };
-  }, []);
+  return { gyroState, requestPermission };
 }
