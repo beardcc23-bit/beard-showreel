@@ -8,7 +8,6 @@ import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
 import { useLenisScroll } from './hooks/useLenisScroll';
 import { useParallaxOrbit } from './hooks/useParallaxOrbit';
-import { useGyroscope } from './hooks/useGyroscope';
 
 const Modal = React.lazy(() => import('./components/Modal'));
 
@@ -20,10 +19,9 @@ export default function App() {
   });
   const [isPageLoaded, setIsPageLoaded] = useState(false);
 
-  // 初始化平滑滾動、3D 幾何軌道視差與手機水平儀陀螺儀重力流光 Hooks
+  // 初始化平滑滾動與 3D 幾何軌道視差 Hooks
   useLenisScroll();
   useParallaxOrbit();
-  useGyroscope();
 
   React.useEffect(() => {
     const handleOpenImage = (e) => {
@@ -62,10 +60,8 @@ export default function App() {
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />
       <div className="grid-bg" />
-      {/* 手機版專屬：極光金屬流光漫延背景 (外層負責陀螺儀位移，內層負責 7s 極光動畫) */}
-      <div className="mobile-aurora-mesh pointer-events-none">
-        <div className="mobile-aurora-inner w-full h-full" />
-      </div>
+      {/* 手機版專屬：極光金屬流光漫延背景 */}
+      <div className="mobile-aurora-mesh pointer-events-none" />
 
       {/* 3D 幾何與折射背景裝飾 */}
       <div className="lens-flare flare-1" />

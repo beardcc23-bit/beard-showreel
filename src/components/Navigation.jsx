@@ -1,36 +1,11 @@
 import React, { useState } from 'react';
-import { Menu, X, Compass } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isGyroActive, setIsGyroActive] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
-
-  const handleGyroClick = async () => {
-    try {
-      if (
-        typeof DeviceOrientationEvent !== 'undefined' &&
-        typeof DeviceOrientationEvent.requestPermission === 'function'
-      ) {
-        const permissionState = await DeviceOrientationEvent.requestPermission().catch(() => 'denied');
-        if (permissionState === 'granted') {
-          if (window.requestGyroPermission) {
-            await window.requestGyroPermission();
-          }
-          setIsGyroActive(true);
-        } else {
-          setIsGyroActive(false);
-        }
-      } else if (window.requestGyroPermission) {
-        await window.requestGyroPermission();
-        setIsGyroActive(true);
-      }
-    } catch (e) {
-      console.warn('Gyro click handler safe fallback:', e);
-    }
-  };
 
   const menuItems = [
     { name: '個人介紹', eng: 'CREATIVE PROFILE', href: '#introduction' },
@@ -136,28 +111,10 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Option 2: 全息稜鏡儀表卡按鈕 (僅在手機/行動裝置 < 768px 顯示) */}
-          <button
-            type="button"
-            onClick={handleGyroClick}
-            className={`md:hidden hud-btn px-3 py-1.5 flex items-center gap-2 rounded-sm bg-bg-core/80 border transition-all cursor-pointer ${
-              isGyroActive
-                ? 'border-aurora-blue shadow-[0_0_15px_rgba(212,175,55,0.35)]'
-                : 'border-white/20 hover:border-aurora-blue/50'
-            }`}
-            aria-label="Toggle Gyroscope Orientation Light"
-          >
-            <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin-slow' : 'opacity-70'}`} />
-            <span className="hud-zht text-[11px] text-zinc-100 font-medium tracking-wider flex items-center gap-1.5">
-              {isGyroActive ? '光影連動中' : '重力光影'}
-              {isGyroActive && <span className="w-1.5 h-1.5 rounded-full bg-aurora-blue animate-ping" />}
-            </span>
-          </button>
-
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
+            className="hud-btn is-active px-5 py-3 flex items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
           >
             <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </a>

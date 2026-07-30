@@ -689,12 +689,7 @@ body {
   display: none !important;
 }
 
-/* 放慢 4 倍速的極慢羅盤旋轉動畫 (4s/圈) */
-.animate-spin-slow {
-  animation: spin 4s linear infinite;
-}
-
-/* 手機版專屬：高對比流動金屬極光 (7s 動態極光) */
+/* 手機版專屬：高對比 7 秒流動金屬極光漸層 */
 @keyframes mobile-aurora-flow {
   0% {
     transform: translate(-15%, -15%) scale(1) rotate(0deg);
@@ -714,35 +709,24 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：零露底黑邊極速流光引擎 (100% 滿版無黑邊，內部水銀漸層流動) */
+/* 行動裝置效能與氛圍優化：7s 高質感極光金屬漫延流光 (雙金、淡紅與淡藍) */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
     position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
+    inset: -15%;
+    width: 130%;
+    height: 130%;
     pointer-events: none;
     z-index: -2;
-    overflow: hidden;
-  }
-
-  .mobile-aurora-inner {
-    width: 100%;
-    height: 100%;
     background: 
-      radial-gradient(circle at calc(25% + var(--lx, 0%)) calc(30% + var(--ly, 0%)), rgba(212, 175, 55, 0.75) 0%, rgba(212, 175, 55, 0) 65%),
-      radial-gradient(circle at calc(75% + var(--lx, 0%)) calc(65% + var(--ly, 0%)), rgba(255, 224, 130, 0.65) 0%, rgba(255, 224, 130, 0) 60%),
-      radial-gradient(circle at calc(50% + var(--lx, 0%)) calc(35% + var(--ly, 0%)), rgba(255, 82, 82, 0.45) 0%, rgba(255, 82, 82, 0) 65%),
-      radial-gradient(circle at calc(35% + var(--lx, 0%)) calc(75% + var(--ly, 0%)), rgba(100, 181, 246, 0.40) 0%, rgba(100, 181, 246, 0) 60%);
+      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.75) 0%, transparent 35%),
+      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.65) 0%, transparent 32%),
+      radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.45) 0%, transparent 35%),
+      radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.38) 0%, transparent 32%);
+    filter: blur(40px);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
-    transition: opacity 0.5s ease;
-  }
-
-  /* 啟動重力感應時：暫停 7s Keyframes，100% 由 --lx, --ly 內部座標平滑感應流動 */
-  .gyro-active .mobile-aurora-inner {
-    animation: none !important;
-    opacity: 0.85 !important;
+    will-change: transform, opacity;
   }
 
   .orbit-container,
