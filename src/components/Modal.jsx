@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Cpu, Zap, Award } from 'lucide-react';
 
@@ -36,9 +37,9 @@ export default function Modal({ isOpen, onClose, type, data }) {
     }
   }, [isOpen, onClose]);
 
-  if (!isOpen || !data) return null;
+  if (!isOpen || !data || typeof document === 'undefined') return null;
 
-  return (
+  return ReactDOM.createPortal(
     <AnimatePresence>
       <div 
         role="dialog"
@@ -278,6 +279,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
           )}
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
