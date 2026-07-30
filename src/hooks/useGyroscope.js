@@ -8,13 +8,20 @@ export function useGyroscope() {
   const [gyroState, setGyroState] = useState('idle'); // 'idle' | 'granted' | 'denied' | 'unsupported'
 
   const startGyroscope = useCallback(() => {
+    // 啟動重力感應標誌，暫停背景自動動畫，改由手機方向 100% 絕對控制
+    document.documentElement.classList.add('gyro-active');
+
     const handleOrientation = (event) => {
       const gamma = event.gamma || 0; // 左右傾斜角 (-90 ~ 90 度)
       const beta = event.beta || 0;   // 前後傾斜角 (-180 ~ 180 度)
 
-      // 以手持 45 度角為自然坐姿基準點，位移限制在 ±75px 內
-      const tiltX = Math.max(-75, Math.min(75, gamma * 1.6));
-      const tiltY = Math.max(-75, Math.min(75, (beta - 45) * 1.6));
+      // 直觀物理對應：
+      // 手機往下傾斜 (beta > 45) -> tiltY 為正，光影穩定留在下方
+      // 手機往上傾斜 (beta < 45) -> tiltY 為負，光影穩定留在上方
+      // 手機往右傾斜 (gamma > 0) -> tiltX 為正，光影穩定留在右方
+      // 手機往左傾斜 (gamma < 0) -> tiltX 為負，光影穩定留在左方
+      const tiltX = Math.max(-130, Math.min(130, gamma * 2.8));
+      const tiltY = Math.max(-150, Math.min(150, (beta - 40) * 2.8));
 
       document.documentElement.style.setProperty('--tilt-x', `${tiltX.toFixed(1)}px`);
       document.documentElement.style.setProperty('--tilt-y', `${tiltY.toFixed(1)}px`);

@@ -740,6 +740,14 @@ body {
     filter: blur(40px);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
     will-change: transform, opacity;
+    transition: opacity 0.5s ease;
+  }
+
+  /* 啟動重力感應時：暫停背景 7s 自發循環動畫，100% 由手機傾斜方向絕對定位 */
+  .gyro-active .mobile-aurora-inner {
+    animation: none !important;
+    transform: translate(0, 0) scale(1.35) !important;
+    opacity: 0.75 !important;
   }
 
   .orbit-container,
