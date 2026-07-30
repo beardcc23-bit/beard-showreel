@@ -146,13 +146,10 @@ export default function Navigation() {
             className="hud-btn px-3 py-1.5 flex items-center gap-2 rounded-sm bg-bg-core/80 border border-aurora-blue/50 hover:border-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.25)] active:scale-95 transition-all cursor-pointer"
             aria-label="Toggle Gyroscope Orientation Light"
           >
-            <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin' : 'opacity-80'}`} />
-            <div className="flex flex-col text-left leading-none">
-              <span className="hud-eng text-[7px] mono tracking-widest text-aurora-blue font-bold uppercase">PHYSICS</span>
-              <span className="hud-zht text-[10px] text-zinc-100 font-medium tracking-wider">
-                {isGyroActive ? '感應中' : '重力流光'}
-              </span>
-            </div>
+            <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin-slow' : 'opacity-80'}`} />
+            <span className="hud-zht text-[11px] text-zinc-100 font-medium tracking-wider">
+              {isGyroActive ? '感應中' : '重力流光'}
+            </span>
           </button>
 
           <a
