@@ -275,7 +275,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
           })}
         </div>
 
-        {/* 品牌卡片 Grid - 手機版 2 欄 (grid-cols-2) 大卡片經典排版 */}
+        {/* 品牌卡片 Grid - 手機版 3 欄 (grid-cols-3)、電腦版 5 欄 (md:grid-cols-5) */}
         <div className="relative z-10 min-h-[300px]" style={{ perspective: '1200px' }}>
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -304,7 +304,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 ease: [0.16, 1, 0.3, 1]
               }}
               style={{ transformStyle: 'preserve-3d', willChange: 'transform, filter, opacity' }}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5"
+              className="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3.5"
             >
               {currentCategory.items.map((item, index) => (
                 <motion.div
