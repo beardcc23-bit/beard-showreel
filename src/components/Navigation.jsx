@@ -1,11 +1,39 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isGyroActive, setIsGyroActive] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleGyroClick = () => {
+    if (
+      typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function'
+    ) {
+      DeviceOrientationEvent.requestPermission()
+        .then((permissionState) => {
+          if (permissionState === 'granted') {
+            if (window.requestGyroPermission) window.requestGyroPermission();
+            setIsGyroActive(true);
+            alert('✅ 陀螺儀授權成功！請試著左右/前後傾斜手機，觀察背景光影流向。');
+          } else {
+            alert('⚠️ 未獲得姿態授權，背景將保持 7 秒自動流光。');
+          }
+        })
+        .catch((err) => {
+          alert(`⚠️ 提示：${err.message || '請在 HTTPS 加密連線或手機瀏覽器下點擊授權'}`);
+        });
+    } else if (window.requestGyroPermission) {
+      window.requestGyroPermission();
+      setIsGyroActive(true);
+      alert('✅ 水平儀重力感應已開啟！請擺動手機測試光影。');
+    } else {
+      alert('⚠️ 您的瀏覽器或環境暫不支援 DeviceOrientation 姿態感應。');
+    }
+  };
 
   const menuItems = [
     { name: '個人介紹', eng: 'CREATIVE PROFILE', href: '#introduction' },
@@ -79,7 +107,7 @@ export default function Navigation() {
   return (
     <>
       <nav className="fixed top-0 w-full z-50 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center backdrop-blur-xl border-b border-border bg-bg-core/40 transition-colors duration-500">
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
           <button
             onClick={toggleMenu}
             className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white-or-black hover:text-aurora-blue transition focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
@@ -89,15 +117,15 @@ export default function Navigation() {
           </button>
           <button
             onClick={scrollToTop}
-            className="text-xl font-black tracking-tighter font-space-mono text-white-or-black hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue cursor-pointer text-left rounded-sm"
+            className="text-lg md:text-xl font-black tracking-tighter font-space-mono text-white-or-black hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue cursor-pointer text-left rounded-sm"
             aria-label="Beard Showreel - Scroll to top"
           >
             Beard<span className="text-aurora-blue"> Showreel</span>
           </button>
         </div>
         
-        <div className="hidden md:flex items-center space-x-12">
-          <div className="flex space-x-12">
+        <div className="flex items-center space-x-3 md:space-x-8">
+          <div className="hidden md:flex space-x-12">
             {menuItems.map((item) => (
               <a
                 key={item.href}
@@ -111,10 +139,26 @@ export default function Navigation() {
             ))}
           </div>
 
+          {/* Option 2: 全息稜鏡儀表卡按鈕 (頂部 Bar 右側) */}
+          <button
+            type="button"
+            onClick={handleGyroClick}
+            className="hud-btn px-3 py-1.5 flex items-center gap-2 rounded-sm bg-bg-core/80 border border-aurora-blue/50 hover:border-aurora-blue shadow-[0_0_12px_rgba(212,175,55,0.25)] active:scale-95 transition-all cursor-pointer"
+            aria-label="Toggle Gyroscope Orientation Light"
+          >
+            <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin' : 'opacity-80'}`} />
+            <div className="flex flex-col text-left leading-none">
+              <span className="hud-eng text-[7px] mono tracking-widest text-aurora-blue font-bold uppercase">PHYSICS</span>
+              <span className="hud-zht text-[10px] text-zinc-100 font-medium tracking-wider">
+                {isGyroActive ? '感應中' : '重力流光'}
+              </span>
+            </div>
+          </button>
+
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hud-btn is-active px-5 py-3 flex items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
+            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
           >
             <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </a>
