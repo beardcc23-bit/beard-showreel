@@ -182,7 +182,8 @@ body {
   z-index: -1;
   mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
   -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
-  transition: var(--theme-transition);
+  transform: scale(var(--scroll-scale, 1));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), var(--theme-transition);
 }
 
 /* Autodesk Flame 懸浮文字底線流光動畫 */
@@ -688,9 +689,15 @@ body {
   display: none !important;
 }
 
-/* 行動裝置效能與氛圍優化：關閉高耗能全螢幕軌道，保留極輕量光暈與前三顆小晶體漂移 */
+/* 行動裝置效能與氛圍優化：開啟手機版輕量幾何軌道與全頁網格手勢波紋 */
 @media (max-width: 768px) {
-  .orbit-container,
+  .orbit-container {
+    display: flex !important;
+    transform: translate3d(-50%, -50%, 0) scale(calc(0.48 * var(--scroll-scale, 1))) !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.5s ease-out !important;
+  }
+
+  .ring-outer, .ring-diagonal,
   .crystal-4, .crystal-5, .crystal-6, .crystal-7, .crystal-8, .crystal-9, .crystal-10 {
     display: none !important;
   }
@@ -699,10 +706,10 @@ body {
     display: none !important;
   }
 
-  /* 保留暖金色霧光 (flare-3) 微亮背景，防止純黑單調 */
+  /* 保留暖金色霧光 (flare-3) 微亮背景，隨手勢輕微發光 */
   .flare-3 {
     display: block !important;
-    opacity: 0.1 !important;
+    opacity: 0.12 !important;
     width: 320px !important;
     height: 320px !important;
     filter: blur(60px) !important;
@@ -713,10 +720,10 @@ body {
     display: none !important;
   }
 
-  /* 4. 移除網格背景的滿版 mask-image 遮罩計算，改以低透明度呈現 */
+  /* 4. 手機版網格背景響應手勢震盪，透明度調亮至 0.12 增強辨識度 */
   .grid-bg {
     mask-image: none !important;
-    opacity: 0.08 !important;
+    opacity: 0.12 !important;
   }
 }
 
