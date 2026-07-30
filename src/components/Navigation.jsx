@@ -114,7 +114,7 @@ export default function Navigation() {
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hud-btn is-active px-5 py-3 flex items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
+            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
           >
             <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </a>
@@ -169,39 +169,6 @@ export default function Navigation() {
                 <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">Establish Connection</span>
                 <span className="hud-zht text-base font-normal uppercase tracking-widest">建立聯繫</span>
               </a>
-
-              {/* 手機水平儀/姿態感應授權按鈕 (100% 同步喚起 iOS 系統彈窗) */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (
-                    typeof DeviceOrientationEvent !== 'undefined' &&
-                    typeof DeviceOrientationEvent.requestPermission === 'function'
-                  ) {
-                    DeviceOrientationEvent.requestPermission()
-                      .then((permissionState) => {
-                        if (permissionState === 'granted') {
-                          if (window.requestGyroPermission) window.requestGyroPermission();
-                          alert('✅ 已成功授權！請向左/右/前/後傾斜手機觀看光影流動。');
-                        } else {
-                          alert('⚠️ 未獲得姿態授權，背景將保持 7 秒自動流光。');
-                        }
-                      })
-                      .catch((err) => {
-                        alert('⚠️ 提示：陀螺儀授權需要由 HTTPS 正式網域開啟。');
-                      });
-                  } else if (window.requestGyroPermission) {
-                    window.requestGyroPermission();
-                    alert('✅ 手機水平儀感應已啟動！請試著傾斜手機。');
-                  } else {
-                    alert('⚠️ 您的裝置或瀏覽器不支援陀螺儀姿態感應。');
-                  }
-                }}
-                className="mt-4 px-4 py-3 rounded-sm border border-aurora-blue/50 bg-aurora-blue/15 text-left flex flex-col gap-1 active:scale-95 transition-all cursor-pointer shadow-[0_0_15px_rgba(212,175,55,0.2)]"
-              >
-                <span className="mono text-[8px] text-aurora-blue tracking-widest uppercase font-bold">// TILT SENSOR CONTROL</span>
-                <span className="text-xs text-white font-semibold tracking-wider">點擊開啟手機水平儀流光 ➔</span>
-              </button>
             </motion.div>
           </>
         )}
