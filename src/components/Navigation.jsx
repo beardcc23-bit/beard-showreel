@@ -20,20 +20,15 @@ export default function Navigation() {
             await window.requestGyroPermission();
           }
           setIsGyroActive(true);
-          alert('陀螺儀授權成功！請試著左右/前後傾斜手機，觀察背景光影流向。');
         } else {
-          alert('未獲得姿態授權，背景將保持 7 秒自動流光。');
+          setIsGyroActive(false);
         }
       } else if (window.requestGyroPermission) {
         await window.requestGyroPermission();
         setIsGyroActive(true);
-        alert('水平儀重力感應已開啟！請擺動手機測試光影。');
-      } else {
-        alert('您的瀏覽器或環境暫不支援 DeviceOrientation 姿態感應。');
       }
     } catch (e) {
-      console.warn('Gyro click safe handler:', e);
-      alert('請在 HTTPS 加密連線或手機瀏覽器下點擊授權。');
+      console.warn('Gyro click handler safe fallback:', e);
     }
   };
 

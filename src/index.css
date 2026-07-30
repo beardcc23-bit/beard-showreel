@@ -714,18 +714,18 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：解耦陀螺儀 transform 與 keyframes 動畫 */
+/* 行動裝置效能與氛圍優化：解耦陀螺儀 transform 與 keyframes 動畫 (超大幅度 2.5x 磅礡重力流動) */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
     position: fixed;
-    inset: -20%;
-    width: 140%;
-    height: 140%;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
     pointer-events: none;
     z-index: -2;
     transform: translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
   }
 
