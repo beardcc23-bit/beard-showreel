@@ -709,22 +709,22 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：高對比快速漸層流光 */
+/* 行動裝置效能與氛圍優化：精緻小面積高對比流光 (面積減少 3/4) */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
     position: fixed;
-    inset: -35%;
-    width: 170%;
-    height: 170%;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
     z-index: -2;
     background: 
-      radial-gradient(circle at 15% 25%, rgba(212, 175, 55, 0.65) 0%, transparent 50%),
-      radial-gradient(circle at 85% 75%, rgba(255, 224, 130, 0.55) 0%, transparent 45%),
-      radial-gradient(circle at 50% 30%, rgba(255, 0, 127, 0.35) 0%, transparent 55%),
-      radial-gradient(circle at 40% 80%, rgba(127, 0, 255, 0.30) 0%, transparent 55%);
-    filter: blur(42px);
+      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.75) 0%, transparent 24%),
+      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.65) 0%, transparent 22%),
+      radial-gradient(circle at 50% 35%, rgba(255, 0, 127, 0.45) 0%, transparent 24%),
+      radial-gradient(circle at 35% 75%, rgba(127, 0, 255, 0.40) 0%, transparent 22%);
+    filter: blur(28px);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
     will-change: transform, opacity;
   }
