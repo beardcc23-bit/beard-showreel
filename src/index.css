@@ -689,9 +689,9 @@ body {
   display: none !important;
 }
 
-/* 放慢 2 倍速的羅盤旋轉動畫 (2s/圈) */
+/* 放慢 4 倍速的極慢羅盤旋轉動畫 (4s/圈) */
 .animate-spin-slow {
-  animation: spin 2s linear infinite;
+  animation: spin 4s linear infinite;
 }
 
 /* 手機版專屬：高對比流動金屬極光 (7s 動態極光) */

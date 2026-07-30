@@ -18,20 +18,20 @@ export default function Navigation() {
           if (permissionState === 'granted') {
             if (window.requestGyroPermission) window.requestGyroPermission();
             setIsGyroActive(true);
-            alert('✅ 陀螺儀授權成功！請試著左右/前後傾斜手機，觀察背景光影流向。');
+            alert('陀螺儀授權成功！請試著左右/前後傾斜手機，觀察背景光影流向。');
           } else {
-            alert('⚠️ 未獲得姿態授權，背景將保持 7 秒自動流光。');
+            alert('未獲得姿態授權，背景將保持 7 秒自動流光。');
           }
         })
         .catch((err) => {
-          alert(`⚠️ 提示：${err.message || '請在 HTTPS 加密連線或手機瀏覽器下點擊授權'}`);
+          alert(`提示：${err.message || '請在 HTTPS 加密連線或手機瀏覽器下點擊授權'}`);
         });
     } else if (window.requestGyroPermission) {
       window.requestGyroPermission();
       setIsGyroActive(true);
-      alert('✅ 水平儀重力感應已開啟！請擺動手機測試光影。');
+      alert('水平儀重力感應已開啟！請擺動手機測試光影。');
     } else {
-      alert('⚠️ 您的瀏覽器或環境暫不支援 DeviceOrientation 姿態感應。');
+      alert('您的瀏覽器或環境暫不支援 DeviceOrientation 姿態感應。');
     }
   };
 
