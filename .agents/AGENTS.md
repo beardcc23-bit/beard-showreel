@@ -17,3 +17,8 @@
   1. **事件驅動 rAF 迴圈**：嚴禁寫入無條件空轉的 `requestAnimationFrame` 迴圈（如滑鼠跟隨、視差動畫）。必須採用「事件觸發繪製」或「插值收斂後自動停止（Stop Ticking）」。
   2. **視區監控 (IntersectionObserver)**：所有 Canvas 影格序列、重度粒子或動畫元件，必須使用 `IntersectionObserver` 監控。當元件滾動離開螢幕可視區域時，必須自動暫停繪製。
   3. **禁用全螢幕高耗能 CSS / SVG 濾鏡**：嚴禁使用全螢幕 `feTurbulence` / SVG filter 作為固定背景；對動態與漂浮元素使用 `backdrop-filter` 或 3D Transform 時，必須加上 `will-change: transform` 隔離繪製圖層。
+
+- **關鍵視覺與元件防護規範 (Protected Visual & Scope Isolation Rules)**：
+  1. **作品卡片比例鎖定**：`VisualSynthesis.jsx` 中的品牌作品卡片（BrandCard）必須永久鎖定維持 `aspect-square`（1:1 正方形）與 `line-clamp-2` 標題防爆，任何背景、導覽列或特效變更皆禁止觸及該 CSS/HTML 結構。
+  2. **獨立背景解耦**：手機版極光漸層背景必須封裝於獨立組件 `<MobileAuroraBackground />` 中，嚴禁將特效與作品排版組件直接耦合。
+  3. **預防修改 A 損壞 B**：改動任何組件前，必須先審查受影響的 DOM 樹結構與 Scope 邊界，確保只對目標 Element 進行精準調校。

@@ -9,6 +9,8 @@ import Contact from './components/Contact';
 import { useLenisScroll } from './hooks/useLenisScroll';
 import { useParallaxOrbit } from './hooks/useParallaxOrbit';
 
+import MobileAuroraBackground from './components/MobileAuroraBackground';
+
 const Modal = React.lazy(() => import('./components/Modal'));
 
 export default function App() {
@@ -60,8 +62,8 @@ export default function App() {
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />
       <div className="grid-bg" />
-      {/* 手機版專屬：極光金屬流光漫延背景 */}
-      <div className="mobile-aurora-mesh pointer-events-none" />
+      {/* 手機版專屬：極光金屬流光漫延背景 (獨立解耦組件) */}
+      <MobileAuroraBackground />
 
       {/* 3D 幾何與折射背景裝飾 */}
       <div className="lens-flare flare-1" />
