@@ -29,14 +29,16 @@ export default function Introduction({ onPlayVideo }) {
               Beard <span className="text-aurora-blue">Chou</span>
             </motion.h2>
 
-            {/* 行動裝置專用照片 (縮小 1/3 並移除所有動態效果) */}
+            {/* 行動裝置專用照片 (縮小 1/3，保留流動金色線條，無視姿態位移動態) */}
             <div className="block md:hidden my-6 w-full max-w-[185px] mx-auto">
-              <div className="aspect-[3/4] rounded-sm overflow-hidden border border-aurora-blue/40 shadow-lg">
-                <img
-                  src="/avatar.jpg"
-                  alt="Beard"
-                  className="w-full h-full object-cover"
-                />
+              <div className="gold-flow-border aspect-[3/4]">
+                <div className="gold-flow-inner w-full h-full">
+                  <img
+                    src="/avatar.jpg"
+                    alt="Beard"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               </div>
             </div>
 
