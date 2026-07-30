@@ -640,17 +640,17 @@ body {
 .gold-flow-border::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
   background: conic-gradient(
     from 0deg,
-    transparent 20%,
-    #ffe082 35%,
+    transparent 15%,
+    #ffe082 30%,
     #d4af37 50%,
-    #ffe082 65%,
-    transparent 80%
+    #ffe082 70%,
+    transparent 85%
   );
   animation: border-rotate 8s linear infinite;
   z-index: 0;
