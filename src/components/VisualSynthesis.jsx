@@ -139,7 +139,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       tabIndex={hasVideo ? 0 : -1}
       role={hasVideo ? "button" : "presentation"}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border text-left w-full p-3.5 rounded-sm flex flex-col justify-between transition-colors duration-300 relative overflow-hidden group min-h-[95px] backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
+      className={`prism-border text-left w-full aspect-square p-3 rounded-sm flex flex-col justify-between transition-colors duration-300 relative overflow-hidden group backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
         ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]'
         : 'bg-white/[0.01] border-white/8 cursor-default'
         }`}
@@ -186,8 +186,8 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
       <div className="relative z-10 pointer-events-none">
         <div
-          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.3)' }}
-          className={`text-xs tracking-wide transition-colors duration-300 leading-snug ${hasVideo
+          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.5)' }}
+          className={`text-[11px] sm:text-xs tracking-wide transition-colors duration-300 leading-tight line-clamp-2 ${hasVideo
             ? 'text-zinc-100 group-hover:text-white font-semibold'
             : 'text-zinc-200 font-semibold'
             }`}
@@ -198,8 +198,8 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
       {hasVideo ? (
         <div
-          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
-          className="relative z-10 mt-2.5 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 pointer-events-none"
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
+          className="relative z-10 mt-auto pt-1 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 pointer-events-none"
         >
           <Play size={8} fill="currentColor" className="play-triangle-pulse" /> Play
         </div>
