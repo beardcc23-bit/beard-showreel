@@ -689,7 +689,7 @@ body {
   display: none !important;
 }
 
-/* 手機版專屬：高對比快速流動金屬極光 (7s 高速強烈流光) */
+/* 手機版專屬：高對比流動金屬極光 (7s 動態極光) */
 @keyframes mobile-aurora-flow {
   0% {
     transform: translate(-15%, -15%) scale(1) rotate(0deg);
@@ -709,7 +709,7 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：雙金、淡紅與淡藍高質感流光 (含手機水平儀陀螺儀重力流動) */
+/* 行動裝置效能與氛圍優化：解耦陀螺儀 transform 與 keyframes 動畫 */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
@@ -719,14 +719,20 @@ body {
     height: 140%;
     pointer-events: none;
     z-index: -2;
+    transform: translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  .mobile-aurora-inner {
+    width: 100%;
+    height: 100%;
     background: 
       radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.75) 0%, transparent 35%),
       radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.65) 0%, transparent 32%),
       radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.45) 0%, transparent 35%),
       radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.38) 0%, transparent 32%);
     filter: blur(40px);
-    transform: translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
     will-change: transform, opacity;
   }
