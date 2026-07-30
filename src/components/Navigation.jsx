@@ -145,7 +145,7 @@ export default function Navigation() {
           >
             <Compass size={14} className={`text-aurora-blue ${isGyroActive ? 'animate-spin-slow' : 'opacity-80'}`} />
             <span className="hud-zht text-[11px] text-zinc-100 font-medium tracking-wider">
-              {isGyroActive ? '感應中' : '重力流光'}
+              重力光影
             </span>
           </button>
 

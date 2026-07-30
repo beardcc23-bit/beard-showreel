@@ -29,9 +29,9 @@ export function useGyroscope() {
           const safeGamma = Number.isFinite(latestGamma) ? latestGamma : 0;
           const safeBeta = Number.isFinite(latestBeta) ? latestBeta : 40;
 
-          // 2.5x 超大位移幅度：限制在 ±320px 內，呈現極度顯著的流光奔動感
-          const tiltX = Math.round(Math.max(-320, Math.min(320, safeGamma * 6.5)));
-          const tiltY = Math.round(Math.max(-350, Math.min(350, (safeBeta - 40) * 6.5)));
+          // 平滑大動態對應：限制在 ±180px ~ ±200px 內，畫面極度順暢大氣
+          const tiltX = Math.round(Math.max(-180, Math.min(180, safeGamma * 4.2)));
+          const tiltY = Math.round(Math.max(-200, Math.min(200, (safeBeta - 40) * 4.2)));
 
           if (document.documentElement) {
             document.documentElement.style.setProperty('--tilt-x', `${tiltX}px`);

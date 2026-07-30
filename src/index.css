@@ -714,18 +714,18 @@ body {
   display: none;
 }
 
-/* 行動裝置效能與氛圍優化：解耦陀螺儀 transform 與 keyframes 動畫 (超大幅度 2.5x 磅礡重力流動) */
+/* 行動裝置效能與氛圍優化：零 GPU VRAM 負擔平滑漸層 (無 blur 濾鏡，100% 永不崩潰) */
 @media (max-width: 768px) {
   .mobile-aurora-mesh {
     display: block !important;
     position: fixed;
-    inset: -50%;
-    width: 200%;
-    height: 200%;
+    inset: -30%;
+    width: 160%;
+    height: 160%;
     pointer-events: none;
     z-index: -2;
     transform: translate3d(var(--tilt-x, 0px), var(--tilt-y, 0px), 0);
-    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
   }
 
@@ -733,21 +733,20 @@ body {
     width: 100%;
     height: 100%;
     background: 
-      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.75) 0%, transparent 35%),
-      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.65) 0%, transparent 32%),
-      radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.45) 0%, transparent 35%),
-      radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.38) 0%, transparent 32%);
-    filter: blur(40px);
+      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.65) 0%, rgba(212, 175, 55, 0) 65%),
+      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.55) 0%, rgba(255, 224, 130, 0) 60%),
+      radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.40) 0%, rgba(255, 82, 82, 0) 65%),
+      radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.35) 0%, rgba(100, 181, 246, 0) 60%);
     animation: mobile-aurora-flow 7s ease-in-out infinite alternate;
-    will-change: transform, opacity;
+    will-change: transform;
     transition: opacity 0.5s ease;
   }
 
   /* 啟動重力感應時：暫停背景 7s 自發循環動畫，100% 由手機傾斜方向絕對定位 */
   .gyro-active .mobile-aurora-inner {
     animation: none !important;
-    transform: translate(0, 0) scale(1.35) !important;
-    opacity: 0.75 !important;
+    transform: translate(0, 0) scale(1.2) !important;
+    opacity: 0.85 !important;
   }
 
   .orbit-container,
