@@ -8,30 +8,32 @@ export default function Navigation() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const handleGyroClick = () => {
-    if (
-      typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function'
-    ) {
-      DeviceOrientationEvent.requestPermission()
-        .then((permissionState) => {
-          if (permissionState === 'granted') {
-            if (window.requestGyroPermission) window.requestGyroPermission();
-            setIsGyroActive(true);
-            alert('陀螺儀授權成功！請試著左右/前後傾斜手機，觀察背景光影流向。');
-          } else {
-            alert('未獲得姿態授權，背景將保持 7 秒自動流光。');
+  const handleGyroClick = async () => {
+    try {
+      if (
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+      ) {
+        const permissionState = await DeviceOrientationEvent.requestPermission().catch(() => 'denied');
+        if (permissionState === 'granted') {
+          if (window.requestGyroPermission) {
+            await window.requestGyroPermission();
           }
-        })
-        .catch((err) => {
-          alert(`提示：${err.message || '請在 HTTPS 加密連線或手機瀏覽器下點擊授權'}`);
-        });
-    } else if (window.requestGyroPermission) {
-      window.requestGyroPermission();
-      setIsGyroActive(true);
-      alert('水平儀重力感應已開啟！請擺動手機測試光影。');
-    } else {
-      alert('您的瀏覽器或環境暫不支援 DeviceOrientation 姿態感應。');
+          setIsGyroActive(true);
+          alert('陀螺儀授權成功！請試著左右/前後傾斜手機，觀察背景光影流向。');
+        } else {
+          alert('未獲得姿態授權，背景將保持 7 秒自動流光。');
+        }
+      } else if (window.requestGyroPermission) {
+        await window.requestGyroPermission();
+        setIsGyroActive(true);
+        alert('水平儀重力感應已開啟！請擺動手機測試光影。');
+      } else {
+        alert('您的瀏覽器或環境暫不支援 DeviceOrientation 姿態感應。');
+      }
+    } catch (e) {
+      console.warn('Gyro click safe handler:', e);
+      alert('請在 HTTPS 加密連線或手機瀏覽器下點擊授權。');
     }
   };
 

@@ -1,70 +1,113 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 /**
- * 自訂 Hook: 手機水平儀 (DeviceOrientation 陀螺儀) 重力流光
- * 導出 requestPermission 確保在 iOS 13+ 上點擊按鈕時 100% 觸發系統授權彈窗
+ * 防彈級自訂 Hook: 手機水平儀 (DeviceOrientation 陀螺儀) 重力流光
+ * 包含 rAF 動畫節流、Strict NaN 防護、全域 Exception 包覆與記憶體自動清理
  */
 export function useGyroscope() {
   const [gyroState, setGyroState] = useState('idle'); // 'idle' | 'granted' | 'denied' | 'unsupported'
+  const rafIdRef = useRef(null);
+  const isListeningRef = useRef(false);
 
   const startGyroscope = useCallback(() => {
-    // 啟動重力感應標誌，暫停背景自動動畫，改由手機方向 100% 絕對控制
-    document.documentElement.classList.add('gyro-active');
+    if (isListeningRef.current) return;
+    if (typeof window === 'undefined') return;
 
-    const handleOrientation = (event) => {
-      const gamma = event.gamma || 0; // 左右傾斜角 (-90 ~ 90 度)
-      const beta = event.beta || 0;   // 前後傾斜角 (-180 ~ 180 度)
+    try {
+      if (document.documentElement) {
+        document.documentElement.classList.add('gyro-active');
+      }
 
-      // 直觀物理對應：
-      // 手機往下傾斜 (beta > 45) -> tiltY 為正，光影穩定留在下方
-      // 手機往上傾斜 (beta < 45) -> tiltY 為負，光影穩定留在上方
-      // 手機往右傾斜 (gamma > 0) -> tiltX 為正，光影穩定留在右方
-      // 手機往左傾斜 (gamma < 0) -> tiltX 為負，光影穩定留在左方
-      const tiltX = Math.max(-130, Math.min(130, gamma * 2.8));
-      const tiltY = Math.max(-150, Math.min(150, (beta - 40) * 2.8));
+      let latestGamma = 0;
+      let latestBeta = 0;
+      let isTicking = false;
 
-      document.documentElement.style.setProperty('--tilt-x', `${tiltX.toFixed(1)}px`);
-      document.documentElement.style.setProperty('--tilt-y', `${tiltY.toFixed(1)}px`);
-    };
+      const updateCSSVariables = () => {
+        try {
+          // 嚴格 NaN / Null / Infinity 防護
+          const safeGamma = Number.isFinite(latestGamma) ? latestGamma : 0;
+          const safeBeta = Number.isFinite(latestBeta) ? latestBeta : 40;
 
-    window.addEventListener('deviceorientation', handleOrientation, true);
-    setGyroState('granted');
+          // 直觀物理對應，安全邊界裁切 (-120px ~ +120px)
+          const tiltX = Math.max(-120, Math.min(120, safeGamma * 2.5));
+          const tiltY = Math.max(-140, Math.min(140, (safeBeta - 40) * 2.5));
+
+          if (document.documentElement) {
+            document.documentElement.style.setProperty('--tilt-x', `${tiltX.toFixed(1)}px`);
+            document.documentElement.style.setProperty('--tilt-y', `${tiltY.toFixed(1)}px`);
+          }
+        } catch (e) {
+          // 靜默捕捉 DOM style 寫入例外，確保主執行緒絕不卡死崩潰
+        } finally {
+          isTicking = false;
+        }
+      };
+
+      const handleOrientation = (event) => {
+        if (!event) return;
+        // 嚴格過濾無效數值
+        if (typeof event.gamma === 'number' && typeof event.beta === 'number') {
+          latestGamma = event.gamma;
+          latestBeta = event.beta;
+
+          // rAF 節流：畫面每影格最多更新一次 CSS 變數，效能 100% 流暢且絕不耗能卡死
+          if (!isTicking) {
+            isTicking = true;
+            rafIdRef.current = requestAnimationFrame(updateCSSVariables);
+          }
+        }
+      };
+
+      window.addEventListener('deviceorientation', handleOrientation, true);
+      isListeningRef.current = true;
+      setGyroState('granted');
+    } catch (err) {
+      console.warn('Gyroscope startup error caught safely:', err);
+      setGyroState('denied');
+    }
   }, []);
 
   const requestPermission = useCallback(async () => {
-    // 檢查是否為需要授權彈窗的 iOS Safari (iOS 13+)
-    if (
-      typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function'
-    ) {
-      try {
+    try {
+      if (
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+      ) {
         const response = await DeviceOrientationEvent.requestPermission();
         if (response === 'granted') {
           startGyroscope();
+          return true;
         } else {
           setGyroState('denied');
+          return false;
         }
-      } catch (error) {
-        console.warn('Gyroscope permission request error:', error);
-        setGyroState('denied');
+      } else {
+        startGyroscope();
+        return true;
       }
-    } else {
-      // Android 手機或一般瀏覽器：直接啟動
-      startGyroscope();
+    } catch (error) {
+      console.warn('Permission request error caught safely:', error);
+      setGyroState('denied');
+      return false;
     }
   }, [startGyroscope]);
 
   useEffect(() => {
-    // 掛載全域全區觸發函式
     window.requestGyroPermission = requestPermission;
 
-    // 非 iOS 13 的 Android 手機或桌面瀏覽器：直接自動監聽
+    // 非 iOS 13+ 的 Android / 桌面裝置直接自動安全啟用
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission !== 'function'
     ) {
       startGyroscope();
     }
+
+    return () => {
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+    };
   }, [startGyroscope, requestPermission]);
 
   return { gyroState, requestPermission };
