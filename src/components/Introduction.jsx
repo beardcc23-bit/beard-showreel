@@ -118,13 +118,45 @@ export default function Introduction({ onPlayVideo }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.25 }}
-              className="w-full flex justify-center md:justify-start"
+              className="w-full flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4"
             >
               <button
                 onClick={() => onPlayVideo('s6s2p87fPdA')}
-                className="prism-button px-16 py-5 !text-white font-bold rounded-sm uppercase text-base tracking-[0.25em] text-center w-full sm:w-auto"
+                className="prism-button px-16 py-5 !text-white font-bold rounded-sm uppercase text-base tracking-[0.25em] text-center w-full sm:w-auto cursor-pointer"
               >
                 SHOWREEL
+              </button>
+
+              {/* 行動裝置專用：水平儀陀螺儀動態授權按鈕 */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    typeof DeviceOrientationEvent !== 'undefined' &&
+                    typeof DeviceOrientationEvent.requestPermission === 'function'
+                  ) {
+                    DeviceOrientationEvent.requestPermission()
+                      .then((permissionState) => {
+                        if (permissionState === 'granted') {
+                          if (window.requestGyroPermission) window.requestGyroPermission();
+                          alert('✅ 陀螺儀授權成功！請試著左右/前後傾斜手機，觀察背景光影流向。');
+                        } else {
+                          alert('⚠️ 系統權限已被拒絕。若欲開啟，請至手機設定清除瀏覽紀錄後重新授權。');
+                        }
+                      })
+                      .catch((err) => {
+                        alert(`⚠️ 系統提示：${err.message || '請在 HTTPS 加密連線或手機瀏覽器下點擊測試'}`);
+                      });
+                  } else if (window.requestGyroPermission) {
+                    window.requestGyroPermission();
+                    alert('✅ 水平儀重力感應已開啟！請擺動手機測試光影。');
+                  } else {
+                    alert('⚠️ 您的瀏覽器或環境暫不支援 DeviceOrientation 姿態感應。');
+                  }
+                }}
+                className="block sm:hidden w-full py-4 px-6 rounded-sm border border-aurora-blue/60 bg-aurora-blue/15 text-aurora-blue font-bold mono text-xs uppercase tracking-widest text-center shadow-[0_0_20px_rgba(212,175,55,0.25)] active:scale-95 transition-all cursor-pointer"
+              >
+                🧭 點擊啟動手機姿態水平儀流光
               </button>
             </motion.div>
           </div>
