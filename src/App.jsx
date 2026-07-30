@@ -60,6 +60,8 @@ export default function App() {
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />
       <div className="grid-bg" />
+      {/* 手機版專屬：極光金屬流光漫延背景 (方案 A) */}
+      <div className="mobile-aurora-mesh pointer-events-none" />
 
       {/* 3D 幾何與折射背景裝飾 */}
       <div className="lens-flare flare-1" />
