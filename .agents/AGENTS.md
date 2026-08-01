@@ -19,6 +19,7 @@
   3. **禁用全螢幕高耗能 CSS / SVG 濾鏡**：嚴禁使用全螢幕 `feTurbulence` / SVG filter 作為固定背景；對動態與漂浮元素使用 `backdrop-filter` 或 3D Transform 時，必須加上 `will-change: transform` 隔離繪製圖層。
 
 - **關鍵視覺與元件防護規範 (Protected Visual & Scope Isolation Rules)**：
-  1. **作品卡片比例鎖定**：`VisualSynthesis.jsx` 中的品牌作品卡片（BrandCard）必須永久鎖定維持 `aspect-square`（1:1 正方形）與 `line-clamp-2` 標題防爆，任何背景、導覽列或特效變更皆禁止觸及該 CSS/HTML 結構。
-  2. **獨立背景解耦**：手機版極光漸層背景必須封裝於獨立組件 `<MobileAuroraBackground />` 中，嚴禁將特效與作品排版組件直接耦合。
-  3. **預防修改 A 損壞 B**：改動任何組件前，必須先審查受影響的 DOM 樹結構與 Scope 邊界，確保只對目標 Element 進行精準調校。
+  1. **作品卡片響應式比例鎖定**：`VisualSynthesis.jsx` 中的品牌作品卡片（BrandCard）必須永久鎖定維持**手機版正方形 (`aspect-square`) 與 電腦網頁版長方形 (`md:aspect-video`)** 的獨立響應式解耦，以及 `line-clamp-2` 標題防爆，禁止破壞電腦版的 16:9 電影長方形格局。
+  2. **斷點嚴格隔離原則 (Mobile & Desktop Scope Isolation)**：當使用者提出修改特定裝置（如「改手機版」或「改電腦版」）時，**嚴禁使用無前綴的全域 Class 覆蓋另一端的視覺**。凡涉及 layout、aspect 比例、padding、grid 欄數等樣式，必須嚴格使用 `md:` / `lg:` 斷點前綴實施隔離，確保修改 A 不會誤傷 B。
+  3. **獨立背景解耦**：手機版極光漸層背景必須封裝於獨立組件 `<MobileAuroraBackground />` 中，嚴禁將特效與作品排版組件直接耦合。
+  4. **預防修改 A 損壞 B**：改動任何組件前，必須先審查受影響的 DOM 樹結構與 Scope 邊界，確保只對目標 Element 與目標斷點進行精準調校。
