@@ -232,8 +232,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
       <div className="max-w-6xl mx-auto px-8 relative z-10">
         {/* 區段標頭 */}
         <div className="text-center mb-16 relative z-10">
-          <h2 className="text-[clamp(2.3rem,10vw,8.5rem)] font-black tracking-[-0.04em] uppercase mb-6 glow-title text-white whitespace-nowrap leading-none w-full flex justify-center items-center">
-            ADVER<span className="text-aurora-blue">TISING</span>
+          <h2 className="text-[clamp(2.5rem,11.5vw,9.5rem)] font-black tracking-[-0.04em] uppercase mb-6 glow-title text-white whitespace-nowrap leading-none w-full flex justify-between sm:justify-center items-center">
+            <span>ADVER</span>
+            <span className="text-aurora-blue">TISING</span>
           </h2>
           <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
             近期參與的廣告專案。
