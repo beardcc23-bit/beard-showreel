@@ -157,7 +157,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     >
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
       {item.bgImage && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-sm pointer-events-none">
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-sm pointer-events-none bg-black">
           {!isImageLoaded && (
             <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
               <div className="w-12 h-12 rounded-full bg-aurora-blue/5 filter blur-md" />
@@ -169,7 +169,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
             loading="lazy"
             decoding="async"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-500 scale-[1.18] group-hover:scale-[1.10] ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+            className={`w-full h-full object-cover object-[center_35%] transition-all duration-500 scale-[1.20] group-hover:scale-[1.12] ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
               }`}
           />
           {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
