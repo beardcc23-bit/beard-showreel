@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cpu, Play } from 'lucide-react';
 import RefractionCard from './RefractionCard';
+import ScrubText from './common/ScrubText';
 
 const lawCategories = [
   {
@@ -163,19 +164,13 @@ export default function Manifesto({ onPlayVideo }) {
                 </span>{' '}
                 進行 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 <span className="inline-block">SC 播帶</span>，完成這次專案。
               </p>
-              <p>
-                即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。
-              </p>
-              <p>
-                面對 AI 浪潮，我不斷學習並掌握 <span className="inline-block">AI 技能</span>，將智慧輔助技術融入傳統合成流程。藉由更高的效率與敏銳的視覺直覺，探索影音創作的全新視野。
-              </p>
-              <p 
-                className="border-l-2 border-aurora-blue py-2 text-zinc-200 text-sm sm:text-base leading-relaxed"
-                style={{ textIndent: '-1em', paddingLeft: 'calc(1.5rem + 1em)' }}
+              <ScrubText text="即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。" />
+              <ScrubText text="面對 AI 浪潮，我不斷學習並掌握 AI 技能，將智慧輔助技術融入傳統合成流程。藉由更高的效率與敏銳的視覺直覺，探索影音創作的全新視野。" />
+              <ScrubText 
+                className="border-l-2 border-aurora-blue py-2 text-zinc-200 text-sm sm:text-base leading-relaxed pl-4 font-semibold"
               >
-                「細心雕琢每一格畫面，在極限的時程裡，<br className="block sm:hidden" />
-                成為替導演與客戶解決問題的人。」
-              </p>
+                「細心雕琢每一格畫面，在極限的時程裡，成為替導演與客戶解決問題的人。」
+              </ScrubText>
             </div>
           </div>
 

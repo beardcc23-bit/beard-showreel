@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import RefractionCard from './RefractionCard';
 import AnimatedCounter from './common/AnimatedCounter';
+import ScrubText from './common/ScrubText';
 
 export default function Introduction({ onPlayVideo }) {
   const statsRef = useRef(null);
@@ -42,22 +43,12 @@ export default function Introduction({ onPlayVideo }) {
               </div>
             </div>
 
-            {/* 精雕文案 */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.15 }}
-              className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left"
-            >
-              重力與空氣的流動、光線穿透塵埃的折射軌跡、人物肌膚的毛孔質感——這些構築真實感的微小物理，是我的日常畫面。
-              <br />
-              <br />
-              最極致的合成特效，往往不著痕跡。在長期與頂級品牌合作的洗禮下，我立足於感性與理性之間 —— 精準收攏導演天馬行空的想像，在有限時程內交付無可挑剔的商業影片。
-              <br />
-              <br />
-              我習慣將這份對細節的敏銳，投射在螢幕彼端，那雙尋找解答也渴望被美感觸動的眼睛。不論是追求極致視覺的宏大敘事，還是需要嚴謹邏輯的商業落地。在光影與像素之間，創造下一個讓人駐足的瞬間。
-            </motion.p>
+            {/* 精雕文案：滾動光束顯影 */}
+            <div className="text-zinc-300 text-sm md:text-base font-light leading-relaxed tracking-wide mb-8 text-left space-y-4">
+              <ScrubText text="重力與空氣的流動、光線穿透塵埃的折射軌跡、人物肌膚的毛孔質感——這些構築真實感的微小物理，是我的日常畫面。" />
+              <ScrubText text="最極致的合成特效，往往不著痕跡。在長期與頂級品牌合作的洗禮下，我立足於感性與理性之間 —— 精準收攏導演天馬行空的想像，在有限時程內交付無可挑剔的商業影片。" />
+              <ScrubText text="我習慣將這份對細節的敏銳，投射在螢幕彼端，那雙尋找解答也渴望被美感觸動的眼睛。不論是追求極致視覺的宏大敘事，還是需要嚴謹邏輯的商業落地。在光影與像素之間，創造下一個讓人駐足的瞬間。" />
+            </div>
 
             {/* 實戰成就數據面板 */}
             <motion.div
