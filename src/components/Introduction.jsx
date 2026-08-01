@@ -34,7 +34,7 @@ export default function Introduction({ onPlayVideo }) {
               <div className="gold-flow-border aspect-[3/4]">
                 <div className="gold-flow-inner w-full h-full">
                   <img
-                    src="/avatar.jpg"
+                    src="/avatar.webp"
                     alt="Beard"
                     className="w-full h-full object-cover"
                   />
@@ -140,7 +140,7 @@ export default function Introduction({ onPlayVideo }) {
             <div className="gold-flow-border w-[280px] sm:w-[320px] md:w-[350px] aspect-[3/4] transition-all duration-700 ease-out origin-center hover:rotate-[13deg] hover:scale-105">
               <div className="gold-flow-inner w-full h-full">
                 <img
-                  src="/avatar.jpg"
+                  src="/avatar.webp"
                   alt="Beard"
                   decoding="async"
                   className="w-full h-full object-cover"
