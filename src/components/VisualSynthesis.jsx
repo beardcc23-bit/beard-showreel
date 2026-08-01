@@ -139,7 +139,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       tabIndex={hasVideo ? 0 : -1}
       role={hasVideo ? "button" : "presentation"}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border text-left w-full aspect-square p-3 rounded-sm flex flex-col justify-between transition-colors duration-300 relative overflow-hidden group backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
+      className={`prism-border text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between transition-colors duration-300 relative overflow-hidden group backdrop-blur-none md:backdrop-blur-[8px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.22)] focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
         ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]'
         : 'bg-white/[0.01] border-white/8 cursor-default'
         }`}
