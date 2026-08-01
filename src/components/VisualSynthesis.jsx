@@ -169,7 +169,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
             loading="lazy"
             decoding="async"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-500 scale-105 group-hover:scale-100 ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+            className={`w-full h-full object-cover transition-all duration-500 scale-[1.18] group-hover:scale-[1.10] ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
               }`}
           />
           {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
