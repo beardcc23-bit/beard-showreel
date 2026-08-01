@@ -5,11 +5,11 @@ import { motion, useScroll, useTransform } from 'framer-motion';
  * ScrubChar: 逐字滾動顯影元件
  */
 function ScrubChar({ children, progress, range }) {
-  const opacity = useTransform(progress, range, [0.22, 1.0]);
+  const opacity = useTransform(progress, range, [0.65, 1.0]);
   const color = useTransform(
     progress,
     range,
-    ['rgba(161, 161, 170, 0.4)', 'rgba(244, 244, 245, 1.0)']
+    ['rgba(212, 212, 216, 0.68)', 'rgba(255, 255, 255, 1.0)']
   );
 
   return (
@@ -24,17 +24,17 @@ function ScrubChar({ children, progress, range }) {
 
 /**
  * ScrubText: 滾動光束顯影解密段落組件
- * 當頁面向下滾動時，文字將以顯影光束掃過般逐字亮起
+ * 當頁面向下滾動時，文字將以顯影光束掃過般逐字亮起，保持至少 2/3 以上的高可讀性
  */
 export default function ScrubText({ text, className = "", children }) {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.9", "start 0.25"],
+    offset: ["start 0.95", "start 0.45"],
   });
 
   if (children) {
-    const opacity = useTransform(scrollYProgress, [0, 0.6], [0.35, 1]);
+    const opacity = useTransform(scrollYProgress, [0, 0.5], [0.75, 1]);
     return (
       <motion.div
         ref={containerRef}
@@ -53,8 +53,8 @@ export default function ScrubText({ text, className = "", children }) {
   return (
     <p ref={containerRef} className={className}>
       {characters.map((char, i) => {
-        const start = (i / total) * 0.75;
-        const end = Math.min(start + 0.25, 1);
+        const start = (i / total) * 0.6;
+        const end = Math.min(start + 0.4, 1);
         return (
           <ScrubChar key={i} progress={scrollYProgress} range={[start, end]}>
             {char}
