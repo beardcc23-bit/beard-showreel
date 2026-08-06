@@ -301,7 +301,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
               <img
                 src={`${import.meta.env.BASE_URL}youtube-logo.webp`}
                 alt="YouTube Play Reel"
-                className="w-20 h-20 md:w-28 md:h-28 object-contain drop-shadow-[0_0_30px_rgba(255,0,0,0.7)] hover:scale-110 transition-transform duration-200"
+                className="w-36 h-36 md:w-48 md:h-48 object-contain drop-shadow-[0_0_35px_rgba(255,0,0,0.75)] hover:scale-105 transition-transform duration-200"
               />
 
               <span className="mono text-[10px] md:text-xs text-white uppercase tracking-[0.3em] mt-4 font-black drop-shadow-md">
