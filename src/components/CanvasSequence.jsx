@@ -298,16 +298,11 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
               showOverlay ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
             }`}>
               {/* YouTube 紅色播放按鈕 */}
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-red-600 flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)] hover:bg-red-500 transition-colors duration-200">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-8 h-8 md:w-10 md:h-10 text-white translate-x-[2px]"
-                >
-                  <path d="M8 5.14v14c0 .86.94 1.36 1.66.88l10-7a1 1 0 000-1.76l-10-7A1 1 0 008 5.14z" />
-                </svg>
-              </div>
+              <img
+                src={`${import.meta.env.BASE_URL}youtube-logo.webp`}
+                alt="YouTube Play Reel"
+                className="w-20 h-20 md:w-28 md:h-28 object-contain drop-shadow-[0_0_30px_rgba(255,0,0,0.7)] hover:scale-110 transition-transform duration-200"
+              />
 
               <span className="mono text-[10px] md:text-xs text-white uppercase tracking-[0.3em] mt-4 font-black drop-shadow-md">
                 Click to View Full Reel

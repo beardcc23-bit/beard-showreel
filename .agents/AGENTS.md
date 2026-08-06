@@ -1,25 +1,20 @@
-# 專案 Agent 規則與創作者資訊
+# 專案與偏好規則
 
-- **創作者基本資訊**：
-  * 偏好稱呼：Beard
-  * 中文姓名：周威全
-  * 英文名稱：Beard Chou
-  * 所在地區：台灣台北 (Taipei, Taiwan)
-  * 專業領域：Autodesk Flame 特效合成師 / 視覺總監 (VFX Compositor & Visual Artist)
+## 1. 系統維護
+- 當使用者要求清理電腦、磁碟或系統空間時，優先使用 `mole` CLI 工具（如 `mole clean`）進行清理與維護。
 
-- **自動測試與 Git 提交推送**：在此專案中，當修改程式碼或文案完成後，請主動執行 `npm run build` 進行編譯與驗證。若編譯成功，不需詢問使用者，請自動執行 `git add`、`git commit`（提交訊息請使用繁體中文台灣用語，並符合 Conventional Commits 規範）及 `git push` 將變更推送至遠端。
+## 2. 專案開發與執行規範
+- Python 專案一律使用 `uv` 管理。
+- 前端與 Node 專案一律使用 `npm` 管理。
+- 專案測試與驗證：
+  - 測試與檢驗一律優先執行 `npm run test:run` 或對應指令。
 
-- **「提出給我」指令行為規範**：當使用者指令中包含「提出給我」時，僅需詳細說明分析與建議，**絕對不要自動修改程式碼或執行修改命令**。必須等到使用者明確指示「執行」後，方可開始進行程式碼變更與編譯提交。
+## 3. Git 與資安規範
+- 禁用自動修改 `.env` 或儲存敏感資訊。
+- 生成 Commit Message 時，採用 Conventional Commits 格式＋繁體中文台灣用語（例如：`feat: 新增使用者認證模組`）。
 
-- **新功能與頁面開發分支規範**：當使用者提出要新增頁面、重構大模組或開發全新功能時，在開始撰寫程式碼前，**必須主動提醒使用者開啟新 Feature Branch**（例如：`git checkout -b feature/xxx`），確保 `main` 分支維持穩定。
-
-- **動畫與前端效能規範 (Performance Best Practices)**：
-  1. **事件驅動 rAF 迴圈**：嚴禁寫入無條件空轉的 `requestAnimationFrame` 迴圈（如滑鼠跟隨、視差動畫）。必須採用「事件觸發繪製」或「插值收斂後自動停止（Stop Ticking）」。
-  2. **視區監控 (IntersectionObserver)**：所有 Canvas 影格序列、重度粒子或動畫元件，必須使用 `IntersectionObserver` 監控。當元件滾動離開螢幕可視區域時，必須自動暫停繪製。
-  3. **禁用全螢幕高耗能 CSS / SVG 濾鏡**：嚴禁使用全螢幕 `feTurbulence` / SVG filter 作為固定背景；對動態與漂浮元素使用 `backdrop-filter` 或 3D Transform 時，必須加上 `will-change: transform` 隔離繪製圖層。
-
-- **關鍵視覺與元件防護規範 (Protected Visual & Scope Isolation Rules)**：
-  1. **作品卡片響應式比例鎖定**：`VisualSynthesis.jsx` 中的品牌作品卡片（BrandCard）必須永久鎖定維持**手機版正方形 (`aspect-square`) 與 電腦網頁版長方形 (`md:aspect-video`)** 的獨立響應式解耦，以及 `line-clamp-2` 標題防爆，禁止破壞電腦版的 16:9 電影長方形格局。
-  2. **斷點嚴格隔離原則 (Mobile & Desktop Scope Isolation)**：當使用者提出修改特定裝置（如「改手機版」或「改電腦版」）時，**嚴禁使用無前綴的全域 Class 覆蓋另一端的視覺**。凡涉及 layout、aspect 比例、padding、grid 欄數等樣式，必須嚴格使用 `md:` / `lg:` 斷點前綴實施隔離，確保修改 A 不會誤傷 B。
-  3. **獨立背景解耦**：手機版極光漸層背景必須封裝於獨立組件 `<MobileAuroraBackground />` 中，嚴禁將特效與作品排版組件直接耦合。
-  4. **預防修改 A 損壞 B**：改動任何組件前，必須先審查受影響的 DOM 樹結構與 Scope 邊界，確保只對目標 Element 與目標斷點進行精準調校。
+## 4. 自動觸發 Insights 洞察分析模式
+- 當使用者提到「有更好建議嗎」、「有什麼優化建議」、「/insights」或詢問「怎麼寫更好」時：
+  - 自動啟動 **Insights 洞察分析** 流程。
+  - 必須從【效能瓶頸】、【可維護性】與【最佳實踐】三個維度主動剖析。
+  - 不給空泛的高階建議，必須直接提供重構前後的具體程式碼對比 (Diff / Refactored Code)。
