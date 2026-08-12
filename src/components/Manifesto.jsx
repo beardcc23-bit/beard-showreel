@@ -108,7 +108,7 @@ export default function Manifesto({ onPlayVideo }) {
                     if (window.innerWidth < 768) {
                       window.dispatchEvent(new CustomEvent('open-image-modal', {
                         detail: {
-                          imageUrl: '/f1.webp',
+                          imageUrl: `${import.meta.env.BASE_URL}f1.webp`,
                           title: 'Autodesk Flame Batch Schematic',
                           description: '實際專案 Batch 節點介面'
                         }
@@ -135,7 +135,7 @@ export default function Manifesto({ onPlayVideo }) {
                       {/* 縮圖顯示器容器 (含網格掃描線與內光暈) */}
                       <span className="block relative aspect-video overflow-hidden border border-zinc-900 rounded-sm mb-3">
                         <img
-                          src="/f1.webp"
+                          src={`${import.meta.env.BASE_URL}f1.webp`}
                           alt="Autodesk Flame Batch Schematic"
                           decoding="async"
                           className="w-full h-full object-cover grayscale-[10%] group-hover/flame:grayscale-0 transition-all duration-700"

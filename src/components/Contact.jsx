@@ -9,8 +9,9 @@ export default function Contact() {
   const email = 'beard.cc23@gmail.com';
   const { copied, copy } = useClipboard(2500);
 
-  // 部署好的 Google Apps Script Web App URL (最新有效部署網址)
+  // 部署好的 Google Apps Script Web App URL (優先使用環境變數配置)
   const GAS_SCRIPT_URL =
+    import.meta.env.VITE_GAS_SCRIPT_URL ||
     'https://script.google.com/macros/s/AKfycbyqnxsdu2s0De5mrIKdmeharnJiy__hLyRyAnhZKzKjEDmXoCjUQYHrlUmmvShbnS7O/exec';
 
   const handleCopyEmail = () => {

@@ -35,6 +35,18 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     }
   };
 
+  const hoverTimerRef = React.useRef(null);
+  const bgImageUrl = item.bgImage
+    ? (item.bgImage.startsWith('/') ? `${import.meta.env.BASE_URL}${item.bgImage.slice(1)}` : item.bgImage)
+    : null;
+
+  React.useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   const handlePointerEnter = (e) => {
     // 手機/觸控螢幕 (hover: none) 阻斷 Bobble 滑動，避免頁面滾動時干擾視覺與效能
     if (window.matchMedia('(hover: none)').matches) return;
@@ -51,11 +63,14 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
     rawRotX.set(-10);
     rawRotY.set(dirX * 10);
 
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+
     // 100ms 後收斂至 Hover 跟隨態
-    setTimeout(() => {
+    hoverTimerRef.current = setTimeout(() => {
       rawY.set(-6);
       rawRotZ.set(0);
       rawScale.set(1.04);
+      hoverTimerRef.current = null;
     }, 100);
   };
 
@@ -90,6 +105,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
   const handlePointerLeave = () => {
     if (window.matchMedia('(hover: none)').matches) return;
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
     // 離開卡片時柔和彈回靜止原位
     rawX.set(0);
     rawY.set(0);
@@ -156,7 +172,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
       }}
     >
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
-      {item.bgImage && (
+      {bgImageUrl && (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-sm pointer-events-none bg-black">
           {!isImageLoaded && (
             <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
@@ -164,7 +180,7 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
             </div>
           )}
           <img
-            src={item.bgImage}
+            src={bgImageUrl}
             alt={`${item.name} background`}
             loading="lazy"
             decoding="async"

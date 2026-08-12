@@ -58,6 +58,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       const concurrencyLimit = 4; // 每次併發 4 個請求，防止網路排隊堵塞
       let nextIndex = 1;
       let loadedCount = 1;
+      let lastReportedProgress = 1;
 
       const loadFrame = (index) => {
         return new Promise((resolve) => {
@@ -80,7 +81,11 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
           if (isCancelled) return;
           loadedCount++;
           const progress = Math.round((loadedCount / frameCount) * 100);
-          setLoadProgress(progress);
+          // 每 5% 步階或達到 100% 時才觸發 State 更新，避免過度觸發 Re-render
+          if (progress - lastReportedProgress >= 5 || progress === 100) {
+            lastReportedProgress = progress;
+            setLoadProgress(progress);
+          }
         }
       };
 
