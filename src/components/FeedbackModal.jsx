@@ -198,6 +198,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <textarea
                     name="message"
                     rows={4}
+                    maxLength={500}
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="請輸入您的寶貴建議..."

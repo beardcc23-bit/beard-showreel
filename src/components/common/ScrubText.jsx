@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 /**
@@ -34,20 +34,17 @@ export default function ScrubText({ text, className = "", children }) {
   });
 
   if (children) {
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [0.75, 1]);
     return (
-      <motion.div
-        ref={containerRef}
-        className={className}
-        style={{ opacity }}
-      >
+      <div ref={containerRef} className={className}>
         {children}
-      </motion.div>
+      </div>
     );
   }
 
-  // 以「詞組/短句」進行區塊切分，大幅減少 70%+ 的 DOM 節點與 Motion transform 計算
-  const chunks = text.match(/[\u4e00-\u9fa5]{1,3}|[^\u4e00-\u9fa5]+/g) || [text];
+  const chunks = useMemo(() => {
+    if (!text) return [];
+    return text.match(/[\u4e00-\u9fa5]{1,3}|[^\u4e00-\u9fa5]+/g) || [text];
+  }, [text]);
   const total = chunks.length;
 
   return (
