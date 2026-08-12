@@ -170,7 +170,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
 
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
       {bgImageUrl && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-sm pointer-events-none bg-black">
+        <div className="absolute inset-[1px] z-0 overflow-hidden rounded-sm pointer-events-none bg-black">
           {!isImageLoaded && (
             <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
               <div className="w-12 h-12 rounded-full bg-aurora-blue/5 filter blur-md" />
@@ -188,14 +188,14 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
           />
           {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
           <div className="absolute inset-0 bg-black/10 backdrop-blur-none md:backdrop-blur-[1px] group-hover:backdrop-blur-none group-hover:bg-black/5 transition-all duration-300" />
-          {/* 漸層遮罩：滑鼠移入時變淡，釋放圖片色彩 */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/25 group-hover:from-black/85 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300" />
+          {/* 漸層遮罩：底部純黑阻絕白線，滑鼠移入時變淡 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/25 group-hover:from-black/90 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300" />
         </div>
       )}
 
       {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage) */}
       {hasVideo && !item.bgImage && (
-        <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        <div className="absolute inset-[1px] bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       )}
 
       <div className="relative z-10 pointer-events-none">

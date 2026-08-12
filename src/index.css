@@ -561,7 +561,7 @@ body {
 .prism-border::after {
   content: '';
   position: absolute;
-  inset: -1px;
+  inset: 0;
   border-radius: inherit;
   background: radial-gradient(
     180px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
