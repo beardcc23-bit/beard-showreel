@@ -37,7 +37,7 @@ export default function AnimatedCounter({ value, trigger, duration = 1.5 }) {
   }, [trigger, value, duration]);
 
   return (
-    <span className={`transition-all duration-700 ${isCompleted ? 'drop-shadow-[0_0_12px_rgba(0,255,255,0.45)]' : ''}`}>
+    <span>
       {count}
     </span>
   );

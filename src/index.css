@@ -988,5 +988,19 @@ html.lenis body {
   backface-visibility: hidden;
 }
 
+/* 溫潤奢華黃金光呼吸動效 (無邊框感) */
+@keyframes gold-glow-breathing {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.45), 0 0 22px rgba(212, 175, 55, 0.25);
+  }
+  50% {
+    text-shadow: 0 0 22px rgba(255, 215, 0, 0.9), 0 0 38px rgba(212, 175, 55, 0.65);
+  }
+}
+
+.gold-glow-pulse {
+  animation: gold-glow-breathing 3.2s ease-in-out infinite;
+}
+
 
 
