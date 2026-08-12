@@ -17,8 +17,8 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   const rawRotZ = useMotionValue(0);
   const rawScale = useMotionValue(1);
 
-  // 高感官 Q 彈 Spring 物理參數 (stiffness: 400, damping: 14)
-  const springConfig = { stiffness: 400, damping: 14, mass: 0.5 };
+  // 高感官 Q 彈 Spring 物理參數 (無影片卡片停用昂貴彈彈動態)
+  const springConfig = hasVideo ? { stiffness: 400, damping: 14, mass: 0.5 } : { stiffness: 1000, damping: 100 };
   const x = useSpring(rawX, springConfig);
   const y = useSpring(rawY, springConfig);
   const rotateX = useSpring(rawRotX, springConfig);
@@ -117,20 +117,14 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
 
   const handleClick = () => {
     if (!hasVideo) return;
-    if (item.isFacebook && item.url) {
-      if (window.innerWidth < 768) {
-        window.location.href = item.url;
-      } else {
-        const newWindow = window.open(item.url, '_blank');
-        if (newWindow) newWindow.opener = null;
-      }
-    } else if (item.videoId) {
+    const targetUrl = item.url;
+    if (item.videoId && !item.isFacebook) {
       onPlayVideo(item.videoId, false, item.aspect);
-    } else if (item.url) {
+    } else if (targetUrl) {
       if (window.innerWidth < 768) {
-        window.location.href = item.url;
+        window.location.href = targetUrl;
       } else {
-        const newWindow = window.open(item.url, '_blank');
+        const newWindow = window.open(targetUrl, '_blank');
         if (newWindow) newWindow.opener = null;
       }
     }
@@ -171,6 +165,11 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
         '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
       }}
     >
+      {/* 頂部極細黃金雷射光束條 */}
+      {hasVideo && (
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-dawn-gold/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20" />
+      )}
+
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
       {bgImageUrl && (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-sm pointer-events-none bg-black">
