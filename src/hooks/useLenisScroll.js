@@ -7,14 +7,13 @@ import Lenis from 'lenis';
 export function useLenisScroll() {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 0.55, // 敏捷高跟手度，消除 1.2 秒遲滯阻尼感
+      duration: 1.2, // 還原經典 1.2 秒電影級電影長阻尼絲滑滑行
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.15,
-      touchMultiplier: 1.5,
-      smoothTouch: false,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.0,
     });
     window.lenis = lenis;
 
