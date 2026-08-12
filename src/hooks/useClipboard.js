@@ -14,16 +14,38 @@ export function useClipboard(timeout = 2500) {
       clearTimeout(timerRef.current);
     }
 
+    const handleSuccess = () => {
+      setCopied(true);
+      timerRef.current = setTimeout(() => {
+        setCopied(false);
+        timerRef.current = null;
+      }, timeout);
+    };
+
+    const fallbackCopy = (str) => {
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = str;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        handleSuccess();
+      } catch (err) {
+        setCopied(false);
+      }
+    };
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(() => {
-        setCopied(true);
-        timerRef.current = setTimeout(() => {
-          setCopied(false);
-          timerRef.current = null;
-        }, timeout);
+        handleSuccess();
       }).catch(() => {
-        setCopied(false);
+        fallbackCopy(text);
       });
+    } else {
+      fallbackCopy(text);
     }
   }, [timeout]);
 

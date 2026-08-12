@@ -218,7 +218,7 @@ export default function Manifesto({ onPlayVideo }) {
                   }}
                 >
                   {/* 高級科技微網格背景 (Micro Dot Grid Matrix) */}
-                  <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+                  <div className="absolute inset-0 pointer-events-none opacity-[0.03] transform-gpu will-change-transform"
                        style={{
                          backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.8) 1px, transparent 1px)',
                          backgroundSize: '20px 20px'

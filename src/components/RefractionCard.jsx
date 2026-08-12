@@ -26,12 +26,20 @@ export default function RefractionCard({ children, className = '', variant = 'gl
     });
   };
 
+  const handleMouseLeave = () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+  };
+
   const borderClass = variant === 'glass' ? 'glass-prism-border' : 'prism-border';
 
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className={`${borderClass} ${className}`}
       {...props}
     >
