@@ -56,10 +56,13 @@ export default function Contact() {
             <button
               type="button"
               onClick={handleCopyEmail}
-              className="group flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 focus-visible:ring-2 focus-visible:ring-aurora-blue outline-none transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start text-left"
+              className="group relative overflow-hidden flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 focus-visible:ring-2 focus-visible:ring-aurora-blue outline-none transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start text-left"
               title="點擊複製 Email 地址"
               aria-label="複製 Email 地址: beard.cc23@gmail.com"
             >
+              {/* 寫實高透玻璃邊緣動態高光條 */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
               <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center shrink-0 ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(0,255,255,0.35)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
                 {copied ? <Check size={18} /> : <Mail size={18} />}
               </span>
@@ -72,9 +75,11 @@ export default function Contact() {
             {/* 回饋按鈕 */}
             <button
               onClick={() => setIsFeedbackOpen(true)}
-              className="group flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 focus-visible:ring-2 focus-visible:ring-aurora-blue outline-none transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start"
+              className="group relative overflow-hidden flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 focus-visible:ring-2 focus-visible:ring-aurora-blue outline-none transition-all duration-300 backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start"
               aria-label="開啟回饋表單"
             >
+              {/* 寫實高透玻璃邊緣動態高光條 */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               <span className="p-2.5 rounded-sm bg-aurora-blue text-black flex items-center justify-center shrink-0 group-hover:bg-white transition-colors duration-300">
                 <MessageSquareText size={18} />
               </span>

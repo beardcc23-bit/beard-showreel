@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
  */
 export default function AnimatedCounter({ value, trigger, duration = 1.5 }) {
   const [count, setCount] = useState(0);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     if (!trigger) return;
@@ -22,6 +23,7 @@ export default function AnimatedCounter({ value, trigger, duration = 1.5 }) {
         animationFrameId = window.requestAnimationFrame(step);
       } else {
         setCount(value);
+        setIsCompleted(true);
       }
     };
 
@@ -34,5 +36,9 @@ export default function AnimatedCounter({ value, trigger, duration = 1.5 }) {
     };
   }, [trigger, value, duration]);
 
-  return <span>{count}</span>;
+  return (
+    <span className={`transition-all duration-700 ${isCompleted ? 'drop-shadow-[0_0_12px_rgba(0,255,255,0.45)]' : ''}`}>
+      {count}
+    </span>
+  );
 }
