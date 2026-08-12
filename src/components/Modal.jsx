@@ -113,7 +113,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   frameBorder="0"
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                   allowFullScreen
-                  referrerPolicy="strict-origin-when-cross-origin"
+                  referrerPolicy="no-referrer-when-downgrade"
                   onLoad={() => setIframeLoading(false)}
                   className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                 ></iframe>
@@ -125,7 +125,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
-                  referrerPolicy="strict-origin-when-cross-origin"
+                  referrerPolicy="no-referrer-when-downgrade"
                   onLoad={() => setIframeLoading(false)}
                   className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                 ></iframe>

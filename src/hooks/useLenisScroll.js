@@ -14,6 +14,7 @@ export function useLenisScroll() {
       smoothWheel: true,
       wheelMultiplier: 1.15,
       touchMultiplier: 1.5,
+      smoothTouch: false,
     });
     window.lenis = lenis;
 
