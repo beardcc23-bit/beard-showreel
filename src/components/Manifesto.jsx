@@ -210,10 +210,10 @@ export default function Manifesto({ onPlayVideo }) {
                 transition={{ duration: 0.3 }}
               >
                 <RefractionCard 
-                  className="backdrop-blur-2xl border border-white/[0.1] rounded-[32px] p-6 md:p-8 shadow-2xl relative overflow-hidden group"
+                  className="backdrop-blur-sm border border-white/[0.1] rounded-[32px] p-6 md:p-8 shadow-2xl relative overflow-hidden group"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.65) 100%)',
-                    backgroundColor: 'rgba(6, 6, 6, 0.45)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.88) 100%)',
+                    backgroundColor: 'rgba(10, 10, 10, 0.85)',
                     boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
                   }}
                 >

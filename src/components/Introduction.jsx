@@ -60,10 +60,10 @@ export default function Introduction({ onPlayVideo }) {
               className="w-full max-w-2xl mb-12"
             >
               <RefractionCard
-                className="flex justify-around w-full py-6 px-2 md:px-8 text-center backdrop-blur-2xl border border-white/[0.1] rounded-[24px] shadow-2xl relative overflow-hidden group"
+                className="flex justify-around w-full py-6 px-2 md:px-8 text-center backdrop-blur-sm border border-white/[0.1] rounded-[24px] shadow-2xl relative overflow-hidden group"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.65) 100%)',
-                  backgroundColor: 'rgba(6, 6, 6, 0.45)',
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.88) 100%)',
+                  backgroundColor: 'rgba(10, 10, 10, 0.85)',
                   boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
                 }}
               >

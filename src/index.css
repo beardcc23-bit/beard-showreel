@@ -180,6 +180,7 @@ body {
   -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
   transform: translate3d(0, calc(-1 * var(--parallax-y-far, 0px)), 0);
   will-change: transform;
+  contain: paint layout;
 }
 
 /* Autodesk Flame 懸浮文字底線流光動畫 */
