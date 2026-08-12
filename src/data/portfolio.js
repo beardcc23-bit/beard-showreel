@@ -1,3 +1,14 @@
+const BASE_URL = import.meta.env.BASE_URL || '/';
+
+export function normalizeItem(item) {
+  if (!item) return null;
+  const bgImage = item.bgImage
+    ? (item.bgImage.startsWith('/') ? `${BASE_URL}${item.bgImage.slice(1)}` : item.bgImage)
+    : null;
+  const hasVideo = !!item.videoId || !!item.url;
+  return { ...item, bgImage, hasVideo };
+}
+
 export const categories = [
   {
     "id": "food",

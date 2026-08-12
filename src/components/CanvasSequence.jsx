@@ -103,9 +103,14 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
     return () => {
       isCancelled = true;
+      if (canvasRef.current) {
+        canvasRef.current.width = 0;
+        canvasRef.current.height = 0;
+      }
       if (loadedImagesRef.current) {
         loadedImagesRef.current.forEach((img, idx) => {
           if (img) {
+            img.src = '';
             img.onload = null;
             img.onerror = null;
             loadedImagesRef.current[idx] = null;

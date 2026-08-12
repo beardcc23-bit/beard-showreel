@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
-import { categories } from '../data/portfolio';
+import { categories, normalizeItem } from '../data/portfolio';
 
-const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
-  const hasVideo = !!item.videoId || !!item.url;
+const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, ref) => {
+  const item = normalizeItem(rawItem);
+  const { hasVideo, bgImage: bgImageUrl } = item;
   const CardElement = hasVideo ? motion.button : motion.div;
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
@@ -36,9 +37,6 @@ const BrandCard = React.memo(React.forwardRef(({ item, onPlayVideo }, ref) => {
   };
 
   const hoverTimerRef = React.useRef(null);
-  const bgImageUrl = item.bgImage
-    ? (item.bgImage.startsWith('/') ? `${import.meta.env.BASE_URL}${item.bgImage.slice(1)}` : item.bgImage)
-    : null;
 
   React.useEffect(() => {
     return () => {
