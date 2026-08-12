@@ -15,6 +15,7 @@ export default function Contact() {
     'https://script.google.com/macros/s/AKfycbyqnxsdu2s0De5mrIKdmeharnJiy__hLyRyAnhZKzKjEDmXoCjUQYHrlUmmvShbnS7O/exec';
 
   const handleCopyEmail = () => {
+    if (copied) return;
     copy(email);
   };
 
