@@ -183,13 +183,14 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
             decoding="async"
             fetchpriority="low"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover object-[center_35%] transition-all duration-500 scale-[1.20] group-hover:scale-[1.12] ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+            style={{ clipPath: 'inset(2px)' }}
+            className={`w-full h-full object-cover object-[center_35%] transition-all duration-500 scale-[1.22] group-hover:scale-[1.14] ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
               }`}
           />
           {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
-          <div className="absolute inset-0 bg-black/10 backdrop-blur-none md:backdrop-blur-[1px] group-hover:backdrop-blur-none group-hover:bg-black/5 transition-all duration-300" />
-          {/* 漸層遮罩：底部純黑阻絕白線，滑鼠移入時變淡 */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/25 group-hover:from-black/90 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300" />
+          <div className="absolute inset-0 bg-black/10 backdrop-blur-none md:backdrop-blur-[1px] group-hover:backdrop-blur-none group-hover:bg-black/5 transition-all duration-300 z-[1]" />
+          {/* 漸層遮罩：層級在圖片之上 (z-[2])，底部純黑 100% 阻絕圖片瑕疵白線 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/25 group-hover:from-black/90 group-hover:via-black/20 group-hover:to-transparent transition-all duration-300 z-[2]" />
         </div>
       )}
 
