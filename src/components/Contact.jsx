@@ -97,6 +97,8 @@ export default function Contact() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
+                role="status"
+                aria-live="polite"
                 className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950/95 border border-aurora-blue/40 text-aurora-blue shadow-[0_0_20px_rgba(0,255,255,0.18)] backdrop-blur-xl select-none"
               >
                 <Check size={12} />

@@ -91,10 +91,10 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 onClick={(e) => handleScroll(e, item.href)}
-                className="hover:text-aurora-blue transition duration-300 relative group flex items-center focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
+                className="hover:text-dawn-gold transition duration-300 relative group flex items-center focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none"
               >
                 <span className="text-xs font-normal tracking-wider">{item.name}</span>
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-aurora-blue transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-dawn-gold transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </div>
@@ -102,7 +102,7 @@ export default function Navigation() {
           <a
             href="#contact"
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm outline-none"
+            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none hover:shadow-[0_0_18px_rgba(212,175,55,0.25)] transition-all duration-300"
           >
             <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </a>
