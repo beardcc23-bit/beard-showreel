@@ -86,10 +86,6 @@ export const categories = [
         "aspect": "portrait"
       },
       {
-        "name": "格蘭利威",
-        "bgImage": "/vfx/A/A-015.webp"
-      },
-      {
         "name": "桂格喝的燕麥",
         "bgImage": "/vfx/A/A-016.webp",
         "url": "https://www.instagram.com/p/DN7VHH2DbeC/"
