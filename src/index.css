@@ -989,21 +989,21 @@ html.lenis body {
   backface-visibility: hidden;
 }
 
-/* 溫潤奢華黃金光交錯接力呼吸動效 (沉穩慢速，1接2接3順序亮起) */
+/* 溫潤奢華黃金光交錯接力呼吸動效 (超慢速電影級，7.5s 悠揚節奏 1接2接3順序亮起) */
 @keyframes gold-glow-staggered {
   0% {
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.25), 0 0 15px rgba(212, 175, 55, 0.1);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.2), 0 0 15px rgba(212, 175, 55, 0.08);
   }
-  20% {
-    text-shadow: 0 0 25px rgba(255, 215, 0, 0.95), 0 0 42px rgba(212, 175, 55, 0.7);
+  22% {
+    text-shadow: 0 0 28px rgba(255, 215, 0, 0.95), 0 0 45px rgba(212, 175, 55, 0.75);
   }
-  40%, 100% {
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.25), 0 0 15px rgba(212, 175, 55, 0.1);
+  42%, 100% {
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.2), 0 0 15px rgba(212, 175, 55, 0.08);
   }
 }
 
 .gold-glow-pulse {
-  animation: gold-glow-staggered 4.5s ease-in-out infinite;
+  animation: gold-glow-staggered 7.5s ease-in-out infinite;
 }
 
 .gold-delay-1 {
@@ -1011,11 +1011,11 @@ html.lenis body {
 }
 
 .gold-delay-2 {
-  animation-delay: 1.5s;
+  animation-delay: 2.5s;
 }
 
 .gold-delay-3 {
-  animation-delay: 3.0s;
+  animation-delay: 5.0s;
 }
 
 
