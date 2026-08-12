@@ -2,6 +2,28 @@ import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// 獨立的平滑滾動 Helper
+const animateScrollTo = (targetY, duration = 400) => {
+  const startPosition = window.scrollY;
+  const distance = targetY - startPosition;
+  let startTime = null;
+
+  const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+  const step = (timestamp) => {
+    if (!startTime) startTime = timestamp;
+    const progress = timestamp - startTime;
+    const percent = Math.min(progress / duration, 1);
+    const easedPercent = easeInOutCubic(percent);
+    window.scrollTo(0, startPosition + distance * easedPercent);
+    if (progress < duration) {
+      requestAnimationFrame(step);
+    }
+  };
+
+  requestAnimationFrame(step);
+};
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,26 +48,7 @@ export default function Navigation() {
       return;
     }
 
-    const targetPosition = element.getBoundingClientRect().top + window.scrollY - 85;
-    const startPosition = window.scrollY;
-    const distance = targetPosition - startPosition;
-    const duration = 400; // 400ms 高速直達
-    let startTime = null;
-
-    const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-
-    const animateScroll = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-      const percent = Math.min(progress / duration, 1);
-      const easedPercent = easeInOutCubic(percent);
-      window.scrollTo(0, startPosition + distance * easedPercent);
-      if (progress < duration) {
-        requestAnimationFrame(animateScroll);
-      }
-    };
-
-    requestAnimationFrame(animateScroll);
+    animateScrollTo(element.getBoundingClientRect().top + window.scrollY - 85);
   };
 
   const scrollToTop = (e) => {
@@ -55,25 +58,7 @@ export default function Navigation() {
       window.lenis.scrollTo(0);
       return;
     }
-    const startPosition = window.scrollY;
-    const distance = -startPosition;
-    const duration = 400; // 400ms 高速直達頂端
-    let startTime = null;
-
-    const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-
-    const animateScroll = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-      const percent = Math.min(progress / duration, 1);
-      const easedPercent = easeInOutCubic(percent);
-      window.scrollTo(0, startPosition + distance * easedPercent);
-      if (progress < duration) {
-        requestAnimationFrame(animateScroll);
-      }
-    };
-
-    requestAnimationFrame(animateScroll);
+    animateScrollTo(0);
   };
 
   return (
