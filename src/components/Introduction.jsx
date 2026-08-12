@@ -6,7 +6,7 @@ import ScrubText from './common/ScrubText';
 
 export default function Introduction({ onPlayVideo }) {
   const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, { once: true, margin: "-30px" });
+  const statsInView = useInView(statsRef, { margin: "-50px", once: true });
 
   return (
     <section id="introduction" className="relative min-h-screen flex items-center justify-center py-24 bg-bg-core/60">

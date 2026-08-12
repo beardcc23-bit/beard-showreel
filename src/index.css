@@ -33,6 +33,8 @@
   --color-aurora-blue: #D4AF37; /* 升級為金色 */
   --color-soft-magenta: #ff007f; /* 霓虹粉 */
   --color-dawn-gold: #ffe082; /* 亮金 */
+  --dawn-gold-glow: rgba(212, 175, 55, 0.45);
+  --dawn-gold-peak: rgba(255, 215, 0, 0.95);
   --color-prism-green: #00FF7F; /* 霓虹綠 */
   --color-title-white: #F2F6F9;
   --color-info-gold-gray: #D1C7BD;
