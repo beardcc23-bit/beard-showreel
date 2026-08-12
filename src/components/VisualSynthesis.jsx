@@ -274,11 +274,11 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 onClick={() => handleTabChange(tab.id)}
                 className={`hud-btn relative px-3 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center w-full min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
               >
-                {/* 絲滑液態金屬 Tab 高光滑塊 */}
+                {/* 絲滑液態金屬 Tab 高光滑塊 (無多餘二重內框) */}
                 {isActive && (
                   <motion.div
                     layoutId="activeTabGlow"
-                    className="absolute inset-0 rounded-sm bg-dawn-gold/[0.1] border border-dawn-gold/50 shadow-[0_0_20px_rgba(212,175,55,0.35)] pointer-events-none z-0"
+                    className="absolute inset-0 rounded-sm bg-dawn-gold/[0.12] shadow-[0_0_20px_rgba(212,175,55,0.25)] pointer-events-none z-0"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
