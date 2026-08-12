@@ -121,6 +121,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
     const img = loadedImagesRef.current[currentFrameRef.current];
     if (img && img.complete) {
       const imgRatio = img.width / img.height;
