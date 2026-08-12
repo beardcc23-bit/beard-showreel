@@ -69,7 +69,7 @@ export default function Introduction({ onPlayVideo }) {
               >
                 <div className="flex flex-col items-center justify-center relative z-10">
                   <div className="text-3xl md:text-4xl font-black text-white tracking-tight flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
-                    <div className="gold-glow-pulse">
+                    <div className="gold-glow-pulse gold-delay-1">
                       <AnimatedCounter value={13} trigger={statsInView} />+
                     </div>
                     <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Years</span>
@@ -80,7 +80,7 @@ export default function Introduction({ onPlayVideo }) {
                 </div>
                 <div className="flex flex-col items-center justify-center relative z-10 translate-x-[2px] md:translate-x-0">
                   <div className="text-3xl md:text-4xl font-black text-white tracking-tight flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
-                    <div className="gold-glow-pulse">
+                    <div className="gold-glow-pulse gold-delay-2">
                       <AnimatedCounter value={300} trigger={statsInView} />+
                     </div>
                     <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Campaigns</span>
@@ -91,7 +91,7 @@ export default function Introduction({ onPlayVideo }) {
                 </div>
                 <div className="flex flex-col items-center justify-center relative z-10">
                   <div className="text-3xl md:text-4xl font-black text-white tracking-tight flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
-                    <div className="gold-glow-pulse">
+                    <div className="gold-glow-pulse gold-delay-3">
                       <AnimatedCounter value={1000} trigger={statsInView} />+
                     </div>
                     <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Versions</span>
