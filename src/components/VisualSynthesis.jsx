@@ -277,11 +277,11 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 {isActive && (
                   <motion.div
                     layoutId="activeTabGlow"
-                    className="absolute inset-0 rounded-sm bg-aurora-blue/[0.08] shadow-[0_0_20px_rgba(212,175,55,0.35)] pointer-events-none z-0"
+                    className="absolute inset-0 rounded-sm bg-dawn-gold/[0.1] border border-dawn-gold/50 shadow-[0_0_20px_rgba(212,175,55,0.35)] pointer-events-none z-0"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className={`hud-eng relative z-10 text-[6px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${isActive ? 'text-aurora-blue font-bold' : 'text-zinc-400'
+                <span className={`hud-eng relative z-10 text-[6px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${isActive ? 'text-dawn-gold font-bold' : 'text-zinc-400'
                   }`}>{engName}</span>
                 <span className="hud-zht relative z-10 text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
               </button>
