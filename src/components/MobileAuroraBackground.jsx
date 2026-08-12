@@ -7,7 +7,7 @@ import React from 'react';
 export const MobileAuroraBackground = React.memo(function MobileAuroraBackground() {
   return (
     <div 
-      className="mobile-aurora-mesh pointer-events-none" 
+      className="mobile-aurora-mesh pointer-events-none transform-gpu will-change-transform" 
       aria-hidden="true"
     />
   );
