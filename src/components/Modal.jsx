@@ -25,14 +25,14 @@ export default function Modal({ isOpen, onClose, type, data }) {
       window.addEventListener('keydown', handleKeyDown);
 
       return () => {
-        document.body.style.overflow = 'unset';
-        document.body.style.paddingRight = '0px';
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
     } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.paddingRight = '0px';
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
       window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
   }, [isOpen, onClose]);

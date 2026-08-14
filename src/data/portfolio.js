@@ -142,6 +142,14 @@ export const categories = [
         "bgImage": "/vfx/A/A-026.webp",
         "url": "https://www.youtube.com/watch?v=AyQQZ37OPfU",
         "videoId": "AyQQZ37OPfU"
+      },
+      {
+        "name": "德克士炸雞",
+        "bgImage": "/vfx/A/A-027.webp",
+        "url": "https://www.facebook.com/reel/1958394558203679",
+        "videoId": "1958394558203679",
+        "isFacebook": true,
+        "aspect": "portrait"
       }
     ]
   },

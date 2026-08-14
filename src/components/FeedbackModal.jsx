@@ -17,12 +17,12 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       };
       window.addEventListener('keydown', handleKeyDown);
       return () => {
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = '';
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
       window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
   }, [isOpen, onClose]);
