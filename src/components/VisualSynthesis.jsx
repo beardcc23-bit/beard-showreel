@@ -6,26 +6,10 @@ import { categories, normalizeItem } from '../data/portfolio';
 const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, ref) => {
   const item = normalizeItem(rawItem);
   const { hasVideo, bgImage: bgImageUrl } = item;
-  const CardElement = hasVideo ? motion.button : motion.div;
+  const CardElement = hasVideo ? 'button' : 'div';
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
-
-  // 物理 Motion values
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  const rawRotX = useMotionValue(0);
-  const rawRotY = useMotionValue(0);
-  const rawRotZ = useMotionValue(0);
-  const rawScale = useMotionValue(1);
-
-  // 高感官 Q 彈 Spring 物理參數 (無影片卡片停用昂貴彈彈動態)
-  const springConfig = hasVideo ? { stiffness: 400, damping: 14, mass: 0.5 } : { stiffness: 1000, damping: 100 };
-  const x = useSpring(rawX, springConfig);
-  const y = useSpring(rawY, springConfig);
-  const rotateX = useSpring(rawRotX, springConfig);
-  const rotateY = useSpring(rawRotY, springConfig);
-  const rotateZ = useSpring(rawRotZ, springConfig);
-  const scale = useSpring(rawScale, springConfig);
+  const rafRef = React.useRef(null);
 
   const setRefs = (node) => {
     innerRef.current = node;
@@ -36,60 +20,18 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
     }
   };
 
-  const hoverTimerRef = React.useRef(null);
-
   React.useEffect(() => {
     return () => {
-      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  const handlePointerEnter = (e) => {
-    // 手機/觸控螢幕 (hover: none) 阻斷 Bobble 滑動，避免頁面滾動時干擾視覺與效能
-    if (window.matchMedia('(hover: none)').matches) return;
-
-    if (!innerRef.current) return;
-    const rect = innerRef.current.getBoundingClientRect();
-    const enterX = e.clientX - rect.left - rect.width / 2;
-    const dirX = enterX >= 0 ? 1 : -1;
-
-    // 移入時激發強烈的 Q 彈 Bobble 果動
-    rawY.set(-16);
-    rawRotZ.set(dirX * 7);
-    rawScale.set(1.09);
-    rawRotX.set(-10);
-    rawRotY.set(dirX * 10);
-
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-
-    // 100ms 後收斂至 Hover 跟隨態
-    hoverTimerRef.current = setTimeout(() => {
-      rawY.set(-6);
-      rawRotZ.set(0);
-      rawScale.set(1.04);
-      hoverTimerRef.current = null;
-    }, 100);
-  };
-
-  const rafRef = React.useRef(null);
   const handleMouseMove = (e) => {
-    // 觸控螢幕降級阻斷
     if (window.matchMedia('(hover: none)').matches) return;
-
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
-
-    const centerX = mouseX - rect.width / 2;
-    const centerY = mouseY - rect.height / 2;
-
-    // 指針在卡片內移動時帶動 3D 懸浮與微妙 Tilt
-    rawRotX.set((-centerY / rect.height) * 18);
-    rawRotY.set((centerX / rect.width) * 18);
-    rawX.set((centerX / rect.width) * 12);
-    rawY.set((centerY / rect.height) * 10 - 6);
 
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
@@ -99,18 +41,6 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
       }
       rafRef.current = null;
     });
-  };
-
-  const handlePointerLeave = () => {
-    if (window.matchMedia('(hover: none)').matches) return;
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    // 離開卡片時柔和彈回靜止原位
-    rawX.set(0);
-    rawY.set(0);
-    rawRotX.set(0);
-    rawRotY.set(0);
-    rawRotZ.set(0);
-    rawScale.set(1);
   };
 
   const handleClick = () => {
@@ -138,29 +68,19 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   return (
     <CardElement
       ref={setRefs}
-      onPointerEnter={handlePointerEnter}
       onMouseMove={handleMouseMove}
-      onPointerLeave={handlePointerLeave}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      whileTap={{ scale: 0.96 }}
       tabIndex={hasVideo ? 0 : -1}
       role={hasVideo ? "button" : "presentation"}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between transition-colors duration-300 relative overflow-hidden group backdrop-blur-none md:backdrop-blur-[8px] shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue ${hasVideo
-        ? 'bg-white/[0.02] border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]'
-        : 'bg-white/[0.01] border-white/8 cursor-default'
+      className={`prism-border text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue bg-[#121314] ${hasVideo
+        ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(212,175,55,0.28)] active:scale-[0.98]'
+        : 'border-white/8 cursor-default'
         }`}
       style={{
-        x,
-        y,
-        rotateX,
-        rotateY,
-        rotateZ,
-        scale,
         transformStyle: 'preserve-3d',
-        willChange: 'transform',
-        '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.08)'
+        '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.16)' : 'rgba(255, 255, 255, 0.06)'
       }}
     >
       {/* 頂部極細黃金雷射光束條 */}
@@ -170,7 +90,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
 
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
       {bgImageUrl && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-sm pointer-events-none bg-black">
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-[inherit] pointer-events-none bg-[#121314]">
           {!isImageLoaded && (
             <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
               <div className="w-12 h-12 rounded-full bg-aurora-blue/5 filter blur-md" />
@@ -183,26 +103,25 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
             decoding="async"
             fetchpriority="low"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover object-[center_35%] transition-all duration-500 scale-[1.22] group-hover:scale-[1.14] ${isImageLoaded ? 'opacity-80 group-hover:opacity-100' : 'opacity-0'
+            className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${isImageLoaded ? 'opacity-90 group-hover:opacity-100' : 'opacity-0'
               }`}
           />
-          {/* 全區域暗化遮罩與玻璃模糊效果：手機版關閉模糊以確保滾動效能 */}
-          <div className="absolute -inset-px bg-black/20 backdrop-blur-none md:backdrop-blur-[1px] group-hover:backdrop-blur-none group-hover:bg-black/10 transition-all duration-300 z-[1]" />
-          {/* 雙向漸層遮罩：底部強化 100% 實心純黑、頂部強化文字襯底暗度，徹底消除四邊任何白邊與高光洩漏 */}
-          <div className="absolute -inset-px bg-gradient-to-t from-black from-15% via-black/75 via-45% to-black/55 group-hover:from-black group-hover:from-20% group-hover:via-black/55 group-hover:to-black/25 transition-all duration-300 z-[2]" />
-          {/* 底部絕對純黑防漏光隔離條 */}
-          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-black to-transparent pointer-events-none z-[3]" />
+          {/* 頂部輕量文字襯底 Scrim 漸層：保證文字清晰又保留畫面構圖 */}
+          <div className="absolute top-0 left-0 right-0 h-2/5 bg-gradient-to-b from-black/70 via-black/20 to-transparent transition-opacity duration-300 z-[1]" />
+          
+          {/* 底部 Play 標籤細膩 Scrim 漸層：通透柔和，徹底融解底圖邊緣 */}
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/85 via-black/30 to-transparent group-hover:from-black/90 group-hover:via-black/40 transition-all duration-300 z-[1]" />
         </div>
       )}
 
       {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage) */}
       {hasVideo && !item.bgImage && (
-        <div className="absolute inset-[1px] bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       )}
 
       <div className="relative z-10 pointer-events-none">
         <div
-          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.5)' }}
+          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.6)' }}
           className={`text-[11px] sm:text-xs tracking-wide transition-colors duration-300 leading-tight line-clamp-2 ${hasVideo
             ? 'text-zinc-100 group-hover:text-white font-semibold'
             : 'text-zinc-200 font-semibold'
@@ -214,7 +133,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
 
       {hasVideo ? (
         <div
-          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.4)' }}
+          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}
           className="relative z-10 mt-auto pt-1 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 pointer-events-none"
         >
           <Play size={8} fill="currentColor" className="play-triangle-pulse" /> Play

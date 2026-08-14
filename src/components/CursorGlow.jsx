@@ -30,17 +30,25 @@ export default function CursorGlow() {
     let isTicking = false;
 
     const render = () => {
-      if (glowRef.current && dotRef.current) {
+      if (glowRef.current) {
         const { x, y } = mouseCoords.current;
         glowRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-        dotRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(1)`;
       }
       isTicking = false;
     };
 
     const handleMouseMove = (e) => {
-      mouseCoords.current.x = e.clientX;
-      mouseCoords.current.y = e.clientY;
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+      mouseCoords.current.x = clientX;
+      mouseCoords.current.y = clientY;
+
+      // 核心指針即時同步更新，實現 120Hz/144Hz 零延遲跟隨
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${clientX}px, ${clientY}px, 0) translate(-50%, -50%)`;
+      }
+
+      // 外層大光暈使用 rAF 柔和渲染
       if (!isTicking) {
         isTicking = true;
         animationFrameId = requestAnimationFrame(render);
