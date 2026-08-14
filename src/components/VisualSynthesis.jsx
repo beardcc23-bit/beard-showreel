@@ -26,21 +26,44 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
     };
   }, []);
 
+  const handlePointerEnter = (e) => {
+    if (window.matchMedia('(hover: none)').matches) return;
+    if (!innerRef.current) return;
+    const rect = innerRef.current.getBoundingClientRect();
+    const isLeft = (e.clientX - rect.left) < rect.width / 2;
+
+    innerRef.current.classList.remove('bobble-left', 'bobble-right');
+    void innerRef.current.offsetWidth; // 強制重繪重啟 keyframe
+    innerRef.current.classList.add(isLeft ? 'bobble-left' : 'bobble-right');
+  };
+
   const handleMouseMove = (e) => {
     if (window.matchMedia('(hover: none)').matches) return;
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
+    const centerX = mouseX - rect.width / 2;
+    const centerY = mouseY - rect.height / 2;
 
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
       if (innerRef.current) {
+        innerRef.current.style.setProperty('--tilt-x', `${(-centerY / rect.height) * 14}deg`);
+        innerRef.current.style.setProperty('--tilt-y', `${(centerX / rect.width) * 14}deg`);
         innerRef.current.style.setProperty('--mouse-x', `${mouseX}px`);
         innerRef.current.style.setProperty('--mouse-y', `${mouseY}px`);
       }
       rafRef.current = null;
     });
+  };
+
+  const handlePointerLeave = () => {
+    if (innerRef.current) {
+      innerRef.current.classList.remove('bobble-left', 'bobble-right');
+      innerRef.current.style.setProperty('--tilt-x', '0deg');
+      innerRef.current.style.setProperty('--tilt-y', '0deg');
+    }
   };
 
   const handleClick = () => {
@@ -68,14 +91,16 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   return (
     <CardElement
       ref={setRefs}
+      onPointerEnter={handlePointerEnter}
       onMouseMove={handleMouseMove}
+      onPointerLeave={handlePointerLeave}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={hasVideo ? 0 : -1}
       role={hasVideo ? "button" : "presentation"}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between transition-all duration-300 relative overflow-hidden group shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue bg-[#121314] ${hasVideo
-        ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(212,175,55,0.28)] active:scale-[0.98]'
+      className={`prism-border brand-card-spring text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between relative overflow-hidden group shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue bg-[#121314] ${hasVideo
+        ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] active:scale-[0.97]'
         : 'border-white/8 cursor-default'
         }`}
       style={{
