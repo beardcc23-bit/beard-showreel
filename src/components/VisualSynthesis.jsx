@@ -128,7 +128,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
             decoding="async"
             fetchpriority="low"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transform-gpu transition-all duration-500 ease-out group-hover:scale-105 ${
+            className={`w-full h-full object-cover transform-gpu transition-all duration-300 ease-out group-hover:scale-105 ${
               isImageLoaded
                 ? 'opacity-85 blur-[2.5px] brightness-[0.68] saturate-[75%] group-hover:opacity-100 group-hover:blur-0 group-hover:brightness-[1.05] group-hover:saturate-[105%]'
                 : 'opacity-0'
