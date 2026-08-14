@@ -255,7 +255,7 @@ export default function Manifesto({ onPlayVideo }) {
                     </div>
 
                     {/* 描述 */}
-                    <p className="text-sm md:text-[15px] text-zinc-400 font-light leading-relaxed md:leading-loose">
+                    <p className="text-sm md:text-[15px] text-zinc-300 font-light leading-relaxed md:leading-loose">
                       {activeCategory.desc}
                     </p>
 
@@ -295,7 +295,7 @@ export default function Manifesto({ onPlayVideo }) {
                                 </span>
                               )}
                             </div>
-                            <p className="text-xs md:text-[13px] text-zinc-450 font-light leading-relaxed md:leading-loose pl-5">
+                            <p className="text-sm md:text-[15px] text-zinc-400 font-light leading-relaxed md:leading-loose pl-5">
                               {param.value}
                             </p>
                           </div>
