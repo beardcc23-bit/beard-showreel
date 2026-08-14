@@ -130,7 +130,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
             onLoad={() => setIsImageLoaded(true)}
             className={`w-full h-full object-cover transform-gpu transition-all duration-300 ease-out group-hover:scale-105 ${
               isImageLoaded
-                ? 'opacity-85 blur-[2.5px] brightness-[0.68] saturate-[75%] group-hover:opacity-100 group-hover:blur-0 group-hover:brightness-[1.05] group-hover:saturate-[105%]'
+                ? 'opacity-95 md:opacity-85 blur-0 md:blur-[2.5px] brightness-90 md:brightness-[0.68] saturate-90 md:saturate-[75%] group-hover:opacity-100 group-hover:blur-0 group-hover:brightness-[1.05] group-hover:saturate-[105%]'
                 : 'opacity-0'
             }`}
           />
@@ -248,26 +248,23 @@ export default function VisualSynthesis({ onPlayVideo }) {
               initial={{
                 opacity: 0,
                 rotateY: direction * 22,
-                filter: 'blur(12px)',
                 scale: 0.93
               }}
               animate={{
                 opacity: 1,
                 rotateY: 0,
-                filter: 'blur(0px)',
                 scale: 1
               }}
               exit={{
                 opacity: 0,
                 rotateY: direction * -22,
-                filter: 'blur(12px)',
                 scale: 0.93
               }}
               transition={{
                 duration: 0.45,
                 ease: [0.16, 1, 0.3, 1]
               }}
-              style={{ transformStyle: 'preserve-3d', willChange: 'transform, filter, opacity' }}
+              style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}
               className="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3.5"
             >
               {currentCategory.items.map((item, index) => (
