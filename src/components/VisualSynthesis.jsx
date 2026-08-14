@@ -128,8 +128,11 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
             decoding="async"
             fetchpriority="low"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${isImageLoaded ? 'opacity-90 group-hover:opacity-100' : 'opacity-0'
-              }`}
+            className={`w-full h-full object-cover transform-gpu transition-all duration-500 ease-out group-hover:scale-105 ${
+              isImageLoaded
+                ? 'opacity-85 blur-[2.5px] brightness-[0.68] saturate-[75%] group-hover:opacity-100 group-hover:blur-0 group-hover:brightness-[1.05] group-hover:saturate-[105%]'
+                : 'opacity-0'
+            }`}
           />
           {/* 頂部輕量文字襯底 Scrim 漸層：保證文字清晰又保留畫面構圖 */}
           <div className="absolute top-0 left-0 right-0 h-2/5 bg-gradient-to-b from-black/70 via-black/20 to-transparent transition-opacity duration-300 z-[1]" />
