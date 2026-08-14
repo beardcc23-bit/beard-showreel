@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "clean": "rm -rf node_modules/.vite dist coverage .vitest && find . -name '.DS_Store' -depth -exec rm {} +",
     "preview": "vite preview",
     "predeploy": "npm run build && cp vercel.json dist/",
     "deploy": "gh-pages -d dist",
