@@ -6,14 +6,17 @@ import Lenis from 'lenis';
  */
 export function useLenisScroll() {
   useEffect(() => {
+    // 檢測觸控裝置，確保行動裝置維持系統原生 120Hz 慣性手勢
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
     const lenis = new Lenis({
-      duration: 1.2, // 還原經典 1.2 秒電影級電影長阻尼絲滑滑行
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: isTouch ? 0.6 : 0.9, // 縮短阻尼至 0.9s，大幅提升煞車精準度與指尖跟手性
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -8 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.0,
+      syncTouch: false,
     });
     window.lenis = lenis;
 

@@ -15,7 +15,7 @@ function ScrubChar({ children, progress, range }) {
   return (
     <motion.span
       style={{ opacity, color }}
-      className="inline transition-colors duration-100"
+      className="inline transform-gpu will-change-[color,opacity]"
     >
       {children}
     </motion.span>

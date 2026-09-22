@@ -10,6 +10,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
   const rafRef = React.useRef(null);
+  const rectRef = React.useRef(null);
 
   const setRefs = (node) => {
     innerRef.current = node;
@@ -30,6 +31,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
     if (window.matchMedia('(hover: none)').matches) return;
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
+    rectRef.current = rect;
     const isLeft = (e.clientX - rect.left) < rect.width / 2;
 
     innerRef.current.classList.remove('bobble-left', 'bobble-right');
@@ -40,7 +42,8 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   const handleMouseMove = (e) => {
     if (window.matchMedia('(hover: none)').matches) return;
     if (!innerRef.current) return;
-    const rect = innerRef.current.getBoundingClientRect();
+    const rect = rectRef.current || innerRef.current.getBoundingClientRect();
+    rectRef.current = rect;
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     const centerX = mouseX - rect.width / 2;
@@ -59,6 +62,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   };
 
   const handlePointerLeave = () => {
+    rectRef.current = null;
     if (innerRef.current) {
       innerRef.current.classList.remove('bobble-left', 'bobble-right');
       innerRef.current.style.setProperty('--tilt-x', '0deg');
