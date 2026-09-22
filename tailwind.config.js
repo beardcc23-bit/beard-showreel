@@ -27,6 +27,15 @@ export default {
         'xl': '20px',  // Heading 3
         'base': '16px', // Body Text
       },
+      transitionTimingFunction: {
+        'emil-out': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'emil-smooth': 'cubic-bezier(0.65, 0, 0.35, 1)',
+      },
+      transitionDuration: {
+        'instant': '150ms',
+        'feedback': '200ms',
+        'layout': '280ms',
+      },
     },
   },
   plugins: [],
