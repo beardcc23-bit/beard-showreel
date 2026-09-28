@@ -72,7 +72,7 @@ export default function Introduction({ onPlayVideo }) {
                     <div className="gold-glow-pulse gold-delay-1">
                       <AnimatedCounter value={13} trigger={statsInView} />+
                     </div>
-                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Years</span>
+                    <span className="text-aurora-blue text-[10px] md:text-[11px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Years</span>
                   </div>
                   <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     後期資歷
@@ -83,7 +83,7 @@ export default function Introduction({ onPlayVideo }) {
                     <div className="gold-glow-pulse gold-delay-2">
                       <AnimatedCounter value={300} trigger={statsInView} />+
                     </div>
-                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Campaigns</span>
+                    <span className="text-aurora-blue text-[10px] md:text-[11px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Campaigns</span>
                   </div>
                   <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     廣告專案
@@ -94,7 +94,7 @@ export default function Introduction({ onPlayVideo }) {
                     <div className="gold-glow-pulse gold-delay-3">
                       <AnimatedCounter value={1000} trigger={statsInView} />+
                     </div>
-                    <span className="text-aurora-blue text-[9px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Versions</span>
+                    <span className="text-aurora-blue text-[10px] md:text-[11px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Versions</span>
                   </div>
                   <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
                     播放版本
@@ -113,7 +113,7 @@ export default function Introduction({ onPlayVideo }) {
             >
               <button
                 onClick={() => onPlayVideo('s6s2p87fPdA')}
-                className="prism-button px-16 py-5 !text-white font-bold rounded-sm uppercase text-base tracking-[0.25em] text-center w-full sm:w-auto cursor-pointer"
+                className="prism-button px-16 py-5 !text-white font-bold rounded-sm uppercase text-base tracking-[0.25em] text-center w-full sm:w-auto cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-core"
               >
                 SHOWREEL
               </button>

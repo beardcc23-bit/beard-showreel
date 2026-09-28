@@ -30,6 +30,18 @@ export default function Navigation() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  // 遵守 Apple HIG 鍵盤操作規範：當選單開啟時監聽 Escape 關閉
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const menuItems = [
     { name: '個人介紹', eng: 'CREATIVE PROFILE', href: '#introduction' },
     { name: '視覺思考', eng: 'VISUAL LOGIC', href: '#about' },
@@ -142,10 +154,10 @@ export default function Navigation() {
               <motion.button
                 whileTap={tapFeedback}
                 onClick={toggleMenu}
-                className="absolute top-6 right-6 text-white-or-black hover:text-aurora-blue transition p-2"
+                className="absolute top-5 right-5 text-white-or-black hover:text-aurora-blue transition min-w-[44px] min-h-[44px] p-2 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-full"
                 aria-label="Close Menu"
               >
-                <X size={28} />
+                <X size={24} />
               </motion.button>
 
               <div className="flex flex-col gap-6">
@@ -158,9 +170,9 @@ export default function Navigation() {
                     transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
                     whileTap={tapFeedback}
                     onClick={(e) => handleScroll(e, item.href)}
-                    className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-200 flex flex-col py-1"
+                    className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-200 flex flex-col py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
                   >
-                    <span className="text-[9px] text-zinc-400 font-medium tracking-widest mono mb-1">{item.eng}</span>
+                    <span className="text-[11px] text-zinc-400 font-medium tracking-widest mono mb-1">{item.eng}</span>
                     {item.name}
                   </motion.a>
                 ))}
@@ -170,9 +182,9 @@ export default function Navigation() {
                 href="#contact"
                 whileTap={tapFeedback}
                 onClick={(e) => handleScroll(e, '#contact')}
-                className="hud-btn is-active w-fit px-6 py-3.5 flex flex-col items-start justify-center leading-none mt-2"
+                className="hud-btn is-active w-fit px-6 py-3.5 flex flex-col items-start justify-center leading-none mt-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm"
               >
-                <span className="hud-eng text-[9px] opacity-70 tracking-widest mono mb-1.5 uppercase">Establish Connection</span>
+                <span className="hud-eng text-[10px] opacity-70 tracking-widest mono mb-1.5 uppercase">Establish Connection</span>
                 <span className="hud-zht text-base font-normal uppercase tracking-widest">建立聯繫</span>
               </motion.a>
             </motion.div>

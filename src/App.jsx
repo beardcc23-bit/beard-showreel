@@ -62,13 +62,6 @@ export default function App() {
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />
       <div className="grid-bg" />
-      {/* 電影級 35mm 物理微膠卷噪點 (SVG 原生硬體加速，0 JS 開銷) */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-[1] opacity-[0.035] mix-blend-overlay"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-        }}
-      />
       {/* 手機版專屬：極光金屬流光漫延背景 (獨立解耦組件) */}
       <MobileAuroraBackground />
 

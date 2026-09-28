@@ -30,7 +30,7 @@ const lawCategories = [
     title: 'CHROMA KEYING',
     subtitle: '綠幕去背合成',
     meta: 'SYSTEM.CHROMA: KEY_EXTRACTION // MATTE: ACTIVE',
-    quote: '「真正的無痕合成，是讓主體邊緣與環境互動光影產生自然呼吸感。」',
+    quote: '「乾淨的去背不是把背景切掉，而是把環境光找回來。」',
     desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
     params: [
       {
@@ -177,7 +177,7 @@ export default function Manifesto({ onPlayVideo }) {
 
           {/* 右側：整合的 Laws 系統 HUD 面板 */}
           <div className="md:col-span-6 flex flex-col">
-            {/* 微型 Tabs 切換 */}
+            {/* 微型 Tabs 切換：符合 Apple HIG 無障礙焦點與字級規範 */}
             <div className="flex gap-1.5 sm:gap-2.5 mb-5 w-full">
               {lawCategories.map((cat) => {
                 const labelMap = {
@@ -190,9 +190,9 @@ export default function Manifesto({ onPlayVideo }) {
                   <button
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
-                    className={`hud-btn px-1.5 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none ${activeTab === cat.id ? 'is-active' : ''}`}
+                    className={`hud-btn px-2 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm ${activeTab === cat.id ? 'is-active' : ''}`}
                   >
-                    <span className={`hud-eng text-[5px] sm:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${activeTab === cat.id ? '' : 'text-zinc-500'
+                    <span className={`hud-eng text-[10px] sm:text-[11px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${activeTab === cat.id ? '' : 'text-zinc-500'
                       }`}>{label.eng}</span>
                     <span className="hud-zht text-[11px] sm:text-xs font-normal tracking-wider whitespace-nowrap">{label.zht}</span>
                   </button>
@@ -290,7 +290,7 @@ export default function Manifesto({ onPlayVideo }) {
                                 {param.key}
                               </span>
                               {hasVideo && (
-                                <span className="text-[9px] text-zinc-600 font-light tracking-wider opacity-0 group-hover/title:opacity-100 transition-opacity duration-200 ml-1">
+                                <span className="text-[11px] text-zinc-400 font-normal tracking-wider opacity-0 group-hover/title:opacity-100 transition-opacity duration-200 ml-1">
                                   // 點擊播放影片
                                 </span>
                               )}

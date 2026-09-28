@@ -82,10 +82,10 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 : 'max-w-4xl'
             }`}
           >
-            {/* 關閉按鈕 */}
+            {/* 關閉按鈕：符合 Apple HIG 最小 44x44pt 觸控標準與焦點輪廓 */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white hover:text-aurora-blue transition duration-300 border border-zinc-800"
+              className="absolute top-4 right-4 z-50 min-w-[44px] min-h-[44px] p-2.5 rounded-full bg-black/60 text-white hover:text-aurora-blue transition duration-300 border border-zinc-800 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue"
               aria-label="Close modal"
             >
               <X size={20} />
@@ -108,7 +108,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                  {iframeLoading && (
                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-md z-10">
                      <div className="w-9 h-9 rounded-full border border-aurora-blue/25 border-t-aurora-blue animate-spin mb-4" />
-                     <span className="mono text-[8px] text-aurora-blue tracking-[0.35em] uppercase animate-pulse">
+                     <span className="mono text-[11px] text-aurora-blue tracking-[0.25em] uppercase font-semibold animate-pulse">
                        CONNECTING MEDIA NODE...
                      </span>
                    </div>

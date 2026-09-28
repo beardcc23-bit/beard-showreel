@@ -179,9 +179,9 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
       {hasVideo ? (
         <div
           style={{ textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}
-          className="relative z-10 mt-auto pt-1 flex items-center gap-1 text-[9px] text-aurora-blue font-black tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 pointer-events-none"
+          className="relative z-10 mt-auto pt-1 flex items-center gap-1 text-[10px] text-aurora-blue font-bold tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 pointer-events-none"
         >
-          <Play size={8} fill="currentColor" className="play-triangle-pulse" /> Play
+          <Play size={9} fill="currentColor" className="play-triangle-pulse" /> Play
         </div>
       ) : null}
     </CardElement>
@@ -238,7 +238,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`hud-btn relative px-3 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center w-full min-w-0 leading-none focus:outline-none focus:ring-0 focus-visible:outline-none ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
+                className={`hud-btn relative px-3 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center w-full min-w-0 leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-core rounded-sm ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
               >
                 {/* 絲滑液態金屬 Tab 高光滑塊 (無多餘二重內框) */}
                 {isActive && (
@@ -248,7 +248,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className={`hud-eng relative z-10 text-[6px] lg:text-[6px] mono tracking-widest uppercase mb-1 whitespace-nowrap ${isActive ? 'text-dawn-gold font-bold' : 'text-zinc-400'
+                <span className={`hud-eng relative z-10 text-[9px] lg:text-[10px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${isActive ? 'text-dawn-gold font-bold' : 'text-zinc-400'
                   }`}>{engName}</span>
                 <span className="hud-zht relative z-10 text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
               </button>
