@@ -99,9 +99,9 @@ export default function CursorGlow() {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('mouseout', handleMouseOut);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
+    window.addEventListener('mouseout', handleMouseOut, { passive: true });
     window.addEventListener('hide-custom-cursor', handleHideCursor);
     window.addEventListener('show-custom-cursor', handleShowCursor);
 
