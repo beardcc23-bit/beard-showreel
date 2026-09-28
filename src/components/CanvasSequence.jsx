@@ -122,30 +122,33 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   }, []);
 
   // 獨立單張影格繪製函式（用於暫停時單次補劃或初始化）
+  const ctxRef = useRef(null);
   const drawCurrentFrame = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = ctxRef.current || (ctxRef.current = canvas.getContext('2d'));
     ctx.imageSmoothingEnabled = false;
     const img = loadedImagesRef.current[currentFrameRef.current];
     if (img && img.complete) {
+      const cWidth = canvas.width || 1504;
+      const cHeight = canvas.height || 832;
       const imgRatio = img.width / img.height;
-      const canvasRatio = canvas.width / canvas.height;
+      const canvasRatio = cWidth / cHeight;
       let drawWidth, drawHeight, drawX, drawY;
 
       if (imgRatio > canvasRatio) {
-        drawHeight = canvas.height;
-        drawWidth = canvas.height * imgRatio;
-        drawX = (canvas.width - drawWidth) / 2;
+        drawHeight = cHeight;
+        drawWidth = cHeight * imgRatio;
+        drawX = (cWidth - drawWidth) / 2;
         drawY = 0;
       } else {
-        drawWidth = canvas.width;
-        drawHeight = canvas.width / imgRatio;
+        drawWidth = cWidth;
+        drawHeight = cWidth / imgRatio;
         drawX = 0;
-        drawY = (canvas.height - drawHeight) / 2;
+        drawY = (cHeight - drawHeight) / 2;
       }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, cWidth, cHeight);
       ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
     }
   };
@@ -155,7 +158,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    ctxRef.current = canvas.getContext('2d');
     
     // 設定畫布解析度匹配原始高畫質尺寸 (1504x832)
     if (canvas.width !== 1504) canvas.width = 1504;
@@ -177,9 +180,12 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
             lastFrameTime = performance.now();
             animationFrameId = requestAnimationFrame(render);
           }
+        } else if (!isIntersecting && animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
         }
       },
-      { threshold: 0.05 }
+      { threshold: 0.15 }
     );
     observer.observe(canvas);
 

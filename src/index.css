@@ -319,14 +319,12 @@ body {
 }
 
 .crystal-inner {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.18); /* 更亮的外框線 */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   box-shadow: 
-    0 10px 30px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 10px 25px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
   animation: float-crystal 12s infinite ease-in-out;
   will-change: transform;
 }

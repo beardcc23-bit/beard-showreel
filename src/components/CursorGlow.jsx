@@ -55,17 +55,12 @@ export default function CursorGlow() {
       }
     };
 
+    const INTERACTIVE_SELECTOR = 'a, button, .tech-card, .glow-title, [role="button"], .group';
+
     const handleMouseOver = (e) => {
       const target = e.target;
-      if (!target) return;
-      if (
-        target.closest('a') ||
-        target.closest('button') ||
-        target.closest('.tech-card') ||
-        target.closest('.glow-title') ||
-        target.closest('[role="button"]') ||
-        target.closest('.group') // 懸停在卡片上時也觸發放大
-      ) {
+      if (!target || !(target instanceof Element)) return;
+      if (target.closest(INTERACTIVE_SELECTOR)) {
         if (!isHoveredRef.current) {
           isHoveredRef.current = true;
           if (glowRef.current) {
@@ -77,28 +72,12 @@ export default function CursorGlow() {
 
     const handleMouseOut = (e) => {
       const target = e.target;
-      if (!target) return;
+      if (!target || !(target instanceof Element)) return;
       
       const relatedTarget = e.relatedTarget;
       
-      if (
-        target.closest('a') ||
-        target.closest('button') ||
-        target.closest('.tech-card') ||
-        target.closest('.glow-title') ||
-        target.closest('[role="button"]') ||
-        target.closest('.group')
-      ) {
-        // 判斷滑鼠是否真的移出所有可 hover 區塊
-        const isStillHovered = relatedTarget && (
-          relatedTarget.closest('a') ||
-          relatedTarget.closest('button') ||
-          relatedTarget.closest('.tech-card') ||
-          relatedTarget.closest('.glow-title') ||
-          relatedTarget.closest('[role="button"]') ||
-          relatedTarget.closest('.group')
-        );
-        
+      if (target.closest(INTERACTIVE_SELECTOR)) {
+        const isStillHovered = relatedTarget && (relatedTarget instanceof Element) && relatedTarget.closest(INTERACTIVE_SELECTOR);
         if (!isStillHovered) {
           isHoveredRef.current = false;
           if (glowRef.current) {

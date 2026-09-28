@@ -1,12 +1,19 @@
 const BASE_URL = import.meta.env.BASE_URL || '/';
 
+export function extractYoutubeId(url) {
+  if (!url) return null;
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([\w-]{11})/);
+  return match ? match[1] : null;
+}
+
 export function normalizeItem(item) {
   if (!item) return null;
   const bgImage = item.bgImage
     ? (item.bgImage.startsWith('/') ? `${BASE_URL}${item.bgImage.slice(1)}` : item.bgImage)
     : null;
-  const hasVideo = !!item.videoId || !!item.url;
-  return { ...item, bgImage, hasVideo };
+  const videoId = item.videoId || extractYoutubeId(item.url);
+  const hasVideo = !!videoId || !!item.url;
+  return { ...item, videoId, bgImage, hasVideo };
 }
 
 export const categories = [
@@ -410,30 +417,36 @@ export const categories = [
       {
         "name": "新光三越",
         "bgImage": "/vfx/D/D-13.webp",
+        "url": "https://www.youtube.com/watch?v=wZhogI5TPB8",
+        "videoId": "wZhogI5TPB8"
+      },
+      {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-14.webp",
         "url": "https://www.youtube.com/watch?v=xS3VLzTJxs0",
         "videoId": "xS3VLzTJxs0"
       },
       {
         "name": "新光三越",
-        "bgImage": "/vfx/D/D-14.webp",
+        "bgImage": "/vfx/D/D-15.webp",
         "url": "https://www.youtube.com/watch?v=7bpKC3naivA",
         "videoId": "7bpKC3naivA"
       },
       {
         "name": "新光三越",
-        "bgImage": "/vfx/D/D-15.webp",
+        "bgImage": "/vfx/D/D-16.webp",
         "url": "https://www.youtube.com/watch?v=QC2Adq-3lOc",
         "videoId": "QC2Adq-3lOc"
       },
       {
         "name": "錦鋐氣密窗",
-        "bgImage": "/vfx/D/D-16.webp",
+        "bgImage": "/vfx/D/D-17.webp",
         "url": "https://www.youtube.com/watch?v=BOj8-iDaB0s",
         "videoId": "BOj8-iDaB0s"
       },
       {
         "name": "魔術靈",
-        "bgImage": "/vfx/D/D-17.webp"
+        "bgImage": "/vfx/D/D-18.webp"
       }
     ]
   },

@@ -4,12 +4,13 @@ import { Play } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 
 const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, ref) => {
-  const item = normalizeItem(rawItem);
+  const item = React.useMemo(() => normalizeItem(rawItem), [rawItem]);
   const { hasVideo, bgImage: bgImageUrl } = item;
   const CardElement = hasVideo ? 'button' : 'div';
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const innerRef = React.useRef(null);
   const rafRef = React.useRef(null);
+  const bobbleRafRef = React.useRef(null);
   const rectRef = React.useRef(null);
 
   const setRefs = (node) => {
@@ -24,6 +25,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   React.useEffect(() => {
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (bobbleRafRef.current) cancelAnimationFrame(bobbleRafRef.current);
     };
   }, []);
 
@@ -34,9 +36,14 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
     rectRef.current = rect;
     const isLeft = (e.clientX - rect.left) < rect.width / 2;
 
+    if (bobbleRafRef.current) cancelAnimationFrame(bobbleRafRef.current);
     innerRef.current.classList.remove('bobble-left', 'bobble-right');
-    void innerRef.current.offsetWidth; // 強制重繪重啟 keyframe
-    innerRef.current.classList.add(isLeft ? 'bobble-left' : 'bobble-right');
+    bobbleRafRef.current = requestAnimationFrame(() => {
+      if (innerRef.current) {
+        innerRef.current.classList.add(isLeft ? 'bobble-left' : 'bobble-right');
+      }
+      bobbleRafRef.current = null;
+    });
   };
 
   const handleMouseMove = (e) => {
@@ -63,6 +70,10 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
 
   const handlePointerLeave = () => {
     rectRef.current = null;
+    if (bobbleRafRef.current) {
+      cancelAnimationFrame(bobbleRafRef.current);
+      bobbleRafRef.current = null;
+    }
     if (innerRef.current) {
       innerRef.current.classList.remove('bobble-left', 'bobble-right');
       innerRef.current.style.setProperty('--tilt-x', '0deg');
@@ -128,6 +139,8 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
           <img
             src={bgImageUrl}
             alt={`${item.name} background`}
+            width="600"
+            height="337"
             loading="lazy"
             decoding="async"
             fetchpriority="low"
@@ -244,45 +257,27 @@ export default function VisualSynthesis({ onPlayVideo }) {
         </div>
 
         {/* 品牌卡片 Grid - 手機版 3 欄 (grid-cols-3)、電腦版 5 欄 (md:grid-cols-5) */}
-        <div className="relative z-10 min-h-[300px]" style={{ perspective: '1200px' }}>
+        <div className="relative z-10 min-h-[300px]">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={activeTab}
               custom={direction}
-              initial={{
-                opacity: 0,
-                rotateY: direction * 22,
-                scale: 0.93
-              }}
-              animate={{
-                opacity: 1,
-                rotateY: 0,
-                scale: 1
-              }}
-              exit={{
-                opacity: 0,
-                rotateY: direction * -22,
-                scale: 0.93
-              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
               transition={{
-                duration: 0.45,
+                duration: 0.22,
                 ease: [0.16, 1, 0.3, 1]
               }}
-              style={{ transformStyle: 'preserve-3d', willChange: 'transform, opacity' }}
               className="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3.5"
             >
               {currentCategory.items.map((item, index) => (
-                <motion.div
-                  key={`${activeTab}-${item.name}-${index}`}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: index * 0.045, ease: [0.16, 1, 0.3, 1] }}
-                >
+                <div key={`${activeTab}-${item.name}-${index}`}>
                   <BrandCard
                     item={item}
                     onPlayVideo={onPlayVideo}
                   />
-                </motion.div>
+                </div>
               ))}
             </motion.div>
           </AnimatePresence>
