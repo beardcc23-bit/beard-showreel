@@ -37,101 +37,111 @@ export default function Modal({ isOpen, onClose, type, data }) {
     }
   }, [isOpen, onClose]);
 
-  if (!isOpen || !data || typeof document === 'undefined') return null;
+  const activeDataRef = React.useRef(data);
+  const activeTypeRef = React.useRef(type);
+  if (data) {
+    activeDataRef.current = data;
+    activeTypeRef.current = type;
+  }
+  const currentData = data || activeDataRef.current;
+  const currentType = type || activeTypeRef.current;
+
+  if (typeof document === 'undefined') return null;
 
   return ReactDOM.createPortal(
-    <AnimatePresence>
-      <div 
-        role="dialog"
-        aria-modal="true"
-        aria-label={data.title || "Media Player Modal"}
-        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
-      >
-        {/* 遮罩層 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="fixed inset-0 bg-black/90 cursor-pointer"
-        />
-
-        {/* 彈窗內容本體 */}
-        <motion.div
-          initial={{ scale: 0.9, y: 40, opacity: 0 }}
-          animate={{ scale: 1, y: 0, opacity: 1 }}
-          exit={{ scale: 0.9, y: 40, opacity: 0 }}
-          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className={`relative w-full bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[95vh] transition-all duration-300 transform-gpu will-change-transform ${
-            type === 'video' && data.aspect === 'portrait'
-              ? 'max-w-[45vh] md:max-w-[50vh]'
-              : type === 'video' && data.aspect === 'square'
-              ? 'max-w-[70vh] md:max-w-[75vh]'
-              : type === 'image'
-              ? 'max-w-2xl'
-              : 'max-w-4xl'
-          }`}
+    <AnimatePresence mode="wait">
+      {isOpen && currentData && (
+        <div 
+          role="dialog"
+          aria-modal="true"
+          aria-label={currentData.title || "Media Player Modal"}
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
         >
-          {/* 關閉按鈕 */}
-          <button
+          {/* 遮罩層 */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white hover:text-aurora-blue transition duration-300 border border-zinc-800"
-            aria-label="Close modal"
-          >
-            <X size={20} />
-          </button>
+            className="fixed inset-0 bg-black/90 cursor-pointer"
+          />
 
-          {type === 'video' ? (
-            /* 影片播放模式 */
-            <div 
-              onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
-              onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
-              className={`bg-black mx-auto overflow-hidden w-full relative ${
-                data.aspect === 'portrait'
-                  ? 'aspect-[9/16] h-[80vh]'
-                  : data.aspect === 'square'
-                  ? 'aspect-square h-[70vh] md:h-[75vh]'
-                  : 'aspect-video'
-              }`}
+          {/* 彈窗內容本體 */}
+          <motion.div
+            initial={{ scale: 0.9, y: 40, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.9, y: 40, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className={`relative w-full bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[95vh] transition-all duration-300 transform-gpu will-change-transform ${
+              currentType === 'video' && currentData.aspect === 'portrait'
+                ? 'max-w-[45vh] md:max-w-[50vh]'
+                : currentType === 'video' && currentData.aspect === 'square'
+                ? 'max-w-[70vh] md:max-w-[75vh]'
+                : currentType === 'image'
+                ? 'max-w-2xl'
+                : 'max-w-4xl'
+            }`}
+          >
+            {/* 關閉按鈕 */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/50 text-white hover:text-aurora-blue transition duration-300 border border-zinc-800"
+              aria-label="Close modal"
             >
-               {/* 科技質感載入骨架屏 */}
-               {iframeLoading && (
-                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-md z-10">
-                   <div className="w-9 h-9 rounded-full border border-aurora-blue/25 border-t-aurora-blue animate-spin mb-4" />
-                   <span className="mono text-[8px] text-aurora-blue tracking-[0.35em] uppercase animate-pulse">
-                     CONNECTING MEDIA NODE...
-                   </span>
-                 </div>
-               )}
-               {data.isFacebook ? (
-                <iframe
-                  key={data.videoUrl || data.videoId}
-                  src={data.videoUrl 
-                    ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(data.videoUrl)}&show_text=0&t=0&autoplay=1`
-                    : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${data.videoId}&show_text=0&t=0&autoplay=1`}
-                  title="Facebook Video Player"
-                  frameBorder="0"
-                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  allowFullScreen
-                  referrerPolicy="no-referrer-when-downgrade"
-                  onLoad={() => setIframeLoading(false)}
-                  className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
-                ></iframe>
-              ) : (
-                <iframe
-                  key={data.videoId}
-                  src={`https://www.youtube.com/embed/${data.videoId}?autoplay=1`}
-                  title="YouTube Video Player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  referrerPolicy="no-referrer-when-downgrade"
-                  onLoad={() => setIframeLoading(false)}
-                  className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
-                ></iframe>
-              )}
-            </div>
-          ) : type === 'image' ? (
+              <X size={20} />
+            </button>
+
+            {currentType === 'video' ? (
+              /* 影片播放模式 */
+              <div 
+                onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
+                onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
+                className={`bg-black mx-auto overflow-hidden w-full relative ${
+                  currentData.aspect === 'portrait'
+                    ? 'aspect-[9/16] h-[80vh]'
+                    : currentData.aspect === 'square'
+                    ? 'aspect-square h-[70vh] md:h-[75vh]'
+                    : 'aspect-video'
+                }`}
+              >
+                 {/* 科技質感載入骨架屏 */}
+                 {iframeLoading && (
+                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-md z-10">
+                     <div className="w-9 h-9 rounded-full border border-aurora-blue/25 border-t-aurora-blue animate-spin mb-4" />
+                     <span className="mono text-[8px] text-aurora-blue tracking-[0.35em] uppercase animate-pulse">
+                       CONNECTING MEDIA NODE...
+                     </span>
+                   </div>
+                 )}
+                 {currentData.isFacebook ? (
+                  <iframe
+                    key={currentData.videoUrl || currentData.videoId}
+                    src={isOpen ? (currentData.videoUrl 
+                      ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(currentData.videoUrl)}&show_text=0&t=0&autoplay=1`
+                      : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${currentData.videoId}&show_text=0&t=0&autoplay=1`) : 'about:blank'}
+                    title="Facebook Video Player"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    onLoad={() => setIframeLoading(false)}
+                    className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                  ></iframe>
+                ) : (
+                  <iframe
+                    key={currentData.videoId}
+                    src={isOpen ? `https://www.youtube.com/embed/${currentData.videoId}?autoplay=1` : 'about:blank'}
+                    title="YouTube Video Player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    onLoad={() => setIframeLoading(false)}
+                    className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                  ></iframe>
+                )}
+              </div>
+            ) : currentType === 'image' ? (
             /* 單張圖片展示模式 (例如 Flame 節點解密) */
             <div className="p-4 md:p-6 flex flex-col bg-[#121314] rounded-lg">
               <div className="w-full overflow-hidden border border-zinc-900 rounded-sm mb-3.5">
@@ -279,6 +289,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
           )}
         </motion.div>
       </div>
+      )}
     </AnimatePresence>,
     document.body
   );
