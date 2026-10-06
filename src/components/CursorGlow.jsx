@@ -127,7 +127,8 @@ export default function CursorGlow() {
         className="cursor-glow-element"
         style={{
           opacity: isHidden ? 0 : 1,
-          transition: 'opacity 0.25s ease, width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          // 只過渡合成層屬性：scale 為獨立屬性，不與 JS 每幀寫入的 transform 衝突
+          transition: 'opacity 0.25s ease, scale 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       />
       {/* 游標核心同心圓環 (45度開口反向旋轉) */}

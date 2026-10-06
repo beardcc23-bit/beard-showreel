@@ -7,6 +7,8 @@ export function useParallaxOrbit() {
   useEffect(() => {
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     if (isTouch) return;
+    // JS 每幀驅動的視差不受 CSS reduced-motion 規則影響，需在此自行略過
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
 
     const orbit = document.querySelector('.orbit-container');
     if (!orbit) return;

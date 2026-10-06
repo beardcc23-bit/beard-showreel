@@ -10,6 +10,9 @@ export function useLenisScroll() {
     const isPureTouch = ('ontouchstart' in window) && !window.matchMedia('(pointer: fine)').matches;
     if (isPureTouch) return; // 純行動裝置交由原生 120Hz 慣性滾動，杜絕任何卡頓
 
+    // 使用者偏好減少動態：不啟用慣性平滑滾動，交回原生捲動
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const lenis = new Lenis({
       duration: 1.05,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

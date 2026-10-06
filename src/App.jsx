@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MotionConfig } from 'framer-motion';
 import Navigation from './components/Navigation';
 import CursorGlow from './components/CursorGlow';
 import Hero from './components/Hero';
@@ -57,6 +58,8 @@ export default function App() {
   }, []);
 
   return (
+    // reducedMotion="user"：系統開啟「減少動態」時，Framer Motion 自動關閉 transform 類動畫
+    <MotionConfig reducedMotion="user">
     <div className={`relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden ${isPageLoaded ? 'is-loaded' : 'is-loading'}`}>
 
       {/* 視覺背景與光學粒子 */}
@@ -130,5 +133,6 @@ export default function App() {
         />
       </React.Suspense>
     </div>
+    </MotionConfig>
   );
 }

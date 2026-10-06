@@ -12,7 +12,7 @@ export default function ScrubText({ text, className = "", children }) {
     offset: ["start 0.92", "start 0.55"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.65, 1.0]);
+  // 只做顏色漸變：原本 opacity(0.65) × 顏色 alpha(0.68) 會雙重調暗至約 44%，對比過低
   const color = useTransform(
     scrollYProgress,
     [0, 1],
@@ -22,7 +22,7 @@ export default function ScrubText({ text, className = "", children }) {
   return (
     <motion.p
       ref={containerRef}
-      style={{ opacity, color }}
+      style={{ color }}
       className={`transform-gpu ${className}`}
     >
       {children || text}

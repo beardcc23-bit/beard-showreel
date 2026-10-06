@@ -1,223 +1,89 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// 是否偏好減少動態（SSR / 測試環境安全）
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * Hero 循環影片播放器
+ * 原本為 145 張 webp 序列 + Canvas rAF 繪製（桌機 17MB / 手機 5.6MB），
+ * 改為原生 <video>：AV1 webm 優先、H.264 mp4 備援，體積降至約 1~2MB，並交由硬體解碼。
+ * 元件名稱與 props 介面維持不變，避免影響 Hero / App。
+ */
 export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
-  const canvasRef = useRef(null);
-  const currentFrameRef = useRef(0);
-  const loadedImagesRef = useRef([]);
-  const isPlayingRef = useRef(true);
-  const [isLoading, setIsLoading] = useState(true); // 代表第一幀是否載入完成（首頁解鎖）
-  const [bgPreloadComplete, setBgPreloadComplete] = useState(false); // 背景其餘影格是否預載完畢
-  const [loadProgress, setLoadProgress] = useState(0);
+  const videoRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true); // poster 是否載入完成（首頁解鎖）
   const [isPlaying, setIsPlaying] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [isMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [reducedMotion] = useState(prefersReducedMotion);
 
-  const frameCount = 145; // png-0_00000000.png ~ png-0_00000144.png
-  const fps = 30;
-  const frameInterval = 1000 / fps;
+  const basePath = import.meta.env.BASE_URL;
+  const suffix = isMobile ? '-mobile' : '';
+  const posterSrc = `${basePath}hero-poster${suffix}.webp`;
 
-  // 同步 state 與 ref
-  useEffect(() => {
-    isPlayingRef.current = isPlaying;
-  }, [isPlaying]);
-
+  // 以 poster 作為首屏解鎖依據：poster 很小，能最快解除 preloader；影片隨後無縫接手
   useEffect(() => {
     let isCancelled = false;
-    const isMobile = window.innerWidth < 768;
-    const folderName = isMobile ? 'png-0-mobile' : 'png-0';
-    const basePath = import.meta.env.BASE_URL;
-    const firstFrameSrc = `${basePath}${folderName}/png-0_00000000.webp?v=3`;
-    
-    // 初始化 ref 陣列長度
-    loadedImagesRef.current = new Array(frameCount);
-    
-    const firstImg = new Image();
-    firstImg.src = firstFrameSrc;
-    
-    firstImg.onload = () => {
+    let fallbackTimer = null;
+
+    const unlock = () => {
       if (isCancelled) return;
-      // 第一幀載入成功，立即初始化並結束全螢幕 loading，使首頁解鎖
-      loadedImagesRef.current[0] = firstImg;
+      clearTimeout(fallbackTimer);
       setIsLoading(false);
       if (onLoaded) onLoaded();
-      setLoadProgress(1);
-      
-      // 接著在背景非同步分批加載剩餘 144 張圖片
-      preloadRemainingFrames(folderName);
     };
 
-    firstImg.onerror = () => {
-      if (isCancelled) return;
-      // 容錯防卡死
-      setIsLoading(false);
-      if (onLoaded) onLoaded();
-      preloadRemainingFrames(folderName);
-    };
-
-    const preloadRemainingFrames = async (activeFolder) => {
-      const concurrencyLimit = 4; // 每次併發 4 個請求，防止網路排隊堵塞
-      let nextIndex = 1;
-      let loadedCount = 1;
-      let lastReportedProgress = 1;
-
-      const loadFrame = (index) => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.src = `${basePath}${activeFolder}/png-0_${String(index).padStart(8, '0')}.webp?v=3`;
-          img.onload = () => {
-            loadedImagesRef.current[index] = img;
-            resolve();
-          };
-          img.onerror = () => {
-            resolve(); // 容錯，出錯也 resolve 以便加載繼續
-          };
-        });
-      };
-
-      const worker = async () => {
-        while (nextIndex < frameCount && !isCancelled) {
-          const currentIndex = nextIndex++;
-          await loadFrame(currentIndex);
-          if (isCancelled) return;
-          loadedCount++;
-          const progress = Math.round((loadedCount / frameCount) * 100);
-          // 每 5% 步階或達到 100% 時才觸發 State 更新，避免過度觸發 Re-render
-          if (progress - lastReportedProgress >= 5 || progress === 100) {
-            lastReportedProgress = progress;
-            setLoadProgress(progress);
-          }
-        }
-      };
-
-      // 啟動多個並行下載 worker
-      const workers = [];
-      for (let w = 0; w < concurrencyLimit; w++) {
-        workers.push(worker());
-      }
-      await Promise.all(workers);
-      
-      if (!isCancelled) {
-        setBgPreloadComplete(true);
-      }
-    };
+    const posterImg = new Image();
+    posterImg.onload = unlock;
+    posterImg.onerror = unlock; // 容錯防卡死
+    posterImg.src = posterSrc;
+    // 最長 3 秒保底，避免網路異常時 preloader 永遠不消失
+    fallbackTimer = setTimeout(unlock, 3000);
 
     return () => {
       isCancelled = true;
-      if (canvasRef.current) {
-        canvasRef.current.width = 0;
-        canvasRef.current.height = 0;
-      }
-      if (loadedImagesRef.current) {
-        loadedImagesRef.current.forEach((img, idx) => {
-          if (img) {
-            img.src = '';
-            img.onload = null;
-            img.onerror = null;
-            loadedImagesRef.current[idx] = null;
-          }
-        });
-        loadedImagesRef.current = [];
-      }
+      clearTimeout(fallbackTimer);
+      posterImg.onload = null;
+      posterImg.onerror = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 獨立單張影格繪製函式（用於暫停時單次補劃或初始化）
-  const ctxRef = useRef(null);
-  const drawCurrentFrame = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = ctxRef.current || (ctxRef.current = canvas.getContext('2d'));
-    ctx.imageSmoothingEnabled = false;
-    const img = loadedImagesRef.current[currentFrameRef.current];
-    if (img && img.complete) {
-      const cWidth = canvas.width || 1504;
-      const cHeight = canvas.height || 832;
-      const imgRatio = img.width / img.height;
-      const canvasRatio = cWidth / cHeight;
-      let drawWidth, drawHeight, drawX, drawY;
-
-      if (imgRatio > canvasRatio) {
-        drawHeight = cHeight;
-        drawWidth = cHeight * imgRatio;
-        drawX = (cWidth - drawWidth) / 2;
-        drawY = 0;
-      } else {
-        drawWidth = cWidth;
-        drawHeight = cWidth / imgRatio;
-        drawX = 0;
-        drawY = (cHeight - drawHeight) / 2;
-      }
-
-      ctx.clearRect(0, 0, cWidth, cHeight);
-      ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-    }
-  };
-
+  // 播放控制：hover 暫停 / Modal 開啟 / 離開視域 / 減少動態偏好 時暫停
   useEffect(() => {
-    if (isLoading) return;
+    const video = videoRef.current;
+    if (!video || isLoading) return;
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    ctxRef.current = canvas.getContext('2d');
-    
-    // 設定畫布解析度匹配原始高畫質尺寸 (1504x832)
-    if (canvas.width !== 1504) canvas.width = 1504;
-    if (canvas.height !== 832) canvas.height = 832;
+    const shouldPlay = (inView) => inView && isPlaying && !isModalOpen && !reducedMotion;
+    const sync = (inView) => {
+      if (shouldPlay(inView)) {
+        video.muted = true; // React 的 muted prop 不一定寫入 DOM attribute，iOS 自動播放需確保靜音
+        const p = video.play();
+        // 自動播放被瀏覽器阻擋（例如 iOS 低電量模式）時靜默處理，維持 poster 畫面
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } else {
+        video.pause();
+      }
+    };
 
-    let animationFrameId;
-    let lastFrameTime = performance.now();
-    let isIntersecting = true;
-
-    // 先繪製一次當前影格（防白屏/黑屏）
-    drawCurrentFrame();
+    let inView = true;
+    sync(inView);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        isIntersecting = entry.isIntersecting;
-        if (isIntersecting && isPlaying && !isModalOpen) {
-          // 重新進入視域時若為播放狀態則啟動 rAF
-          if (!animationFrameId) {
-            lastFrameTime = performance.now();
-            animationFrameId = requestAnimationFrame(render);
-          }
-        } else if (!isIntersecting && animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-          animationFrameId = null;
-        }
+        inView = entry.isIntersecting;
+        sync(inView);
       },
       { threshold: 0.15 }
     );
-    observer.observe(canvas);
+    observer.observe(video);
 
-    const render = (now) => {
-      // 若非播放狀態、或打開 Modal，停止繼續請求下一幀 (Stop Ticking)
-      if (!isIntersecting || !isPlaying || isModalOpen) {
-        animationFrameId = null;
-        return;
-      }
-
-      const deltaTime = now - lastFrameTime;
-      if (deltaTime >= frameInterval) {
-        drawCurrentFrame();
-        currentFrameRef.current = (currentFrameRef.current + 1) % frameCount;
-        lastFrameTime = now - (deltaTime % frameInterval);
-      }
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    // 只有在 isPlaying = true 且未開啟 Modal 時才啟動 rAF 迴圈
-    if (isPlaying && !isModalOpen) {
-      animationFrameId = requestAnimationFrame(render);
-    }
-
-    return () => {
-      observer.disconnect();
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [isLoading, isPlaying, isModalOpen]);
+    return () => observer.disconnect();
+  }, [isLoading, isPlaying, isModalOpen, reducedMotion]);
 
   const handleMouseEnter = () => {
     setIsPlaying(false);
@@ -231,7 +97,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-      {/* 高質感科幻 Preloader (載入第一幀即消失) */}
+      {/* 高質感科幻 Preloader (poster 載入即消失) */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
@@ -242,17 +108,10 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
             className="absolute inset-0 flex flex-col items-center justify-center z-30 bg-bg-core pointer-events-auto"
           >
             <div className="relative w-28 h-28 flex items-center justify-center">
-              {/* 外圈旋轉動畫 */}
-              <svg className="absolute w-full h-full transform -rotate-90">
+              {/* 外圈 */}
+              <svg className="absolute w-full h-full transform -rotate-90" aria-hidden="true">
+                <circle cx="56" cy="56" r="50" className="stroke-zinc-800" strokeWidth="2" fill="transparent" />
                 <circle
-                  cx="56"
-                  cy="56"
-                  r="50"
-                  className="stroke-zinc-800"
-                  strokeWidth="2"
-                  fill="transparent"
-                />
-                <motion.circle
                   cx="56"
                   cy="56"
                   r="50"
@@ -261,7 +120,6 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
                   fill="transparent"
                   strokeDasharray="314"
                   strokeDashoffset={0}
-                  transition={{ ease: 'easeInOut' }}
                 />
               </svg>
               {/* 內圈呼吸燈 */}
@@ -269,20 +127,19 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
                 <span className="mono text-xs font-black text-white">SYNC</span>
               </div>
             </div>
-            
+
             <div className="mt-8 text-center">
               <span className="mono text-[10px] tracking-[0.4em] text-aurora-blue uppercase animate-pulse">
                 INITIALIZING VISUAL MATRIX
               </span>
               <p className="text-[10px] text-zinc-500 mono mt-2 uppercase tracking-widest">
-                FPS: 30 // CHUNKED PRELOAD ACTIVE // REGISTRY: OPTIMAL
+                FPS: 30 // STREAM: HW DECODE // REGISTRY: OPTIMAL
               </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* 圖片序列 Canvas 主體 */}
       {/* 播放器後方 HUD 同心圓旋轉背景（僅在手機版顯示，網頁桌面版隱藏） */}
       {!isLoading && (
         <div className="absolute w-[1300px] h-[1300px] md:w-[1500px] md:h-[1500px] max-w-[140vw] max-h-[140vw] z-0 pointer-events-none flex md:hidden items-center justify-center overflow-visible opacity-50">
@@ -292,31 +149,53 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
         </div>
       )}
 
-      {/* 圖片序列 Canvas 主體 */}
+      {/* 影片主體（移除 transition-all，避免與 Framer Motion 每幀 transform 互相拖拽） */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ 
-          opacity: isLoading ? 0 : 1, 
-          scale: isLoading ? 0.95 : 1 
+        animate={{
+          opacity: isLoading ? 0 : 1,
+          scale: isLoading ? 0.95 : 1,
         }}
         transition={{ duration: 1, ease: 'easeOut' }}
-        className={`w-full md:w-[1000px] md:max-w-[90vw] aspect-[5/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-none md:rounded-sm relative overflow-hidden border-y border-zinc-800 md:border md:border-zinc-800 transition-all duration-300 z-10 ${
+        className={`w-full md:w-[1000px] md:max-w-[90vw] aspect-[5/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-none md:rounded-sm relative overflow-hidden border-y border-zinc-800 md:border md:border-zinc-800 z-10 ${
           isLoading ? 'pointer-events-none' : 'pointer-events-auto'
         }`}
       >
         <div className="w-full h-full overflow-hidden relative">
-          <canvas ref={canvasRef} className="w-full h-full block pointer-events-none object-cover" />
-          
+          <video
+            ref={videoRef}
+            className="w-full h-full block pointer-events-none object-cover"
+            poster={posterSrc}
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            {/* AV1 level：桌機 1504x832 = 4.0 (08)、手機 960x532 = 3.0 (04) */}
+            <source
+              src={`${basePath}hero${suffix}.webm`}
+              type={`video/webm; codecs="av01.0.${isMobile ? '04' : '08'}M.08"`}
+            />
+            <source src={`${basePath}hero${suffix}.mp4`} type="video/mp4" />
+          </video>
+
           {/* Hover 滿版微暗調半透明 Overlay，凸顯 YT 紅色按鈕但不擋住畫格內容 */}
-          <div className={`absolute inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity duration-300 pointer-events-none flex flex-col items-center justify-center ${
-            showOverlay ? 'opacity-100' : 'opacity-0'
-          }`}>
-            <div className={`flex flex-col items-center transform transition-all duration-300 ${
-              showOverlay ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
-            }`}>
+          <div
+            className={`absolute inset-0 bg-black/40 backdrop-blur-[1px] transition-opacity duration-300 pointer-events-none flex flex-col items-center justify-center ${
+              showOverlay ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <div
+              className={`flex flex-col items-center transform transition-[transform,opacity] duration-300 ${
+                showOverlay ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+              }`}
+            >
               {/* YouTube 紅色播放按鈕 */}
               <img
-                src={`${import.meta.env.BASE_URL}youtube-logo.webp`}
+                src={`${basePath}youtube-logo.webp`}
                 alt="YouTube Play Reel"
                 className="w-36 h-36 md:w-48 md:h-48 object-contain drop-shadow-[0_0_35px_rgba(255,0,0,0.75)] hover:scale-105 transition-transform duration-200"
               />
@@ -339,14 +218,6 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
           <div className="glow-border pointer-events-none" />
         </div>
-
-        {/* 右上角極微型背景加載進度指示器（精緻細節，當加載完畢後淡出消失） */}
-        {!bgPreloadComplete && !isLoading && (
-          <div className="absolute top-4 right-4 mono text-[6px] text-aurora-blue opacity-50 select-none pointer-events-none uppercase tracking-widest flex items-center gap-1.5 animate-pulse">
-            <span className="w-1 h-1 rounded-full bg-aurora-blue animate-ping" />
-            Caching Matrix: {loadProgress}%
-          </div>
-        )}
       </motion.div>
     </div>
   );
