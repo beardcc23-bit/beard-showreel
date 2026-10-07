@@ -15,6 +15,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
       }
       setIframeLoading(true); // 開啟時重設為載入中狀態
+      // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
+      window.lenis?.stop();
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
@@ -27,6 +29,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
       return () => {
         document.body.style.overflow = '';
         document.body.style.paddingRight = '';
+        window.lenis?.start();
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
@@ -55,6 +58,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
           role="dialog"
           aria-modal="true"
           aria-label={currentData.title || "Media Player Modal"}
+          data-lenis-prevent
           className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8"
         >
           {/* 遮罩層 */}
@@ -72,7 +76,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.9, y: 40, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className={`relative w-full bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[95vh] transition-all duration-300 transform-gpu will-change-transform ${
+            className={`relative w-full bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[95vh] ${
               currentType === 'video' && currentData.aspect === 'portrait'
                 ? 'max-w-[45vh] md:max-w-[50vh]'
                 : currentType === 'video' && currentData.aspect === 'square'

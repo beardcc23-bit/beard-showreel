@@ -6,16 +6,18 @@ export default {
   ],
   theme: {
     extend: {
+      // 使用 rgb 通道 + <alpha-value>，Tailwind 才能產生 bg-aurora-blue/40 這類透明度修飾詞
+      // 通道數值定義於 src/index.css 的 :root（--rgb-*），需與 --color-* hex 值保持一致
       colors: {
-        'bg-core': 'var(--color-bg-core)',
-        'bg-mist': 'var(--color-bg-mist)',
-        'bg-shadow': 'var(--color-bg-shadow)',
-        'aurora-blue': 'var(--color-aurora-blue)',
-        'soft-magenta': 'var(--color-soft-magenta)',
-        'dawn-gold': 'var(--color-dawn-gold)',
-        'prism-green': 'var(--color-prism-green)',
-        'title-white': 'var(--color-title-white)',
-        'info-gold-gray': 'var(--color-info-gold-gray)',
+        'bg-core': 'rgb(var(--rgb-bg-core) / <alpha-value>)',
+        'bg-mist': 'rgb(var(--rgb-bg-mist) / <alpha-value>)',
+        'bg-shadow': 'rgb(var(--rgb-bg-shadow) / <alpha-value>)',
+        'aurora-blue': 'rgb(var(--rgb-accent) / <alpha-value>)',
+        'soft-magenta': 'rgb(var(--rgb-soft-magenta) / <alpha-value>)',
+        'dawn-gold': 'rgb(var(--rgb-dawn-gold) / <alpha-value>)',
+        'prism-green': 'rgb(var(--rgb-prism-green) / <alpha-value>)',
+        'title-white': 'rgb(var(--rgb-title-white) / <alpha-value>)',
+        'info-gold-gray': 'rgb(var(--rgb-info-gold-gray) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['"Space Mono"', '"Noto Sans TC"', 'monospace', 'sans-serif'],

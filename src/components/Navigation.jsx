@@ -84,7 +84,7 @@ export default function Navigation() {
           <motion.button
             whileTap={tapFeedback}
             onClick={toggleMenu}
-            className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white-or-black hover:text-aurora-blue transition focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
+            className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white-or-black hover:text-aurora-blue transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
             aria-label="Toggle Navigation Menu"
           >
             <Menu size={24} />
@@ -99,8 +99,10 @@ export default function Navigation() {
           </motion.button>
         </div>
         
-        <div className="flex items-center space-x-3 md:space-x-8">
-          <div className="hidden md:flex space-x-12">
+        <div className="flex items-center space-x-3">
+          {/* 熱區：每個連結加 px-5 py-3（與右側 CTA 同尺寸），間距由 space-x-12 改 space-x-2
+              → 文字之間視覺距離維持 48px（20 + 8 + 20），但整塊框框範圍都可感應 */}
+          <div className="hidden md:flex space-x-2">
             {menuItems.map((item) => (
               <motion.a
                 key={item.href}
@@ -109,10 +111,13 @@ export default function Navigation() {
                 whileTap={tapFeedback}
                 transition={emilSpring.snappy}
                 onClick={(e) => handleScroll(e, item.href)}
-                className="hover:text-dawn-gold transition duration-300 relative group flex items-center focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none cursor-pointer"
+                className="px-5 py-3 border border-transparent leading-none hover:text-dawn-gold transition-colors duration-300 group flex items-center justify-center focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none cursor-pointer"
               >
-                <span className="text-xs font-normal tracking-wider">{item.name}</span>
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-dawn-gold transition-all duration-300 group-hover:w-full" />
+                {/* 底線掛在文字 span 上，寬度只跟文字等寬，不會被 padding 撐大 */}
+                <span className="relative text-xs font-normal tracking-wider">
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-dawn-gold transition-all duration-300 group-hover:w-full" />
+                </span>
               </motion.a>
             ))}
           </div>
@@ -123,7 +128,7 @@ export default function Navigation() {
             whileHover={{ scale: 1.02 }}
             transition={emilSpring.snappy}
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none hover:shadow-[0_0_18px_rgba(212,175,55,0.25)] transition-all duration-300 cursor-pointer"
+            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none hover:shadow-[0_0_18px_rgba(212,175,55,0.25)] transition-shadow duration-300 cursor-pointer"
           >
             <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
           </motion.a>
@@ -154,7 +159,7 @@ export default function Navigation() {
               <motion.button
                 whileTap={tapFeedback}
                 onClick={toggleMenu}
-                className="absolute top-5 right-5 text-white-or-black hover:text-aurora-blue transition min-w-[44px] min-h-[44px] p-2 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-full"
+                className="absolute top-5 right-5 text-white-or-black hover:text-aurora-blue transition-colors min-w-[44px] min-h-[44px] p-2 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-full"
                 aria-label="Close Menu"
               >
                 <X size={24} />
@@ -170,7 +175,7 @@ export default function Navigation() {
                     transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
                     whileTap={tapFeedback}
                     onClick={(e) => handleScroll(e, item.href)}
-                    className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition duration-200 flex flex-col py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
+                    className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition-colors duration-200 flex flex-col py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
                   >
                     <span className="text-[11px] text-zinc-400 font-medium tracking-widest mono mb-1">{item.eng}</span>
                     {item.name}

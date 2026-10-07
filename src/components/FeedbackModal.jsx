@@ -12,12 +12,15 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
+      window.lenis?.stop();
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') onClose();
       };
       window.addEventListener('keydown', handleKeyDown);
       return () => {
         document.body.style.overflow = '';
+        window.lenis?.start();
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
@@ -96,6 +99,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         <div
           role="dialog"
           aria-modal="true"
+          data-lenis-prevent
           className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none"
           onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
           onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}

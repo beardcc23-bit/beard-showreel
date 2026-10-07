@@ -116,7 +116,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
       className={`prism-border brand-card-spring text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between relative overflow-hidden group shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue bg-[#121314] ${hasVideo
         ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] active:scale-[0.97]'
-        : 'border-white/8 cursor-default'
+        : 'border-white/[0.08] cursor-default'
         }`}
       style={{
         transformStyle: 'preserve-3d',
@@ -248,7 +248,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className={`hud-eng relative z-10 text-[9px] lg:text-[10px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${isActive ? 'text-dawn-gold font-bold' : 'text-zinc-400'
+                <span className={`hud-eng relative z-10 text-[9px] lg:text-[10px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${isActive ? 'text-dawn-gold' : 'text-zinc-400'
                   }`}>{engName}</span>
                 <span className="hud-zht relative z-10 text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
               </button>

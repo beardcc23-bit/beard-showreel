@@ -41,6 +41,17 @@
   --glass-white: rgba(255, 255, 255, 0.02);
   --spectrum-gradient: linear-gradient(90deg, #ff7b00, #ff007f, #7f00ff, #007fff, #00ff7f);
 
+  /* Tailwind 透明度用 RGB 通道（空格分隔），需與上方 hex 保持一致 */
+  --rgb-bg-core: 18 19 20;
+  --rgb-bg-mist: 35 37 40;
+  --rgb-bg-shadow: 24 25 27;
+  --rgb-accent: 212 175 55;
+  --rgb-soft-magenta: 255 0 127;
+  --rgb-dawn-gold: 255 224 130;
+  --rgb-prism-green: 0 255 127;
+  --rgb-title-white: 242 246 249;
+  --rgb-info-gold-gray: 209 199 189;
+
   /* 語意化主題變數 */
   --bg-core: var(--color-bg-core);
   --bg-mist: var(--color-bg-mist);
@@ -894,33 +905,48 @@ body {
 }
 
 /* 文字樣式控制 */
-/* 不再動畫 letter-spacing：字距逐幀變化會連帶改變按鈕寬度，每幀觸發 layout 並造成抖動 */
-.hud-btn .hud-eng {
-  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+/* 字距展開：中英文共用同一組變數，展開幅度、曲線、時長完全一致
+   margin-right 設為負的字距，抵銷最後一個字元尾端多出的空白，讓文字展開時維持置中不偏左
+   （只有 2 個小 span 在 0.7 秒內重排，layout 成本可忽略） */
+.hud-btn {
+  --hud-track-rest: 0.05em;
+  --hud-track-open: 0.3em;
 }
 
+.hud-btn .hud-eng,
 .hud-btn .hud-zht {
-  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  /* 覆蓋 Tailwind tracking-wider / tracking-widest，確保起點一致 */
+  letter-spacing: var(--hud-track-rest);
+  margin-right: calc(var(--hud-track-rest) * -1);
+  transition:
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    letter-spacing 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    margin-right 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Hover 時僅變化文字顏色 */
-.hud-btn:hover .hud-eng {
-  color: rgba(255, 255, 255, 0.9);
+/* 展開狀態：hover（僅限有滑鼠的裝置，避免觸控黏住）、鍵盤聚焦、選取 */
+@media (hover: hover) {
+  .hud-btn:hover .hud-eng,
+  .hud-btn:hover .hud-zht {
+    letter-spacing: var(--hud-track-open);
+    margin-right: calc(var(--hud-track-open) * -1);
+  }
+  .hud-btn:hover .hud-eng { color: rgba(255, 255, 255, 0.9); }
+  .hud-btn:hover .hud-zht { color: #fff; }
 }
 
-.hud-btn:hover .hud-zht {
-  color: #fff;
+.hud-btn:focus-visible .hud-eng,
+.hud-btn:focus-visible .hud-zht,
+.hud-btn.is-active .hud-eng,
+.hud-btn.is-active .hud-zht {
+  letter-spacing: var(--hud-track-open);
+  margin-right: calc(var(--hud-track-open) * -1);
 }
 
-.hud-btn.is-active .hud-eng {
-  color: var(--color-aurora-blue) !important;
-  letter-spacing: 0.36em !important;
-}
-
+/* 選取態只換色，不改字重（字重無法過渡，會造成中文瞬間變粗的跳動） */
+.hud-btn.is-active .hud-eng,
 .hud-btn.is-active .hud-zht {
   color: var(--color-aurora-blue) !important;
-  font-weight: 500;
-  letter-spacing: 0.2em !important;
 }
 
 /* ==========================================================================
@@ -959,6 +985,13 @@ body {
   }
   .crystal {
     transform: translateY(0) rotate(0deg) !important;
+  }
+
+  /* 例外：按鈕字距展開屬於小範圍、非前庭刺激的回饋動畫，依需求保留
+     （.hud-btn .hud-eng 權重 0,2,0 高於上方 * 的 !important） */
+  .hud-btn .hud-eng,
+  .hud-btn .hud-zht {
+    transition-duration: 0.5s, 0.7s, 0.7s !important;
   }
 }
 
@@ -1004,12 +1037,11 @@ html.lenis body {
 }
 
 /* ==========================================================================
-   長頁面繪製與排版效能優化 (Content Visibility Optimization)
+   註：已移除 #vfx / #about / #contact 的 content-visibility: auto。
+   contain-intrinsic-size 800px 遠小於 #about 實際高度（桌機約 1400px、手機約 2500px），
+   導覽點擊時 Lenis 以佔位高度計算目標，區塊渲染後高度撐開導致停在錯誤位置。
+   僅 3 個區塊，省下的繪製成本可忽略。
    ========================================================================== */
-#vfx, #about, #contact {
-  content-visibility: auto;
-  contain-intrinsic-size: 800px;
-}
 
 /* ==========================================================================
    Tab 內容切換流暢過渡動畫 (Tab Content Fluid Transition)

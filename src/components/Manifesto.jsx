@@ -88,7 +88,7 @@ export default function Manifesto({ onPlayVideo }) {
             <span>THE</span>
             <span className="text-aurora-blue ml-2 sm:ml-6">MANIFESTO</span>
           </h2>
-          <p className="text-zinc-350 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
+          <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
             在商業廣告的極速步調中，憑藉心手合一的極速直覺，讓每個創意精準且高速交付。
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function Manifesto({ onPlayVideo }) {
         {/* 內容區：左右對齊 */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-16 items-start">
           {/* 左側：品牌文字宣言 */}
-          <div className="md:col-span-6 flex flex-col text-zinc-350 text-sm md:text-lg leading-relaxed font-light">
+          <div className="md:col-span-6 flex flex-col text-zinc-300 text-sm md:text-lg leading-relaxed font-light">
             {/* 隱形占位區，高度與右側按鈕及間距呼應，以達成左右文字齊頭 */}
             <div className="hidden md:block h-[51px] mb-5" />
             <div className="space-y-8">
@@ -234,8 +234,8 @@ export default function Manifesto({ onPlayVideo }) {
                   />
 
                   {/* 玻璃內部的雙色折射光源 (Refraction Ambient Glows) */}
-                  <div className="absolute -top-32 -left-32 w-64 h-64 bg-aurora-blue/12 rounded-full blur-[80px] pointer-events-none" />
-                  <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/6 rounded-full blur-[80px] pointer-events-none" />
+                  <div className="absolute -top-32 -left-32 w-64 h-64 bg-aurora-blue/[0.12] rounded-full blur-[80px] pointer-events-none" />
+                  <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/[0.06] rounded-full blur-[80px] pointer-events-none" />
 
                   {/* 寫實玻璃邊緣高光反光 (Specular Reflection Highlights - 符合圖二) */}
                   {/* 頂部偏右邊緣高光 */}
@@ -243,7 +243,7 @@ export default function Manifesto({ onPlayVideo }) {
                   {/* 右側邊緣高光 */}
                   <div className="absolute top-[40%] right-0 w-[1.5px] h-32 bg-gradient-to-b from-transparent via-white/30 to-transparent blur-[0.3px] pointer-events-none z-10" />
                   {/* 底部偏左邊緣高光 */}
-                  <div className="absolute bottom-0 left-[15%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/22 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                  <div className="absolute bottom-0 left-[15%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/[0.22] to-transparent blur-[0.3px] pointer-events-none z-10" />
 
                   <div className="space-y-6 relative z-10">
                     {/* 大字箴言 */}
