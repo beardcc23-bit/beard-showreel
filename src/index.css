@@ -913,6 +913,13 @@ body {
   --hud-track-open: 0.3em;
 }
 
+/* 手機版（< md 768px）不展開：按鈕寬度只有約 100px，展開會把英文頭尾裁掉 */
+@media (max-width: 767px) {
+  .hud-btn {
+    --hud-track-open: var(--hud-track-rest);
+  }
+}
+
 .hud-btn .hud-eng,
 .hud-btn .hud-zht {
   /* 覆蓋 Tailwind tracking-wider / tracking-widest，確保起點一致 */
