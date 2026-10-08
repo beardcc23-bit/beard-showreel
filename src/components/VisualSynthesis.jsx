@@ -119,7 +119,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
         : 'border-white/[0.08] cursor-default'
         }`}
       style={{
-        transformStyle: 'preserve-3d',
+        // 已移除 transformStyle: preserve-3d：子元素皆為平面，只會強迫進入 3D 排序脈絡
         '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.16)' : 'rgba(255, 255, 255, 0.06)'
       }}
     >
@@ -145,7 +145,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
             decoding="async"
             fetchpriority="low"
             onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transform-gpu transition-all duration-300 ease-out group-hover:scale-105 ${
+            className={`w-full h-full object-cover transition-[opacity,filter,transform] duration-300 ease-out group-hover:scale-105 ${
               isImageLoaded
                 ? 'opacity-95 md:opacity-85 blur-0 md:blur-[2.5px] brightness-90 md:brightness-[0.68] saturate-90 md:saturate-[75%] group-hover:opacity-100 group-hover:blur-0 group-hover:brightness-[1.05] group-hover:saturate-[105%]'
                 : 'opacity-0'

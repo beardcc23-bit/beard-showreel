@@ -3,6 +3,12 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { emilSpring, tapFeedback } from '../utils/motion';
 
+// 錨點跳轉專用曲線（Lenis 全域已改 lerp，程式化跳轉在此個別帶入時間曲線）
+const LENIS_ANCHOR_OPTIONS = {
+  duration: 1.05,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+};
+
 // 獨立的平滑滾動 Helper
 const animateScrollTo = (targetY, duration = 400) => {
   const startPosition = window.scrollY;
@@ -57,7 +63,7 @@ export default function Navigation() {
     setIsOpen(false); // 關閉行動版選單
 
     if (window.lenis) {
-      window.lenis.scrollTo(element, { offset: -85 });
+      window.lenis.scrollTo(element, { offset: -85, ...LENIS_ANCHOR_OPTIONS });
       return;
     }
 
@@ -68,7 +74,7 @@ export default function Navigation() {
     if (e) e.preventDefault();
     setIsOpen(false);
     if (window.lenis) {
-      window.lenis.scrollTo(0);
+      window.lenis.scrollTo(0, LENIS_ANCHOR_OPTIONS);
       return;
     }
     animateScrollTo(0);
@@ -76,7 +82,7 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center backdrop-blur-md border-b border-border bg-bg-core/85 transition-colors duration-500">
+      <nav className="fixed top-0 w-full z-50 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center border-b border-border bg-bg-core/95 transition-colors duration-500">
         {/* 導覽列底部極細微光漸層雷射線 */}
         <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-aurora-blue/40 to-transparent pointer-events-none opacity-70" />
 

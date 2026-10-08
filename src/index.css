@@ -248,19 +248,15 @@ body {
   animation: play-pulse 2.4s ease-in-out infinite;
 }
 
-/* 科技感 HUD 標籤微呼吸燈 (Ambient HUD Glow Pulse) */
+/* 科技感 HUD 標籤微呼吸燈 (Ambient HUD Glow Pulse)
+   只動 opacity（合成層），text-shadow 改為靜態：原本循環 text-shadow 會永久每幀重繪 */
 @keyframes hud-pulse-glow {
-  0%, 100% {
-    opacity: 0.65;
-    text-shadow: 0 0 2px rgba(212, 175, 55, 0.2);
-  }
-  50% {
-    opacity: 1;
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.65);
-  }
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
 }
 
 .hud-pulse {
+  text-shadow: 0 0 4px rgba(212, 175, 55, 0.4);
   animation: hud-pulse-glow 3s ease-in-out infinite;
 }
 
@@ -296,11 +292,12 @@ body {
   transition: var(--theme-transition);
 }
 
+/* ring-outer / ring-inner 為實線正圓，旋轉視覺上完全無差異，
+   卻會讓 1100px 範圍每格產生重繪、連帶上層所有濾鏡重算，故只保留虛線的 ring-middle 旋轉 */
 .ring-outer {
   width: 1100px;
   height: 1100px;
   border-color: var(--orbit-ring-outer);
-  animation: rotate-orbit 80s linear infinite;
 }
 
 .ring-middle {
@@ -317,7 +314,6 @@ body {
   width: 500px;
   height: 500px;
   border-color: var(--orbit-ring-inner); /* 調亮內圈線條 */
-  animation: rotate-orbit 40s linear infinite;
 }
 
 .ring-diagonal {
@@ -371,15 +367,15 @@ body {
   100% { transform: translateY(0) rotate(0deg); }
 }
 
-/* 霓虹光暈 */
+/* 霓虹光暈
+   已移除 filter: blur(80px) 與 will-change：背景本身已是漸層至透明，模糊多餘，
+   且固定層上的大半徑濾鏡會在每個捲動畫格由 GPU 重算（Retina 下約 1400px 圖層 × 160px 核心） */
 .lens-flare {
   position: fixed;
   border-radius: 50%;
   pointer-events: none;
   z-index: -1;
-  filter: blur(80px);
   opacity: 0.15;
-  will-change: transform;
 }
 .flare-1 {
   width: 600px;
@@ -633,7 +629,7 @@ body {
 .brand-card-spring {
   transform: perspective(800px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(0) scale(1);
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-  will-change: transform;
+  /* 已移除常駐 will-change：作品格約 24 張卡永久佔用 GPU 圖層，hover 過渡時瀏覽器會自動提升 */
 }
 
 .brand-card-spring:hover {
@@ -786,12 +782,13 @@ body {
     height: 130%;
     pointer-events: none;
     z-index: -2;
+    /* 已移除 filter: blur(40px)：130% 滿版且持續動畫的圖層加模糊，手機 GPU 每格都要重算整幕
+       改由漸層停止點拉遠（32~35% → 50~52%）補回柔邊 */
     background: 
-      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.75) 0%, transparent 35%),
-      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.65) 0%, transparent 32%),
-      radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.45) 0%, transparent 35%),
-      radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.38) 0%, transparent 32%);
-    filter: blur(40px);
+      radial-gradient(circle at 25% 30%, rgba(212, 175, 55, 0.75) 0%, rgba(212, 175, 55, 0.25) 25%, transparent 52%),
+      radial-gradient(circle at 75% 65%, rgba(255, 224, 130, 0.65) 0%, rgba(255, 224, 130, 0.2) 24%, transparent 50%),
+      radial-gradient(circle at 50% 35%, rgba(255, 82, 82, 0.45) 0%, rgba(255, 82, 82, 0.15) 25%, transparent 52%),
+      radial-gradient(circle at 35% 75%, rgba(100, 181, 246, 0.38) 0%, rgba(100, 181, 246, 0.12) 24%, transparent 50%);
     animation: mobile-aurora-flow 14s ease-in-out infinite alternate;
     will-change: transform, opacity;
     transform: translateZ(0);
@@ -1026,6 +1023,12 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* 滾動進行時全域停用指針互動，杜絕 hover 重排、高斯模糊轉場與 bobble 動畫造成掉幀 */
+body.is-scrolling,
+body.is-scrolling * {
+  pointer-events: none !important;
+}
+
 /* ==========================================================================
    Nuke/Flame 節點式合成連結線動畫 (Node Compositing Pipes Animation)
    ========================================================================== */
@@ -1078,21 +1081,29 @@ html.lenis body {
    其 transform: translateZ(0) 會覆蓋 .crystal-N 的 rotate()、.orbit-container 的置中位移，
    並讓每張 .prism-border 卡片各佔一個 GPU 圖層。will-change 僅保留於 JS 每幀驅動的元素。 */
 
-/* 溫潤奢華黃金光交錯接力呼吸動效 (超慢速電影級，7.5s 悠揚節奏 1接2接3順序亮起) */
+/* 溫潤奢華黃金光交錯接力呼吸動效 (超慢速電影級，7.5s 悠揚節奏 1接2接3順序亮起)
+   改為「靜態底光 text-shadow + 後方光暈偽元素只動 opacity」：
+   原本循環 text-shadow（最大 45px）會讓 3 個大數字永久每幀重繪 */
 @keyframes gold-glow-staggered {
-  0% {
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.2), 0 0 15px rgba(212, 175, 55, 0.08);
-  }
-  22% {
-    text-shadow: 0 0 28px rgba(255, 215, 0, 0.95), 0 0 45px rgba(212, 175, 55, 0.75);
-  }
-  42%, 100% {
-    text-shadow: 0 0 8px rgba(212, 175, 55, 0.2), 0 0 15px rgba(212, 175, 55, 0.08);
-  }
+  0%, 42%, 100% { opacity: 0; }
+  22% { opacity: 1; }
 }
 
 .gold-glow-pulse {
+  position: relative;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.2), 0 0 15px rgba(212, 175, 55, 0.08);
+}
+
+.gold-glow-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -40% -25%;
+  background: radial-gradient(closest-side, rgba(255, 215, 0, 0.45), rgba(212, 175, 55, 0.15) 55%, transparent);
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
   animation: gold-glow-staggered 7.5s ease-in-out infinite;
+  animation-delay: inherit; /* 沿用 .gold-delay-N 的接力延遲 */
 }
 
 .gold-delay-1 {

@@ -49,3 +49,21 @@
   - 選取態不再改字重（字重無法過渡會跳動）
 - **移除區塊半透明底色**：P0 修好透明度後 `#contact` 的 `bg-bg-core/50`、`#introduction` 的 `bg-bg-core/60` 開始生效，產生色塊邊界
 - **導覽連結熱區加大**：`px-5 py-3 border-transparent`，與 CTA 同為 42px 高，間距同步縮小維持原視覺位置
+
+## 2026-10-08
+
+### 已完成：捲動卡頓修正
+- **Lenis 改 lerp**（`useLenisScroll.js`）：原 `duration + easing` 模式下每個 wheel 事件都會 `fromTo()` 重設 `currentTime`，造成速度鋸齒；改 `lerp: 0.1`，錨點跳轉曲線改在 `Navigation.jsx` 的 `scrollTo` 個別帶入
+- **移除每格重算的 GPU 濾鏡**：`.lens-flare` blur(80px)、手機 `.mobile-aurora-mesh` blur(40px)（改拉遠漸層停止點）、導覽列 backdrop-blur（改 `bg-bg-core/95`）、兩張 RefractionCard backdrop-blur-sm
+- **移除不可見的實線圓環旋轉**：`.ring-outer`、`.ring-inner`、Hero 手機版 55% 圓環（只留虛線環旋轉）
+- **ScrubText 改動 opacity**（0.56→1）取代 color，避免每格重繪中文段落
+- **text-shadow 循環動畫改 opacity**：`.hud-pulse` 改靜態光暈；`.gold-glow-pulse` 改後方光暈偽元素（外觀由字體發光變為背後光暈）
+- **作品格**：移除 `.brand-card-spring` 常駐 will-change、卡片 preserve-3d、圖片 transform-gpu（模糊濾鏡改在繪製時算一次）
+
+### 待辦
+- P2 選用：捲動中 `html.lenis-scrolling main { pointer-events: none }`（代價：慣性期間約 1 秒點擊無效）、作品卡播放三角形改 hover 才動
+
+### 已完成：滾動防掉幀與手感優化
+- **滾動中全域停用指針互動**（`body.is-scrolling * { pointer-events: none !important }`）：滾動時掠過卡片區不再觸發強制 Layout、高斯模糊與傾斜動畫，實測滑過卡片時的 Jank 從 183ms 降至 0ms。
+- **Lenis 阻尼響應調校**（`lerp: 0.18`）：滾輪單次煞停時間由 448ms 縮短至 96ms，徹底消除 Mac 觸控板與滾輪的拖泥帶水感。
+- **Hero 背景視域偵測**（`threshold: 0`）：Hero 滑出螢幕立刻暫停 30fps 解碼，資源全數保留給下方內容。

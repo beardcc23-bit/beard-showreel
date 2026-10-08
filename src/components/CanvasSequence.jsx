@@ -72,7 +72,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     const el = wrapperRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
-      threshold: 0.15,
+      threshold: 0,
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -248,7 +248,8 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
         <div className="absolute w-[1300px] h-[1300px] md:w-[1500px] md:h-[1500px] max-w-[140vw] max-h-[140vw] z-0 pointer-events-none flex md:hidden items-center justify-center overflow-visible opacity-50">
           <div className="absolute w-[90%] h-[90%] rounded-full border border-dashed border-zinc-800/80 animate-[spin_100s_linear_infinite]" />
           <div className="absolute w-[75%] h-[75%] rounded-full border-[1.5px] border-dashed border-dawn-gold/25 animate-[spin_70s_linear_infinite_reverse]" />
-          <div className="absolute w-[55%] h-[55%] rounded-full border border-zinc-800/40 animate-[spin_40s_linear_infinite]" />
+          {/* 實線正圓旋轉視覺上無差異，卻每格產生大範圍重繪，故不加旋轉 */}
+          <div className="absolute w-[55%] h-[55%] rounded-full border border-zinc-800/40" />
         </div>
       )}
 
