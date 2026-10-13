@@ -67,3 +67,11 @@
 - **滾動中全域停用指針互動**（`body.is-scrolling * { pointer-events: none !important }`）：滾動時掠過卡片區不再觸發強制 Layout、高斯模糊與傾斜動畫，實測滑過卡片時的 Jank 從 183ms 降至 0ms。
 - **Lenis 阻尼響應調校**（`lerp: 0.18`）：滾輪單次煞停時間由 448ms 縮短至 96ms，徹底消除 Mac 觸控板與滾輪的拖泥帶水感。
 - **Hero 背景視域偵測**（`threshold: 0`）：Hero 滑出螢幕立刻暫停 30fps 解碼，資源全數保留給下方內容。
+
+## 2026-10-13
+
+### 已完成：手機版背景修復
+- **消除露底黑邊與裁切破圖**：`.mobile-aurora-mesh` 尺寸由 `130%`（`inset: -15%`）擴展為 `170%`（`inset: -35%`，`min-height: 170dvh`），配合動畫位移收斂至微幅有機呼吸（-3% ~ +5%），四周保留 35% 物理緩衝，徹底杜絕旋轉時四角黑邊露底。
+- **色票收斂與電影級質感**：移除刺眼高飽和度紅斑（`rgba(255, 82, 82)`）與水藍斑（`rgba(100, 181, 246)`），全面收斂為 Autodesk Flame 核心焰金（`#D4AF37`）、晨金（`#ffe082`）與深邃鈦銀冷調（`rgba(130, 160, 195)`），並採用多段平滑衰減，無 blur 亦完全無硬邊色斑。
+- **樣式競態衝突修復**：移除 `MobileAuroraBackground.jsx` 上的 Tailwind `transform-gpu` 類別，避免與 CSS keyframes 產生樣式特異性覆蓋。
+- **層級明確化**：`.mist-bg` 明確指定 `z-index: -3`，流光 `.mobile-aurora-mesh` 為 `z-index: -2`，網格 `.grid-bg` 為 `z-index: -1`。

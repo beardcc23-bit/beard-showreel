@@ -3,7 +3,7 @@ import CanvasSequence from './CanvasSequence';
 
 export default function Hero({ onPlayVideo, isModalOpen, onLoaded }) {
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
+    <section className="relative min-h-[100dvh] h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
       {/* 序列圖畫布區：絕對置中，無重疊文字 */}
       <div className="absolute inset-0 z-0">
         {/* 電影感漸層遮罩：退至背景層，不遮擋畫布播放 */}

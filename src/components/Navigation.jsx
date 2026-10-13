@@ -160,7 +160,7 @@ export default function Navigation() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={emilSpring.gentle}
-              className="fixed top-0 left-0 w-[80%] max-w-[320px] h-screen bg-bg-core/95 backdrop-blur-2xl z-[1000] md:hidden flex flex-col justify-center p-8 gap-8 border-r border-border shadow-2xl"
+              className="fixed top-0 left-0 w-[80%] max-w-[320px] min-h-[100dvh] h-screen bg-bg-core/95 backdrop-blur-2xl z-[1000] md:hidden flex flex-col justify-center p-8 gap-8 border-r border-border shadow-2xl"
             >
               <motion.button
                 whileTap={tapFeedback}
