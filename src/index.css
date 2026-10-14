@@ -752,18 +752,33 @@ body {
   display: none !important;
 }
 
-/* 手機版專屬：電影級焰金暗黑流光漫延動態 (小幅度有機呼吸，杜絕露底黑邊) */
-@keyframes mobile-aurora-flow {
+/* 手機版專屬：電影級焰金暗黑流光漫延動態 (有機正圓光球呼吸漂游，零旋轉、零露底、物理性杜絕黑框) */
+@keyframes mobile-aurora-blob-1 {
   0% {
-    transform: translate(-3%, -3%) scale(1.05) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1);
     opacity: 0.70;
   }
   50% {
-    transform: translate(4%, 5%) scale(1.15) rotate(180deg);
+    transform: translate3d(12vw, 15vh, 0) scale(1.12);
     opacity: 0.95;
   }
   100% {
-    transform: translate(-3%, -3%) scale(1.05) rotate(360deg);
+    transform: translate3d(-8vw, 8vh, 0) scale(1.04);
+    opacity: 0.75;
+  }
+}
+
+@keyframes mobile-aurora-blob-2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(-15vw, -12vh, 0) scale(1.15);
+    opacity: 0.90;
+  }
+  100% {
+    transform: translate3d(10vw, -6vh, 0) scale(1.05);
     opacity: 0.70;
   }
 }
@@ -777,21 +792,46 @@ body {
   .mobile-aurora-mesh {
     display: block !important;
     position: fixed;
-    inset: -35%;
-    width: 170%;
-    height: 170%;
-    min-height: 170dvh;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
     pointer-events: none;
     z-index: -2;
-    background: 
-      radial-gradient(circle at 28% 25%, rgba(212, 175, 55, 0.28) 0%, rgba(212, 175, 55, 0.10) 30%, transparent 65%),
-      radial-gradient(circle at 75% 70%, rgba(255, 224, 130, 0.22) 0%, rgba(255, 224, 130, 0.08) 28%, transparent 60%),
-      radial-gradient(circle at 45% 45%, rgba(130, 160, 195, 0.14) 0%, rgba(130, 160, 195, 0.04) 25%, transparent 58%),
-      radial-gradient(circle at 35% 80%, rgba(212, 175, 55, 0.18) 0%, transparent 52%);
-    animation: mobile-aurora-flow 18s ease-in-out infinite alternate;
-    will-change: transform, opacity;
+    background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 65%);
     transform: translateZ(0);
     backface-visibility: hidden;
+  }
+
+  /* 核心光球 1：左上至中央 Flame 核心焰金流光 (正圓無邊角，70% 完全衰減羽化) */
+  .mobile-aurora-mesh::before {
+    content: "";
+    position: absolute;
+    top: -25vw;
+    left: -25vw;
+    width: 150vw;
+    height: 150vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.26) 0%, rgba(212, 175, 55, 0.09) 35%, transparent 70%);
+    animation: mobile-aurora-blob-1 18s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+    pointer-events: none;
+  }
+
+  /* 核心光球 2：右下至中央 晨金與冷鈦銀流光 (正圓無邊角，70% 完全衰減羽化) */
+  .mobile-aurora-mesh::after {
+    content: "";
+    position: absolute;
+    bottom: -25vw;
+    right: -25vw;
+    width: 150vw;
+    height: 150vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 224, 130, 0.22) 0%, rgba(130, 160, 195, 0.14) 32%, transparent 70%);
+    animation: mobile-aurora-blob-2 22s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+    pointer-events: none;
   }
 
   .orbit-container,
@@ -812,12 +852,13 @@ body {
     display: none !important;
   }
 
-  /* 手機版網格背景以極低透明度作為背景基底 */
+  /* 手機版網格背景以極低透明度作為背景基底，上下平滑羽化避免切線黑框 */
   .grid-bg {
     position: absolute !important;
-    mask-image: none !important;
     opacity: 0.06 !important;
     transform: none !important;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%) !important;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%) !important;
   }
 
   /* 手機版卡片停用背景模糊與多餘濾鏡，確保內容清晰銳利 */
