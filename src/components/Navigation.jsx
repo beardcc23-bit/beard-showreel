@@ -181,7 +181,7 @@ export default function Navigation() {
                     transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
                     whileTap={tapFeedback}
                     onClick={(e) => handleScroll(e, item.href)}
-                    className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition-colors duration-200 flex flex-col py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
+                    className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition-colors duration-200 flex flex-col px-6 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
                   >
                     <span className="text-[11px] text-zinc-400 font-medium tracking-widest mono mb-1">{item.eng}</span>
                     {item.name}
