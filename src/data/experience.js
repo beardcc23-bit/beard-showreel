@@ -1,13 +1,13 @@
 /**
  * 學經歷資料模組 (Experience & Education Data)
- * 整合為單一時間軸序列，去重且依在學與實戰時間整理
+ * 依照倒序時間軸整理
  */
 
 export const careerHistory = [
   {
     period: '2012 - 至今',
     title: '遇見未來影像創作有限公司',
-    role: '',
+    role: 'D1特效合成',
     highlight: true
   },
   {
@@ -21,14 +21,14 @@ export const careerHistory = [
     role: '實習'
   },
   {
-    period: '2007 - 2011',
-    title: '環球技術學院',
-    role: '視覺傳達設計系'
-  },
-  {
     period: '2009',
     title: '冉色斯創意影像有限公司',
     role: '實習'
+  },
+  {
+    period: '2007 - 2011',
+    title: '環球科技大學',
+    role: '視覺傳達設計系'
   },
   {
     period: '2004 - 2007',
