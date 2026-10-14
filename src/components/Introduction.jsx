@@ -3,6 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import RefractionCard from './RefractionCard';
 import AnimatedCounter from './common/AnimatedCounter';
 import ScrubText from './common/ScrubText';
+import ExperienceTimeline from './ExperienceTimeline';
 
 export default function Introduction({ onPlayVideo }) {
   const statsRef = useRef(null);
@@ -141,6 +142,9 @@ export default function Introduction({ onPlayVideo }) {
           </motion.div>
 
         </div>
+
+        {/* 履歷與學歷時間軸 */}
+        <ExperienceTimeline />
       </div>
     </section>
   );
