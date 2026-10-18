@@ -80,3 +80,31 @@
   3. **位移動態取代旋轉**：採用獨立的 `translate3d + scale` 雙向漂游呼吸動態，完全消除旋轉帶來的切邊，且 GPU 硬體合成層消耗極低。
   4. **網格邊界平滑羽化**：手機版 `.grid-bg` 加上下線性漸層遮罩（`mask-image`），消除區塊間的水平硬切黑線。
 
+## 2026-10-18
+
+### 已完成：全站反偵查反破解防護強化
+- **表單防灌水與防注入（`FeedbackModal.jsx`）**：
+  - 植入商業欄位偽裝蜜罐（`corporate_organization`，螢幕外絕對定位），徹底瞞過智慧爬蟲與 LLM Agent 的啟發式 DOM 探測，自動填表靜默攔截。
+  - 部署 `sanitizeSheetInput` 消毒函數，防禦 Google Sheets 試算表公式注入攻擊（CSV / Formula Injection），強制將開頭為 `=, +, -, @` 的內容轉義為純文字。
+  - 輸入邊界限制（Name: 60 字元、Email: 100 字元）與 20 秒本地防刷冷卻（Anti-Flood Cooldown），保護 GAS 每日執行配額。
+  - 開啟彈窗時徹底重設狀態，杜絕提前關閉彈窗導致的狀態殘留。
+- **資產保護與 Canvas 記憶體防 Dump（`CanvasSequence.jsx`）**：
+  - 覆寫備援序列畫布 `toDataURL` 與 `toBlob` 導出函數，阻斷從 DevTools Console 批次 dump 每一影格無損圖檔。
+  - 播放器外層容器與 Canvas 綁定 `contextmenu` 阻斷，防止透過滑鼠右鍵另存影格或影片。
+- **OWASP 軍規級 HTTP 安全標頭（`vercel.json`）**：
+  - `X-Frame-Options: DENY`：徹底封死外站透過 `<iframe>` 嵌套假冒或發動點擊劫持（Clickjacking）。
+  - `X-Content-Type-Options: nosniff`：防止瀏覽器進行 MIME 探測與腳本偽裝。
+  - `Referrer-Policy: strict-origin-when-cross-origin`：保護跳轉來源隱私。
+  - `Content-Security-Policy (CSP)`：明確限制腳本、字型、YouTube/Facebook 影片彈窗白名單，補齊 `object-src 'none'; base-uri 'self'` 阻斷外掛與 Base Tag 劫持。
+- **爬蟲收割與 AI 訓練阻斷（`robots.txt`、`index.html`、`Contact.jsx`、`Modal.jsx`）**：
+  - `robots.txt` 封鎖 GPTBot、ClaudeBot、Bytespider、CCBot、Google-Extended、Diffbot。
+  - `Contact.jsx` 改用動態組裝信箱字串，破壞原始碼層級的明文 Email 正則特徵。
+  - `index.html` 移除 Schema.org JSON-LD 內的明文信箱，替換為 `sameAs` 聯絡錨點，杜絕 OSINT 爬蟲收割。
+  - `Modal.jsx` 將 iframe `referrerPolicy` 升級為 `strict-origin-when-cross-origin`。
+
+### 已完成：Hero 播放器循環停頓根除修復（`CanvasSequence.jsx`）
+- **雙重循環防線**：
+  - 影片模式：DOM 注入強制 `loop` 屬性，監聽 `timeupdate` 在尾端 0.08 秒前主動平滑重置，並以 `ended` 事件作為保底，徹底消除解碼器在最後一格的停滯問題。
+  - 序列模式：`rAF tick` 升級容錯前進演算法，播到最後第 144 格跨回第 0 格時若目標幀未就緒，自動向前尋找最近可用影格推進，絕不停滯死鎖。
+- **單元測試**：新增 `CanvasSequence.test.jsx` 影片播畢自動循環重置測試，全站 33 個測試全數綠燈通過。
+
