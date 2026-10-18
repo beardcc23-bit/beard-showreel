@@ -113,4 +113,17 @@ describe('CanvasSequence（Hero 循環播放器）', () => {
     });
     expect(container.querySelector('canvas')).toBeInTheDocument();
   });
+
+  it('video 播畢觸發 ended 事件時應強制重設 currentTime 為 0 並繼續播放', () => {
+    const { container } = render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
+    const video = container.querySelector('video');
+    unlock();
+    playSpy.mockClear();
+
+    video.currentTime = 4.83;
+    fireEvent.ended(video);
+
+    expect(video.currentTime).toBe(0);
+    expect(playSpy).toHaveBeenCalled();
+  });
 });

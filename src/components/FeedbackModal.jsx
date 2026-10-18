@@ -3,14 +3,35 @@ import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
+// 防止 Google Sheets 試算表公式注入攻擊 (CSV / Formula Injection)
+const sanitizeSheetInput = (str) => {
+  if (!str) return '';
+  const trimmed = str.trim();
+  // 若開頭為試算表公式觸發字元 (=, +, -, @, \t, \r)，補上前綴單引號強制轉義為純文字
+  if (/^[=+@\-\t\r]/.test(trimmed)) {
+    return `'${trimmed}`;
+  }
+  return trimmed;
+};
+
+// 模組級防洪計時器 (單次成功後 20 秒冷卻)
+let lastSubmitTimestamp = 0;
+const COOLDOWN_MS = 20000;
+
 export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [honeypot, setHoneypot] = useState('');
+  const [openTime, setOpenTime] = useState(Date.now());
   const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
 
   // 彈窗開啟時的背景滾動與游標處理
   useEffect(() => {
     if (isOpen) {
+      setOpenTime(Date.now());
+      setHoneypot('');
+      setStatus('idle');
+      setErrorMessage('');
       document.body.style.overflow = 'hidden';
       // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
       window.lenis?.stop();
@@ -54,6 +75,26 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
+    // 防刷冷卻保護：防止短時間內重複連擊浪費 API 配額
+    const now = Date.now();
+    if (now - lastSubmitTimestamp < COOLDOWN_MS) {
+      const waitSec = Math.ceil((COOLDOWN_MS - (now - lastSubmitTimestamp)) / 1000);
+      setStatus('error');
+      setErrorMessage(`送出過於頻繁，請等待 ${waitSec} 秒後再試。`);
+      return;
+    }
+
+    // 反自動化防禦：若機器人填入蜜罐欄位或表單開啟至送出少於 1 秒，靜默略過並偽裝成功
+    if (honeypot || (now - openTime < 1000)) {
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setTimeout(() => {
+        setStatus('idle');
+        onClose();
+      }, 2500);
+      return;
+    }
+
     if (!scriptUrl) {
       setStatus('error');
       setErrorMessage('未設定後端 API 網址');
@@ -64,11 +105,16 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     setErrorMessage('');
 
     try {
+      // 消毒與長度安全截斷處理
+      const safeName = sanitizeSheetInput(formData.name.slice(0, 60));
+      const safeEmail = sanitizeSheetInput(formData.email.slice(0, 100));
+      const safeMessage = sanitizeSheetInput(formData.message.slice(0, 500));
+
       // 改用 URLSearchParams 傳送標準表單格式，對 Google Apps Script 具備 100% 相容性
       const params = new URLSearchParams();
-      params.append('name', formData.name.trim());
-      params.append('email', formData.email.trim());
-      params.append('message', formData.message.trim());
+      params.append('name', safeName);
+      params.append('email', safeEmail);
+      params.append('message', safeMessage);
 
       await fetch(scriptUrl, {
         method: 'POST',
@@ -79,6 +125,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         body: params.toString(),
       });
 
+      lastSubmitTimestamp = Date.now();
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => {
@@ -154,6 +201,18 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+                {/* 逼真偽裝的蜜罐欄位 (移至螢幕外，避開啟發式偵測，機器人填寫將觸發靜默攔截) */}
+                <input
+                  type="text"
+                  name="corporate_organization"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, pointerEvents: 'none' }}
+                  aria-hidden="true"
+                />
+
                 {/* Header 區塊 */}
                 <div className="mb-6">
                   <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase glow-title">
@@ -172,6 +231,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <input
                     type="text"
                     name="name"
+                    maxLength={60}
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="例如：Alex Chen"
@@ -187,6 +247,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <input
                     type="text"
                     name="email"
+                    maxLength={100}
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="name@example.com 或 LINE ID"

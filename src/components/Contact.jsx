@@ -6,7 +6,10 @@ import { useClipboard } from '../hooks/useClipboard';
 
 export default function Contact() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-  const email = 'beard.cc23@gmail.com';
+  // 動態拼裝 Email，避免爬蟲透過靜態正則直接收割郵件地址
+  const emailUser = 'beard.cc23';
+  const emailDomain = 'gmail.com';
+  const email = `${emailUser}@${emailDomain}`;
   const { copied, copy } = useClipboard(2500);
 
   // 部署好的 Google Apps Script Web App URL (優先使用環境變數配置)

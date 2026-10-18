@@ -78,15 +78,38 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     return () => observer.disconnect();
   }, []);
 
-  // ── 影片模式：確保靜音自動播放屬性真的寫進 DOM（React 的 muted prop 不會輸出 attribute） ──
+  // ── 影片模式：確保靜音、自動播放與無縫循環 (Loop) 寫進 DOM 並綁定防停頓監聽 ──
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     video.defaultMuted = true;
     video.muted = true;
+    video.loop = true;
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('loop', '');
+
+    // 雙重循環保險：影片播畢時強制重設回第一秒播放
+    const handleLoop = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+
+    // 某些解碼器在到達結尾時不會觸發 loop，在倒數 0.08 秒前主動重置
+    const handleTimeUpdate = () => {
+      if (video.duration && video.currentTime >= video.duration - 0.08) {
+        handleLoop();
+      }
+    };
+
+    video.addEventListener('ended', handleLoop);
+    video.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      video.removeEventListener('ended', handleLoop);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+    };
   }, []);
 
   // ── 影片模式：播放 / 暫停控制 + 自動播放被阻擋偵測 ──
@@ -135,6 +158,21 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     return true;
   };
+
+  // ── 序列模式：Canvas 記憶體防護與防右鍵 ──
+  useEffect(() => {
+    if (mode !== 'frames') return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const blockMenu = (e) => e.preventDefault();
+    canvas.addEventListener('contextmenu', blockMenu);
+    // 阻斷未授權 Console 記憶體導出
+    try {
+      canvas.toDataURL = () => 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+      canvas.toBlob = () => null;
+    } catch (_) {}
+    return () => canvas.removeEventListener('contextmenu', blockMenu);
+  }, [mode]);
 
   // ── 序列模式：分批預載影格（從接續的那一格開始載） ──
   useEffect(() => {
@@ -185,10 +223,25 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       const delta = now - last;
       if (delta >= FRAME_INTERVAL) {
         const next = (frameIndexRef.current + 1) % FRAME_COUNT;
-        // 下一格尚未載入時停留在目前格，避免預載期間閃爍跳格
         if (framesRef.current[next]) {
           frameIndexRef.current = next;
           drawFrame(next);
+        } else {
+          // 容錯循環防禦：若特定影格尚未載入或網路抖動，向前尋找最近的可用影格，絕不停滯卡死
+          let advanced = false;
+          for (let step = 1; step < FRAME_COUNT; step++) {
+            const candidate = (next + step) % FRAME_COUNT;
+            if (framesRef.current[candidate]) {
+              frameIndexRef.current = candidate;
+              drawFrame(candidate);
+              advanced = true;
+              break;
+            }
+          }
+          // 若全部幀皆未就緒，仍強制遞增索引確保時間軸持續推進
+          if (!advanced) {
+            frameIndexRef.current = next;
+          }
         }
         last = now - (delta % FRAME_INTERVAL);
       }
@@ -261,6 +314,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
           scale: isLoading ? 0.95 : 1,
         }}
         transition={{ duration: 1, ease: 'easeOut' }}
+        onContextMenu={(e) => e.preventDefault()}
         className={`w-full md:w-[1000px] md:max-w-[90vw] aspect-[5/4] md:aspect-video bg-black shadow-[0_0_60px_rgba(0,0,0,0.9)] rounded-none md:rounded-sm relative overflow-hidden border-y border-zinc-800 md:border md:border-zinc-800 z-10 ${
           isLoading ? 'pointer-events-none' : 'pointer-events-auto'
         }`}
@@ -279,6 +333,10 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
             disablePictureInPicture
             aria-hidden="true"
             tabIndex={-1}
+            onEnded={(e) => {
+              e.currentTarget.currentTime = 0;
+              e.currentTarget.play().catch(() => {});
+            }}
           >
             {/* AV1 level：桌機 1504x832 = 4.0 (08)、手機 960x532 = 3.0 (04) */}
             <source
