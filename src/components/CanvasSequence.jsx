@@ -26,12 +26,13 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   const [isLoading, setIsLoading] = useState(true); // poster 是否載入完成（首頁解鎖）
   const [isHovering, setIsHovering] = useState(false);
   const [inView, setInView] = useState(true);
+  const [isPageVisible, setIsPageVisible] = useState(() => typeof document === 'undefined' || !document.hidden);
   const [isMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   const basePath = import.meta.env.BASE_URL;
   const suffix = isMobile ? '-mobile' : '';
   const posterSrc = `${basePath}hero-poster${suffix}.webp`;
-  const shouldPlay = inView && !isHovering && !isModalOpen;
+  const shouldPlay = inView && isPageVisible && !isHovering && !isModalOpen;
 
   // 切換至序列備援模式（由影片當下時間接續，畫面不跳回第一格）
   const fallbackToFrames = () => {
@@ -83,6 +84,13 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     return () => observer.disconnect();
   }, []);
 
+  // ── 分頁可見度偵測：背景分頁時暫停播放，避免省電暫停被看門狗誤判為自動播放失敗 ──
+  useEffect(() => {
+    const handleVisibility = () => setIsPageVisible(!document.hidden);
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
+
   // ── 影片模式：確保靜音、自動播放與無縫循環 (Loop) 寫進 DOM 並綁定防停頓監聽 ──
   useEffect(() => {
     const video = videoRef.current;
@@ -130,7 +138,9 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
     // 看門狗：部分瀏覽器被擋時 promise 不會 reject，只是一直停著
     const watchdog = setTimeout(() => {
-      if (videoRef.current && videoRef.current.paused) fallbackToFrames();
+      if (!document.hidden && videoRef.current && videoRef.current.paused) {
+        fallbackToFrames();
+      }
     }, AUTOPLAY_WATCHDOG_MS);
 
     return () => clearTimeout(watchdog);

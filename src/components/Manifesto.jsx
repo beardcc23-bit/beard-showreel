@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Play } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
@@ -74,10 +74,12 @@ const lawCategories = [
 
 export default function Manifesto({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('01');
+  const sectionRef = useRef(null);
+  const sectionInView = useInView(sectionRef, { margin: "100px 0px" });
   const activeCategory = lawCategories.find(cat => cat.id === activeTab) || lawCategories[0];
 
   return (
-    <section id="about" className="w-full relative py-36">
+    <section ref={sectionRef} id="about" className={`w-full relative py-36 ${sectionInView ? '' : 'section-offscreen'}`}>
       {/* 滿版網格與漸層裝飾背景 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 

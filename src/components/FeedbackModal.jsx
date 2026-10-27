@@ -42,6 +42,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
   const closeTimerRef = React.useRef(null);
+  const isSubmittingRef = React.useRef(false);
   const onCloseRef = React.useRef(onClose);
   onCloseRef.current = onClose;
 
@@ -49,6 +50,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   useEffect(() => {
     if (isOpen) {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      isSubmittingRef.current = false;
       setOpenTime(Date.now());
       setHoneypot('');
       setStatus('idle');
@@ -61,6 +63,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       }
       // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
       window.lenis?.stop();
+      window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') onCloseRef.current?.();
       };
@@ -87,6 +90,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmittingRef.current || status === 'submitting' || status === 'success') return;
 
     // 檢查必填項目 (姓名與留言)
     if (!formData.name || !formData.name.trim()) {
@@ -128,8 +132,12 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
+    isSubmittingRef.current = true;
     setStatus('submitting');
     setErrorMessage('');
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
       // 消毒與長度安全截斷處理
@@ -150,8 +158,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
           'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
         },
         body: params.toString(),
+        signal: controller.signal,
       });
 
+      clearTimeout(timeoutId);
       setLastSubmitTime(Date.now());
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
@@ -160,9 +170,12 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         onClose();
       }, 2500);
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error('Feedback submission error:', err);
       setStatus('error');
       setErrorMessage('連線失敗，請檢查網路或稍後再試。');
+    } finally {
+      isSubmittingRef.current = false;
     }
   };
 

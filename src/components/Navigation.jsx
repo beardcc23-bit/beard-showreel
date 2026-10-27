@@ -10,7 +10,9 @@ const LENIS_ANCHOR_OPTIONS = {
 };
 
 // 獨立的平滑滾動 Helper
+let scrollRafId = null;
 const animateScrollTo = (targetY, duration = 400) => {
+  if (scrollRafId) cancelAnimationFrame(scrollRafId);
   const startPosition = window.scrollY;
   const distance = targetY - startPosition;
   let startTime = null;
@@ -24,11 +26,13 @@ const animateScrollTo = (targetY, duration = 400) => {
     const easedPercent = easeInOutCubic(percent);
     window.scrollTo(0, startPosition + distance * easedPercent);
     if (progress < duration) {
-      requestAnimationFrame(step);
+      scrollRafId = requestAnimationFrame(step);
+    } else {
+      scrollRafId = null;
     }
   };
 
-  requestAnimationFrame(step);
+  scrollRafId = requestAnimationFrame(step);
 };
 
 export default function Navigation() {

@@ -70,7 +70,7 @@ export default function CursorGlow() {
       }
     };
 
-    const INTERACTIVE_SELECTOR = 'a, button, .tech-card, .glow-title, [role="button"], .group\\/flame, .group\\/title';
+    const INTERACTIVE_SELECTOR = 'a, button, .glow-title, [role="button"], .group\\/flame, .group\\/title';
 
     const handleMouseOver = (e) => {
       const target = e.target;

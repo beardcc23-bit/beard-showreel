@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 
 // 快取已完成載入的圖片 URL，切換 Tab 時零閃爍直接呈現
 const loadedImageCache = new Set();
 
-const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, ref) => {
+const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
   const item = React.useMemo(() => normalizeItem(rawItem), [rawItem]);
   const { hasVideo, bgImage: bgImageUrl } = item;
   const CardElement = hasVideo ? 'button' : 'div';
@@ -16,15 +16,6 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   const bobbleRafRef = React.useRef(null);
   const rectRef = React.useRef(null);
   const scrollYRef = React.useRef(0);
-
-  const setRefs = (node) => {
-    innerRef.current = node;
-    if (typeof ref === 'function') {
-      ref(node);
-    } else if (ref) {
-      ref.current = node;
-    }
-  };
 
   React.useEffect(() => {
     return () => {
@@ -110,22 +101,14 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleClick();
-    }
-  };
-
   return (
     <CardElement
-      ref={setRefs}
+      ref={innerRef}
+      type={hasVideo ? 'button' : undefined}
       onPointerEnter={hasVideo ? handlePointerEnter : undefined}
       onMouseMove={hasVideo ? handleMouseMove : undefined}
       onPointerLeave={hasVideo ? handlePointerLeave : undefined}
       onClick={hasVideo ? handleClick : undefined}
-      onKeyDown={hasVideo ? handleKeyDown : undefined}
-      tabIndex={hasVideo ? 0 : undefined}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
       className={`prism-border brand-card-spring text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between relative overflow-hidden group shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue bg-[#121314] ${hasVideo
         ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] active:scale-[0.97]'
@@ -205,12 +188,14 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
       ) : null}
     </CardElement>
   );
-}));
+});
 
 BrandCard.displayName = 'BrandCard';
 
 export default function VisualSynthesis({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('food');
+  const sectionRef = useRef(null);
+  const sectionInView = useInView(sectionRef, { margin: "100px 0px" });
 
   const handleTabChange = (newTabId) => {
     if (newTabId === activeTab) return;
@@ -220,7 +205,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
   return (
-    <section id="vfx" className="w-full relative py-24">
+    <section ref={sectionRef} id="vfx" className={`w-full relative py-24 ${sectionInView ? '' : 'section-offscreen'}`}>
       {/* 滿版背景點綴網格 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
@@ -286,12 +271,11 @@ export default function VisualSynthesis({ onPlayVideo }) {
               className="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3.5"
             >
               {currentCategory.items.map((item, index) => (
-                <div key={`${activeTab}-${item.name}-${index}`}>
-                  <BrandCard
-                    item={item}
-                    onPlayVideo={onPlayVideo}
-                  />
-                </div>
+                <BrandCard
+                  key={`${activeTab}-${item.name}-${index}`}
+                  item={item}
+                  onPlayVideo={onPlayVideo}
+                />
               ))}
             </motion.div>
           </AnimatePresence>

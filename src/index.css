@@ -37,7 +37,7 @@
   --color-title-white: #F2F6F9;
   --color-info-gold-gray: #D1C7BD;
   --glass-white: rgba(255, 255, 255, 0.02);
-  --spectrum-gradient: linear-gradient(90deg, #ff7b00, #ff007f, #7f00ff, #007fff, #00ff7f);
+  --spectrum-gradient: linear-gradient(90deg, #d4af37, #ffe082, #82a0c3, #ffe082, #d4af37);
 
   /* Tailwind 透明度用 RGB 通道（空格分隔），需與上方 hex 保持一致 */
   --rgb-bg-core: 18 19 20;
@@ -74,25 +74,21 @@ body {
 
 /* 語意化 Utility Classes */
 .text-white-or-black {
-  color: var(--text-white-or-black) !important;
-  transition: var(--theme-transition);
+  color: var(--text-white-or-black);
 }
 
 .text-gray-or-zinc {
-  color: var(--text-gray-or-zinc) !important;
-  transition: var(--theme-transition);
+  color: var(--text-gray-or-zinc);
 }
 
 .border-border {
-  border-color: var(--border-color) !important;
-  transition: var(--theme-transition);
+  border-color: var(--border-color);
 }
 
 @media (min-width: 768px) {
   body.custom-cursor,
   body.custom-cursor a,
   body.custom-cursor button,
-  body.custom-cursor .tech-card,
   body.custom-cursor iframe,
   body.custom-cursor [role="button"],
   body.custom-cursor input,
@@ -462,44 +458,6 @@ body {
   filter: brightness(1.1);
 }
 
-.tech-card {
-  background: var(--glass-white);
-  backdrop-filter: blur(25px) saturate(120%);
-  -webkit-backdrop-filter: blur(25px) saturate(120%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-/* 玻璃卡片的彩虹流光 hover 效果 */
-.tech-card::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: var(--spectrum-gradient);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0.12;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-
-.tech-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-4px) scale(1.015);
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(212, 175, 55, 0.15);
-}
-
-.tech-card:hover::after {
-  opacity: 0.7;
-}
-
 /* 序列播放框：光譜折射邊框 */
 .glow-border {
   position: absolute;
@@ -536,10 +494,9 @@ body {
   border-radius: inherit;
   background: radial-gradient(
     180px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(255, 224, 130, 0.5) 0%,
-    rgba(212, 175, 55, 0.6) 30%,
-    rgba(255, 0, 127, 0.4) 60%,
-    rgba(0, 240, 255, 0.4) 80%,
+    rgba(255, 224, 130, 0.65) 0%,
+    rgba(212, 175, 55, 0.55) 35%,
+    rgba(130, 160, 195, 0.35) 70%,
     transparent 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
@@ -790,7 +747,6 @@ body {
   }
 
   /* 手機版卡片停用背景模糊與多餘濾鏡，確保內容清晰銳利 */
-  .tech-card,
   .brand-card-spring,
   .glass-prism-border,
   .prism-border {
@@ -993,13 +949,18 @@ html.lenis body {
 
 /* 滾動進行時僅停用卡片與視差容器的指針互動，保留導覽列與按鈕隨時可點擊，並防止穿透 body 造成原生游標閃爍 */
 body.is-scrolling .brand-card-spring,
-body.is-scrolling .tech-card,
 body.is-scrolling .prism-border,
 body.is-scrolling .glass-prism-border {
   pointer-events: none !important;
 }
 
-/* 彈窗或側邊選單開啟時，暫停背景所有常駐無限 CSS 動畫，將 100% GPU 算力讓給影片播放與彈窗過渡 */
+/* 彈窗或側邊選單開啟、或區塊滾出視窗外時，暫停常駐無限 CSS 動畫，節省 GPU 算力 */
+.section-offscreen .gold-flow-border::before,
+.section-offscreen .gold-glow-pulse::after,
+.section-offscreen .play-triangle-pulse,
+.section-offscreen .hud-pulse,
+.section-offscreen .flowing-laser-line,
+.section-offscreen .prism-button::after,
 body.modal-open .ring-middle,
 body.modal-open .crystal-inner,
 body.modal-open .gold-flow-border::before,

@@ -20,6 +20,9 @@ export default function Modal({ isOpen, onClose, type, data }) {
       setIframeLoading(true); // 開啟時重設為載入中狀態
       // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
       window.lenis?.stop();
+      if (type === 'video') {
+        window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
+      }
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {

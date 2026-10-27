@@ -30,6 +30,11 @@ class MockResizeObserver {
 global.ResizeObserver = MockResizeObserver;
 window.ResizeObserver = MockResizeObserver;
 
+// 模擬 HTMLMediaElement.prototype.load（避免 jsdom 印出 Not implemented 警告）
+if (typeof window !== 'undefined' && window.HTMLMediaElement) {
+  window.HTMLMediaElement.prototype.load = () => {};
+}
+
 // 初始化 navigator.clipboard
 if (typeof window !== 'undefined' && !navigator.clipboard) {
   Object.defineProperty(navigator, 'clipboard', {

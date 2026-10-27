@@ -6,11 +6,13 @@ import ScrubText from './common/ScrubText';
 import ExperienceTimeline from './ExperienceTimeline';
 
 export default function Introduction({ onPlayVideo }) {
+  const sectionRef = useRef(null);
+  const sectionInView = useInView(sectionRef, { margin: "100px 0px" });
   const statsRef = useRef(null);
   const statsInView = useInView(statsRef, { margin: "-50px", once: true });
 
   return (
-    <section id="introduction" className="relative min-h-screen flex items-center justify-center py-24">
+    <section ref={sectionRef} id="introduction" className={`relative min-h-screen flex items-center justify-center py-24 ${sectionInView ? '' : 'section-offscreen'}`}>
       {/* 網格背景與漸層 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 

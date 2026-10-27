@@ -13,7 +13,10 @@ export function normalizeItem(item) {
     : null;
   const videoId = item.videoId || extractYoutubeId(item.url);
   const hasVideo = !!videoId || !!item.url;
-  return { ...item, videoId, bgImage, hasVideo };
+  const aspect =
+    item.aspect ||
+    (/\/(shorts|reel|reels)\//.test(item.url || '') ? 'portrait' : undefined);
+  return { ...item, ...(aspect ? { aspect } : {}), videoId, bgImage, hasVideo };
 }
 
 export const categories = [
@@ -470,7 +473,8 @@ export const categories = [
         "name": "Bifesta 碧菲絲特",
         "bgImage": "/vfx/E/E-03.webp",
         "url": "https://www.youtube.com/shorts/jPH0atsz3UY",
-        "videoId": "jPH0atsz3UY"
+        "videoId": "jPH0atsz3UY",
+        "aspect": "portrait"
       },
       {
         "name": "Calm Night Day 淨日夜沐浴露",
