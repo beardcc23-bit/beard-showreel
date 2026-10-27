@@ -363,6 +363,8 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
               <img
                 src={`${basePath}youtube-logo.webp`}
                 alt="YouTube Play Reel"
+                loading="lazy"
+                decoding="async"
                 className="w-36 h-36 md:w-48 md:h-48 object-contain drop-shadow-[0_0_35px_rgba(255,0,0,0.75)] hover:scale-105 transition-transform duration-200"
               />
               <span className="mono text-[10px] md:text-xs text-white uppercase tracking-[0.3em] mt-4 font-black drop-shadow-md">
@@ -375,10 +377,21 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
           {!isLoading && (
             <div
               data-testid="hero-hotspot"
+              role="button"
+              tabIndex={0}
+              aria-label="Play Full Showreel Video"
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
+              onFocus={() => setIsHovering(true)}
+              onBlur={() => setIsHovering(false)}
               onClick={() => onPlayVideo(REEL_VIDEO_ID)}
-              className="absolute inset-0 m-auto w-1/2 h-1/2 z-20 cursor-pointer pointer-events-auto flex items-center justify-center"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onPlayVideo(REEL_VIDEO_ID);
+                }
+              }}
+              className="absolute inset-0 m-auto w-1/2 h-1/2 z-20 cursor-pointer pointer-events-auto flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue/60 rounded-sm"
             />
           )}
 

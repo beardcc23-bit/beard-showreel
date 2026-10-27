@@ -38,6 +38,8 @@ export default function Introduction({ onPlayVideo }) {
                   <img
                     src={`${import.meta.env.BASE_URL}avatar.webp`}
                     alt="Beard"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -134,6 +136,7 @@ export default function Introduction({ onPlayVideo }) {
                 <img
                   src={`${import.meta.env.BASE_URL}avatar.webp`}
                   alt="Beard"
+                  loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover"
                 />

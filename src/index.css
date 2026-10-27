@@ -31,11 +31,9 @@
   --color-bg-mist: #232528; /* 水泥中點灰 */
   --color-bg-shadow: #18191b; /* 炭灰 */
   --color-aurora-blue: #D4AF37; /* 升級為金色 */
-  --color-soft-magenta: #ff007f; /* 霓虹粉 */
   --color-dawn-gold: #ffe082; /* 亮金 */
   --dawn-gold-glow: rgba(212, 175, 55, 0.45);
   --dawn-gold-peak: rgba(255, 215, 0, 0.95);
-  --color-prism-green: #00FF7F; /* 霓虹綠 */
   --color-title-white: #F2F6F9;
   --color-info-gold-gray: #D1C7BD;
   --glass-white: rgba(255, 255, 255, 0.02);
@@ -46,9 +44,7 @@
   --rgb-bg-mist: 35 37 40;
   --rgb-bg-shadow: 24 25 27;
   --rgb-accent: 212 175 55;
-  --rgb-soft-magenta: 255 0 127;
   --rgb-dawn-gold: 255 224 130;
-  --rgb-prism-green: 0 255 127;
   --rgb-title-white: 242 246 249;
   --rgb-info-gold-gray: 209 199 189;
 
@@ -105,14 +101,6 @@ body {
   }
 }
 
-#cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
-  pointer-events: none;
-  z-index: 99999;
-  will-change: transform;
-}
-
 /* 高科技同心圓環旋轉動畫 */
 .cursor-ring-outer {
   transform-origin: 16px 16px;
@@ -142,16 +130,18 @@ body {
 .cursor-glow-element {
   position: fixed;
   top: 0; left: 0;
+  margin-left: -187.5px;
+  margin-top: -187.5px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
   width: 375px;
   height: 375px;
-  background: radial-gradient(circle, rgba(101, 180, 227, 0.22) 0%, rgba(208, 157, 183, 0.09) 40%, rgba(208, 157, 183, 0) 70%);
-  /* 以獨立 scale 屬性放大（合成層處理），不與 JS 每幀寫入的 transform 互相覆蓋，也不觸發 layout / repaint */
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.16) 0%, rgba(255, 224, 130, 0.06) 40%, rgba(212, 175, 55, 0) 70%);
+  /* 以獨立 translate 與 scale 屬性運作（合成層處理），translate 排在 scale 之前執行，確保原地中心放大不偏移 */
   scale: 1;
   transition: scale 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-  will-change: transform;
+  will-change: translate, scale;
 }
 
 .cursor-glow-element.is-hovered {
@@ -164,7 +154,7 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(circle, rgba(101, 180, 227, 0.13) 0%, rgba(208, 157, 183, 0.06) 45%, rgba(208, 157, 183, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 224, 130, 0.14) 0%, rgba(212, 175, 55, 0.05) 45%, rgba(212, 175, 55, 0) 70%);
   opacity: 0;
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -323,11 +313,6 @@ body {
   transform: rotateX(65deg) rotateY(25deg);
 }
 
-@keyframes rotate-orbit {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 @keyframes rotate-orbit-reverse {
   from { transform: rotate(0deg); }
   to { transform: rotate(-360deg); }
@@ -380,14 +365,14 @@ body {
 .flare-1 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(127, 0, 255, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.16) 0%, transparent 70%);
   top: -10%;
   left: 5%;
 }
 .flare-2 {
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(0, 255, 127, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(130, 160, 195, 0.12) 0%, transparent 70%);
   bottom: -20%;
   right: 5%;
 }
@@ -433,11 +418,6 @@ body {
 .glow-title:hover::after {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1.05);
-}
-
-@keyframes breathe {
-  0%, 100% { opacity: 0.25; transform: scale(0.95); }
-  50% { opacity: 0.55; transform: scale(1.35); }
 }
 
 .prism-button {

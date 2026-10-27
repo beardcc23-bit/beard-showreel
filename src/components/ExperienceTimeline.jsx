@@ -20,8 +20,11 @@ export default function ExperienceTimeline() {
           boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
         }}
       >
-        {/* 背景環境微光 */}
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-aurora-blue/[0.03] rounded-full blur-3xl pointer-events-none" />
+        {/* 背景環境微光 (以 radial-gradient 取代 blur-3xl，零 GPU 濾鏡開銷) */}
+        <div
+          className="absolute top-0 right-1/4 w-96 h-96 rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%)' }}
+        />
 
         {/* 整合單一時間軸列表 */}
         <ol className="relative border-l border-white/[0.12] ml-3 sm:ml-4 space-y-7 sm:space-y-8 relative z-10">

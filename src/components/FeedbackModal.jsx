@@ -42,6 +42,8 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
   const closeTimerRef = React.useRef(null);
+  const onCloseRef = React.useRef(onClose);
+  onCloseRef.current = onClose;
 
   // 彈窗開啟時的背景滾動與游標處理
   useEffect(() => {
@@ -59,7 +61,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
       window.lenis?.stop();
       const handleKeyDown = (e) => {
-        if (e.key === 'Escape') onClose();
+        if (e.key === 'Escape') onCloseRef.current?.();
       };
       window.addEventListener('keydown', handleKeyDown);
       return () => {
@@ -70,13 +72,8 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
-    } else {
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-      window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

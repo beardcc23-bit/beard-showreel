@@ -65,6 +65,7 @@ export default function Navigation() {
     if (!element) return;
     
     setIsOpen(false); // 關閉行動版選單
+    document.body.style.overflow = '';
 
     if (window.lenis) {
       window.lenis.scrollTo(element, { offset: -85, ...LENIS_ANCHOR_OPTIONS });
@@ -77,6 +78,7 @@ export default function Navigation() {
   const scrollToTop = (e) => {
     if (e) e.preventDefault();
     setIsOpen(false);
+    document.body.style.overflow = '';
     if (window.lenis) {
       window.lenis.scrollTo(0, LENIS_ANCHOR_OPTIONS);
       return;

@@ -11,12 +11,19 @@ export default function CursorGlow() {
   const mouseCoords = useRef({ x: 0, y: 0 });
   const isHoveredRef = useRef(false);
   const hasMovedRef = useRef(false);
+  const isMobileRef = useRef(true);
 
   useEffect(() => {
+    // 純觸控硬體裝置直接跳過，不綁定任何監聽器
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchDevice) {
+      document.body.classList.remove('custom-cursor');
+      return;
+    }
+
     const checkMobile = () => {
-      const isMobileDevice = window.innerWidth < 768 || 
-                             ('ontouchstart' in window) || 
-                             (navigator.maxTouchPoints > 0);
+      const isMobileDevice = window.innerWidth < 768;
+      isMobileRef.current = isMobileDevice;
       setIsMobile(isMobileDevice);
       if (!isMobileDevice) {
         document.body.classList.add('custom-cursor');
@@ -26,7 +33,7 @@ export default function CursorGlow() {
       return isMobileDevice;
     };
     
-    if (checkMobile()) return () => document.body.classList.remove('custom-cursor');
+    checkMobile();
     window.addEventListener('resize', checkMobile);
 
     let animationFrameId = null;
@@ -35,12 +42,13 @@ export default function CursorGlow() {
     const render = () => {
       if (glowRef.current) {
         const { x, y } = mouseCoords.current;
-        glowRef.current.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        glowRef.current.style.translate = `${x}px ${y}px 0px`;
       }
       isTicking = false;
     };
 
     const handleMouseMove = (e) => {
+      if (isMobileRef.current) return;
       const clientX = e.clientX;
       const clientY = e.clientY;
       mouseCoords.current.x = clientX;

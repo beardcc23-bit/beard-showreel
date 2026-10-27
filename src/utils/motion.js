@@ -27,30 +27,8 @@ export const emilSpring = {
   },
 };
 
-// Emil Kowalski 推薦的自定義 Easing 曲線 (嚴禁 linear 或 ease-in-out)
-export const emilEasings = {
-  easeOutQuart: [0.16, 1, 0.3, 1], // 自然減速
-  smoothInOut: [0.65, 0, 0.35, 1], // 精緻雙向緩動
-};
-
 // 點擊微反饋 (Micro-tap Feedback)
 export const tapFeedback = {
   scale: 0.97,
   transition: emilSpring.snappy,
 };
-
-// 卡片懸停微物理浮升
-export const cardHover = {
-  y: -4,
-  scale: 1.012,
-  transition: emilSpring.snappy,
-};
-
-// 瀑布流微差進場配置 (Stagger)
-export const staggerCascade = (staggerDelay = 0.06) => ({
-  visible: {
-    transition: {
-      staggerChildren: staggerDelay,
-    },
-  },
-});

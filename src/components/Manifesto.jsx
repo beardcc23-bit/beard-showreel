@@ -137,6 +137,7 @@ export default function Manifesto({ onPlayVideo }) {
                         <img
                           src={`${import.meta.env.BASE_URL}f1.webp`}
                           alt="Autodesk Flame Batch Schematic"
+                          loading="lazy"
                           decoding="async"
                           className="w-full h-full object-cover grayscale-[10%] group-hover/flame:grayscale-0 transition-all duration-700"
                         />
@@ -233,9 +234,15 @@ export default function Manifesto({ onPlayVideo }) {
                     }}
                   />
 
-                  {/* 玻璃內部的雙色折射光源 (Refraction Ambient Glows) */}
-                  <div className="absolute -top-32 -left-32 w-64 h-64 bg-aurora-blue/[0.12] rounded-full blur-[80px] pointer-events-none" />
-                  <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-yellow-500/[0.06] rounded-full blur-[80px] pointer-events-none" />
+                  {/* 玻璃內部的雙色折射光源 (以 radial-gradient 取代 blur-[80px]，零 GPU 濾鏡開銷) */}
+                  <div
+                    className="absolute -top-32 -left-32 w-80 h-80 rounded-full pointer-events-none"
+                    style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, transparent 70%)' }}
+                  />
+                  <div
+                    className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
+                    style={{ background: 'radial-gradient(circle, rgba(234, 179, 8, 0.08) 0%, transparent 70%)' }}
+                  />
 
                   {/* 寫實玻璃邊緣高光反光 (Specular Reflection Highlights - 符合圖二) */}
                   {/* 頂部偏右邊緣高光 */}
@@ -263,25 +270,33 @@ export default function Manifesto({ onPlayVideo }) {
                     <div className="space-y-4 pt-6 border-t border-zinc-900/60 mt-6">
                       {activeCategory.params.map((param) => {
                         const hasVideo = !!param.videoId;
+                        const triggerVideo = () => {
+                          if (!hasVideo) return;
+                          if (param.isFacebook && param.url) {
+                            if (window.innerWidth < 768) {
+                              window.location.href = param.url;
+                            } else {
+                              const newWindow = window.open(param.url, '_blank', 'noopener,noreferrer');
+                              if (newWindow) newWindow.opener = null;
+                            }
+                          } else if (onPlayVideo) {
+                            onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
+                          }
+                        };
                         return (
                           <div key={param.key} className="space-y-1.5 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
                             <div
-                              onClick={() => {
-                                if (hasVideo) {
-                                  if (param.isFacebook && param.url) {
-                                    if (window.innerWidth < 768) {
-                                      window.location.href = param.url;
-                                    } else {
-                                      const newWindow = window.open(param.url, '_blank', 'noopener,noreferrer');
-                                      if (newWindow) newWindow.opener = null;
-                                    }
-                                  } else if (onPlayVideo) {
-                                    onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
-                                  }
+                              role={hasVideo ? 'button' : undefined}
+                              tabIndex={hasVideo ? 0 : undefined}
+                              onClick={triggerVideo}
+                              onKeyDown={hasVideo ? (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  triggerVideo();
                                 }
-                              }}
+                              } : undefined}
                               className={`flex items-center gap-2 text-sm md:text-[15px] font-semibold transition-all duration-200 ${hasVideo
-                                ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title'
+                                ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title focus:outline-none focus-visible:ring-1 focus-visible:ring-aurora-blue rounded-sm'
                                 : 'text-aurora-blue'
                                 }`}
                             >

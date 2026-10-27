@@ -13,6 +13,7 @@ export default function RefractionCard({ children, className = '', variant = 'gl
   }, []);
 
   const handleMouseEnter = () => {
+    if (window.matchMedia?.('(hover: none)').matches) return;
     if (cardRef.current) {
       rectRef.current = cardRef.current.getBoundingClientRect();
       scrollYRef.current = window.scrollY;
@@ -20,7 +21,7 @@ export default function RefractionCard({ children, className = '', variant = 'gl
   };
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || window.matchMedia?.('(hover: none)').matches) return;
     const clientX = e.clientX;
     const clientY = e.clientY;
 

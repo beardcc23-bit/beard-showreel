@@ -5,6 +5,8 @@ import { X } from 'lucide-react';
 
 export default function Modal({ isOpen, onClose, type, data }) {
   const [iframeLoading, setIframeLoading] = React.useState(true);
+  const onCloseRef = React.useRef(onClose);
+  onCloseRef.current = onClose;
 
   // 當 Modal 開啟時，禁止背景 scroll 並且監聽 Escape 按鈕
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
-          onClose();
+          onCloseRef.current?.();
         }
       };
 
@@ -33,12 +35,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-      window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   const activeDataRef = React.useRef(data);
   const activeTypeRef = React.useRef(type);
