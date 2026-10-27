@@ -102,10 +102,22 @@ export default function Manifesto({ onPlayVideo }) {
             <div className="space-y-8">
               <p>
                 作為台灣俗稱的 <span className="inline-block">D1 技師</span> <span className="inline-block">(VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用{' '}
-                <span 
+                <span
+                  role="button"
+                  tabIndex={0}
+                  aria-label="檢視 Autodesk Flame 實際專案 Batch 節點介面"
                   onClick={() => {
-                    // 手機版或無滑鼠懸浮的觸控裝置（如 iPad）點擊皆彈出 Modal
-                    if (window.innerWidth < 768 || window.matchMedia('(hover: none)').matches) {
+                    window.dispatchEvent(new CustomEvent('open-image-modal', {
+                      detail: {
+                        imageUrl: `${import.meta.env.BASE_URL}f1.webp`,
+                        title: 'Autodesk Flame Batch Schematic',
+                        description: '實際專案 Batch 節點介面'
+                      }
+                    }));
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
                       window.dispatchEvent(new CustomEvent('open-image-modal', {
                         detail: {
                           imageUrl: `${import.meta.env.BASE_URL}f1.webp`,
@@ -115,7 +127,7 @@ export default function Manifesto({ onPlayVideo }) {
                       }));
                     }
                   }}
-                  className="relative inline-block group/flame cursor-pointer"
+                  className="relative inline-block group/flame cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-aurora-blue rounded-sm"
                 >
                   <span className="text-white group-hover/flame:text-aurora-blue font-bold transition-colors duration-300">
                     Autodesk Flame

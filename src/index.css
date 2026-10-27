@@ -999,6 +999,21 @@ body.is-scrolling .glass-prism-border {
   pointer-events: none !important;
 }
 
+/* 彈窗或側邊選單開啟時，暫停背景所有常駐無限 CSS 動畫，將 100% GPU 算力讓給影片播放與彈窗過渡 */
+body.modal-open .ring-middle,
+body.modal-open .crystal-inner,
+body.modal-open .gold-flow-border::before,
+body.modal-open .gold-glow-pulse::after,
+body.modal-open .play-triangle-pulse,
+body.modal-open .glow-border,
+body.modal-open .hud-pulse,
+body.modal-open .flowing-laser-line,
+body.modal-open .prism-button::after,
+body.modal-open .mobile-aurora-mesh::before,
+body.modal-open .mobile-aurora-mesh::after {
+  animation-play-state: paused !important;
+}
+
 /* ==========================================================================
    註：已移除 #vfx / #about / #contact 的 content-visibility: auto。
    contain-intrinsic-size 800px 遠小於 #about 實際高度（桌機約 1400px、手機約 2500px），

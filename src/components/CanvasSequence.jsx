@@ -39,7 +39,11 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     if (video) {
       frameIndexRef.current = Math.floor((video.currentTime || 0) * FPS) % FRAME_COUNT;
       video.pause();
+      video.querySelectorAll('source').forEach((s) => s.remove());
       video.removeAttribute('src');
+      try {
+        video.load();
+      } catch (_) {}
     }
     setMode('frames');
   };

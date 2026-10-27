@@ -80,6 +80,10 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
 
   const handlePointerLeave = () => {
     rectRef.current = null;
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
     if (bobbleRafRef.current) {
       cancelAnimationFrame(bobbleRafRef.current);
       bobbleRafRef.current = null;
@@ -142,7 +146,10 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
         <div className="absolute inset-0 z-0 overflow-hidden rounded-[inherit] pointer-events-none bg-[#121314]">
           {!isImageLoaded && (
             <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-aurora-blue/5 filter blur-md" />
+              <div
+                className="w-16 h-16 rounded-full"
+                style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%)' }}
+              />
             </div>
           )}
           <img

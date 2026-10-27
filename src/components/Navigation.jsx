@@ -40,6 +40,8 @@ export default function Navigation() {
   React.useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
+    window.lenis?.stop();
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         setIsOpen(false);
@@ -48,6 +50,8 @@ export default function Navigation() {
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
+      window.lenis?.start();
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
@@ -66,8 +70,10 @@ export default function Navigation() {
     
     setIsOpen(false); // 關閉行動版選單
     document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
 
     if (window.lenis) {
+      window.lenis.start();
       window.lenis.scrollTo(element, { offset: -85, ...LENIS_ANCHOR_OPTIONS });
       return;
     }
@@ -79,7 +85,9 @@ export default function Navigation() {
     if (e) e.preventDefault();
     setIsOpen(false);
     document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
     if (window.lenis) {
+      window.lenis.start();
       window.lenis.scrollTo(0, LENIS_ANCHOR_OPTIONS);
       return;
     }
@@ -166,6 +174,7 @@ export default function Navigation() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={emilSpring.gentle}
+              data-lenis-prevent
               className="fixed top-0 left-0 w-[80%] max-w-[320px] min-h-[100dvh] h-screen bg-bg-core/98 z-[1000] md:hidden flex flex-col justify-center p-8 gap-8 border-r border-border shadow-2xl"
             >
               <motion.button

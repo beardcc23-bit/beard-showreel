@@ -13,6 +13,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
     if (isOpen) {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
       if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
       }
@@ -31,6 +32,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
       return () => {
         document.body.style.overflow = '';
         document.body.style.paddingRight = '';
+        document.body.classList.remove('modal-open');
         window.lenis?.start();
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
