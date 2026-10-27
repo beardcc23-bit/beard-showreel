@@ -3,11 +3,14 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motio
 import { Play } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 
+// 快取已完成載入的圖片 URL，切換 Tab 時零閃爍直接呈現
+const loadedImageCache = new Set();
+
 const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, ref) => {
   const item = React.useMemo(() => normalizeItem(rawItem), [rawItem]);
   const { hasVideo, bgImage: bgImageUrl } = item;
   const CardElement = hasVideo ? 'button' : 'div';
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(() => (bgImageUrl ? loadedImageCache.has(bgImageUrl) : false));
   const innerRef = React.useRef(null);
   const rafRef = React.useRef(null);
   const bobbleRafRef = React.useRef(null);
@@ -90,7 +93,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
       if (window.innerWidth < 768) {
         window.location.href = targetUrl;
       } else {
-        const newWindow = window.open(targetUrl, '_blank');
+        const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer');
         if (newWindow) newWindow.opener = null;
       }
     }
@@ -106,13 +109,12 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   return (
     <CardElement
       ref={setRefs}
-      onPointerEnter={handlePointerEnter}
-      onMouseMove={handleMouseMove}
-      onPointerLeave={handlePointerLeave}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={hasVideo ? 0 : -1}
-      role={hasVideo ? "button" : "presentation"}
+      onPointerEnter={hasVideo ? handlePointerEnter : undefined}
+      onMouseMove={hasVideo ? handleMouseMove : undefined}
+      onPointerLeave={hasVideo ? handlePointerLeave : undefined}
+      onClick={hasVideo ? handleClick : undefined}
+      onKeyDown={hasVideo ? handleKeyDown : undefined}
+      tabIndex={hasVideo ? 0 : undefined}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
       className={`prism-border brand-card-spring text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between relative overflow-hidden group shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue bg-[#121314] ${hasVideo
         ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] active:scale-[0.97]'
@@ -144,10 +146,13 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
             loading="lazy"
             decoding="async"
             fetchpriority="low"
-            onLoad={() => setIsImageLoaded(true)}
-            className={`w-full h-full object-cover transition-[opacity,filter,transform] duration-300 ease-out group-hover:scale-105 ${
+            onLoad={() => {
+              loadedImageCache.add(bgImageUrl);
+              setIsImageLoaded(true);
+            }}
+            className={`w-full h-full object-cover transition-[opacity,transform] duration-300 ease-out group-hover:scale-105 ${
               isImageLoaded
-                ? 'opacity-95 md:opacity-85 blur-0 md:blur-[2.5px] brightness-90 md:brightness-[0.68] saturate-90 md:saturate-[75%] group-hover:opacity-100 group-hover:blur-0 group-hover:brightness-[1.05] group-hover:saturate-[105%]'
+                ? 'opacity-90 md:opacity-75 group-hover:opacity-100'
                 : 'opacity-0'
             }`}
           />

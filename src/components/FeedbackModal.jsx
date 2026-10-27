@@ -7,16 +7,33 @@ import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 const sanitizeSheetInput = (str) => {
   if (!str) return '';
   const trimmed = str.trim();
-  // 若開頭為試算表公式觸發字元 (=, +, -, @, \t, \r)，補上前綴單引號強制轉義為純文字
-  if (/^[=+@\-\t\r]/.test(trimmed)) {
-    return `'${trimmed}`;
+  // 防禦字首與換行後的試算表公式觸發字元 (=, +, -, @, |, \t, \r)，強制補上前綴單引號轉義為純文字
+  const safeLines = trimmed.replace(/([\r\n]+)\s*([=+@\-\t\r|])/g, "$1'$2");
+  if (/^[=+@\-\t\r|]/.test(safeLines)) {
+    return `'${safeLines}`;
   }
-  return trimmed;
+  return safeLines;
 };
 
-// 模組級防洪計時器 (單次成功後 20 秒冷卻)
+// 結合 sessionStorage 與記憶體的防洪計時器 (單次成功後 20 秒冷卻，防止重新整理繞過)
 let lastSubmitTimestamp = 0;
 const COOLDOWN_MS = 20000;
+const getLastSubmitTime = () => {
+  try {
+    const stored = Number(sessionStorage.getItem('fb_last_ts') || 0);
+    return Math.max(lastSubmitTimestamp, stored);
+  } catch {
+    return lastSubmitTimestamp;
+  }
+};
+const setLastSubmitTime = (ts) => {
+  lastSubmitTimestamp = ts;
+  try {
+    sessionStorage.setItem('fb_last_ts', String(ts));
+  } catch {
+    // 忽略無痕模式或禁用 storage 的情況
+  }
+};
 
 export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -77,8 +94,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
     // 防刷冷卻保護：防止短時間內重複連擊浪費 API 配額
     const now = Date.now();
-    if (now - lastSubmitTimestamp < COOLDOWN_MS) {
-      const waitSec = Math.ceil((COOLDOWN_MS - (now - lastSubmitTimestamp)) / 1000);
+    const lastTs = getLastSubmitTime();
+    if (now - lastTs < COOLDOWN_MS) {
+      const waitSec = Math.ceil((COOLDOWN_MS - (now - lastTs)) / 1000);
       setStatus('error');
       setErrorMessage(`送出過於頻繁，請等待 ${waitSec} 秒後再試。`);
       return;
@@ -125,7 +143,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         body: params.toString(),
       });
 
-      lastSubmitTimestamp = Date.now();
+      setLastSubmitTime(Date.now());
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
       setTimeout(() => {

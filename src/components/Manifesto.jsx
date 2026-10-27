@@ -272,7 +272,7 @@ export default function Manifesto({ onPlayVideo }) {
                                     if (window.innerWidth < 768) {
                                       window.location.href = param.url;
                                     } else {
-                                      const newWindow = window.open(param.url, '_blank');
+                                      const newWindow = window.open(param.url, '_blank', 'noopener,noreferrer');
                                       if (newWindow) newWindow.opener = null;
                                     }
                                   } else if (onPlayVideo) {

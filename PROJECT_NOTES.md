@@ -108,3 +108,18 @@
   - 序列模式：`rAF tick` 升級容錯前進演算法，播到最後第 144 格跨回第 0 格時若目標幀未就緒，自動向前尋找最近可用影格推進，絕不停滯死鎖。
 - **單元測試**：新增 `CanvasSequence.test.jsx` 影片播畢自動循環重置測試，全站 33 個測試全數綠燈通過。
 
+## 2026-10-27
+
+### 已完成：全站資安強化與作品集卡片 3D 傾斜流暢度優化
+- **資安風險全數清零**：
+  - `Contact.jsx` 與 `public/llms.txt`：移除 `aria-label` 與 `llms.txt` 中的明文 Email，改為動態插值與 `#contact` 錨點，徹底防堵爬蟲正則收割。
+  - `VisualSynthesis.jsx` 與 `Manifesto.jsx`：`window.open` 補齊原生 `'noopener,noreferrer'` 第三參數，強制跨程序執行緒隔離並防範 `opener` 殘留。
+  - `FeedbackModal.jsx`：`sanitizeSheetInput` 升級防禦跨行（`\r\n`）與管線符號 `|` 公式注入；20 秒防刷冷卻結合 `sessionStorage`，防止重整繞過。
+  - `vercel.json`：新增 `Strict-Transport-Security` (HSTS)，並於 CSP 補齊 `frame-ancestors 'none'; upgrade-insecure-requests;` 與 `https://web.facebook.com`。
+  - NPM 依賴套件安全升級：修復 `@vitest/mocker`、`undici`、`browserslist`、`nanoid`、`source-map-js` 等並將 `vite` 升級至 `v7.3.7`，`npm audit` 漏洞數降為 `0`。
+- **作品集卡片 3D 傾斜與載入優化（`VisualSynthesis.jsx`）**：
+  - 移除桌機版卡片底圖預設的 `md:blur-[2.5px] md:brightness-[0.68] md:saturate-[75%]` 與 `filter` transition，改用純合成層 `transition-[opacity,transform]`，消除 3D 傾斜時每幀重新光柵化模糊濾鏡造成的掉幀。
+  - 新增 `loadedImageCache` 快取已載入圖片 URL，切換分類 Tab 零閃爍。
+  - 僅在 `hasVideo` 卡片綁定 3D 傾斜與果凍彈跳事件，純展示卡片不再誤觸動態。
+
+
