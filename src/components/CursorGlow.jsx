@@ -5,10 +5,12 @@ export default function CursorGlow() {
   const dotRef = useRef(null);
   const [isMobile, setIsMobile] = useState(true);
   const [isHidden, setIsHidden] = useState(false);
+  const [hasMoved, setHasMoved] = useState(false);
 
   // 在 ref 中緩存滑鼠與 hover 狀態，避免頻繁更新 React state 導致重複 render
   const mouseCoords = useRef({ x: 0, y: 0 });
   const isHoveredRef = useRef(false);
+  const hasMovedRef = useRef(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -21,9 +23,10 @@ export default function CursorGlow() {
       } else {
         document.body.classList.remove('custom-cursor');
       }
+      return isMobileDevice;
     };
     
-    checkMobile();
+    if (checkMobile()) return () => document.body.classList.remove('custom-cursor');
     window.addEventListener('resize', checkMobile);
 
     let animationFrameId = null;
@@ -42,6 +45,10 @@ export default function CursorGlow() {
       const clientY = e.clientY;
       mouseCoords.current.x = clientX;
       mouseCoords.current.y = clientY;
+      if (!hasMovedRef.current) {
+        hasMovedRef.current = true;
+        setHasMoved(true);
+      }
 
       // 核心指針即時同步更新，實現 120Hz/144Hz 零延遲跟隨
       if (dotRef.current) {
@@ -55,7 +62,7 @@ export default function CursorGlow() {
       }
     };
 
-    const INTERACTIVE_SELECTOR = 'a, button, .tech-card, .glow-title, [role="button"], .group';
+    const INTERACTIVE_SELECTOR = 'a, button, .tech-card, .glow-title, [role="button"], .group\\/flame, .group\\/title';
 
     const handleMouseOver = (e) => {
       const target = e.target;
@@ -126,7 +133,7 @@ export default function CursorGlow() {
         ref={glowRef}
         className="cursor-glow-element"
         style={{
-          opacity: isHidden ? 0 : 1,
+          opacity: isHidden || !hasMoved ? 0 : 1,
           // 只過渡合成層屬性：scale 為獨立屬性，不與 JS 每幀寫入的 transform 衝突
           transition: 'opacity 0.25s ease, scale 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
@@ -141,7 +148,7 @@ export default function CursorGlow() {
           height: '32px',
           transform: 'translate3d(0,0,0) translate(-50%, -50%) scale(1)',
           transition: 'opacity 0.25s ease', // 移除 transform transition，避免與 rAF 每一幀的 translate3d 發生衝突與粘滯延遲
-          opacity: isHidden ? 0 : 1,
+          opacity: isHidden || !hasMoved ? 0 : 1,
         }}
       >
         <svg width="32" height="32" viewBox="0 0 32 32" className="overflow-visible">

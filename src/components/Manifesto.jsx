@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
 
@@ -41,7 +41,7 @@ const lawCategories = [
       {
         key: '磊山保經',
         value: '克服無綠幕環境的限制，以細緻的手工逐格去背抽離人物，並在多重圖層間嵌入動態閃爍色塊，創造出節奏感強烈且層次豐富的視覺張力。',
-        videoId: 'Ofl89MtikqE'
+        videoId: 'Rwrn87N2PUc'
       }
     ]
   },
@@ -104,8 +104,8 @@ export default function Manifesto({ onPlayVideo }) {
                 作為台灣俗稱的 <span className="inline-block">D1 技師</span> <span className="inline-block">(VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用{' '}
                 <span 
                   onClick={() => {
-                    // 只有在手機版（螢幕小於 768px）點擊才彈出 Modal，網頁版（桌機）只靠懸浮
-                    if (window.innerWidth < 768) {
+                    // 手機版或無滑鼠懸浮的觸控裝置（如 iPad）點擊皆彈出 Modal
+                    if (window.innerWidth < 768 || window.matchMedia('(hover: none)').matches) {
                       window.dispatchEvent(new CustomEvent('open-image-modal', {
                         detail: {
                           imageUrl: `${import.meta.env.BASE_URL}f1.webp`,
@@ -190,9 +190,9 @@ export default function Manifesto({ onPlayVideo }) {
                   <button
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
-                    className={`hud-btn px-2 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm ${activeTab === cat.id ? 'is-active' : ''}`}
+                    className={`hud-btn px-1.5 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm ${activeTab === cat.id ? 'is-active' : ''}`}
                   >
-                    <span className={`hud-eng text-[10px] sm:text-[11px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${activeTab === cat.id ? '' : 'text-zinc-500'
+                    <span className={`hud-eng text-[9px] sm:text-[11px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${activeTab === cat.id ? '' : 'text-zinc-500'
                       }`}>{label.eng}</span>
                     <span className="hud-zht text-[11px] sm:text-xs font-normal tracking-wider whitespace-nowrap">{label.zht}</span>
                   </button>

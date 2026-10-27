@@ -265,7 +265,7 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate3d(-50%, calc(-50% + var(--parallax-y-mid, 0px)), 0) scale(0.65);
+  transform: translate3d(calc(-50% + var(--orbit-tx, 0px)), calc(-50% + var(--orbit-ty, 0px)), 0) rotateX(var(--orbit-rx, 0deg)) rotateY(var(--orbit-ry, 0deg)) scale(0.65);
   opacity: 0;
   width: 1400px;
   height: 1400px;
@@ -280,7 +280,7 @@ body {
 }
 
 .is-loaded .orbit-container {
-  transform: translate3d(-50%, calc(-50% + var(--parallax-y-mid, 0px)), 0) scale(1);
+  transform: translate3d(calc(-50% + var(--orbit-tx, 0px)), calc(-50% + var(--orbit-ty, 0px)), 0) rotateX(var(--orbit-rx, 0deg)) rotateY(var(--orbit-ry, 0deg)) scale(1);
   opacity: 1;
 }
 
@@ -333,10 +333,9 @@ body {
   to { transform: rotate(-360deg); }
 }
 
-/* 漂浮水晶 - Z-Near 快速視差位移層 */
+/* 漂浮水晶 */
 .crystal {
   position: absolute;
-  transform: translate3d(0, calc(-1 * var(--parallax-y-near, 0px)), 0);
 }
 
 .crystal-inner {
@@ -347,6 +346,7 @@ body {
     0 10px 25px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
   animation: float-crystal 12s infinite ease-in-out;
+  animation-delay: inherit;
   will-change: transform;
 }
 
@@ -520,29 +520,6 @@ body {
   opacity: 0.7;
 }
 
-/* 序列圖容器：精準置中 */
-.sequence-frame {
-  position: absolute;
-  width: 1000px;
-  height: 563px;
-  top: 50%; 
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #000;
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
-  z-index: 10;
-}
-
-@media (max-width: 1024px) {
-  .sequence-frame {
-    width: 80vw;
-    height: calc(80vw * 9 / 16);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
-
 /* 序列播放框：光譜折射邊框 */
 .glow-border {
   position: absolute;
@@ -563,14 +540,6 @@ body {
 @keyframes spectrum-breathe {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.85; }
-}
-
-.yt-logo-glow {
-  width: 80px;
-  height: 80px;
-  filter: drop-shadow(0 0 15px var(--color-aurora-blue));
-  transform: scale(0.8);
-  transition: all 0.4s ease;
 }
 
 /* 稜鏡折射邊框樣式 */
@@ -729,27 +698,6 @@ body {
   border-radius: 6px;
   overflow: hidden;
   display: flex;
-}
-
-/* 作品集 Tab 切換科幻淡入動畫與顯隱類別 */
-@keyframes tab-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.tab-content-active {
-  display: grid !important;
-  animation: tab-fade-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.tab-content-hidden {
-  display: none !important;
 }
 
 /* 手機版專屬：電影級焰金暗黑流光漫延動態 (有機正圓光球呼吸漂游，零旋轉、零露底、物理性杜絕黑框) */
@@ -1063,27 +1011,12 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* 滾動進行時全域停用指針互動，杜絕 hover 重排、高斯模糊轉場與 bobble 動畫造成掉幀 */
-body.is-scrolling,
-body.is-scrolling * {
+/* 滾動進行時僅停用卡片與視差容器的指針互動，保留導覽列與按鈕隨時可點擊，並防止穿透 body 造成原生游標閃爍 */
+body.is-scrolling .brand-card-spring,
+body.is-scrolling .tech-card,
+body.is-scrolling .prism-border,
+body.is-scrolling .glass-prism-border {
   pointer-events: none !important;
-}
-
-/* ==========================================================================
-   Nuke/Flame 節點式合成連結線動畫 (Node Compositing Pipes Animation)
-   ========================================================================== */
-.node-pipe {
-  stroke-dasharray: 6 12;
-  animation: node-pipe-flow 3s linear infinite;
-}
-.node-pipe-fast {
-  stroke-dasharray: 4 10;
-  animation: node-pipe-flow 1.5s linear infinite;
-}
-@keyframes node-pipe-flow {
-  to {
-    stroke-dashoffset: -36;
-  }
 }
 
 /* ==========================================================================
@@ -1092,30 +1025,6 @@ body.is-scrolling * {
    導覽點擊時 Lenis 以佔位高度計算目標，區塊渲染後高度撐開導致停在錯誤位置。
    僅 3 個區塊，省下的繪製成本可忽略。
    ========================================================================== */
-
-/* ==========================================================================
-   Tab 內容切換流暢過渡動畫 (Tab Content Fluid Transition)
-   ========================================================================== */
-.tab-content-active {
-  display: grid;
-  animation: tab-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: opacity, transform;
-}
-
-.tab-content-hidden {
-  display: none;
-}
-
-@keyframes tab-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /* 註：原本兩段「GPU 硬體加速」區塊已移除。
    其 transform: translateZ(0) 會覆蓋 .crystal-N 的 rotate()、.orbit-container 的置中位移，
@@ -1131,6 +1040,7 @@ body.is-scrolling * {
 
 .gold-glow-pulse {
   position: relative;
+  isolation: isolate;
   text-shadow: 0 0 8px rgba(212, 175, 55, 0.2), 0 0 15px rgba(212, 175, 55, 0.08);
 }
 

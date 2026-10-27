@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Cpu, Zap, Award } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export default function Modal({ isOpen, onClose, type, data }) {
   const [iframeLoading, setIframeLoading] = React.useState(true);
@@ -145,154 +145,30 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   ></iframe>
                 )}
               </div>
-            ) : currentType === 'image' ? (
-            /* 單張圖片展示模式 (例如 Flame 節點解密) */
-            <div className="p-4 md:p-6 flex flex-col bg-[#121314] rounded-lg">
-              <div className="w-full overflow-hidden border border-zinc-900 rounded-sm mb-3.5">
-                <img
-                  src={data.imageUrl}
-                  alt={data.title}
-                  decoding="async"
-                  className="w-full aspect-video object-cover"
-                />
-              </div>
-              <div className="flex items-center gap-2.5 pl-1 pb-1">
-                <span className="flex gap-[1.5px] h-3 pointer-events-none">
-                  <span className="w-[1.5px] h-full bg-aurora-blue" />
-                  <span className="w-[1px] h-full bg-aurora-blue/50" />
-                </span>
-                <span className="text-[11px] text-zinc-300 font-bold tracking-wide">
-                  {data.description}
-                </span>
-              </div>
-            </div>
-          ) : (
-            /* Case Study 專案模式 */
-            <div className="overflow-y-auto flex-1">
-              {/* 頂部視覺區 */}
-              <div className="relative h-64 md:h-80 w-full overflow-hidden bg-gradient-to-br from-bg-mist to-bg-core flex items-center justify-center border-b border-zinc-800/80">
-                {/* 電影感網格與光暈背景 */}
-                <div className="absolute inset-0 grid-bg opacity-40" />
-                <div className="absolute inset-0 bg-gradient-to-t from-bg-core via-transparent to-transparent z-10" />
-                
-                {/* Nuke/Flame 節點式合成連結線 (裝飾性 Compositing Node Pipes) */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-25 z-0">
-                  <path d="M -20 40 L 120 40 L 170 120 L 320 120" fill="none" stroke="#D4AF37" strokeWidth="1.5" className="node-pipe" />
-                  <path d="M 180 -20 L 180 80 L 260 160 L 400 160" fill="none" stroke="#00ffff" strokeWidth="1" className="node-pipe-fast" />
-                  <circle cx="120" cy="40" r="3" fill="#D4AF37" />
-                  <circle cx="170" cy="120" r="3" fill="#D4AF37" />
-                  <circle cx="180" cy="80" r="2.5" fill="#00ffff" />
-                  <circle cx="260" cy="160" r="2.5" fill="#00ffff" />
-                </svg>
-                <div
-                  className="absolute w-[400px] h-[400px] rounded-full filter blur-[100px] opacity-20 pointer-events-none animate-pulse"
-                  style={{
-                    background: `radial-gradient(circle, var(--color-aurora-blue) 0%, var(--color-soft-magenta) 100%)`,
-                  }}
-                />
-                
-                {/* 裝飾文字 */}
-                <div className="absolute top-6 left-8 mono text-[10px] text-zinc-500 uppercase tracking-[0.4em] z-20">
-                  SYSTEM_DUMP // CASE_STUDY_{data.id}
+            ) : (
+              /* 單張圖片展示模式 (例如 Flame 節點解密) */
+              <div className="p-4 md:p-6 flex flex-col bg-[#121314] rounded-lg">
+                <div className="w-full overflow-hidden border border-zinc-900 rounded-sm mb-3.5">
+                  <img
+                    src={currentData.imageUrl}
+                    alt={currentData.title}
+                    decoding="async"
+                    className="w-full aspect-video object-cover"
+                  />
                 </div>
-                
-                <div className="relative z-20 text-center px-6">
-                  <span className="mono text-[10px] text-aurora-blue uppercase tracking-widest font-black block mb-3">
-                    // {data.category}
+                <div className="flex items-center gap-2.5 pl-1 pb-1">
+                  <span className="flex gap-[1.5px] h-3 pointer-events-none">
+                    <span className="w-[1.5px] h-full bg-aurora-blue" />
+                    <span className="w-[1px] h-full bg-aurora-blue/50" />
                   </span>
-                  <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase">
-                    {data.title}
-                  </h2>
+                  <span className="text-[11px] text-zinc-300 font-bold tracking-wide">
+                    {currentData.description}
+                  </span>
                 </div>
               </div>
-
-              {/* 內文區 */}
-              <div className="p-8 md:p-12 grid md:grid-cols-3 gap-8 md:gap-12">
-                {/* 左側邊欄：屬性與標籤 */}
-                <div className="space-y-6 md:border-r md:border-zinc-800 md:pr-8">
-                  <div>
-                    <h3 className="mono text-[10px] text-zinc-500 uppercase tracking-widest mb-2">// Project Meta</h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-zinc-500">屬性</span>
-                        <span className="text-white font-medium">{data.category}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-zinc-500">版本</span>
-                        <span className="text-aurora-blue font-bold mono">v.2.0</span>
-                      </div>
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-zinc-500">精密級</span>
-                        <span className="text-dawn-gold font-bold mono">Pixel-Perfect</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="mono text-[10px] text-zinc-500 uppercase tracking-widest mb-3">// Core Technologies</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {data.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[10px] px-3 py-1 bg-bg-mist text-zinc-300 font-bold uppercase tracking-widest border border-zinc-800"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 右側：專案挑戰與解決方案 */}
-                <div className="md:col-span-2 space-y-8">
-                  {/* Problem */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Cpu size={16} className="text-soft-magenta" />
-                      <h4 className="mono text-xs uppercase tracking-widest text-soft-magenta font-black">
-                        01 // The Challenge (挑戰痛點)
-                      </h4>
-                    </div>
-                    <p className="text-sm text-zinc-400 leading-relaxed font-light pl-7">
-                      {data.problem}
-                    </p>
-                  </div>
-
-                  {/* Solution */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Zap size={16} className="text-aurora-blue" />
-                      <h4 className="mono text-xs uppercase tracking-widest text-aurora-blue font-black">
-                        02 // The Solution (解決方案)
-                      </h4>
-                    </div>
-                    <p className="text-sm text-zinc-400 leading-relaxed font-light pl-7">
-                      {data.solution}
-                    </p>
-                  </div>
-
-                  {/* Impact */}
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Award size={16} className="text-prism-green" />
-                      <h4 className="mono text-xs uppercase tracking-widest text-prism-green font-black">
-                        03 // The Impact (具體成效)
-                      </h4>
-                    </div>
-                    <div className="pl-7">
-                      <div className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-sm">
-                        <p className="text-sm text-zinc-300 leading-relaxed font-light">
-                          {data.impact || '透過視覺層級的最佳化與微交互引導，將資訊加載感知降低 30%，並在使用者滿意度測試中獲得 95% 以上的極高反饋，完美平衡了「極簡美學」與「高效率互動」的訴求。'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </motion.div>
-      </div>
+            )}
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>,
     document.body

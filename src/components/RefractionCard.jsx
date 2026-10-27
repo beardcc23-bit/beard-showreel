@@ -4,6 +4,7 @@ export default function RefractionCard({ children, className = '', variant = 'gl
   const cardRef = useRef(null);
   const rafRef = useRef(null);
   const rectRef = useRef(null);
+  const scrollYRef = useRef(0);
 
   useEffect(() => {
     return () => {
@@ -14,6 +15,7 @@ export default function RefractionCard({ children, className = '', variant = 'gl
   const handleMouseEnter = () => {
     if (cardRef.current) {
       rectRef.current = cardRef.current.getBoundingClientRect();
+      scrollYRef.current = window.scrollY;
     }
   };
 
@@ -25,8 +27,9 @@ export default function RefractionCard({ children, className = '', variant = 'gl
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
       if (cardRef.current) {
-        if (!rectRef.current) {
+        if (!rectRef.current || scrollYRef.current !== window.scrollY) {
           rectRef.current = cardRef.current.getBoundingClientRect();
+          scrollYRef.current = window.scrollY;
         }
         const rect = rectRef.current;
         cardRef.current.style.setProperty('--mouse-x', `${clientX - rect.left}px`);

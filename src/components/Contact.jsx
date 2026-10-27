@@ -67,7 +67,7 @@ export default function Contact() {
               {/* 寫實高透玻璃邊緣動態高光條 */}
               <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-              <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center shrink-0 ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(0,255,255,0.35)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
+              <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center shrink-0 ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(212,175,55,0.45)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
                 {copied ? <Check size={18} /> : <Mail size={18} />}
               </span>
 
@@ -103,7 +103,7 @@ export default function Contact() {
                 transition={{ duration: 0.2 }}
                 role="status"
                 aria-live="polite"
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950/95 border border-aurora-blue/40 text-aurora-blue shadow-[0_0_20px_rgba(0,255,255,0.18)] backdrop-blur-xl select-none"
+                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950/95 border border-aurora-blue/40 text-aurora-blue shadow-[0_0_20px_rgba(212,175,55,0.22)] backdrop-blur-xl select-none"
               >
                 <Check size={12} />
                 <span className="mono text-[10px] uppercase tracking-widest font-black">

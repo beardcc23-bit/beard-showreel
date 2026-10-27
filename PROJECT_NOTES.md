@@ -121,5 +121,15 @@
   - 移除桌機版卡片底圖預設的 `md:blur-[2.5px] md:brightness-[0.68] md:saturate-[75%]` 與 `filter` transition，改用純合成層 `transition-[opacity,transform]`，消除 3D 傾斜時每幀重新光柵化模糊濾鏡造成的掉幀。
   - 新增 `loadedImageCache` 快取已載入圖片 URL，切換分類 Tab 零閃爍。
   - 僅在 `hasVideo` 卡片綁定 3D 傾斜與果凍彈跳事件，純展示卡片不再誤觸動態。
+- **渲染、互動邊界與流暢度深度調校**：
+  - `src/index.css`：滾動期間 `body.is-scrolling` 改為僅停用卡片與視差框指針感應，保留頂部導覽列與按鈕隨時可點擊，並解決穿透 `body` 造成系統原生白游標閃現的問題；補上 `.crystal-inner` 的 `animation-delay: inherit` 與 `.gold-glow-pulse` 的 `isolation: isolate`；清理重複與廢棄樣式。
+  - `useParallaxOrbit.js`：改以 CSS 變數 `--orbit-tx/ty/rx/ry` 驅動 3D 軌道視差，不再覆寫首屏 `scale(0.65) -> scale(1)` 進場縮放。
+  - `VisualSynthesis.jsx` 與 `RefractionCard.jsx`：快取 `getBoundingClientRect()` 時同步比對 `window.scrollY`，消除滾動後卡片 3D 傾斜與玻璃反光座標偏移，並限制傾斜角度於 `±7deg` 內。
+  - `CanvasSequence.jsx`：移除隨機截斷尾端影格的 `timeupdate` 監聽，並在退回 `frames` 備援模式時執行 `video.removeAttribute('src')` 釋放頻寬。
+  - `CursorGlow.jsx`：精確化互動選擇器（不再誤觸大面積數據面板）、行動端跳過全域滑鼠監聽，並在首次 `mousemove` 前隱藏游標杜絕左上角 `(0, 0)` 穿幫。
+  - `Modal.jsx` 與 `FeedbackModal.jsx` & `Navigation.jsx`：移除雙層重度高斯模糊、補齊捲軸寬度補償防跳動、清理 `closeTimerRef` 與 124 行未使用死碼（`Modal` 體積減半）、補上表單 `htmlFor`/`id` 與行動選單背景防穿透。
+  - `Manifesto.jsx`：支援 iPad / 觸控裝置點擊開啟 Flame 節點圖、微調 375px 手機版按鈕字級防裁切、同步「磊山保經」影片 ID。
+  - `index.html` 與靜態資源：移除未使用的 6 個斜體字型請求、補齊 `mobile-web-app-capable` meta、刪除廢棄的 `public/f1.jpg`（減少 551 KB）。
+
 
 

@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
  */
 const AnimatedCounter = React.memo(function AnimatedCounter({ value, trigger, duration = 1.5 }) {
   const [count, setCount] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
   const targetValue = typeof value === 'number' && !isNaN(value) ? value : 0;
 
   useEffect(() => {
@@ -24,7 +23,6 @@ const AnimatedCounter = React.memo(function AnimatedCounter({ value, trigger, du
         animationFrameId = window.requestAnimationFrame(step);
       } else {
         setCount(targetValue);
-        setIsCompleted(true);
       }
     };
 

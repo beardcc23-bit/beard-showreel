@@ -41,15 +41,21 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [openTime, setOpenTime] = useState(Date.now());
   const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
+  const closeTimerRef = React.useRef(null);
 
   // 彈窗開啟時的背景滾動與游標處理
   useEffect(() => {
     if (isOpen) {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
       setOpenTime(Date.now());
       setHoneypot('');
       setStatus('idle');
       setErrorMessage('');
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = 'hidden';
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
       // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
       window.lenis?.stop();
       const handleKeyDown = (e) => {
@@ -57,13 +63,17 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       };
       window.addEventListener('keydown', handleKeyDown);
       return () => {
+        if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
         document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
         window.lenis?.start();
         window.removeEventListener('keydown', handleKeyDown);
         window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
     } else {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
       window.dispatchEvent(new CustomEvent('show-custom-cursor'));
     }
   }, [isOpen, onClose]);
@@ -106,7 +116,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     if (honeypot || (now - openTime < 1000)) {
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => {
+      closeTimerRef.current = setTimeout(() => {
         setStatus('idle');
         onClose();
       }, 2500);
@@ -146,7 +156,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       setLastSubmitTime(Date.now());
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => {
+      closeTimerRef.current = setTimeout(() => {
         setStatus('idle');
         onClose();
       }, 2500);
@@ -175,7 +185,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/85 backdrop-blur-xl cursor-pointer z-0"
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm cursor-pointer z-0"
           />
 
           {/* Modal 主體奢華卡片 */}
@@ -184,7 +194,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 25 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="relative w-full max-w-lg rounded-2xl bg-zinc-950/95 border border-white/10 p-6 sm:p-8 shadow-[0_0_90px_rgba(0,0,0,0.95)] z-10 overflow-hidden text-left my-auto backdrop-blur-2xl"
+            className="relative w-full max-w-lg rounded-2xl bg-zinc-950 border border-white/10 p-6 sm:p-8 shadow-[0_0_90px_rgba(0,0,0,0.95)] z-10 overflow-hidden text-left my-auto"
           >
             {/* 頂部極細藍色漸層飾條 */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aurora-blue to-transparent opacity-80" />
@@ -243,49 +253,52 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 {/* 稱呼欄位 */}
                 <div>
-                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
+                  <label htmlFor="feedback-name" className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
                     Name / 您的稱呼 <span className="text-aurora-blue">*</span>
                   </label>
                   <input
+                    id="feedback-name"
                     type="text"
                     name="name"
                     maxLength={60}
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="例如：Alex Chen"
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-300"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300"
                   />
                 </div>
 
                 {/* Email / LINE 欄位 */}
                 <div>
-                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
+                  <label htmlFor="feedback-email" className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
                     Email / LINE
                   </label>
                   <input
+                    id="feedback-email"
                     type="text"
                     name="email"
                     maxLength={100}
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="name@example.com 或 LINE ID"
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-300"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300"
                   />
                 </div>
 
                 {/* 留言內容欄位 */}
                 <div>
-                  <label className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
+                  <label htmlFor="feedback-message" className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
                     Message / 回饋內容 <span className="text-aurora-blue">*</span>
                   </label>
                   <textarea
+                    id="feedback-message"
                     name="message"
                     rows={4}
                     maxLength={500}
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="請輸入您的寶貴建議..."
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(0,255,255,0.15)] transition-all duration-300 resize-none"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 resize-none"
                   />
                 </div>
 
@@ -314,7 +327,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="group relative flex items-center gap-2 px-6 py-2.5 rounded-md bg-aurora-blue text-black font-bold text-xs mono uppercase tracking-wider hover:bg-white transition-all duration-300 disabled:opacity-50 shadow-[0_0_20px_rgba(0,255,255,0.25)] hover:shadow-[0_0_25px_rgba(0,255,255,0.45)] cursor-pointer active:scale-[0.97]"
+                    className="group relative flex items-center gap-2 px-6 py-2.5 rounded-md bg-aurora-blue text-black font-bold text-xs mono uppercase tracking-wider hover:bg-white transition-all duration-300 disabled:opacity-50 shadow-[0_0_20px_rgba(212,175,55,0.28)] hover:shadow-[0_0_25px_rgba(212,175,55,0.48)] cursor-pointer active:scale-[0.97]"
                   >
                     {status === 'submitting' ? (
                       <>

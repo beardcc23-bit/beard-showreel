@@ -27,7 +27,10 @@ export function useParallaxOrbit() {
       currentX += dx * 0.08;
       currentY += dy * 0.08;
 
-      orbit.style.transform = `translate3d(calc(-50% + ${currentX * 18}px), calc(-50% + ${currentY * 15}px), 0) rotateX(${-currentY * 12}deg) rotateY(${currentX * 12}deg)`;
+      orbit.style.setProperty('--orbit-tx', `${(currentX * 18).toFixed(2)}px`);
+      orbit.style.setProperty('--orbit-ty', `${(currentY * 15).toFixed(2)}px`);
+      orbit.style.setProperty('--orbit-rx', `${(-currentY * 12).toFixed(2)}deg`);
+      orbit.style.setProperty('--orbit-ry', `${(currentX * 12).toFixed(2)}deg`);
 
       // 如果差距仍大於 0.0001 則繼續下一幀插值，否則停止動畫迴圈以節省資源 (Stop Ticking)
       if (Math.abs(dx) > 0.0001 || Math.abs(dy) > 0.0001) {

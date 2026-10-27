@@ -39,6 +39,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     if (video) {
       frameIndexRef.current = Math.floor((video.currentTime || 0) * FPS) % FRAME_COUNT;
       video.pause();
+      video.removeAttribute('src');
     }
     setMode('frames');
   };
@@ -96,19 +97,10 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       video.play().catch(() => {});
     };
 
-    // 某些解碼器在到達結尾時不會觸發 loop，在倒數 0.08 秒前主動重置
-    const handleTimeUpdate = () => {
-      if (video.duration && video.currentTime >= video.duration - 0.08) {
-        handleLoop();
-      }
-    };
-
     video.addEventListener('ended', handleLoop);
-    video.addEventListener('timeupdate', handleTimeUpdate);
 
     return () => {
       video.removeEventListener('ended', handleLoop);
-      video.removeEventListener('timeupdate', handleTimeUpdate);
     };
   }, []);
 

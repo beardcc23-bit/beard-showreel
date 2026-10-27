@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 
@@ -15,6 +15,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   const rafRef = React.useRef(null);
   const bobbleRafRef = React.useRef(null);
   const rectRef = React.useRef(null);
+  const scrollYRef = React.useRef(0);
 
   const setRefs = (node) => {
     innerRef.current = node;
@@ -37,6 +38,7 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
     if (!innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
     rectRef.current = rect;
+    scrollYRef.current = window.scrollY;
     const isLeft = (e.clientX - rect.left) < rect.width / 2;
 
     if (bobbleRafRef.current) cancelAnimationFrame(bobbleRafRef.current);
@@ -52,8 +54,11 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
   const handleMouseMove = (e) => {
     if (window.matchMedia('(hover: none)').matches) return;
     if (!innerRef.current) return;
-    const rect = rectRef.current || innerRef.current.getBoundingClientRect();
+    const rect = (!rectRef.current || scrollYRef.current !== window.scrollY)
+      ? innerRef.current.getBoundingClientRect()
+      : rectRef.current;
     rectRef.current = rect;
+    scrollYRef.current = window.scrollY;
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     const centerX = mouseX - rect.width / 2;
@@ -62,8 +67,10 @@ const BrandCard = React.memo(React.forwardRef(({ item: rawItem, onPlayVideo }, r
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
       if (innerRef.current) {
-        innerRef.current.style.setProperty('--tilt-x', `${(-centerY / rect.height) * 14}deg`);
-        innerRef.current.style.setProperty('--tilt-y', `${(centerX / rect.width) * 14}deg`);
+        const tiltX = Math.max(-7, Math.min(7, (-centerY / rect.height) * 14));
+        const tiltY = Math.max(-7, Math.min(7, (centerX / rect.width) * 14));
+        innerRef.current.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
+        innerRef.current.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
         innerRef.current.style.setProperty('--mouse-x', `${mouseX}px`);
         innerRef.current.style.setProperty('--mouse-y', `${mouseY}px`);
       }
@@ -197,13 +204,9 @@ BrandCard.displayName = 'BrandCard';
 
 export default function VisualSynthesis({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('food');
-  const [direction, setDirection] = useState(1);
 
   const handleTabChange = (newTabId) => {
     if (newTabId === activeTab) return;
-    const oldIndex = categories.findIndex((c) => c.id === activeTab);
-    const newIndex = categories.findIndex((c) => c.id === newTabId);
-    setDirection(newIndex > oldIndex ? 1 : -1);
     setActiveTab(newTabId);
   };
 
@@ -263,10 +266,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
 
         {/* 品牌卡片 Grid - 手機版 3 欄 (grid-cols-3)、電腦版 5 欄 (md:grid-cols-5) */}
         <div className="relative z-10 min-h-[300px]">
-          <AnimatePresence mode="wait" custom={direction}>
+          <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              custom={direction}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
