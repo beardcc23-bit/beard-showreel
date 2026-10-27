@@ -11,6 +11,7 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
   const { hasVideo, bgImage: bgImageUrl } = item;
   const CardElement = hasVideo ? 'button' : 'div';
   const [isImageLoaded, setIsImageLoaded] = useState(() => (bgImageUrl ? loadedImageCache.has(bgImageUrl) : false));
+  const [hasImageError, setHasImageError] = useState(false);
   const innerRef = React.useRef(null);
   const rafRef = React.useRef(null);
   const bobbleRafRef = React.useRef(null);
@@ -125,7 +126,7 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
       )}
 
       {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
-      {bgImageUrl && (
+      {bgImageUrl && !hasImageError && (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-[inherit] pointer-events-none bg-[#121314]">
           {!isImageLoaded && (
             <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
@@ -145,6 +146,10 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
             fetchpriority="low"
             onLoad={() => {
               loadedImageCache.add(bgImageUrl);
+              setIsImageLoaded(true);
+            }}
+            onError={() => {
+              setHasImageError(true);
               setIsImageLoaded(true);
             }}
             className={`w-full h-full object-cover transition-[opacity,transform] duration-300 ease-out group-hover:scale-105 ${

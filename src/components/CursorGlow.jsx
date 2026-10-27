@@ -108,6 +108,15 @@ export default function CursorGlow() {
 
     const handleHideCursor = () => {
       isHiddenRef.current = true;
+      isHoveredRef.current = false;
+      if (glowRef.current) {
+        glowRef.current.classList.remove('is-hovered');
+      }
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      isTicking = false;
       setIsHidden(true);
       document.body.classList.remove('custom-cursor');
     };

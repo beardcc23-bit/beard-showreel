@@ -12,7 +12,14 @@ const LENIS_ANCHOR_OPTIONS = {
 // 獨立的平滑滾動 Helper
 let scrollRafId = null;
 const animateScrollTo = (targetY, duration = 400) => {
-  if (scrollRafId) cancelAnimationFrame(scrollRafId);
+  if (scrollRafId) {
+    cancelAnimationFrame(scrollRafId);
+    scrollRafId = null;
+  }
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo(0, targetY);
+    return;
+  }
   const startPosition = window.scrollY;
   const distance = targetY - startPosition;
   let startTime = null;
@@ -39,6 +46,15 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  React.useEffect(() => {
+    return () => {
+      if (scrollRafId) {
+        cancelAnimationFrame(scrollRafId);
+        scrollRafId = null;
+      }
+    };
+  }, []);
 
   // 遵守 Apple HIG 鍵盤操作規範：當選單開啟時監聽 Escape 關閉並鎖定背景滾動
   React.useEffect(() => {

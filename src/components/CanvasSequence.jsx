@@ -218,6 +218,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
     return () => {
       isCancelled = true;
+      framesRef.current = [];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
@@ -346,6 +347,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
               e.currentTarget.currentTime = 0;
               e.currentTarget.play().catch(() => {});
             }}
+            onError={fallbackToFrames}
           >
             {/* AV1 level：桌機 1504x832 = 4.0 (08)、手機 960x532 = 3.0 (04) */}
             <source

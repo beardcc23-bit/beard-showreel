@@ -1,17 +1,19 @@
 # Beard Chou (周威全) - VFX Artist & Autodesk Flame Compositor
 
-> Professional Visual Effects Compositor specializing in Autodesk Flame, High-end Commercial Visual Synthesis, Color Grading, and Precision Finishing.
+> Professional Visual Effects Compositor (D1 Artist) specializing in Autodesk Flame, AI-assisted Video Synthesis, Chroma Keying, Beauty Retouching, and High-end Commercial Finishing.
 
 ## Identity & Profession
 - Name: Beard Chou (周威全 / Beard)
-- Title: VFX Compositor & Autodesk Flame Visual Artist
-- Expertise: Autodesk Flame, Nuke, Visual Synthesis, Commercial VFX Supervision, Beauty Retouching, 3D Integration.
+- Title: D1 VFX Compositor & Autodesk Flame Visual Artist
+- Current Role: D1 VFX Artist at 遇見未來影像創作有限公司 (2012 - Present)
+- Experience: 13+ Years in Post-Production, 300+ Commercial Campaigns, 1000+ Broadcast Versions
+- Expertise: Autodesk Flame, AI Video Generation & Synthesis, Chroma Keying, Beauty Retouching, 3D Object Integration, Color Grading, Commercial Online Finishing.
 - Primary Location: Taipei, Taiwan (台灣台北)
 
 ## Key Work & Portfolio
 - Official Showreel & Works: https://beardchou.com
-- Core System: Autodesk Flame 3D Compositing System
-- Key Strengths: Pixel-perfect physical detail, high-velocity workflow, cinematic aesthetic for top-tier commercial brands.
+- Core System: Autodesk Flame 3D Compositing System (Batch Node-Based Workflow)
+- Key Strengths: Pixel-perfect physical detail, high-velocity client-supervised online sessions, seamless integration of AI-generated elements with live-action footage.
 
 ## Contact & Inquiry
 - Contact Section: https://beardchou.com/#contact

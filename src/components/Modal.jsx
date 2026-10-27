@@ -8,6 +8,25 @@ export default function Modal({ isOpen, onClose, type, data }) {
   const onCloseRef = React.useRef(onClose);
   onCloseRef.current = onClose;
 
+  const activeDataRef = React.useRef(data);
+  const activeTypeRef = React.useRef(type);
+  if (data) {
+    activeDataRef.current = data;
+    activeTypeRef.current = type;
+  }
+  const currentData = data || activeDataRef.current;
+  const currentType = type || activeTypeRef.current;
+  const safeVideoId = currentData?.videoId && /^[\w-]+$/.test(String(currentData.videoId)) ? currentData.videoId : '';
+  const safeVideoUrl = currentData?.videoUrl && /^https:\/\/(www\.|web\.)?facebook\.com\//i.test(String(currentData.videoUrl)) ? currentData.videoUrl : '';
+
+  // 當目標影片變更時重設 iframe 載入狀態
+  useEffect(() => {
+    if (isOpen && type === 'video') {
+      setIframeLoading(true);
+      window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
+    }
+  }, [isOpen, type, data?.videoId, data?.videoUrl]);
+
   // 當 Modal 開啟時，禁止背景 scroll 並且監聽 Escape 按鈕
   useEffect(() => {
     if (isOpen) {
@@ -17,12 +36,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
       if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
       }
-      setIframeLoading(true); // 開啟時重設為載入中狀態
       // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
       window.lenis?.stop();
-      if (type === 'video') {
-        window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
-      }
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
@@ -42,16 +57,6 @@ export default function Modal({ isOpen, onClose, type, data }) {
       };
     }
   }, [isOpen]);
-
-  const activeDataRef = React.useRef(data);
-  const activeTypeRef = React.useRef(type);
-  if (data) {
-    activeDataRef.current = data;
-    activeTypeRef.current = type;
-  }
-  const currentData = data || activeDataRef.current;
-  const currentType = type || activeTypeRef.current;
-  const safeVideoId = currentData?.videoId && /^[\w-]+$/.test(String(currentData.videoId)) ? currentData.videoId : '';
 
   if (typeof document === 'undefined') return null;
 
@@ -80,8 +85,6 @@ export default function Modal({ isOpen, onClose, type, data }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.9, y: 40, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            onMouseEnter={() => isOpen && currentType === 'video' && window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
-            onMouseLeave={() => currentType === 'video' && window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
             className={`relative w-full bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[95vh] ${
               currentType === 'video' && currentData.aspect === 'portrait'
                 ? 'max-w-[45vh] md:max-w-[50vh]'
@@ -124,9 +127,9 @@ export default function Modal({ isOpen, onClose, type, data }) {
                  )}
                  {currentData.isFacebook ? (
                   <iframe
-                    key={currentData.videoUrl || currentData.videoId}
-                    src={isOpen ? (currentData.videoUrl 
-                      ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(currentData.videoUrl)}&show_text=0&t=0&autoplay=1`
+                    key={safeVideoUrl || safeVideoId}
+                    src={isOpen && (safeVideoUrl || safeVideoId) ? (safeVideoUrl 
+                      ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(safeVideoUrl)}&show_text=0&t=0&autoplay=1`
                       : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${safeVideoId}&show_text=0&t=0&autoplay=1`) : 'about:blank'}
                     title="Facebook Video Player"
                     frameBorder="0"

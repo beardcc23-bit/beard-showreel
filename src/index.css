@@ -664,7 +664,7 @@ body {
 }
 
 /* 行動裝置專屬：電影級 Flame 核心金與深邃鈦冷調流光漫延背景 */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .mobile-aurora-mesh {
     display: block !important;
     position: fixed;

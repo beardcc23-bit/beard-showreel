@@ -124,7 +124,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       setFormData({ name: '', email: '', message: '' });
       closeTimerRef.current = setTimeout(() => {
         setStatus('idle');
-        onClose();
+        onCloseRef.current?.();
       }, 2500);
       return;
     }
@@ -193,10 +193,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         <div
           role="dialog"
           aria-modal="true"
+          aria-labelledby="feedback-modal-title"
           data-lenis-prevent
           className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none"
-          onMouseEnter={() => isOpen && window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
-          onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
         >
           {/* 高級暗黑毛玻璃背景遮罩 */}
           <motion.div
@@ -262,7 +261,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 {/* Header 區塊 */}
                 <div className="mb-6">
-                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase glow-title">
+                  <h3 id="feedback-modal-title" className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase glow-title">
                     Feedback / 留下回饋
                   </h3>
                   <p className="text-xs text-zinc-400 mt-1.5 font-light">
