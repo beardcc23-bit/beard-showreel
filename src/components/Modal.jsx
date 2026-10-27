@@ -51,6 +51,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
   }
   const currentData = data || activeDataRef.current;
   const currentType = type || activeTypeRef.current;
+  const safeVideoId = currentData?.videoId && /^[\w-]+$/.test(String(currentData.videoId)) ? currentData.videoId : '';
 
   if (typeof document === 'undefined') return null;
 
@@ -79,6 +80,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.9, y: 40, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            onMouseEnter={() => isOpen && currentType === 'video' && window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
+            onMouseLeave={() => currentType === 'video' && window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
             className={`relative w-full bg-bg-core border border-zinc-800 rounded-lg overflow-hidden shadow-2xl z-10 flex flex-col max-h-[95vh] ${
               currentType === 'video' && currentData.aspect === 'portrait'
                 ? 'max-w-[45vh] md:max-w-[50vh]'
@@ -91,6 +94,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
           >
             {/* 關閉按鈕：符合 Apple HIG 最小 44x44pt 觸控標準與焦點輪廓 */}
             <button
+              type="button"
               onClick={onClose}
               className="absolute top-4 right-4 z-50 min-w-[44px] min-h-[44px] p-2.5 rounded-full bg-black/60 text-white hover:text-aurora-blue transition duration-300 border border-zinc-800 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue"
               aria-label="Close modal"
@@ -101,8 +105,6 @@ export default function Modal({ isOpen, onClose, type, data }) {
             {currentType === 'video' ? (
               /* 影片播放模式 */
               <div 
-                onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
-                onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
                 className={`bg-black mx-auto overflow-hidden w-full relative ${
                   currentData.aspect === 'portrait'
                     ? 'aspect-[9/16] h-[80vh]'
@@ -125,7 +127,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                     key={currentData.videoUrl || currentData.videoId}
                     src={isOpen ? (currentData.videoUrl 
                       ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(currentData.videoUrl)}&show_text=0&t=0&autoplay=1`
-                      : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${currentData.videoId}&show_text=0&t=0&autoplay=1`) : 'about:blank'}
+                      : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${safeVideoId}&show_text=0&t=0&autoplay=1`) : 'about:blank'}
                     title="Facebook Video Player"
                     frameBorder="0"
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
@@ -137,7 +139,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 ) : (
                   <iframe
                     key={currentData.videoId}
-                    src={isOpen ? `https://www.youtube.com/embed/${currentData.videoId}?autoplay=1` : 'about:blank'}
+                    src={isOpen && safeVideoId ? `https://www.youtube.com/embed/${safeVideoId}?autoplay=1` : 'about:blank'}
                     title="YouTube Video Player"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -155,6 +157,8 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   <img
                     src={currentData.imageUrl}
                     alt={currentData.title}
+                    width="1920"
+                    height="902"
                     decoding="async"
                     className="w-full aspect-video object-cover"
                   />

@@ -12,6 +12,7 @@ export default function CursorGlow() {
   const isHoveredRef = useRef(false);
   const hasMovedRef = useRef(false);
   const isMobileRef = useRef(true);
+  const isHiddenRef = useRef(false);
 
   useEffect(() => {
     // 純觸控硬體裝置直接跳過，不綁定任何監聽器
@@ -57,6 +58,7 @@ export default function CursorGlow() {
         hasMovedRef.current = true;
         setHasMoved(true);
       }
+      if (isHiddenRef.current) return;
 
       // 核心指針即時同步更新，實現 120Hz/144Hz 零延遲跟隨
       if (dotRef.current) {
@@ -73,6 +75,7 @@ export default function CursorGlow() {
     const INTERACTIVE_SELECTOR = 'a, button, .glow-title, [role="button"], .group\\/flame, .group\\/title';
 
     const handleMouseOver = (e) => {
+      if (isHiddenRef.current || isMobileRef.current) return;
       const target = e.target;
       if (!target || !(target instanceof Element)) return;
       if (target.closest(INTERACTIVE_SELECTOR)) {
@@ -86,6 +89,7 @@ export default function CursorGlow() {
     };
 
     const handleMouseOut = (e) => {
+      if (isHiddenRef.current || isMobileRef.current) return;
       const target = e.target;
       if (!target || !(target instanceof Element)) return;
       
@@ -103,11 +107,13 @@ export default function CursorGlow() {
     };
 
     const handleHideCursor = () => {
+      isHiddenRef.current = true;
       setIsHidden(true);
       document.body.classList.remove('custom-cursor');
     };
 
     const handleShowCursor = () => {
+      isHiddenRef.current = false;
       setIsHidden(false);
       if (window.innerWidth >= 768) {
         document.body.classList.add('custom-cursor');

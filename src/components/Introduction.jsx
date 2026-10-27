@@ -40,6 +40,8 @@ export default function Introduction({ onPlayVideo }) {
                   <img
                     src={`${import.meta.env.BASE_URL}avatar.webp`}
                     alt="Beard"
+                    width="888"
+                    height="1024"
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover"
@@ -117,6 +119,7 @@ export default function Introduction({ onPlayVideo }) {
               className="w-full flex justify-center md:justify-start"
             >
               <button
+                type="button"
                 onClick={() => onPlayVideo('s6s2p87fPdA')}
                 className="prism-button px-16 py-5 !text-white font-bold rounded-sm uppercase text-base tracking-[0.25em] text-center w-full sm:w-auto cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-core"
               >
@@ -138,6 +141,8 @@ export default function Introduction({ onPlayVideo }) {
                 <img
                   src={`${import.meta.env.BASE_URL}avatar.webp`}
                   alt="Beard"
+                  width="888"
+                  height="1024"
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover"

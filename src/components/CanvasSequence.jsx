@@ -21,6 +21,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
   const ctxRef = useRef(null);
   const framesRef = useRef([]);
   const frameIndexRef = useRef(0);
+  const hasFallenBackRef = useRef(false);
 
   const [mode, setMode] = useState('video'); // 'video' | 'frames'
   const [isLoading, setIsLoading] = useState(true); // poster 是否載入完成（首頁解鎖）
@@ -36,6 +37,8 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
 
   // 切換至序列備援模式（由影片當下時間接續，畫面不跳回第一格）
   const fallbackToFrames = () => {
+    if (hasFallenBackRef.current) return;
+    hasFallenBackRef.current = true;
     const video = videoRef.current;
     if (video) {
       frameIndexRef.current = Math.floor((video.currentTime || 0) * FPS) % FRAME_COUNT;
@@ -305,8 +308,8 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
       {/* 播放器後方 HUD 同心圓旋轉背景（僅在手機版顯示，網頁桌面版隱藏） */}
       {!isLoading && (
         <div className="absolute w-[1300px] h-[1300px] md:w-[1500px] md:h-[1500px] max-w-[140vw] max-h-[140vw] z-0 pointer-events-none flex md:hidden items-center justify-center overflow-visible opacity-50">
-          <div className="absolute w-[90%] h-[90%] rounded-full border border-dashed border-zinc-800/80 animate-[spin_100s_linear_infinite]" />
-          <div className="absolute w-[75%] h-[75%] rounded-full border-[1.5px] border-dashed border-dawn-gold/25 animate-[spin_70s_linear_infinite_reverse]" />
+          <div className={`absolute w-[90%] h-[90%] rounded-full border border-dashed border-zinc-800/80 animate-[spin_100s_linear_infinite] ${shouldPlay ? '' : '[animation-play-state:paused]'}`} />
+          <div className={`absolute w-[75%] h-[75%] rounded-full border-[1.5px] border-dashed border-dawn-gold/25 animate-[spin_70s_linear_infinite_reverse] ${shouldPlay ? '' : '[animation-play-state:paused]'}`} />
           {/* 實線正圓旋轉視覺上無差異，卻每格產生大範圍重繪，故不加旋轉 */}
           <div className="absolute w-[55%] h-[55%] rounded-full border border-zinc-800/40" />
         </div>
@@ -377,6 +380,8 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
               <img
                 src={`${basePath}youtube-logo.webp`}
                 alt="YouTube Play Reel"
+                width="192"
+                height="192"
                 loading="lazy"
                 decoding="async"
                 className="w-36 h-36 md:w-48 md:h-48 object-contain drop-shadow-[0_0_35px_rgba(255,0,0,0.75)] hover:scale-105 transition-transform duration-200"

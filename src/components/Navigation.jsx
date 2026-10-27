@@ -51,12 +51,19 @@ export default function Navigation() {
         setIsOpen(false);
       }
     };
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(false);
+      }
+    };
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleResize);
     return () => {
       document.body.style.overflow = '';
       document.body.classList.remove('modal-open');
       window.lenis?.start();
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleResize);
     };
   }, [isOpen]);
 
@@ -106,6 +113,7 @@ export default function Navigation() {
 
         <div className="flex items-center gap-3 md:gap-6">
           <motion.button
+            type="button"
             whileTap={tapFeedback}
             onClick={toggleMenu}
             className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white-or-black hover:text-aurora-blue transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
@@ -114,6 +122,7 @@ export default function Navigation() {
             <Menu size={24} />
           </motion.button>
           <motion.button
+            type="button"
             whileTap={tapFeedback}
             onClick={scrollToTop}
             className="text-lg md:text-xl font-black tracking-tighter font-space-mono text-white-or-black hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue cursor-pointer text-left rounded-sm"
@@ -182,6 +191,7 @@ export default function Navigation() {
               className="fixed top-0 left-0 w-[80%] max-w-[320px] min-h-[100dvh] h-screen bg-bg-core/98 z-[1000] md:hidden flex flex-col justify-center p-8 gap-8 border-r border-border shadow-2xl"
             >
               <motion.button
+                type="button"
                 whileTap={tapFeedback}
                 onClick={toggleMenu}
                 className="absolute top-5 right-5 text-white-or-black hover:text-aurora-blue transition-colors min-w-[44px] min-h-[44px] p-2 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-full"

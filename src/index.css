@@ -49,14 +49,9 @@
   --rgb-info-gold-gray: 209 199 189;
 
   /* 語意化主題變數 */
-  --bg-core: var(--color-bg-core);
-  --bg-mist: var(--color-bg-mist);
-  --bg-shadow: var(--color-bg-shadow);
   --text-white-or-black: #F2F6F9;
   --text-gray-or-zinc: #a1a1aa;
   --border-color: rgba(255, 255, 255, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.02);
-  --theme-transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   --grid-line: rgba(255, 255, 255, 0.015);
   --orbit-ring: rgba(255, 255, 255, 0.06);
   --orbit-ring-outer: rgba(255, 255, 255, 0.04);
@@ -69,7 +64,6 @@ body {
   background-color: var(--color-bg-core);
   color: var(--text-white-or-black);
   overflow-x: hidden;
-  transition: var(--theme-transition);
 }
 
 /* 語意化 Utility Classes */
@@ -168,7 +162,6 @@ body {
   inset: 0;
   background: radial-gradient(circle at 50% 50%, var(--color-bg-mist) 0%, var(--color-bg-core) 100%);
   z-index: -3;
-  transition: var(--theme-transition);
 }
 .mist-bg::before {
   content: "";
@@ -275,7 +268,6 @@ body {
   border: 1px solid var(--orbit-ring);
   border-radius: 50%;
   transform-style: preserve-3d;
-  transition: var(--theme-transition);
 }
 
 /* ring-outer / ring-inner 為實線正圓，旋轉視覺上完全無差異，
@@ -293,7 +285,6 @@ body {
   border-width: 1.5px;
   border-style: dashed;
   animation: rotate-orbit-reverse 60s linear infinite;
-  transition: var(--theme-transition);
 }
 
 .ring-inner {
@@ -971,8 +962,21 @@ body.modal-open .hud-pulse,
 body.modal-open .flowing-laser-line,
 body.modal-open .prism-button::after,
 body.modal-open .mobile-aurora-mesh::before,
-body.modal-open .mobile-aurora-mesh::after {
+body.modal-open .mobile-aurora-mesh::after,
+body.modal-open .cursor-ring-outer,
+body.modal-open .cursor-ring-inner {
   animation-play-state: paused !important;
+}
+
+/* 當響應式容器隱藏（display: none）時，明確卸載內部 300% 面積的 conic-gradient 旋轉動畫 */
+.hidden .gold-flow-border::before {
+  animation: none !important;
+}
+
+@media (min-width: 768px) {
+  .md\:hidden .gold-flow-border::before {
+    animation: none !important;
+  }
 }
 
 /* ==========================================================================

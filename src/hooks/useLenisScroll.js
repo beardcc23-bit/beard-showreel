@@ -38,7 +38,6 @@ export function useLenisScroll() {
       }, 100);
     };
 
-    lenis.on('scroll', handleScroll);
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     let rafId = null;
@@ -56,7 +55,6 @@ export function useLenisScroll() {
       if (rafId) cancelAnimationFrame(rafId);
       clearTimeout(scrollEndTimer);
       document.body.classList.remove('is-scrolling');
-      lenis.off('scroll', handleScroll);
       window.removeEventListener('scroll', handleScroll);
       window.lenis = null;
       lenis.destroy();

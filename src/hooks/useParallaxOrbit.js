@@ -41,6 +41,7 @@ export function useParallaxOrbit() {
     };
 
     const handleMouseMove = (e) => {
+      if (window.innerWidth < 768 || document.body.classList.contains('modal-open')) return;
       mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
       mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
       if (!isRunning) {

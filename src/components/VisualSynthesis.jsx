@@ -91,12 +91,12 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
     const targetUrl = item.url;
     if (item.videoId && !item.isFacebook) {
       onPlayVideo(item.videoId, false, item.aspect);
-    } else if (targetUrl) {
-      if (window.innerWidth < 768) {
-        window.location.href = targetUrl;
+    } else if (targetUrl && /^https:\/\//i.test(targetUrl)) {
+      const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      if (newWindow) {
+        newWindow.opener = null;
       } else {
-        const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer');
-        if (newWindow) newWindow.opener = null;
+        window.location.href = targetUrl;
       }
     }
   };
@@ -236,6 +236,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
             const isActive = activeTab === tab.id;
             return (
               <button
+                type="button"
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
                 className={`hud-btn relative px-3 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center w-full min-w-0 leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-core rounded-sm ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}

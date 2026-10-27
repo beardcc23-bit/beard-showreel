@@ -8,7 +8,7 @@
     "build": "vite build",
     "clean": "rm -rf node_modules/.vite dist coverage .vitest && (find . -name '.DS_Store' -delete 2>/dev/null || true)",
     "preview": "vite preview",
-    "predeploy": "npm run build && cp vercel.json dist/",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "test": "vitest",
     "test:run": "vitest run"

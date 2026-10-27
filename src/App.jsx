@@ -28,7 +28,9 @@ export default function App() {
 
   React.useEffect(() => {
     const handleOpenImage = (e) => {
+      if (!e?.detail || typeof e.detail.imageUrl !== 'string') return;
       const { imageUrl, title, description } = e.detail;
+      if (!imageUrl.startsWith('/') || imageUrl.startsWith('//')) return;
       setModalState({
         isOpen: true,
         type: 'image',
@@ -55,6 +57,10 @@ export default function App() {
       type: null,
       data: null,
     });
+  }, []);
+
+  const handlePageLoaded = React.useCallback(() => {
+    setIsPageLoaded(true);
   }, []);
 
   return (
@@ -103,7 +109,7 @@ export default function App() {
       {/* 主頁面區段 */}
       <main>
         {/* 首頁 Hero 區 */}
-        <Hero onPlayVideo={handleOpenVideoModal} isModalOpen={modalState.isOpen} onLoaded={() => setIsPageLoaded(true)} />
+        <Hero onPlayVideo={handleOpenVideoModal} isModalOpen={modalState.isOpen} onLoaded={handlePageLoaded} />
 
         {/* 開場介紹區段 */}
         <Introduction onPlayVideo={handleOpenVideoModal} />

@@ -43,6 +43,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [errorMessage, setErrorMessage] = useState('');
   const closeTimerRef = React.useRef(null);
   const isSubmittingRef = React.useRef(false);
+  const abortControllerRef = React.useRef(null);
   const onCloseRef = React.useRef(onClose);
   onCloseRef.current = onClose;
 
@@ -70,6 +71,8 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       window.addEventListener('keydown', handleKeyDown);
       return () => {
         if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+        abortControllerRef.current?.abort();
+        abortControllerRef.current = null;
         document.body.style.overflow = '';
         document.body.style.paddingRight = '';
         document.body.classList.remove('modal-open');
@@ -136,7 +139,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     setStatus('submitting');
     setErrorMessage('');
 
+    abortControllerRef.current?.abort();
     const controller = new AbortController();
+    abortControllerRef.current = controller;
     const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
@@ -162,15 +167,17 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       });
 
       clearTimeout(timeoutId);
+      if (controller.signal.aborted) return;
       setLastSubmitTime(Date.now());
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
       closeTimerRef.current = setTimeout(() => {
         setStatus('idle');
-        onClose();
+        onCloseRef.current?.();
       }, 2500);
     } catch (err) {
       clearTimeout(timeoutId);
+      if (controller.signal.aborted) return;
       console.error('Feedback submission error:', err);
       setStatus('error');
       setErrorMessage('連線失敗，請檢查網路或稍後再試。');
@@ -188,7 +195,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
           aria-modal="true"
           data-lenis-prevent
           className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none"
-          onMouseEnter={() => window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
+          onMouseEnter={() => isOpen && window.dispatchEvent(new CustomEvent('hide-custom-cursor'))}
           onMouseLeave={() => window.dispatchEvent(new CustomEvent('show-custom-cursor'))}
         >
           {/* 高級暗黑毛玻璃背景遮罩 */}

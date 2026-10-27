@@ -151,6 +151,8 @@ export default function Manifesto({ onPlayVideo }) {
                         <img
                           src={`${import.meta.env.BASE_URL}f1.webp`}
                           alt="Autodesk Flame Batch Schematic"
+                          width="1920"
+                          height="902"
                           loading="lazy"
                           decoding="async"
                           className="w-full h-full object-cover grayscale-[10%] group-hover/flame:grayscale-0 transition-all duration-700"
@@ -203,6 +205,7 @@ export default function Manifesto({ onPlayVideo }) {
                 const label = labelMap[cat.id];
                 return (
                   <button
+                    type="button"
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
                     className={`hud-btn px-1.5 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm ${activeTab === cat.id ? 'is-active' : ''}`}
@@ -286,12 +289,12 @@ export default function Manifesto({ onPlayVideo }) {
                         const hasVideo = !!param.videoId;
                         const triggerVideo = () => {
                           if (!hasVideo) return;
-                          if (param.isFacebook && param.url) {
-                            if (window.innerWidth < 768) {
-                              window.location.href = param.url;
+                          if (param.isFacebook && param.url && /^https:\/\//i.test(param.url)) {
+                            const newWindow = window.open(param.url, '_blank', 'noopener,noreferrer');
+                            if (newWindow) {
+                              newWindow.opener = null;
                             } else {
-                              const newWindow = window.open(param.url, '_blank', 'noopener,noreferrer');
-                              if (newWindow) newWindow.opener = null;
+                              window.location.href = param.url;
                             }
                           } else if (onPlayVideo) {
                             onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);

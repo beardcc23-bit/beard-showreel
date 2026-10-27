@@ -22,6 +22,10 @@ export default function Contact() {
     copy(email);
   };
 
+  const handleCloseFeedback = React.useCallback(() => {
+    setIsFeedbackOpen(false);
+  }, []);
+
   return (
     <section id="contact" className="relative overflow-hidden py-32">
       {/* 科技光點背景 */}
@@ -78,6 +82,7 @@ export default function Contact() {
 
             {/* 回饋按鈕 */}
             <button
+              type="button"
               onClick={() => setIsFeedbackOpen(true)}
               className="group relative overflow-hidden flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 focus-visible:ring-2 focus-visible:ring-aurora-blue outline-none transition-all duration-300 backdrop-blur-none sm:backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start"
               aria-label="開啟回饋表單"
@@ -118,7 +123,7 @@ export default function Contact() {
       {/* 回饋 Modal 彈窗 */}
       <FeedbackModal
         isOpen={isFeedbackOpen}
-        onClose={() => setIsFeedbackOpen(false)}
+        onClose={handleCloseFeedback}
         scriptUrl={GAS_SCRIPT_URL}
       />
     </section>
