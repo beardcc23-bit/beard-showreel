@@ -111,7 +111,7 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
       onPointerLeave={hasVideo ? handlePointerLeave : undefined}
       onClick={hasVideo ? handleClick : undefined}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border brand-card-spring text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between relative overflow-hidden group shadow-md focus:outline-none focus:ring-1 focus:ring-aurora-blue bg-[#121314] ${hasVideo
+      className={`prism-border brand-card-spring text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between relative overflow-hidden group shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue bg-[#121314] ${hasVideo
         ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] active:scale-[0.97]'
         : 'border-white/[0.08] cursor-default'
         }`}
@@ -166,8 +166,8 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
         </div>
       )}
 
-      {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage) */}
-      {hasVideo && !item.bgImage && (
+      {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage 或縮圖載入失敗) */}
+      {hasVideo && (!bgImageUrl || hasImageError) && (
         <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       )}
 

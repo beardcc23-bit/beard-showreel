@@ -17,17 +17,17 @@ export default function Modal({ isOpen, onClose, type, data }) {
   const currentData = data || activeDataRef.current;
   const currentType = type || activeTypeRef.current;
   const safeVideoId = currentData?.videoId && /^[\w-]+$/.test(String(currentData.videoId)) ? currentData.videoId : '';
-  const safeVideoUrl = currentData?.videoUrl && /^https:\/\/(www\.|web\.)?facebook\.com\//i.test(String(currentData.videoUrl)) ? currentData.videoUrl : '';
+  const safeVideoUrl = currentData?.videoUrl && /^https:\/\/((www\.|web\.)?facebook\.com|fb\.watch)\//i.test(String(currentData.videoUrl)) ? currentData.videoUrl : '';
+  const hasValidVideoSource = currentType === 'video' && (currentData?.isFacebook ? Boolean(safeVideoUrl || safeVideoId) : Boolean(safeVideoId));
 
   // 當目標影片變更時重設 iframe 載入狀態
   useEffect(() => {
     if (isOpen && type === 'video') {
       setIframeLoading(true);
-      window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
     }
   }, [isOpen, type, data?.videoId, data?.videoUrl]);
 
-  // 當 Modal 開啟時，禁止背景 scroll 並且監聽 Escape 按鈕
+  // 當 Modal 開啟時，禁止背景 scroll、隱藏自訂游標（避免被 z-[9999] 遮罩壓在底下消失）並且監聽 Escape 按鈕
   useEffect(() => {
     if (isOpen) {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -38,6 +38,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
       }
       // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
       window.lenis?.stop();
+      window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
 
       const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
@@ -117,7 +118,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 }`}
               >
                  {/* 科技質感載入骨架屏 */}
-                 {iframeLoading && (
+                 {iframeLoading && hasValidVideoSource && (
                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-950/90 backdrop-blur-md z-10">
                      <div className="w-9 h-9 rounded-full border border-aurora-blue/25 border-t-aurora-blue animate-spin mb-4" />
                      <span className="mono text-[11px] text-aurora-blue tracking-[0.25em] uppercase font-semibold animate-pulse">
@@ -132,24 +133,22 @@ export default function Modal({ isOpen, onClose, type, data }) {
                       ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(safeVideoUrl)}&show_text=0&t=0&autoplay=1`
                       : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${safeVideoId}&show_text=0&t=0&autoplay=1`) : 'about:blank'}
                     title="Facebook Video Player"
-                    frameBorder="0"
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
                     onLoad={() => setIframeLoading(false)}
-                    className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                    className={`w-full h-full border-0 transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                   ></iframe>
                 ) : (
                   <iframe
                     key={currentData.videoId}
                     src={isOpen && safeVideoId ? `https://www.youtube.com/embed/${safeVideoId}?autoplay=1` : 'about:blank'}
                     title="YouTube Video Player"
-                    frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
                     onLoad={() => setIframeLoading(false)}
-                    className={`w-full h-full transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                    className={`w-full h-full border-0 transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                   ></iframe>
                 )}
               </div>

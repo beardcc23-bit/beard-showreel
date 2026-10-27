@@ -217,11 +217,11 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             {/* 頂部極細藍色漸層飾條 */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aurora-blue to-transparent opacity-80" />
 
-            {/* 關閉按鈕 (Hover 微妙旋轉動態) */}
+            {/* 關閉按鈕 (Hover 微妙旋轉動態，符合 Apple HIG 44x44px 最小觸控熱區) */}
             <button
               onClick={onClose}
               type="button"
-              className="group absolute top-5 right-5 p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300 cursor-pointer z-20"
+              className="group absolute top-4 right-4 min-w-[44px] min-h-[44px] p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300 cursor-pointer z-20 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue"
               aria-label="Close Modal"
             >
               <X size={18} className="transition-transform duration-300 group-hover:rotate-90" />
@@ -282,7 +282,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="例如：Alex Chen"
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 select-text"
                   />
                 </div>
 
@@ -299,7 +299,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="name@example.com 或 LINE ID"
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 select-text"
                   />
                 </div>
 
@@ -316,7 +316,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="請輸入您的寶貴建議..."
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 resize-none"
+                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 resize-none select-text"
                   />
                 </div>
 

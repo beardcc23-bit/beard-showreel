@@ -94,7 +94,7 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, []);
 
-  // ── 影片模式：確保靜音、自動播放與無縫循環 (Loop) 寫進 DOM 並綁定防停頓監聽 ──
+  // ── 影片模式：確保靜音、自動播放與無縫循環 (Loop) 寫進 DOM ──
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -105,18 +105,6 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
     video.setAttribute('loop', '');
-
-    // 雙重循環保險：影片播畢時強制重設回第一秒播放
-    const handleLoop = () => {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    };
-
-    video.addEventListener('ended', handleLoop);
-
-    return () => {
-      video.removeEventListener('ended', handleLoop);
-    };
   }, []);
 
   // ── 影片模式：播放 / 暫停控制 + 自動播放被阻擋偵測 ──
@@ -345,7 +333,9 @@ export default function CanvasSequence({ onPlayVideo, isModalOpen, onLoaded }) {
             tabIndex={-1}
             onEnded={(e) => {
               e.currentTarget.currentTime = 0;
-              e.currentTarget.play().catch(() => {});
+              if (shouldPlay) {
+                e.currentTarget.play().catch(() => {});
+              }
             }}
             onError={fallbackToFrames}
           >
