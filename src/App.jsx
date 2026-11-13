@@ -66,7 +66,7 @@ export default function App() {
   return (
     // reducedMotion="user"：系統開啟「減少動態」時，Framer Motion 自動關閉 transform 類動畫
     <MotionConfig reducedMotion="user">
-    <div className={`relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-hidden ${isPageLoaded ? 'is-loaded' : 'is-loading'}`}>
+    <div className={`relative text-white min-h-screen selection:bg-aurora-blue selection:text-black overflow-x-clip ${isPageLoaded ? 'is-loaded' : 'is-loading'}`}>
 
       {/* 視覺背景與光學粒子 */}
       <div className="mist-bg" />

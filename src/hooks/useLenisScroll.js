@@ -26,16 +26,31 @@ export function useLenisScroll() {
     });
     window.lenis = lenis;
 
-    // 滾動進行中掛載 is-scrolling 類別，關閉所有指針互動，消除滾動時掠過卡片的重排與掉幀
+    // 滾動進行中掛載 is-scrolling 類別，關閉卡片指針互動，消除滾動時掠過卡片的重排與掉幀
+    // 以區域布林快取與時間戳延遲檢查取代每幀 clearTimeout/setTimeout，避免 120Hz 下每秒數百次計時器分配
+    const SCROLL_IDLE_MS = 120;
+    let isBodyScrolling = false;
+    let lastScrollTime = 0;
     let scrollEndTimer = null;
-    const handleScroll = () => {
-      if (!document.body.classList.contains('is-scrolling')) {
-        document.body.classList.add('is-scrolling');
-      }
-      clearTimeout(scrollEndTimer);
-      scrollEndTimer = setTimeout(() => {
+
+    const checkScrollEnd = () => {
+      const elapsed = performance.now() - lastScrollTime;
+      if (elapsed >= SCROLL_IDLE_MS) {
+        isBodyScrolling = false;
+        scrollEndTimer = null;
         document.body.classList.remove('is-scrolling');
-      }, 100);
+      } else {
+        scrollEndTimer = setTimeout(checkScrollEnd, SCROLL_IDLE_MS - elapsed);
+      }
+    };
+
+    const handleScroll = () => {
+      lastScrollTime = performance.now();
+      if (!isBodyScrolling) {
+        isBodyScrolling = true;
+        document.body.classList.add('is-scrolling');
+        scrollEndTimer = setTimeout(checkScrollEnd, SCROLL_IDLE_MS);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -43,16 +58,39 @@ export function useLenisScroll() {
     let rafId = null;
 
     function raf(time) {
-      if (!document.hidden) {
-        lenis.raf(time);
-      }
+      lenis.raf(time);
       rafId = requestAnimationFrame(raf);
     }
 
-    rafId = requestAnimationFrame(raf);
+    const startRaf = () => {
+      if (rafId === null && !document.hidden) {
+        // 重置 Lenis 內部時間基準，防止從背景分頁切回首幀 deltaTime 暴衝導致滾動瞬移跳格
+        lenis.time = 0;
+        rafId = requestAnimationFrame(raf);
+      }
+    };
+
+    const stopRaf = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopRaf();
+      } else {
+        startRaf();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    startRaf();
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
+      stopRaf();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearTimeout(scrollEndTimer);
       document.body.classList.remove('is-scrolling');
       window.removeEventListener('scroll', handleScroll);

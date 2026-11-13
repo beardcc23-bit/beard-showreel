@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { useOverlayLock } from '../hooks/useOverlayLock';
 
 // 防止 Google Sheets 試算表公式注入攻擊 (CSV / Formula Injection)
 const sanitizeSheetInput = (str) => {
@@ -41,13 +42,17 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [openTime, setOpenTime] = useState(Date.now());
   const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
-  const closeTimerRef = React.useRef(null);
-  const isSubmittingRef = React.useRef(false);
-  const abortControllerRef = React.useRef(null);
-  const onCloseRef = React.useRef(onClose);
+  const closeTimerRef = useRef(null);
+  const isSubmittingRef = useRef(false);
+  const abortControllerRef = useRef(null);
+  const dialogRef = useRef(null);
+  const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
-  // 彈窗開啟時的背景滾動與游標處理
+  // 統一委託 useOverlayLock 處理背景滾動鎖定、捲軸補償、Lenis 暫停、自訂游標顯隱與焦點陷阱
+  useOverlayLock(isOpen, onClose, { hideCursor: true, containerRef: dialogRef });
+
+  // 彈窗開啟與關閉時的表單狀態重設與進行中請求清理
   useEffect(() => {
     if (isOpen) {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
@@ -56,29 +61,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       setHoneypot('');
       setStatus('idle');
       setErrorMessage('');
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      document.body.classList.add('modal-open');
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-      // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
-      window.lenis?.stop();
-      window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
-      const handleKeyDown = (e) => {
-        if (e.key === 'Escape') onCloseRef.current?.();
-      };
-      window.addEventListener('keydown', handleKeyDown);
       return () => {
         if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
         abortControllerRef.current?.abort();
         abortControllerRef.current = null;
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        document.body.classList.remove('modal-open');
-        window.lenis?.start();
-        window.removeEventListener('keydown', handleKeyDown);
-        window.dispatchEvent(new CustomEvent('show-custom-cursor'));
       };
     }
   }, [isOpen]);
@@ -191,6 +177,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     <AnimatePresence>
       {isOpen && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="feedback-modal-title"

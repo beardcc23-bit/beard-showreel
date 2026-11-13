@@ -2,8 +2,13 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ExperienceTimeline from '../ExperienceTimeline';
+import { getExperienceYears } from '../../data/experience';
 
 describe('ExperienceTimeline 元件單元測試', () => {
+  it('年資計算應保底 14 年並隨年份自動演進', () => {
+    expect(getExperienceYears(new Date('2026-11-13'))).toBe(14);
+    expect(getExperienceYears(new Date('2028-01-01'))).toBe(16);
+  });
   it('應該不包含任何多餘的分類大標題', () => {
     render(<ExperienceTimeline />);
 

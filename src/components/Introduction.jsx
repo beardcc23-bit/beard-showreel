@@ -4,15 +4,17 @@ import RefractionCard from './RefractionCard';
 import AnimatedCounter from './common/AnimatedCounter';
 import ScrubText from './common/ScrubText';
 import ExperienceTimeline from './ExperienceTimeline';
+import { achievementStats } from '../data/experience';
+import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 export default function Introduction({ onPlayVideo }) {
   const sectionRef = useRef(null);
-  const sectionInView = useInView(sectionRef, { margin: "100px 0px" });
+  useOffscreenPause(sectionRef);
   const statsRef = useRef(null);
   const statsInView = useInView(statsRef, { margin: "-50px", once: true });
 
   return (
-    <section ref={sectionRef} id="introduction" className={`relative min-h-screen flex items-center justify-center py-24 ${sectionInView ? '' : 'section-offscreen'}`}>
+    <section ref={sectionRef} id="introduction" className="relative min-h-screen flex items-center justify-center py-24">
       {/* 網格背景與漸層 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
@@ -74,39 +76,24 @@ export default function Introduction({ onPlayVideo }) {
                   boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
                 }}
               >
-                <div className="flex flex-col items-center justify-center relative z-10">
-                  <div className="text-3xl md:text-4xl font-black text-white tracking-tight flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
-                    <div className="gold-glow-pulse gold-delay-1">
-                      <AnimatedCounter value={13} trigger={statsInView} />+
+                {achievementStats.map((stat) => (
+                  <div
+                    key={stat.key}
+                    className={`flex flex-col items-center justify-center relative z-10 ${stat.offsetClass}`}
+                  >
+                    <div className="text-3xl md:text-4xl font-black text-white tracking-tight flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
+                      <div className={`gold-glow-pulse ${stat.delayClass}`}>
+                        <AnimatedCounter value={stat.getValue()} trigger={statsInView} />+
+                      </div>
+                      <span className="text-aurora-blue text-[10px] md:text-[11px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">
+                        {stat.unit}
+                      </span>
                     </div>
-                    <span className="text-aurora-blue text-[10px] md:text-[11px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Years</span>
-                  </div>
-                  <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
-                    後期資歷
-                  </div>
-                </div>
-                <div className="flex flex-col items-center justify-center relative z-10 translate-x-[2px] md:translate-x-0">
-                  <div className="text-3xl md:text-4xl font-black text-white tracking-tight flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
-                    <div className="gold-glow-pulse gold-delay-2">
-                      <AnimatedCounter value={300} trigger={statsInView} />+
+                    <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
+                      {stat.label}
                     </div>
-                    <span className="text-aurora-blue text-[10px] md:text-[11px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Campaigns</span>
                   </div>
-                  <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
-                    廣告專案
-                  </div>
-                </div>
-                <div className="flex flex-col items-center justify-center relative z-10">
-                  <div className="text-3xl md:text-4xl font-black text-white tracking-tight flex flex-col lg:flex-row items-center lg:items-baseline justify-center">
-                    <div className="gold-glow-pulse gold-delay-3">
-                      <AnimatedCounter value={1000} trigger={statsInView} />+
-                    </div>
-                    <span className="text-aurora-blue text-[10px] md:text-[11px] font-semibold tracking-wider mono mt-1 lg:mt-0 lg:ml-1 hud-pulse">//Versions</span>
-                  </div>
-                  <div className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-2 mono">
-                    播放版本
-                  </div>
-                </div>
+                ))}
               </RefractionCard>
             </motion.div>
 

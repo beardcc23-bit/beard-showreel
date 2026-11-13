@@ -1,7 +1,40 @@
 /**
- * 學經歷資料模組 (Experience & Education Data)
- * 依照倒序時間軸整理
+ * 學經歷與戰績資料模組 (Experience, Education & Stats Data)
+ * 依照倒序時間軸整理，並提供年資自動演進計算
  */
+
+export const CAREER_START_YEAR = 2012;
+
+export function getExperienceYears(now = new Date()) {
+  return Math.max(14, now.getFullYear() - CAREER_START_YEAR);
+}
+
+export const achievementStats = [
+  {
+    key: 'years',
+    getValue: getExperienceYears,
+    unit: '//Years',
+    label: '後期資歷',
+    delayClass: 'gold-delay-1',
+    offsetClass: '',
+  },
+  {
+    key: 'campaigns',
+    getValue: () => 300,
+    unit: '//Campaigns',
+    label: '廣告專案',
+    delayClass: 'gold-delay-2',
+    offsetClass: 'translate-x-[2px] md:translate-x-0',
+  },
+  {
+    key: 'versions',
+    getValue: () => 1000,
+    unit: '//Versions',
+    label: '播放版本',
+    delayClass: 'gold-delay-3',
+    offsetClass: '',
+  },
+];
 
 export const careerHistory = [
   {

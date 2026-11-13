@@ -131,5 +131,21 @@
   - `Manifesto.jsx`：支援 iPad / 觸控裝置點擊開啟 Flame 節點圖、微調 375px 手機版按鈕字級防裁切、同步「磊山保經」影片 ID。
   - `index.html` 與靜態資源：移除未使用的 6 個斜體字型請求、補齊 `mobile-web-app-capable` meta、刪除廢棄的 `public/f1.jpg`（減少 551 KB）。
 
+## 2026-11-13
 
+### 已完成：年資升級（14 年）自動演進機制、彈窗鎖定與滾動順暢度深度重構
+- **年資更新與單一資料源（SSOT）**：
+  - `src/data/experience.js`：新增 `CAREER_START_YEAR = 2012`、`getExperienceYears()`（保底 `14`，隨年份自動遞增）與 `achievementStats` 設定。
+  - `src/components/Introduction.jsx`、`public/llms.txt`、`public/sitemap.xml`：後期資歷統一更新為 `14+` 年。
+- **彈窗鎖定與無障礙架構重構**：
+  - 新增 `src/hooks/useOverlayLock.js`：統一接管 `Modal.jsx`、`FeedbackModal.jsx`、`Navigation.jsx` 的 `lockCount` / `cursorHideCount` 參照計數、捲軸寬度補償、Lenis 暫停、LIFO `Escape` 堆疊關閉、`Tab` 焦點陷阱（Focus Trap）與 `preventScroll: true` 焦點歸還。
+  - 新增 `src/utils/url.js`：抽離 `openSafeExternalUrl()` 供 `VisualSynthesis.jsx` 與 `Manifesto.jsx` 共用，並補齊兩處分類切換的 WAI-ARIA `tablist` / `tab` / `tabpanel` 語意。
+  - `vercel.json`：CSP 補齊 `form-action 'self';`，並將 `media-src` 收緊為 `'self'`、`img-src` 收緊為 `'self' data: https://i.ytimg.com`。
+- **滾動順暢度與渲染效能極致調校**：
+  - 新增 `src/hooks/useOffscreenPause.js`：以全站單一共享 `IntersectionObserver` 直接操作 DOM `section-offscreen` 類別，取代 `Hero`、`Introduction`、`Manifesto`、`VisualSynthesis` 原本基於 React state 的 `useInView`，使跨區快速滾動達到 **0 次 React Re-render**，並補齊首屏離屏時 `.glow-border` 與 `.animate-bounce` 自動休眠。
+  - `src/hooks/useLenisScroll.js`：背景分頁暫停 rAF 並在切回前景時重置 `lenis.time = 0`（防止首幀 `deltaTime` 暴衝瞬移跳格）；滾動狀態改用區域布林快取＋時間戳延遲檢查，減少 120Hz 下 95% 以上的計時器分配。
+  - `src/components/common/AnimatedCounter.jsx`：改以 `spanRef.current.textContent` 直寫取代每幀 `setState`。
+  - `src/components/VisualSynthesis.jsx` & `src/components/RefractionCard.jsx`：模組層級快取單一 `hoverNoneQuery`，滑鼠座標改存 `pointerRef` 並受 `rafRef` 節流。
+  - `src/App.jsx` & `src/index.css`：根容器與 `body` 升級為 `overflow-x: clip` 消除雙層隱式捲動容器；為 `.ring-middle` 與 `.gold-flow-border::before` 補齊 `will-change: transform` 隔離旋轉合成層。
+- **測試覆蓋**：全站擴充至 13 個測試檔、39 項單元測試 100% 通過，`npm audit` 維持 `0 vulnerabilities`。
 

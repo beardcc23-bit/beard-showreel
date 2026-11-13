@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useOverlayLock } from '../hooks/useOverlayLock';
 
 export default function Modal({ isOpen, onClose, type, data }) {
   const [iframeLoading, setIframeLoading] = React.useState(true);
-  const onCloseRef = React.useRef(onClose);
-  onCloseRef.current = onClose;
+  const dialogRef = useRef(null);
 
-  const activeDataRef = React.useRef(data);
-  const activeTypeRef = React.useRef(type);
+  const activeDataRef = useRef(data);
+  const activeTypeRef = useRef(type);
   if (data) {
     activeDataRef.current = data;
     activeTypeRef.current = type;
@@ -27,44 +27,16 @@ export default function Modal({ isOpen, onClose, type, data }) {
     }
   }, [isOpen, type, data?.videoId, data?.videoUrl]);
 
-  // 當 Modal 開啟時，禁止背景 scroll、隱藏自訂游標（避免被 z-[9999] 遮罩壓在底下消失）並且監聽 Escape 按鈕
-  useEffect(() => {
-    if (isOpen) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      document.body.classList.add('modal-open');
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-      // Lenis 攔截滾輪後以 scrollTo 捲動，body overflow:hidden 擋不住，需明確暫停
-      window.lenis?.stop();
-      window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
-
-      const handleKeyDown = (e) => {
-        if (e.key === 'Escape') {
-          onCloseRef.current?.();
-        }
-      };
-
-      window.addEventListener('keydown', handleKeyDown);
-
-      return () => {
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-        document.body.classList.remove('modal-open');
-        window.lenis?.start();
-        window.removeEventListener('keydown', handleKeyDown);
-        window.dispatchEvent(new CustomEvent('show-custom-cursor'));
-      };
-    }
-  }, [isOpen]);
+  // 統一委託 useOverlayLock 處理背景滾動鎖定、捲軸補償、Lenis 暫停、自訂游標顯隱與焦點陷阱
+  useOverlayLock(isOpen, onClose, { hideCursor: true, containerRef: dialogRef });
 
   if (typeof document === 'undefined') return null;
 
   return ReactDOM.createPortal(
     <AnimatePresence mode="wait">
       {isOpen && currentData && (
-        <div 
+        <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label={currentData.title || "Media Player Modal"}

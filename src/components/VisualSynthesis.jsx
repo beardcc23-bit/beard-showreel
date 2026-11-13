@@ -1,10 +1,25 @@
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
+import { openSafeExternalUrl } from '../utils/url';
+import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 // 快取已完成載入的圖片 URL，切換 Tab 時零閃爍直接呈現
 const loadedImageCache = new Set();
+
+// 模組層級快取單一 MediaQueryList 與分類英文名稱對照表，避免每次滑鼠事件或渲染重複建立物件
+const hoverNoneQuery =
+  typeof window !== 'undefined' ? window.matchMedia?.('(hover: none)') : null;
+
+const CATEGORY_ENG_MAP = {
+  food: 'FOOD & BEV',
+  tech: 'TECH & TELECOM',
+  vehicle: 'AUTO & TRAVEL',
+  lifestyle: 'LIFESTYLE',
+  beauty: 'BEAUTY & HEALTH',
+  finance: 'FINANCE & INS',
+};
 
 const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
   const item = React.useMemo(() => normalizeItem(rawItem), [rawItem]);
@@ -17,6 +32,7 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
   const bobbleRafRef = React.useRef(null);
   const rectRef = React.useRef(null);
   const scrollYRef = React.useRef(0);
+  const pointerRef = React.useRef({ x: 0, y: 0 });
 
   React.useEffect(() => {
     return () => {
@@ -26,8 +42,7 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
   }, []);
 
   const handlePointerEnter = (e) => {
-    if (window.matchMedia('(hover: none)').matches) return;
-    if (!innerRef.current) return;
+    if (hoverNoneQuery?.matches || !innerRef.current) return;
     const rect = innerRef.current.getBoundingClientRect();
     rectRef.current = rect;
     scrollYRef.current = window.scrollY;
@@ -44,21 +59,22 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
   };
 
   const handleMouseMove = (e) => {
-    if (window.matchMedia('(hover: none)').matches) return;
-    if (!innerRef.current) return;
-    const rect = (!rectRef.current || scrollYRef.current !== window.scrollY)
-      ? innerRef.current.getBoundingClientRect()
-      : rectRef.current;
-    rectRef.current = rect;
-    scrollYRef.current = window.scrollY;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const centerX = mouseX - rect.width / 2;
-    const centerY = mouseY - rect.height / 2;
+    if (hoverNoneQuery?.matches || !innerRef.current) return;
+    pointerRef.current.x = e.clientX;
+    pointerRef.current.y = e.clientY;
 
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
       if (innerRef.current) {
+        const rect = (!rectRef.current || scrollYRef.current !== window.scrollY)
+          ? innerRef.current.getBoundingClientRect()
+          : rectRef.current;
+        rectRef.current = rect;
+        scrollYRef.current = window.scrollY;
+        const mouseX = pointerRef.current.x - rect.left;
+        const mouseY = pointerRef.current.y - rect.top;
+        const centerX = mouseX - rect.width / 2;
+        const centerY = mouseY - rect.height / 2;
         const tiltX = Math.max(-7, Math.min(7, (-centerY / rect.height) * 14));
         const tiltY = Math.max(-7, Math.min(7, (centerX / rect.width) * 14));
         innerRef.current.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
@@ -89,16 +105,10 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
 
   const handleClick = () => {
     if (!hasVideo) return;
-    const targetUrl = item.url;
     if (item.videoId && !item.isFacebook) {
       onPlayVideo(item.videoId, false, item.aspect);
-    } else if (targetUrl && /^https:\/\//i.test(targetUrl)) {
-      const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer');
-      if (newWindow) {
-        newWindow.opener = null;
-      } else {
-        window.location.href = targetUrl;
-      }
+    } else {
+      openSafeExternalUrl(item.url);
     }
   };
 
@@ -200,7 +210,7 @@ BrandCard.displayName = 'BrandCard';
 export default function VisualSynthesis({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('food');
   const sectionRef = useRef(null);
-  const sectionInView = useInView(sectionRef, { margin: "100px 0px" });
+  useOffscreenPause(sectionRef);
 
   const handleTabChange = (newTabId) => {
     if (newTabId === activeTab) return;
@@ -210,7 +220,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
   return (
-    <section ref={sectionRef} id="vfx" className={`w-full relative py-24 ${sectionInView ? '' : 'section-offscreen'}`}>
+    <section ref={sectionRef} id="vfx" className="w-full relative py-24">
       {/* 滿版背景點綴網格 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
@@ -227,21 +237,21 @@ export default function VisualSynthesis({ onPlayVideo }) {
         </div>
 
         {/* 分類切換 Tab (手機版 2 欄整齊上下排網格 + layoutId 絲滑滑塊) */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:justify-center gap-2.5 lg:gap-4 max-w-5xl mx-auto px-2 md:px-4 mb-12 relative z-10 py-1">
+        <div
+          role="tablist"
+          aria-label="作品專案分類"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:justify-center gap-2.5 lg:gap-4 max-w-5xl mx-auto px-2 md:px-4 mb-12 relative z-10 py-1"
+        >
           {categories.map((tab) => {
-            const engMap = {
-              food: 'FOOD & BEV',
-              tech: 'TECH & TELECOM',
-              vehicle: 'AUTO & TRAVEL',
-              lifestyle: 'LIFESTYLE',
-              beauty: 'BEAUTY & HEALTH',
-              finance: 'FINANCE & INS'
-            };
-            const engName = engMap[tab.id] || tab.id.toUpperCase();
+            const engName = CATEGORY_ENG_MAP[tab.id] || tab.id.toUpperCase();
             const isActive = activeTab === tab.id;
             return (
               <button
                 type="button"
+                role="tab"
+                id={`vfx-tab-${tab.id}`}
+                aria-selected={isActive}
+                aria-controls="vfx-tabpanel"
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
                 className={`hud-btn relative px-3 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center w-full min-w-0 leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-core rounded-sm ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
@@ -263,7 +273,12 @@ export default function VisualSynthesis({ onPlayVideo }) {
         </div>
 
         {/* 品牌卡片 Grid - 手機版 3 欄 (grid-cols-3)、電腦版 5 欄 (md:grid-cols-5) */}
-        <div className="relative z-10 min-h-[300px]">
+        <div
+          id="vfx-tabpanel"
+          role="tabpanel"
+          aria-labelledby={`vfx-tab-${activeTab}`}
+          className="relative z-10 min-h-[300px]"
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

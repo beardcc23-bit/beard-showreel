@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { emilSpring, tapFeedback } from '../utils/motion';
+import { useOverlayLock } from '../hooks/useOverlayLock';
 
 // 錨點跳轉專用曲線（Lenis 全域已改 lerp，程式化跳轉在此個別帶入時間曲線）
 const LENIS_ANCHOR_OPTIONS = {
@@ -44,8 +45,10 @@ const animateScrollTo = (targetY, duration = 400) => {
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const drawerRef = useRef(null);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const toggleMenu = () => setIsOpen((prev) => !prev);
+  const closeMenu = useCallback(() => setIsOpen(false), []);
 
   React.useEffect(() => {
     return () => {
@@ -56,31 +59,19 @@ export default function Navigation() {
     };
   }, []);
 
-  // 遵守 Apple HIG 鍵盤操作規範：當選單開啟時監聽 Escape 關閉並鎖定背景滾動
+  // 統一委託 useOverlayLock 處理背景滾動鎖定、捲軸補償、Lenis 暫停、Escape 關閉與焦點陷阱
+  useOverlayLock(isOpen, closeMenu, { containerRef: drawerRef });
+
+  // 當視窗拉寬至桌機斷點 (>= 768px) 時自動收合行動選單
   React.useEffect(() => {
     if (!isOpen) return;
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('modal-open');
-    window.lenis?.stop();
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setIsOpen(false);
-      }
-    };
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setIsOpen(false);
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('resize', handleResize);
-    return () => {
-      document.body.style.overflow = '';
-      document.body.classList.remove('modal-open');
-      window.lenis?.start();
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, [isOpen]);
 
   const menuItems = [
@@ -199,11 +190,13 @@ export default function Navigation() {
             />
             {/* 側邊選單主體 */}
             <motion.div
+              ref={drawerRef}
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={emilSpring.gentle}
               data-lenis-prevent
+              aria-label="行動版導覽選單"
               className="fixed top-0 left-0 w-[80%] max-w-[320px] min-h-[100dvh] h-screen bg-bg-core/98 z-[1000] md:hidden flex flex-col justify-center p-8 gap-8 border-r border-border shadow-2xl"
             >
               <motion.button

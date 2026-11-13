@@ -1,10 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 
+const hoverNoneQuery =
+  typeof window !== 'undefined' ? window.matchMedia?.('(hover: none)') : null;
+
 export default function RefractionCard({ children, className = '', variant = 'glass', ...props }) {
   const cardRef = useRef(null);
   const rafRef = useRef(null);
   const rectRef = useRef(null);
   const scrollYRef = useRef(0);
+  const pointerRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     return () => {
@@ -13,7 +17,7 @@ export default function RefractionCard({ children, className = '', variant = 'gl
   }, []);
 
   const handleMouseEnter = () => {
-    if (window.matchMedia?.('(hover: none)').matches) return;
+    if (hoverNoneQuery?.matches) return;
     if (cardRef.current) {
       rectRef.current = cardRef.current.getBoundingClientRect();
       scrollYRef.current = window.scrollY;
@@ -21,9 +25,9 @@ export default function RefractionCard({ children, className = '', variant = 'gl
   };
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current || window.matchMedia?.('(hover: none)').matches) return;
-    const clientX = e.clientX;
-    const clientY = e.clientY;
+    if (!cardRef.current || hoverNoneQuery?.matches) return;
+    pointerRef.current.x = e.clientX;
+    pointerRef.current.y = e.clientY;
 
     if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
@@ -33,8 +37,8 @@ export default function RefractionCard({ children, className = '', variant = 'gl
           scrollYRef.current = window.scrollY;
         }
         const rect = rectRef.current;
-        cardRef.current.style.setProperty('--mouse-x', `${clientX - rect.left}px`);
-        cardRef.current.style.setProperty('--mouse-y', `${clientY - rect.top}px`);
+        cardRef.current.style.setProperty('--mouse-x', `${pointerRef.current.x - rect.left}px`);
+        cardRef.current.style.setProperty('--mouse-y', `${pointerRef.current.y - rect.top}px`);
       }
       rafRef.current = null;
     });

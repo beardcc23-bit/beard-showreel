@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import CanvasSequence from './CanvasSequence';
+import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 export default function Hero({ onPlayVideo, isModalOpen, onLoaded }) {
+  const sectionRef = useRef(null);
+  useOffscreenPause(sectionRef);
+
   return (
-    <section className="relative min-h-[100dvh] h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
+    <section ref={sectionRef} className="relative min-h-[100dvh] h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
       {/* 語意化首頁核心標題 (提供搜尋引擎 AEO/SEO 與螢幕閱讀器，視覺隱藏保持電影純粹感) */}
       <h1 className="sr-only">Beard Chou 周威全 | 視覺創造 (Autodesk Flame VFX)</h1>
 

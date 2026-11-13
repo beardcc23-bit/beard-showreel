@@ -64,6 +64,7 @@ body {
   background-color: var(--color-bg-core);
   color: var(--text-white-or-black);
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* 語意化 Utility Classes */
@@ -285,6 +286,7 @@ body {
   border-width: 1.5px;
   border-style: dashed;
   animation: rotate-orbit-reverse 60s linear infinite;
+  will-change: transform;
 }
 
 .ring-inner {
@@ -612,6 +614,7 @@ body {
     transparent 85%
   );
   animation: border-rotate 8s linear infinite;
+  will-change: transform;
   z-index: 0;
 }
 
@@ -949,6 +952,8 @@ body.is-scrolling .glass-prism-border {
 .section-offscreen .gold-flow-border::before,
 .section-offscreen .gold-glow-pulse::after,
 .section-offscreen .play-triangle-pulse,
+.section-offscreen .glow-border,
+.section-offscreen .animate-bounce,
 .section-offscreen .hud-pulse,
 .section-offscreen .flowing-laser-line,
 .section-offscreen .prism-button::after,
@@ -958,6 +963,7 @@ body.modal-open .gold-flow-border::before,
 body.modal-open .gold-glow-pulse::after,
 body.modal-open .play-triangle-pulse,
 body.modal-open .glow-border,
+body.modal-open .animate-bounce,
 body.modal-open .hud-pulse,
 body.modal-open .flowing-laser-line,
 body.modal-open .prism-button::after,

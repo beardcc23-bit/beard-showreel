@@ -1,8 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
+import { openSafeExternalUrl } from '../utils/url';
+import { useOffscreenPause } from '../hooks/useOffscreenPause';
+
+const LAW_LABEL_MAP = {
+  '01': { eng: '01 / AI VIDEO', zht: 'AI 影片生成' },
+  '02': { eng: '02 / CHROMA KEY', zht: '綠幕去背合成' },
+  '03': { eng: '03 / BEAUTY WORK', zht: '人物美體精修' },
+};
 
 const lawCategories = [
   {
@@ -75,11 +83,11 @@ const lawCategories = [
 export default function Manifesto({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('01');
   const sectionRef = useRef(null);
-  const sectionInView = useInView(sectionRef, { margin: "100px 0px" });
+  useOffscreenPause(sectionRef);
   const activeCategory = lawCategories.find(cat => cat.id === activeTab) || lawCategories[0];
 
   return (
-    <section ref={sectionRef} id="about" className={`w-full relative py-36 ${sectionInView ? '' : 'section-offscreen'}`}>
+    <section ref={sectionRef} id="about" className="w-full relative py-36">
       {/* 滿版網格與漸層裝飾背景 */}
       <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
 
@@ -195,22 +203,22 @@ export default function Manifesto({ onPlayVideo }) {
           {/* 右側：整合的 Laws 系統 HUD 面板 */}
           <div className="md:col-span-6 flex flex-col">
             {/* 微型 Tabs 切換：符合 Apple HIG 無障礙焦點與字級規範 */}
-            <div className="flex gap-1.5 sm:gap-2.5 mb-5 w-full">
+            <div role="tablist" aria-label="核心技術領域" className="flex gap-1.5 sm:gap-2.5 mb-5 w-full">
               {lawCategories.map((cat) => {
-                const labelMap = {
-                  '01': { eng: '01 / AI VIDEO', zht: 'AI 影片生成' },
-                  '02': { eng: '02 / CHROMA KEY', zht: '綠幕去背合成' },
-                  '03': { eng: '03 / BEAUTY WORK', zht: '人物美體精修' }
-                };
-                const label = labelMap[cat.id];
+                const label = LAW_LABEL_MAP[cat.id];
+                const isActive = activeTab === cat.id;
                 return (
                   <button
                     type="button"
+                    role="tab"
+                    id={`law-tab-${cat.id}`}
+                    aria-selected={isActive}
+                    aria-controls="law-tabpanel"
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
-                    className={`hud-btn px-1.5 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm ${activeTab === cat.id ? 'is-active' : ''}`}
+                    className={`hud-btn px-1.5 sm:px-4 py-2.5 flex flex-col items-center justify-center text-center min-w-0 sm:min-w-[100px] flex-1 sm:flex-initial leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm ${isActive ? 'is-active' : ''}`}
                   >
-                    <span className={`hud-eng text-[9px] sm:text-[11px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${activeTab === cat.id ? '' : 'text-zinc-500'
+                    <span className={`hud-eng text-[9px] sm:text-[11px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${isActive ? '' : 'text-zinc-500'
                       }`}>{label.eng}</span>
                     <span className="hud-zht text-[11px] sm:text-xs font-normal tracking-wider whitespace-nowrap">{label.zht}</span>
                   </button>
@@ -219,125 +227,122 @@ export default function Manifesto({ onPlayVideo }) {
             </div>
 
             {/* HUD 面板卡片 */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.3 }}
-              >
-                <RefractionCard 
-                  className="border border-white/[0.1] rounded-[32px] p-6 md:p-8 shadow-2xl relative overflow-hidden group"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.88) 100%)',
-                    backgroundColor: 'rgba(10, 10, 10, 0.85)',
-                    boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
-                  }}
+            <div id="law-tabpanel" role="tabpanel" aria-labelledby={`law-tab-${activeTab}`}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  {/* 高級科技微網格背景 (Micro Dot Grid Matrix) */}
-                  <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                       style={{
-                         backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.8) 1px, transparent 1px)',
-                         backgroundSize: '20px 20px'
-                       }}
-                  />
-
-                  {/* 隨滑鼠游標移動的動態高光折射 (Interactive Specular Reflection) */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0"
+                  <RefractionCard 
+                    className="border border-white/[0.1] rounded-[32px] p-6 md:p-8 shadow-2xl relative overflow-hidden group"
                     style={{
-                      background: 'radial-gradient(circle 250px at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.035), transparent 80%)'
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 50%, rgba(0, 0, 0, 0.88) 100%)',
+                      backgroundColor: 'rgba(10, 10, 10, 0.85)',
+                      boxShadow: 'inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25), inset 0 15px 30px rgba(255, 255, 255, 0.02), 0 30px 60px rgba(0, 0, 0, 0.55)'
                     }}
-                  />
+                  >
+                    {/* 高級科技微網格背景 (Micro Dot Grid Matrix) */}
+                    <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+                         style={{
+                           backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.8) 1px, transparent 1px)',
+                           backgroundSize: '20px 20px'
+                         }}
+                    />
 
-                  {/* 玻璃內部的雙色折射光源 (以 radial-gradient 取代 blur-[80px]，零 GPU 濾鏡開銷) */}
-                  <div
-                    className="absolute -top-32 -left-32 w-80 h-80 rounded-full pointer-events-none"
-                    style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, transparent 70%)' }}
-                  />
-                  <div
-                    className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
-                    style={{ background: 'radial-gradient(circle, rgba(234, 179, 8, 0.08) 0%, transparent 70%)' }}
-                  />
-
-                  {/* 寫實玻璃邊緣高光反光 (Specular Reflection Highlights - 符合圖二) */}
-                  {/* 頂部偏右邊緣高光 */}
-                  <div className="absolute top-0 right-[20%] w-40 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent blur-[0.3px] pointer-events-none z-10" />
-                  {/* 右側邊緣高光 */}
-                  <div className="absolute top-[40%] right-0 w-[1.5px] h-32 bg-gradient-to-b from-transparent via-white/30 to-transparent blur-[0.3px] pointer-events-none z-10" />
-                  {/* 底部偏左邊緣高光 */}
-                  <div className="absolute bottom-0 left-[15%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/[0.22] to-transparent blur-[0.3px] pointer-events-none z-10" />
-
-                  <div className="space-y-6 relative z-10">
-                    {/* 大字箴言 */}
+                    {/* 隨滑鼠游標移動的動態高光折射 (Interactive Specular Reflection) */}
                     <div 
-                      className="text-zinc-100 font-semibold text-lg md:text-xl tracking-wide text-left border-l-2 border-aurora-blue py-0.5 leading-relaxed"
-                      style={{ textIndent: '-1em', paddingLeft: 'calc(1rem + 1em)' }}
-                    >
-                      {activeCategory.quote}
-                    </div>
+                      className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0"
+                      style={{
+                        background: 'radial-gradient(circle 250px at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.035), transparent 80%)'
+                      }}
+                    />
 
-                    {/* 描述 */}
-                    <p className="text-sm md:text-[15px] text-zinc-300 font-light leading-relaxed md:leading-loose">
-                      {activeCategory.desc}
-                    </p>
+                    {/* 玻璃內部的雙色折射光源 (以 radial-gradient 取代 blur-[80px]，零 GPU 濾鏡開銷) */}
+                    <div
+                      className="absolute -top-32 -left-32 w-80 h-80 rounded-full pointer-events-none"
+                      style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, transparent 70%)' }}
+                    />
+                    <div
+                      className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
+                      style={{ background: 'radial-gradient(circle, rgba(234, 179, 8, 0.08) 0%, transparent 70%)' }}
+                    />
 
-                    {/* 大師實踐解密 (Mastery In Action) - 調整為純乾淨頂邊線分隔 */}
-                    <div className="space-y-4 pt-6 border-t border-zinc-900/60 mt-6">
-                      {activeCategory.params.map((param) => {
-                        const hasVideo = !!param.videoId;
-                        const triggerVideo = () => {
-                          if (!hasVideo) return;
-                          if (param.isFacebook && param.url && /^https:\/\//i.test(param.url)) {
-                            const newWindow = window.open(param.url, '_blank', 'noopener,noreferrer');
-                            if (newWindow) {
-                              newWindow.opener = null;
-                            } else {
-                              window.location.href = param.url;
+                    {/* 寫實玻璃邊緣高光反光 (Specular Reflection Highlights - 符合圖二) */}
+                    {/* 頂部偏右邊緣高光 */}
+                    <div className="absolute top-0 right-[20%] w-40 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                    {/* 右側邊緣高光 */}
+                    <div className="absolute top-[40%] right-0 w-[1.5px] h-32 bg-gradient-to-b from-transparent via-white/30 to-transparent blur-[0.3px] pointer-events-none z-10" />
+                    {/* 底部偏左邊緣高光 */}
+                    <div className="absolute bottom-0 left-[15%] w-32 h-[1px] bg-gradient-to-r from-transparent via-white/[0.22] to-transparent blur-[0.3px] pointer-events-none z-10" />
+
+                    <div className="space-y-6 relative z-10">
+                      {/* 大字箴言 */}
+                      <div 
+                        className="text-zinc-100 font-semibold text-lg md:text-xl tracking-wide text-left border-l-2 border-aurora-blue py-0.5 leading-relaxed"
+                        style={{ textIndent: '-1em', paddingLeft: 'calc(1rem + 1em)' }}
+                      >
+                        {activeCategory.quote}
+                      </div>
+
+                      {/* 描述 */}
+                      <p className="text-sm md:text-[15px] text-zinc-300 font-light leading-relaxed md:leading-loose">
+                        {activeCategory.desc}
+                      </p>
+
+                      {/* 大師實踐解密 (Mastery In Action) - 調整為純乾淨頂邊線分隔 */}
+                      <div className="space-y-4 pt-6 border-t border-zinc-900/60 mt-6">
+                        {activeCategory.params.map((param) => {
+                          const hasVideo = !!param.videoId;
+                          const triggerVideo = () => {
+                            if (!hasVideo) return;
+                            if (param.isFacebook && param.url) {
+                              openSafeExternalUrl(param.url);
+                            } else if (onPlayVideo) {
+                              onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
                             }
-                          } else if (onPlayVideo) {
-                            onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
-                          }
-                        };
-                        return (
-                          <div key={param.key} className="space-y-1.5 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
-                            <div
-                              role={hasVideo ? 'button' : undefined}
-                              tabIndex={hasVideo ? 0 : undefined}
-                              onClick={triggerVideo}
-                              onKeyDown={hasVideo ? (e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                  e.preventDefault();
-                                  triggerVideo();
-                                }
-                              } : undefined}
-                              className={`flex items-center gap-2 text-sm md:text-[15px] font-semibold transition-all duration-200 ${hasVideo
-                                ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title focus:outline-none focus-visible:ring-1 focus-visible:ring-aurora-blue rounded-sm'
-                                : 'text-aurora-blue'
-                                }`}
-                            >
-                              <Play size={10} fill="currentColor" className="text-aurora-blue play-triangle-pulse group-hover/title:!scale-150 transition-transform duration-200" />
-                              <span className={`whitespace-nowrap ${hasVideo ? 'group-hover/title:underline' : ''}`}>
-                                {param.key}
-                              </span>
-                              {hasVideo && (
-                                <span className="text-[11px] text-zinc-400 font-normal tracking-wider opacity-0 group-hover/title:opacity-100 transition-opacity duration-200 ml-1">
-                                  // 點擊播放影片
+                          };
+                          return (
+                            <div key={param.key} className="space-y-1.5 pb-3.5 border-b border-zinc-900 last:border-b-0 last:pb-0">
+                              <div
+                                role={hasVideo ? 'button' : undefined}
+                                tabIndex={hasVideo ? 0 : undefined}
+                                onClick={triggerVideo}
+                                onKeyDown={hasVideo ? (e) => {
+                                  if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    triggerVideo();
+                                  }
+                                } : undefined}
+                                className={`flex items-center gap-2 text-sm md:text-[15px] font-semibold transition-all duration-200 ${hasVideo
+                                  ? 'text-aurora-blue hover:text-white cursor-pointer select-none group/title focus:outline-none focus-visible:ring-1 focus-visible:ring-aurora-blue rounded-sm'
+                                  : 'text-aurora-blue'
+                                  }`}
+                              >
+                                <Play size={10} fill="currentColor" className="text-aurora-blue play-triangle-pulse group-hover/title:!scale-150 transition-transform duration-200" />
+                                <span className={`whitespace-nowrap ${hasVideo ? 'group-hover/title:underline' : ''}`}>
+                                  {param.key}
                                 </span>
-                              )}
+                                {hasVideo && (
+                                  <span className="text-[11px] text-zinc-400 font-normal tracking-wider opacity-0 group-hover/title:opacity-100 transition-opacity duration-200 ml-1">
+                                    // 點擊播放影片
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm md:text-[15px] text-zinc-400 font-light leading-relaxed md:leading-loose pl-5">
+                                {param.value}
+                              </p>
                             </div>
-                            <p className="text-sm md:text-[15px] text-zinc-400 font-light leading-relaxed md:leading-loose pl-5">
-                              {param.value}
-                            </p>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                </RefractionCard>
-              </motion.div>
-            </AnimatePresence>
+                  </RefractionCard>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
