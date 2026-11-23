@@ -197,7 +197,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
-            className="relative w-full max-w-lg min-h-[100dvh] h-full bg-[#060912]/62 backdrop-blur-2xl backdrop-saturate-[185%] border-l border-white/18 p-7 sm:p-10 shadow-[-30px_0_80px_rgba(0,0,0,0.92)] z-10 overflow-y-auto flex flex-col justify-between text-left"
+            className="relative w-full max-w-lg h-full max-h-[100dvh] bg-[#060912]/62 backdrop-blur-2xl backdrop-saturate-[185%] border-l border-white/18 px-7 pt-7 sm:px-10 sm:pt-10 pb-[calc(2rem+env(safe-area-inset-bottom))] shadow-[-30px_0_80px_rgba(0,0,0,0.92)] z-10 overflow-y-auto overscroll-contain flex flex-col justify-between text-left"
           >
             {/* 左緣光譜漫射細線 */}
             <div

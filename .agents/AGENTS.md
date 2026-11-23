@@ -17,3 +17,12 @@
   - 自動啟動 **Insights 洞察分析** 流程。
   - 必須從【效能瓶頸】、【可維護性】與【最佳實踐】三個維度主動剖析。
   - 不給空泛的高階建議，必須直接提供重構前後的具體程式碼對比 (Diff / Refactored Code)。
+
+## 5. 響應式 UI 與收工前視覺驗收防呆 (Visual & Viewport Guardrails)
+- **靜態結構防線（自動化測試強制攔截）**：由 `src/utils/__tests__/layoutGuard.test.js` 隨 `npm run test:run` 與 Git pre-commit hook 強制把關：
+  - 凡 `fixed` 抽屜／彈窗一律禁用 `h-screen` / `100vh`，改用 `inset-y-0` / `inset-0` / `100dvh` 搭配 `overflow-y-auto overscroll-contain` 與底部安全區 `env(safe-area-inset-bottom)`。
+  - `[data-lenis-prevent]` 僅允許 `overscroll-behavior: contain`，禁止寫 `overflow: clip` 或 `overflow: hidden`。
+  - 禁止於同一元素同時套用 `fixed` 與 `.optical-surface`（避免 `position: relative` 覆蓋）；禁止於 `.optical-surface` 外層直接套用 `overflow-hidden` 裁切 3D 玻璃斷面。
+- **真瀏覽器多視口實測（動到 UI／導覽／彈窗／背景時，收工前必執行）**：
+  - 啟動本地 Vite 伺服器並於真實 Chrome 驗證桌機（`1440×900`）與手機矮視口（`390×664`，模擬含行動瀏覽器網址列的真實可視區）。
+  - 實測點開手機漢堡選單與彈窗，以 `getBoundingClientRect()` 確認核心按鈕完全落在可視視窗內（`top >= 0 && bottom <= window.innerHeight`）且截圖肉眼確認，驗收完畢後關閉測試分頁與 dev server。

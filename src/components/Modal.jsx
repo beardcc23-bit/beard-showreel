@@ -56,7 +56,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.96, y: 20, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-            className={`relative w-full bg-[#05070B] border border-white/20 shadow-[0_30px_100px_rgba(0,0,0,0.95)] z-10 flex flex-col max-h-[94vh] ${
+            className={`relative w-full bg-[#05070B] border border-white/20 shadow-[0_30px_100px_rgba(0,0,0,0.95)] z-10 flex flex-col max-h-[94dvh] overflow-y-auto overscroll-contain ${
               currentType === 'video' && currentData.aspect === 'portrait'
                 ? 'max-w-[45vh] md:max-w-[50vh]'
                 : currentType === 'video' && currentData.aspect === 'square'
