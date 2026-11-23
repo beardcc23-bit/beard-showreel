@@ -28,9 +28,17 @@ describe('VisualSynthesis Component', () => {
     fireEvent.click(screen.getByRole('button', { name: /播放影片：UCC/i }));
     expect(handlePlayVideo).toHaveBeenCalledWith('AuuxyMIutf8', false, undefined);
 
-    // 無影片大牌劇照（Johnnie Walker）應為靜態展示（非 button），點擊不觸發燈箱或放大
+    // 無影片大牌劇照（Johnnie Walker）應為靜態展示（非 button），手機版隱藏（hidden md:flex）以節省版面，點擊不觸發燈箱
     const staticLabel = screen.getByText('Johnnie Walker');
     expect(staticLabel.closest('button')).toBeNull();
+    const staticCard = staticLabel.closest('.brand-card-spring');
+    expect(staticCard).toHaveClass('hidden');
+    expect(staticCard).toHaveClass('md:flex');
+
+    const interactiveCard = screen.getByRole('button', { name: /播放影片：UCC/i });
+    expect(interactiveCard).toHaveClass('flex');
+    expect(interactiveCard).not.toHaveClass('hidden');
+
     fireEvent.click(staticLabel);
     expect(imageModalListener).not.toHaveBeenCalled();
 

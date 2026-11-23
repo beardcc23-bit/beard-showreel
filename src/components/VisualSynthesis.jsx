@@ -74,10 +74,10 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
       aria-label={ariaLabel}
       custom={{ dir: direction, index }}
       variants={CARD_VARIANTS}
-      className={`brand-card-spring group relative text-left w-full h-full flex flex-col overflow-hidden bg-transparent border transition-colors duration-300 ${
+      className={`brand-card-spring group relative text-left w-full h-full flex-col overflow-hidden bg-transparent border transition-colors duration-300 ${
         isInteractive
-          ? 'border-white/[0.14] hover:border-white/[0.28] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson'
-          : 'border-white/[0.08] cursor-default'
+          ? 'flex border-white/[0.14] hover:border-white/[0.28] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson'
+          : 'hidden md:flex border-white/[0.08] cursor-default'
       } ${isFeatured ? 'lg:col-span-2 lg:row-span-2' : ''}`}
     >
       {/* 上方純淨 16:9 無壓字商業劇照銀幕（桌機主推卡透過 lg:flex-1 與右側雙排小卡像素級等高對齊） */}
@@ -186,19 +186,23 @@ export default function VisualSynthesis({ onPlayVideo }) {
   const prefetchCategory = (catId, limit = 6) => {
     const target = categories.find((c) => c.id === catId);
     if (!target) return;
+    const isMobileViewport = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 767px)').matches;
     const featured = target.items.find((it) => it.featured);
     const ordered = featured
       ? [featured, ...target.items.filter((it) => it !== featured)]
       : target.items;
-    ordered.slice(0, limit).forEach((raw) => {
-      const normalized = normalizeItem(raw);
-      const bgImage = getDisplayImageUrl(normalized);
-      if (!bgImage || loadedImageCache.has(bgImage)) return;
-      const img = new Image();
-      img.decoding = 'async';
-      img.onload = () => loadedImageCache.add(bgImage);
-      img.src = bgImage;
-    });
+    ordered
+      .map((raw) => normalizeItem(raw))
+      .filter((item) => !isMobileViewport || item.hasVideo)
+      .slice(0, limit)
+      .forEach((normalized) => {
+        const bgImage = getDisplayImageUrl(normalized);
+        if (!bgImage || loadedImageCache.has(bgImage)) return;
+        const img = new Image();
+        img.decoding = 'async';
+        img.onload = () => loadedImageCache.add(bgImage);
+        img.src = bgImage;
+      });
   };
 
   const schedulePrefetch = (catId) => {
