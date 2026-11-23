@@ -166,6 +166,11 @@
   - `Contact` 重構為瑞士 `7:5` 雙欄 `1px` 分割厚玻璃互動艙；`FeedbackModal` 改為右側全高滑出式磨砂玻璃抽屜。
 - **資安與測試強化**：
   - `vercel.json` 收緊 `script-src 'self'` 與 `Cross-Origin-Opener-Policy: same-origin`；`Modal.jsx` 升級為 `youtube-nocookie.com` 搭配 `sandbox`；`url.js` 實作外部網域白名單與本地圖片路徑校驗；`robots.txt` 開放 `ChatGPT-User` 提升 AI 搜尋引用率。
-  - 全站 13 個測試檔、39 項單元測試與生產建置全數通過。
+  - 全站 13 個測試檔、40 項單元測試與生產建置全數通過。
+- **v2 視覺細節定稿打磨（同日第二波）**：
+  - **作品欄重構（`VisualSynthesis.jsx` & `portfolio.js`）**：升級為 `1 大 4 小` 非對稱 Bento 裱框牆＋半透明透光磨砂文字欄；6 大分類主推大圖全數更換為 `1440px` Retina 高清 WebP（UCC、Tokuyo 按摩椅、Foxtron Caviar、新光三越寶可夢、活沛多、磊山保經）並附帶 `?v=2` 擊穿快取；加入方向感知與封頂波浪進場動態及 Tab 透光滑塊；無影片項目維持靜態呈現、零 icon 與零誤導動態。
+  - **全站減法美學與元件統一**：全面清除各區多餘裝飾性英文小字與中括號編號（保留 Manifesto 右上角 `01`/`02`/`03` 浮水印）；主按鈕 `.spectral-cta` 升級為品牌橘紅半透線框（Crimson Ghost CTA）；數據卡改為數字右上上標 `+` 搭配純白底部對齊單位；`Autodesk Flame` 懸浮預覽改為 Portal 智慧定位於文字右下／右上方（`min(44vw, 680px)`、`1920×902` 零裁切）；聯絡區雙艙字級平衡並配品牌橘色圖示框。
+  - **版本歸檔命名對齊**：昨天以前的原版（`259f296`）鎖定為 `v1`（本機 `beard-showreel-v1` + 遠端 `origin/v1` + 標籤 `v1.0.0`），現行版本為 `v2`（`origin/main`）。
+
 
 

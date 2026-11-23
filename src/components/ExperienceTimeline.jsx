@@ -15,12 +15,6 @@ export default function ExperienceTimeline() {
       transition={{ duration: 0.7 }}
       className="w-full mt-16 md:mt-20"
     >
-      <div className="flex items-center justify-between mb-6">
-        <span className="mono text-[11px] uppercase tracking-[0.24em] text-zinc-500">
-          CAREER &amp; EDUCATION CHRONOLOGY
-        </span>
-      </div>
-
       <ol className="optical-surface px-6 sm:px-8 py-2 divide-y divide-white/[0.10]">
         {careerHistory.map((item, idx) => (
           <li

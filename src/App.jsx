@@ -86,9 +86,8 @@ export default function App() {
 
           {/* 極簡電影後期室落款頁尾 */}
           <footer className="relative z-10 border-t border-white/[0.08] py-12 px-6 md:px-12">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 mono text-[11px] uppercase tracking-[0.22em] text-zinc-500">
+            <div className="max-w-7xl mx-auto flex items-center justify-center sm:justify-start text-xs tracking-wider text-zinc-500">
               <span>&copy; 2026 Beard Chou</span>
-              <span className="text-zinc-600">Autodesk Flame Online &middot; Commercial VFX &middot; Taipei</span>
             </div>
           </footer>
 

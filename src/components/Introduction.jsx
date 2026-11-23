@@ -24,16 +24,6 @@ export default function Introduction({ onPlayVideo }) {
       className="relative py-28 md:py-36 px-5 md:px-12 border-t border-white/[0.08]"
     >
       <div className="max-w-7xl mx-auto w-full">
-        {/* 區段索引標頭 */}
-        <div className="flex items-center justify-between mb-14 md:mb-20">
-          <span className="mono text-xs uppercase tracking-[0.26em] text-spectral-crimson">
-            01 / CREATIVE PROFILE
-          </span>
-          <span className="hidden sm:inline-block mono text-[11px] uppercase tracking-[0.2em] text-zinc-500">
-            TAIPEI POST-PRODUCTION
-          </span>
-        </div>
-
         {/* 不對稱雙欄：左肖像 + 右大標與文案 */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 items-start">
           {/* 左側：銳利直角雜誌肖像（左側帶 45° 光譜邊緣光條） */}
@@ -79,9 +69,13 @@ export default function Introduction({ onPlayVideo }) {
               <button
                 type="button"
                 onClick={() => onPlayVideo('s6s2p87fPdA')}
-                className="spectral-cta px-10 py-4 inline-flex items-center gap-3 mono text-xs uppercase tracking-[0.26em] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
+                className="group spectral-cta px-10 py-4 inline-flex items-center gap-3 mono text-xs uppercase tracking-[0.26em] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
               >
-                <Play size={12} fill="currentColor" />
+                <Play
+                  size={12}
+                  fill="currentColor"
+                  className="text-spectral-crimson group-hover:text-white transition-colors duration-300"
+                />
                 <span>SHOWREEL</span>
               </button>
             </div>
@@ -102,17 +96,21 @@ export default function Introduction({ onPlayVideo }) {
               key={stat.key}
               className="p-7 sm:p-9 flex flex-col justify-between gap-3"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
                 <span className="text-xs text-zinc-400 font-medium tracking-[0.2em]">
                   {stat.label}
                 </span>
-                <span className="mono text-[11px] text-spectral-cyan tracking-widest uppercase">
-                  {stat.unit}
-                </span>
               </div>
-              <div className="font-display text-5xl md:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-title-white tabular-nums leading-none mt-2">
-                <AnimatedCounter value={stat.getValue()} trigger={statsInView} />
-                <span className="text-spectral-crimson ml-1">+</span>
+              <div className="mt-3 flex items-baseline gap-x-2.5 gap-y-1.5 flex-wrap">
+                <div className="inline-flex items-baseline font-display text-5xl md:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-title-white tabular-nums leading-none">
+                  <AnimatedCounter value={stat.getValue()} trigger={statsInView} />
+                  <sup className="static self-start text-spectral-crimson text-2xl md:text-3xl lg:text-4xl font-bold leading-none ml-0.5 -mt-1">
+                    +
+                  </sup>
+                </div>
+                <span className="font-display text-xs md:text-sm font-medium uppercase tracking-[0.16em] text-white leading-none">
+                  {stat.unit.replace(/^\/\//, '')}
+                </span>
               </div>
             </div>
           ))}

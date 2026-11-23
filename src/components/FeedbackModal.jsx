@@ -208,11 +208,8 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
             <div className="flex items-start justify-between border-b border-white/10 pb-6">
               <div>
-                <span className="mono text-[10px] uppercase tracking-[0.24em] text-spectral-crimson block mb-2">
-                  DIRECT MESSAGE
-                </span>
-                <h3 id="feedback-modal-title" className="font-display text-2xl font-bold text-title-white uppercase tracking-tight">
-                  Feedback / 留下回饋
+                <h3 id="feedback-modal-title" className="font-display text-2xl font-bold text-title-white tracking-tight">
+                  留下回饋
                 </h3>
                 <p className="text-xs text-zinc-400 mt-1.5 font-light">
                   歡迎分享您的任何想法或優化建議
@@ -344,9 +341,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
               </form>
             )}
 
-            <div className="pt-4 border-t border-white/[0.06] mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
-              BEARD CHOU STUDIO &middot; TAIPEI
-            </div>
+            <div aria-hidden="true" className="pt-2" />
           </m.div>
         </div>
       )}

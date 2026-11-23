@@ -149,12 +149,11 @@ export default function Modal({ isOpen, onClose, type, data }) {
                     />
                   )}
                 </div>
-                <div className="flex items-center justify-between mono text-[11px] text-zinc-300 tracking-wider">
+                <div className="flex items-center text-xs text-zinc-300 tracking-wide">
                   <span className="flex items-center gap-2.5">
                     <span className="w-2 h-2 bg-spectral-crimson" />
                     <span>{currentData.description}</span>
                   </span>
-                  <span className="text-zinc-500 uppercase hidden sm:inline">AUTODESK FLAME BATCH</span>
                 </div>
               </div>
             )}

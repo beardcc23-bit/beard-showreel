@@ -1,4 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { m, AnimatePresence } from 'framer-motion';
 import { Play, ArrowUpRight } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
@@ -8,9 +10,7 @@ import { useOffscreenPause } from '../hooks/useOffscreenPause';
 const lawCategories = [
   {
     id: '01',
-    engLabel: 'AI VIDEO SYNTHESIS',
     subtitle: 'AI 智慧影像生成',
-    accentLine: 'linear-gradient(90deg, #EB4A2E 0%, #FF8A6C 60%, transparent 100%)',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(235, 74, 46, 0.16) 0%, transparent 62%)',
     stickyTop: 'md:top-24',
     quote: '「AI 負責拓寬創意的邊界，而我負責將其無縫封裝落地。」',
@@ -30,9 +30,7 @@ const lawCategories = [
   },
   {
     id: '02',
-    engLabel: 'OPTICAL CHROMA KEYING',
     subtitle: '綠幕去背合成',
-    accentLine: 'linear-gradient(90deg, #D0346C 0%, #EB4A2E 60%, transparent 100%)',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(208, 52, 108, 0.16) 0%, transparent 62%)',
     stickyTop: 'md:top-32',
     quote: '「乾淨的去背不是把背景切掉，而是把環境光找回來。」',
@@ -52,9 +50,7 @@ const lawCategories = [
   },
   {
     id: '03',
-    engLabel: 'ORGANIC BEAUTY WORK',
     subtitle: '人物美體膚質精修',
-    accentLine: 'linear-gradient(90deg, #1276B8 0%, #3898EC 60%, transparent 100%)',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(18, 118, 184, 0.18) 0%, transparent 62%)',
     stickyTop: 'md:top-40',
     quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
@@ -85,9 +81,47 @@ const lawCategories = [
  */
 export default function Manifesto({ onPlayVideo }) {
   const sectionRef = useRef(null);
+  const [flamePreview, setFlamePreview] = useState(null);
   useOffscreenPause(sectionRef);
 
+  useEffect(() => {
+    if (!flamePreview) return undefined;
+    const dismiss = () => setFlamePreview(null);
+    window.addEventListener('scroll', dismiss, { passive: true });
+    window.addEventListener('resize', dismiss, { passive: true });
+    window.addEventListener('blur', dismiss);
+    return () => {
+      window.removeEventListener('scroll', dismiss);
+      window.removeEventListener('resize', dismiss);
+      window.removeEventListener('blur', dismiss);
+    };
+  }, [flamePreview]);
+
+  const handleFlameEnter = (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const pad = 24;
+    const navSafeTop = 88;
+    const cardW = Math.min(vw * 0.44, 680, vw - pad * 2);
+    const estH = cardW * (902 / 1920) + 64;
+
+    // 水平對齊文字右側，並防溢出螢幕右緣
+    const left = Math.max(pad, Math.min(rect.right + 20, vw - cardW - pad));
+
+    // 優先放文字右下方，下方空間不足則自動切至文字右上方並避開頂部導覽列
+    const belowTop = rect.bottom + 14;
+    const fitsBelow = belowTop + estH <= vh - pad;
+    const top = fitsBelow
+      ? belowTop
+      : Math.max(navSafeTop, Math.min(rect.top - estH - 14, vh - estH - pad));
+
+    setFlamePreview({ left, top, width: cardW });
+  };
+
   const openFlameSchematic = () => {
+    setFlamePreview(null);
     window.dispatchEvent(
       new CustomEvent('open-image-modal', {
         detail: {
@@ -106,19 +140,11 @@ export default function Manifesto({ onPlayVideo }) {
       className="w-full relative py-28 md:py-40 px-5 md:px-12 border-t border-white/[0.08]"
     >
       <div className="max-w-7xl mx-auto">
-        {/* 非對稱編輯標頭 */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 md:mb-24">
-          <div>
-            <span className="mono text-xs uppercase tracking-[0.26em] text-spectral-cyan block mb-4">
-              02 / VISUAL LOGIC
-            </span>
-            <h2 className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
-              THE MANIFESTO
-            </h2>
-          </div>
-          <p className="text-zinc-300 font-light max-w-md text-sm md:text-base leading-relaxed md:text-right">
-            在商業廣告的極速步調中，憑藉心手合一的極速直覺，讓每個創意精準且高速交付。
-          </p>
+        {/* 左對齊編輯標頭 */}
+        <div className="mb-16 md:mb-24">
+          <h2 className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
+            THE MANIFESTO
+          </h2>
         </div>
 
         {/* 左欄 Sticky 釘選宣言 × 右欄 Sticky-Stack 三層光譜大卡 */}
@@ -131,6 +157,9 @@ export default function Manifesto({ onPlayVideo }) {
                 role="button"
                 tabIndex={0}
                 aria-label="檢視 Autodesk Flame 實際專案 Batch 節點介面"
+                onPointerEnter={handleFlameEnter}
+                onPointerLeave={() => setFlamePreview(null)}
+                onBlur={() => setFlamePreview(null)}
                 onClick={openFlameSchematic}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -145,27 +174,6 @@ export default function Manifesto({ onPlayVideo }) {
                 </span>
                 <ArrowUpRight size={13} className="text-spectral-crimson transition-transform duration-300 group-hover/flame:translate-x-0.5 group-hover/flame:-translate-y-0.5" />
                 <span className="absolute bottom-0 left-0 w-full h-[1.5px] spectral-underline" />
-
-                {/* 桌面版懸浮 Batch 節點圖磨砂玻璃預覽面板 */}
-                <span className="absolute bottom-full left-0 mb-4 w-[320px] pointer-events-none opacity-0 translate-y-2 group-hover/flame:opacity-100 group-hover/flame:translate-y-0 transition-all duration-300 ease-out z-[99] hidden md:block">
-                  <span className="block optical-surface p-3">
-                    <span className="block relative aspect-video overflow-hidden border border-white/10 mb-2.5">
-                      <img
-                        src={`${import.meta.env.BASE_URL}f1.webp`}
-                        alt="Autodesk Flame Batch Schematic"
-                        width="1920"
-                        height="902"
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover"
-                      />
-                    </span>
-                    <span className="flex items-center justify-between mono text-[10px] text-zinc-300 tracking-wider uppercase">
-                      <span>實際專案 Batch 節點介面</span>
-                      <span className="text-spectral-crimson">[ EXPAND ]</span>
-                    </span>
-                  </span>
-                </span>
               </span>{' '}
               進行 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 <span className="text-white font-normal">SC 播帶</span>，完成這次專案。
             </p>
@@ -194,16 +202,6 @@ export default function Manifesto({ onPlayVideo }) {
                 </div>
 
                 <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="mono text-xs text-spectral-crimson font-semibold tracking-[0.22em]">
-                      {cat.id}
-                    </span>
-                    <span className="w-5 h-[1px] bg-white/20" />
-                    <span className="mono text-[11px] text-zinc-400 tracking-[0.2em] uppercase">
-                      {cat.engLabel}
-                    </span>
-                  </div>
-
                   <h3 className="text-xl sm:text-2xl font-semibold text-title-white tracking-tight mb-5">
                     {cat.subtitle}
                   </h3>
@@ -219,7 +217,7 @@ export default function Manifesto({ onPlayVideo }) {
                     {cat.desc}
                   </p>
 
-                  {/* 實戰案例工業播放條 */}
+                  {/* 實戰案例播放條 */}
                   <div className="border-t border-white/10 divide-y divide-white/[0.08]">
                     {cat.params.map((param) => {
                       const hasVideo = Boolean(param.videoId);
@@ -247,9 +245,6 @@ export default function Manifesto({ onPlayVideo }) {
                               />
                               <span>{param.key}</span>
                             </span>
-                            <span className="mono text-[10px] tracking-[0.2em] uppercase text-zinc-500 group-hover/play:text-white transition-colors">
-                              [ WATCH CASE ]
-                            </span>
                           </button>
                           <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed pl-5">
                             {param.value}
@@ -264,6 +259,44 @@ export default function Manifesto({ onPlayVideo }) {
           </div>
         </div>
       </div>
+
+      {/* 游標懸停 Autodesk Flame 時於文字右下或右上方完整呈現無裁切 Batch 節點介面 */}
+      {typeof document !== 'undefined' &&
+        ReactDOM.createPortal(
+          <AnimatePresence>
+            {flamePreview && (
+              <m.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                aria-hidden="true"
+                style={{
+                  left: `${flamePreview.left}px`,
+                  top: `${flamePreview.top}px`,
+                  width: `${flamePreview.width}px`,
+                }}
+                className="fixed z-[9990] pointer-events-none optical-surface p-2.5 md:p-3 shadow-[0_28px_80px_rgba(0,0,0,0.9)]"
+              >
+                <div className="w-full aspect-[1920/902] border border-white/10 bg-black overflow-hidden">
+                  <img
+                    src={`${import.meta.env.BASE_URL}f1.webp`}
+                    alt="Autodesk Flame Batch Schematic"
+                    width="1920"
+                    height="902"
+                    decoding="async"
+                    className="block w-full h-full object-contain"
+                  />
+                </div>
+                <div className="mt-2.5 flex items-center gap-2 text-xs text-zinc-300 tracking-wide">
+                  <span className="w-1.5 h-1.5 bg-spectral-crimson shrink-0" />
+                  <span>實際專案 Batch 節點介面</span>
+                </div>
+              </m.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </section>
   );
 }

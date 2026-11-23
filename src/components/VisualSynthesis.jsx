@@ -1,123 +1,164 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { Play, ArrowUpRight } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 import { openSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 const loadedImageCache = new Set();
 
-const CATEGORY_ENG_MAP = {
-  food: 'FOOD & BEV',
-  tech: 'TECH & HOME',
-  vehicle: 'MOBILITY',
-  lifestyle: 'LIFESTYLE',
-  beauty: 'BEAUTY & CARE',
-  finance: 'FINANCE',
+const GRID_VARIANTS = {
+  enter: { opacity: 1 },
+  center: { opacity: 1 },
+  exit: (dir) => ({
+    opacity: 0,
+    x: dir * -16,
+    transition: { duration: 0.12, ease: [0.4, 0, 1, 1] },
+  }),
 };
 
-const BrandCard = React.memo(({ item: rawItem, onPlayVideo, isFeatured }) => {
-  const item = React.useMemo(() => normalizeItem(rawItem), [rawItem]);
-  const { hasVideo, bgImage: bgImageUrl } = item;
-  const CardElement = hasVideo ? 'button' : 'div';
+const CARD_VARIANTS = {
+  enter: ({ dir, index }) => ({
+    opacity: 0,
+    x: dir * 20,
+    scale: index === 0 ? 0.985 : 1,
+  }),
+  center: ({ index }) => ({
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: index === 0 ? 0.34 : 0.28,
+      delay: Math.min(index, 8) * 0.022,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  }),
+};
+
+const getDisplayImageUrl = (item) => {
+  if (!item?.bgImage) return null;
+  return item.featured ? `${item.bgImage}?v=2` : item.bgImage;
+};
+
+const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction }) => {
+  const { hasVideo } = item;
+  const bgImageUrl = getDisplayImageUrl(item);
+  const isInlineVideo = Boolean(item.videoId && !item.isFacebook);
+  const isExternalVideo = Boolean(hasVideo && !isInlineVideo);
+  const isInteractive = isInlineVideo || isExternalVideo;
+
+  const CardElement = isInteractive ? m.button : m.div;
   const [isImageLoaded, setIsImageLoaded] = useState(() =>
     bgImageUrl ? loadedImageCache.has(bgImageUrl) : false
   );
   const [hasImageError, setHasImageError] = useState(false);
 
   const handleClick = () => {
-    if (!hasVideo) return;
-    if (item.videoId && !item.isFacebook) {
+    if (isInlineVideo) {
       onPlayVideo(item.videoId, false, item.aspect);
-    } else {
+    } else if (isExternalVideo) {
       openSafeExternalUrl(item.url);
     }
   };
 
+  const ariaLabel = isInlineVideo
+    ? `播放影片：${item.name}`
+    : isExternalVideo
+    ? `開啟外部影片：${item.name}`
+    : undefined;
+
   return (
     <CardElement
-      type={hasVideo ? 'button' : undefined}
-      onClick={hasVideo ? handleClick : undefined}
-      aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`brand-card-spring group relative text-left w-full aspect-video p-4 sm:p-5 flex flex-col justify-between overflow-hidden bg-[#07090E] focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
-        isFeatured ? 'md:col-span-2 md:row-span-2' : ''
-      } ${hasVideo ? 'cursor-pointer' : 'cursor-default'}`}
+      type={isInteractive ? 'button' : undefined}
+      onClick={isInteractive ? handleClick : undefined}
+      aria-label={ariaLabel}
+      custom={{ dir: direction, index }}
+      variants={CARD_VARIANTS}
+      className={`brand-card-spring group relative text-left w-full h-full flex flex-col overflow-hidden bg-transparent border transition-colors duration-300 ${
+        isInteractive
+          ? 'border-white/[0.14] hover:border-white/[0.28] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson'
+          : 'border-white/[0.08] cursor-default'
+      } ${isFeatured ? 'lg:col-span-2 lg:row-span-2' : ''}`}
     >
-      {/* 懸停底部 45° 光譜快門線 */}
-      {hasVideo && (
-        <div
-          aria-hidden="true"
-          className="absolute bottom-0 left-0 right-0 h-[2px] z-20 pointer-events-none scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-          style={{ background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 45%, #1276B8 100%)' }}
-        />
-      )}
+      {/* 上方純淨 16:9 無壓字商業劇照銀幕（桌機主推卡透過 lg:flex-1 與右側雙排小卡像素級等高對齊） */}
+      <div
+        className={`relative w-full overflow-hidden bg-[#07090E] pointer-events-none ${
+          isFeatured ? 'aspect-video lg:aspect-auto lg:flex-1 lg:min-h-[240px]' : 'aspect-video'
+        }`}
+      >
+        {bgImageUrl && !hasImageError && (
+          <>
+            {!isImageLoaded && <div className="absolute inset-0 bg-zinc-950 animate-pulse" />}
+            <img
+              src={bgImageUrl}
+              alt={item.name}
+              width={isFeatured ? 1200 : 600}
+              height={isFeatured ? 675 : 337}
+              loading={isFeatured ? 'eager' : 'lazy'}
+              decoding="async"
+              onLoad={() => {
+                loadedImageCache.add(bgImageUrl);
+                setIsImageLoaded(true);
+              }}
+              onError={() => {
+                setHasImageError(true);
+                setIsImageLoaded(true);
+              }}
+              className={`w-full h-full object-cover transition-[opacity,transform] duration-500 ease-out ${
+                isInteractive ? 'group-hover:scale-[1.04]' : ''
+              } ${
+                isImageLoaded
+                  ? isInteractive
+                    ? 'opacity-92 group-hover:opacity-100'
+                    : 'opacity-85'
+                  : 'opacity-0'
+              }`}
+            />
+          </>
+        )}
 
-      {/* 16:9 完整不裁切商業廣告底圖 */}
-      {bgImageUrl && !hasImageError && (
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#07090E]">
-          {!isImageLoaded && <div className="absolute inset-0 bg-zinc-950 animate-pulse" />}
-          <img
-            src={bgImageUrl}
-            alt={`${item.name} background`}
-            width="600"
-            height="337"
-            loading="lazy"
-            decoding="async"
-            onLoad={() => {
-              loadedImageCache.add(bgImageUrl);
-              setIsImageLoaded(true);
-            }}
-            onError={() => {
-              setHasImageError(true);
-              setIsImageLoaded(true);
-            }}
-            className={`w-full h-full object-cover transition-[opacity,transform] duration-500 ease-out ${
-              hasVideo ? 'group-hover:scale-[1.05]' : ''
-            } ${
-              isImageLoaded
-                ? hasVideo
-                  ? 'opacity-85 group-hover:opacity-100'
-                  : 'opacity-65'
-                : 'opacity-0'
-            }`}
+        {/* 劇照與底欄交界處的懸停光譜快門線（僅限有影片連結的卡片） */}
+        {isInteractive && (
+          <div
+            aria-hidden="true"
+            className="absolute bottom-0 left-0 right-0 h-[1.5px] z-20 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+            style={{ background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 45%, #1276B8 100%)' }}
           />
-          <div className="absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-black/75 via-black/20 to-transparent z-[1]" />
-          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-[1]" />
-        </div>
-      )}
-
-      {/* 左上角主推標記或作品標題 */}
-      <div className="relative z-10 flex items-start justify-between gap-2 pointer-events-none">
-        <div
-          style={{ textShadow: '0 1px 6px rgba(0,0,0,0.9)' }}
-          className={`tracking-wide leading-snug line-clamp-2 ${
-            isFeatured ? 'text-sm sm:text-lg font-semibold text-white' : 'text-xs sm:text-[13px] font-medium text-zinc-100'
-          }`}
-        >
-          {item.name}
-        </div>
-        {isFeatured && (
-          <span className="hidden md:inline-block shrink-0 px-2 py-0.5 bg-[#05070B]/80 border border-white/20 mono text-[9px] uppercase tracking-[0.2em] text-dawn-gold">
-            FEATURED
-          </span>
         )}
       </div>
 
-      {/* 左下角互動狀態 */}
-      <div className="relative z-10 mt-auto pt-2 flex items-center justify-between pointer-events-none">
-        {hasVideo ? (
-          <span
-            style={{ textShadow: '0 1px 4px rgba(0,0,0,0.85)' }}
-            className="inline-flex items-center gap-1.5 mono text-[10px] uppercase tracking-[0.22em] text-zinc-200 group-hover:text-white transition-colors"
-          >
-            <Play size={9} fill="currentColor" className="text-spectral-crimson" />
-            <span>Play</span>
-          </span>
-        ) : (
-          <span className="mono text-[9px] uppercase tracking-[0.22em] text-zinc-500">
-            Archive
-          </span>
-        )}
+      {/* 下方半透明透光磨砂文字欄（無黑底；無連結項目右側留白、無 icon、不觸發 hover 高亮） */}
+      <div
+        className={`w-full px-3.5 sm:px-4 py-3 border-t border-white/[0.12] backdrop-blur-md backdrop-saturate-[160%] flex items-center justify-between gap-3 pointer-events-none ${
+          isInteractive
+            ? 'bg-white/[0.06] group-hover:bg-white/[0.10] transition-colors duration-300'
+            : 'bg-white/[0.04]'
+        }`}
+      >
+        <span
+          className={`truncate tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.55)] transition-colors duration-200 ${
+            isFeatured
+              ? 'text-sm sm:text-[15px] font-semibold text-white'
+              : isInteractive
+              ? 'text-xs sm:text-[13px] font-medium text-zinc-100 group-hover:text-white'
+              : 'text-xs sm:text-[13px] font-medium text-zinc-300'
+          }`}
+        >
+          {item.name}
+        </span>
+
+        {isInlineVideo ? (
+          <Play
+            size={11}
+            fill="currentColor"
+            className="shrink-0 text-spectral-crimson opacity-85 group-hover:opacity-100 transition-opacity"
+          />
+        ) : isExternalVideo ? (
+          <ArrowUpRight
+            size={14}
+            className="shrink-0 text-spectral-crimson transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          />
+        ) : null}
       </div>
     </CardElement>
   );
@@ -126,19 +167,32 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo, isFeatured }) => {
 BrandCard.displayName = 'BrandCard';
 
 /**
- * 第四幕 VisualSynthesis：主推雙倍銀幕 Bento × 1px 髮絲線暗房燈箱膠片牆
- * - 每個分類前 2 支有影片作品放大為 2x2 主推焦點，打破均質小格子疲勞感
+ * 第四幕 VisualSynthesis：暗房調光台 1 大 4 小非對稱 Bento × 裱框分離透光分鏡格
  */
 export default function VisualSynthesis({ onPlayVideo }) {
-  const [activeTab, setActiveTab] = useState('food');
+  const [{ activeTab, direction }, setTabState] = useState({ activeTab: 'food', direction: 1 });
   const sectionRef = useRef(null);
+  const prefetchTimerRef = useRef(null);
   useOffscreenPause(sectionRef);
 
-  const prefetchCategory = (catId) => {
+  useEffect(() => {
+    return () => {
+      if (prefetchTimerRef.current) {
+        clearTimeout(prefetchTimerRef.current);
+      }
+    };
+  }, []);
+
+  const prefetchCategory = (catId, limit = 6) => {
     const target = categories.find((c) => c.id === catId);
     if (!target) return;
-    target.items.slice(0, 10).forEach((raw) => {
-      const { bgImage } = normalizeItem(raw);
+    const featured = target.items.find((it) => it.featured);
+    const ordered = featured
+      ? [featured, ...target.items.filter((it) => it !== featured)]
+      : target.items;
+    ordered.slice(0, limit).forEach((raw) => {
+      const normalized = normalizeItem(raw);
+      const bgImage = getDisplayImageUrl(normalized);
       if (!bgImage || loadedImageCache.has(bgImage)) return;
       const img = new Image();
       img.decoding = 'async';
@@ -147,22 +201,44 @@ export default function VisualSynthesis({ onPlayVideo }) {
     });
   };
 
+  const schedulePrefetch = (catId) => {
+    if (catId === activeTab) return;
+    if (prefetchTimerRef.current) {
+      clearTimeout(prefetchTimerRef.current);
+    }
+    prefetchTimerRef.current = setTimeout(() => {
+      prefetchCategory(catId, 6);
+    }, 120);
+  };
+
+  const cancelPrefetch = () => {
+    if (prefetchTimerRef.current) {
+      clearTimeout(prefetchTimerRef.current);
+      prefetchTimerRef.current = null;
+    }
+  };
+
   const handleTabChange = (newTabId) => {
     if (newTabId === activeTab) return;
-    setActiveTab(newTabId);
+    cancelPrefetch();
+    const prevIdx = categories.findIndex((c) => c.id === activeTab);
+    const nextIdx = categories.findIndex((c) => c.id === newTabId);
+    setTabState({ activeTab: newTabId, direction: nextIdx >= prevIdx ? 1 : -1 });
   };
 
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
-  // 挑出該分類前 2 支有影片作品作為 2x2 視覺主推卡
-  const featuredIndices = React.useMemo(() => {
-    const indices = new Set();
-    for (let i = 0; i < currentCategory.items.length && indices.size < 2; i += 1) {
-      if (normalizeItem(currentCategory.items[i])?.hasVideo) {
-        indices.add(i);
-      }
+  // 優先將指定 featured 主推作品置於左上角第一位，構成 1 大帶 4 小黃金比例
+  const orderedItems = React.useMemo(() => {
+    const list = currentCategory.items.map((raw) => normalizeItem(raw));
+    let featIdx = list.findIndex((it) => it.featured);
+    if (featIdx === -1) {
+      featIdx = list.findIndex(
+        (it) => it.videoId && !it.isFacebook && it.aspect !== 'portrait' && it.aspect !== 'square'
+      );
     }
-    return indices;
+    if (featIdx <= 0) return list;
+    return [list[featIdx], ...list.slice(0, featIdx), ...list.slice(featIdx + 1)];
   }, [currentCategory]);
 
   return (
@@ -173,28 +249,20 @@ export default function VisualSynthesis({ onPlayVideo }) {
     >
       <div className="max-w-7xl mx-auto">
         {/* 左對齊編輯標頭 */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
-          <div>
-            <span className="mono text-xs uppercase tracking-[0.26em] text-spectral-crimson block mb-4">
-              03 / PRODUCTION FILES
-            </span>
-            <h2 className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
-              ADVERTISING
-            </h2>
-          </div>
-          <p className="text-zinc-300 font-light text-sm md:text-base leading-relaxed md:text-right">
-            近期參與的廣告專案。
-          </p>
+        <div className="mb-12 md:mb-16">
+          <h2 className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
+            ADVERTISING
+          </h2>
         </div>
 
         {/* 磨砂毛玻璃剪接軌道分類切換列 */}
         <div
           role="tablist"
           aria-label="作品專案分類"
+          onPointerLeave={cancelPrefetch}
           className="optical-surface grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 mb-10"
         >
           {categories.map((tab) => {
-            const engName = CATEGORY_ENG_MAP[tab.id] || tab.id.toUpperCase();
             const isActive = activeTab === tab.id;
             return (
               <button
@@ -204,30 +272,30 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 aria-selected={isActive}
                 aria-controls="vfx-tabpanel"
                 key={tab.id}
-                onPointerEnter={() => prefetchCategory(tab.id)}
-                onFocus={() => prefetchCategory(tab.id)}
+                onPointerEnter={() => schedulePrefetch(tab.id)}
+                onFocus={() => schedulePrefetch(tab.id)}
+                onBlur={cancelPrefetch}
                 onClick={() => handleTabChange(tab.id)}
-                className={`relative px-4 py-3.5 flex flex-col items-start justify-between text-left border-b lg:border-b-0 border-r border-white/10 last:border-r-0 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
-                  isActive ? 'bg-white/[0.06] text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.02]'
+                className={`relative px-4 py-4 flex items-center justify-center text-center border-b lg:border-b-0 border-r border-white/10 last:border-r-0 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+                  isActive ? 'text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.02]'
                 }`}
               >
                 {isActive && (
-                  <m.div
-                    layoutId="activeTabGlow"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none"
-                    style={{ background: 'linear-gradient(90deg, #EB4A2E 0%, #D0346C 50%, #1276B8 100%)' }}
-                    transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-                  />
+                  <>
+                    <m.div
+                      layoutId="activeTabSurface"
+                      className="absolute inset-0 bg-white/[0.07] pointer-events-none"
+                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                    />
+                    <m.div
+                      layoutId="activeTabGlow"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none"
+                      style={{ background: 'linear-gradient(90deg, #EB4A2E 0%, #D0346C 50%, #1276B8 100%)' }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                    />
+                  </>
                 )}
-                <div className="w-full flex items-center justify-between gap-2 mb-1">
-                  <span className={`mono text-[9px] tracking-[0.18em] uppercase ${isActive ? 'text-spectral-crimson' : 'text-zinc-500'}`}>
-                    {engName}
-                  </span>
-                  <span className="mono text-[10px] tabular-nums text-zinc-500">
-                    [{String(tab.items.length).padStart(2, '0')}]
-                  </span>
-                </div>
-                <span className="text-xs sm:text-[13px] font-medium tracking-wider">
+                <span className="relative z-10 text-xs sm:text-sm font-medium tracking-widest">
                   {tab.name}
                 </span>
               </button>
@@ -235,27 +303,30 @@ export default function VisualSynthesis({ onPlayVideo }) {
           })}
         </div>
 
-        {/* 1px 細線無圓角膠片燈箱牆（桌機 4 欄 Bento，手機 2 欄完整 16:9 構圖） */}
+        {/* 透光間距非對稱 Bento 裱框牆（方向感知＋主推先行波浪分鏡動態） */}
         <div
           id="vfx-tabpanel"
           role="tabpanel"
           aria-labelledby={`vfx-tab-${activeTab}`}
-          className="relative min-h-[320px]"
+          className="relative min-h-[320px] overflow-x-clip"
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
             <m.div
               key={activeTab}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-[1px] bg-white/15 border border-white/15 grid-flow-dense"
+              custom={direction}
+              variants={GRID_VARIANTS}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 md:gap-4 grid-flow-dense"
             >
-              {currentCategory.items.map((item, index) => (
+              {orderedItems.map((item, index) => (
                 <BrandCard
                   key={`${activeTab}-${item.name}-${index}`}
                   item={item}
-                  isFeatured={featuredIndices.has(index)}
+                  index={index}
+                  direction={direction}
+                  isFeatured={index === 0}
                   onPlayVideo={onPlayVideo}
                 />
               ))}

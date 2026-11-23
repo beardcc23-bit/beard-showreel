@@ -45,7 +45,8 @@ export const categories = [
         "name": "UCC",
         "bgImage": "/vfx/A/A-004.webp",
         "url": "https://www.youtube.com/watch?v=AuuxyMIutf8",
-        "videoId": "AuuxyMIutf8"
+        "videoId": "AuuxyMIutf8",
+        "featured": true
       },
       {
         "name": "好侍咖哩",
@@ -247,7 +248,8 @@ export const categories = [
         "name": "Tokuyo 按摩椅",
         "bgImage": "/vfx/B/B-12.webp",
         "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
-        "videoId": "_SENfBsNjgE"
+        "videoId": "_SENfBsNjgE",
+        "featured": true
       },
       {
         "name": "三菱重工空調",
@@ -282,7 +284,8 @@ export const categories = [
         "name": "Foxtron Caviar",
         "bgImage": "/vfx/C/C-02.webp",
         "url": "https://youtu.be/pCBQA1vEDig?si=lbbvGmTm90P5Vx4P",
-        "videoId": "pCBQA1vEDig"
+        "videoId": "pCBQA1vEDig",
+        "featured": true
       },
       {
         "name": "Gogoro EZZY",
@@ -421,7 +424,8 @@ export const categories = [
         "name": "新光三越",
         "bgImage": "/vfx/D/D-13.webp",
         "url": "https://www.youtube.com/watch?v=wZhogI5TPB8",
-        "videoId": "wZhogI5TPB8"
+        "videoId": "wZhogI5TPB8",
+        "featured": true
       },
       {
         "name": "新光三越",
@@ -511,7 +515,8 @@ export const categories = [
         "name": "活沛多",
         "bgImage": "/vfx/A/A-014.webp",
         "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
-        "videoId": "Y4CG2QNa5hs"
+        "videoId": "Y4CG2QNa5hs",
+        "featured": true
       },
       {
         "name": "大本山 益生菌",
@@ -611,7 +616,8 @@ export const categories = [
         "name": "磊山保經",
         "bgImage": "/vfx/F/F-09.webp",
         "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
-        "videoId": "Rwrn87N2PUc"
+        "videoId": "Rwrn87N2PUc",
+        "featured": true
       },
       {
         "name": "國泰世華 財富管理",

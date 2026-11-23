@@ -108,9 +108,9 @@ export default function Navigation() {
   }, [isOpen]);
 
   const menuItems = [
-    { name: '個人介紹', eng: '01 / PROFILE', href: '#introduction' },
-    { name: '視覺思考', eng: '02 / MANIFESTO', href: '#about' },
-    { name: '作品案例', eng: '03 / ARCHIVE', href: '#vfx' },
+    { name: '個人介紹', href: '#introduction' },
+    { name: '視覺思考', href: '#about' },
+    { name: '作品案例', href: '#vfx' },
   ];
 
   const handleScroll = (e, href) => {
@@ -244,10 +244,7 @@ export default function Navigation() {
               aria-label="行動版導覽選單"
               className="fixed top-0 left-0 w-[82%] max-w-[320px] min-h-[100dvh] h-screen bg-[#060911]/72 backdrop-blur-2xl backdrop-saturate-[180%] z-[1000] md:hidden flex flex-col justify-between p-8 border-r border-white/15"
             >
-              <div className="flex items-center justify-between border-b border-white/10 pb-5">
-                <span className="mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
-                  NAVIGATION
-                </span>
+              <div className="flex items-center justify-end border-b border-white/10 pb-5">
                 <button
                   type="button"
                   onClick={toggleMenu}
@@ -270,15 +267,12 @@ export default function Navigation() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
                       onClick={(e) => handleScroll(e, item.href)}
-                      className={`text-lg font-medium tracking-tight transition-colors duration-200 flex flex-col px-6 py-1 border-l-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+                      className={`text-lg font-medium tracking-tight transition-colors duration-200 flex flex-col px-6 py-1.5 border-l-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
                         isCurrent
                           ? 'text-white border-spectral-crimson'
                           : 'text-zinc-300 hover:text-white border-white/10'
                       }`}
                     >
-                      <span className={`text-[10px] mono tracking-[0.22em] mb-1 ${isCurrent ? 'text-spectral-crimson' : 'text-zinc-500'}`}>
-                        {item.eng}
-                      </span>
                       {item.name}
                     </m.a>
                   );
@@ -289,9 +283,8 @@ export default function Navigation() {
                 href="#contact"
                 aria-current={activeSection === 'contact' ? 'location' : undefined}
                 onClick={(e) => handleScroll(e, '#contact')}
-                className="spectral-cta w-full px-6 py-4 flex flex-col items-start justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
+                className="spectral-cta w-full px-6 py-4 flex items-center justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
               >
-                <span className="text-[10px] opacity-70 tracking-[0.22em] mono mb-1.5 uppercase">Establish Connection</span>
                 <span className="text-base font-semibold tracking-widest">建立聯繫</span>
               </a>
             </m.div>
