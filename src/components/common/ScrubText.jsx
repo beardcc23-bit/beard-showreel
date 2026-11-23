@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { m, useScroll, useTransform } from 'framer-motion';
 
 /**
  * ScrubText: 滾動光束顯影段落組件 (高效段落級優化版)
@@ -19,9 +19,9 @@ export default function ScrubText({ text, className = "", children }) {
   return (
     <p ref={containerRef} className={className}>
       {/* 透明度放在內層 span：引言段落的金色左框線不會跟著變暗；will-change 確保獨立合成層，更新時不重繪 */}
-      <motion.span style={{ opacity }} className="block text-white will-change-[opacity]">
+      <m.span style={{ opacity }} className="block text-white will-change-[opacity]">
         {children || text}
-      </motion.span>
+      </m.span>
     </p>
   );
 }

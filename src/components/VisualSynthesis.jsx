@@ -1,107 +1,29 @@
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 import { openSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
-// 快取已完成載入的圖片 URL，切換 Tab 時零閃爍直接呈現
 const loadedImageCache = new Set();
-
-// 模組層級快取單一 MediaQueryList 與分類英文名稱對照表，避免每次滑鼠事件或渲染重複建立物件
-const hoverNoneQuery =
-  typeof window !== 'undefined' ? window.matchMedia?.('(hover: none)') : null;
 
 const CATEGORY_ENG_MAP = {
   food: 'FOOD & BEV',
-  tech: 'TECH & TELECOM',
-  vehicle: 'AUTO & TRAVEL',
+  tech: 'TECH & HOME',
+  vehicle: 'MOBILITY',
   lifestyle: 'LIFESTYLE',
-  beauty: 'BEAUTY & HEALTH',
-  finance: 'FINANCE & INS',
+  beauty: 'BEAUTY & CARE',
+  finance: 'FINANCE',
 };
 
-const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
+const BrandCard = React.memo(({ item: rawItem, onPlayVideo, isFeatured }) => {
   const item = React.useMemo(() => normalizeItem(rawItem), [rawItem]);
   const { hasVideo, bgImage: bgImageUrl } = item;
   const CardElement = hasVideo ? 'button' : 'div';
-  const [isImageLoaded, setIsImageLoaded] = useState(() => (bgImageUrl ? loadedImageCache.has(bgImageUrl) : false));
+  const [isImageLoaded, setIsImageLoaded] = useState(() =>
+    bgImageUrl ? loadedImageCache.has(bgImageUrl) : false
+  );
   const [hasImageError, setHasImageError] = useState(false);
-  const innerRef = React.useRef(null);
-  const rafRef = React.useRef(null);
-  const bobbleRafRef = React.useRef(null);
-  const rectRef = React.useRef(null);
-  const scrollYRef = React.useRef(0);
-  const pointerRef = React.useRef({ x: 0, y: 0 });
-
-  React.useEffect(() => {
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (bobbleRafRef.current) cancelAnimationFrame(bobbleRafRef.current);
-    };
-  }, []);
-
-  const handlePointerEnter = (e) => {
-    if (hoverNoneQuery?.matches || !innerRef.current) return;
-    const rect = innerRef.current.getBoundingClientRect();
-    rectRef.current = rect;
-    scrollYRef.current = window.scrollY;
-    const isLeft = (e.clientX - rect.left) < rect.width / 2;
-
-    if (bobbleRafRef.current) cancelAnimationFrame(bobbleRafRef.current);
-    innerRef.current.classList.remove('bobble-left', 'bobble-right');
-    bobbleRafRef.current = requestAnimationFrame(() => {
-      if (innerRef.current) {
-        innerRef.current.classList.add(isLeft ? 'bobble-left' : 'bobble-right');
-      }
-      bobbleRafRef.current = null;
-    });
-  };
-
-  const handleMouseMove = (e) => {
-    if (hoverNoneQuery?.matches || !innerRef.current) return;
-    pointerRef.current.x = e.clientX;
-    pointerRef.current.y = e.clientY;
-
-    if (rafRef.current) return;
-    rafRef.current = requestAnimationFrame(() => {
-      if (innerRef.current) {
-        const rect = (!rectRef.current || scrollYRef.current !== window.scrollY)
-          ? innerRef.current.getBoundingClientRect()
-          : rectRef.current;
-        rectRef.current = rect;
-        scrollYRef.current = window.scrollY;
-        const mouseX = pointerRef.current.x - rect.left;
-        const mouseY = pointerRef.current.y - rect.top;
-        const centerX = mouseX - rect.width / 2;
-        const centerY = mouseY - rect.height / 2;
-        const tiltX = Math.max(-7, Math.min(7, (-centerY / rect.height) * 14));
-        const tiltY = Math.max(-7, Math.min(7, (centerX / rect.width) * 14));
-        innerRef.current.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
-        innerRef.current.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
-        innerRef.current.style.setProperty('--mouse-x', `${mouseX}px`);
-        innerRef.current.style.setProperty('--mouse-y', `${mouseY}px`);
-      }
-      rafRef.current = null;
-    });
-  };
-
-  const handlePointerLeave = () => {
-    rectRef.current = null;
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
-    if (bobbleRafRef.current) {
-      cancelAnimationFrame(bobbleRafRef.current);
-      bobbleRafRef.current = null;
-    }
-    if (innerRef.current) {
-      innerRef.current.classList.remove('bobble-left', 'bobble-right');
-      innerRef.current.style.setProperty('--tilt-x', '0deg');
-      innerRef.current.style.setProperty('--tilt-y', '0deg');
-    }
-  };
 
   const handleClick = () => {
     if (!hasVideo) return;
@@ -114,38 +36,26 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
 
   return (
     <CardElement
-      ref={innerRef}
       type={hasVideo ? 'button' : undefined}
-      onPointerEnter={hasVideo ? handlePointerEnter : undefined}
-      onMouseMove={hasVideo ? handleMouseMove : undefined}
-      onPointerLeave={hasVideo ? handlePointerLeave : undefined}
       onClick={hasVideo ? handleClick : undefined}
       aria-label={hasVideo ? `播放影片：${item.name}` : item.name}
-      className={`prism-border brand-card-spring text-left w-full aspect-square md:aspect-video p-3 rounded-sm flex flex-col justify-between relative overflow-hidden group shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue bg-[#121314] ${hasVideo
-        ? 'border-white/15 hover:border-aurora-blue/85 cursor-pointer hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] active:scale-[0.97]'
-        : 'border-white/[0.08] cursor-default'
-        }`}
-      style={{
-        // 已移除 transformStyle: preserve-3d：子元素皆為平面，只會強迫進入 3D 排序脈絡
-        '--border-color': hasVideo ? 'rgba(255, 255, 255, 0.16)' : 'rgba(255, 255, 255, 0.06)'
-      }}
+      className={`brand-card-spring group relative text-left w-full aspect-video p-4 sm:p-5 flex flex-col justify-between overflow-hidden bg-[#07090E] focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+        isFeatured ? 'md:col-span-2 md:row-span-2' : ''
+      } ${hasVideo ? 'cursor-pointer' : 'cursor-default'}`}
     >
-      {/* 頂部極細黃金雷射光束條 */}
+      {/* 懸停底部 45° 光譜快門線 */}
       {hasVideo && (
-        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-dawn-gold/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20" />
+        <div
+          aria-hidden="true"
+          className="absolute bottom-0 left-0 right-0 h-[2px] z-20 pointer-events-none scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+          style={{ background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 45%, #1276B8 100%)' }}
+        />
       )}
 
-      {/* 項目背景底圖 (僅限有 bgImage 的卡片) */}
+      {/* 16:9 完整不裁切商業廣告底圖 */}
       {bgImageUrl && !hasImageError && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-[inherit] pointer-events-none bg-[#121314]">
-          {!isImageLoaded && (
-            <div className="absolute inset-0 bg-zinc-950 animate-pulse flex items-center justify-center">
-              <div
-                className="w-16 h-16 rounded-full"
-                style={{ background: 'radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%)' }}
-              />
-            </div>
-          )}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#07090E]">
+          {!isImageLoaded && <div className="absolute inset-0 bg-zinc-950 animate-pulse" />}
           <img
             src={bgImageUrl}
             alt={`${item.name} background`}
@@ -153,7 +63,6 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
             height="337"
             loading="lazy"
             decoding="async"
-            fetchpriority="low"
             onLoad={() => {
               loadedImageCache.add(bgImageUrl);
               setIsImageLoaded(true);
@@ -162,55 +71,81 @@ const BrandCard = React.memo(({ item: rawItem, onPlayVideo }) => {
               setHasImageError(true);
               setIsImageLoaded(true);
             }}
-            className={`w-full h-full object-cover transition-[opacity,transform] duration-300 ease-out group-hover:scale-105 ${
+            className={`w-full h-full object-cover transition-[opacity,transform] duration-500 ease-out ${
+              hasVideo ? 'group-hover:scale-[1.05]' : ''
+            } ${
               isImageLoaded
-                ? 'opacity-90 md:opacity-75 group-hover:opacity-100'
+                ? hasVideo
+                  ? 'opacity-85 group-hover:opacity-100'
+                  : 'opacity-65'
                 : 'opacity-0'
             }`}
           />
-          {/* 頂部輕量文字襯底 Scrim 漸層：保證文字清晰又保留畫面構圖 */}
-          <div className="absolute top-0 left-0 right-0 h-2/5 bg-gradient-to-b from-black/70 via-black/20 to-transparent transition-opacity duration-300 z-[1]" />
-          
-          {/* 底部 Play 標籤細膩 Scrim 漸層：通透柔和，徹底融解底圖邊緣 */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/85 via-black/30 to-transparent group-hover:from-black/90 group-hover:via-black/40 transition-all duration-300 z-[1]" />
+          <div className="absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-black/75 via-black/20 to-transparent z-[1]" />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-[1]" />
         </div>
       )}
 
-      {/* 淡淡的金色漸層 hover 底色 (僅限有影片且無 bgImage 或縮圖載入失敗) */}
-      {hasVideo && (!bgImageUrl || hasImageError) && (
-        <div className="absolute inset-0 bg-gradient-to-tr from-aurora-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-      )}
-
-      <div className="relative z-10 pointer-events-none">
+      {/* 左上角主推標記或作品標題 */}
+      <div className="relative z-10 flex items-start justify-between gap-2 pointer-events-none">
         <div
-          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.6)' }}
-          className={`text-[11px] sm:text-xs tracking-wide transition-colors duration-300 leading-tight line-clamp-2 ${hasVideo
-            ? 'text-zinc-100 group-hover:text-white font-semibold'
-            : 'text-zinc-200 font-semibold'
-            }`}
+          style={{ textShadow: '0 1px 6px rgba(0,0,0,0.9)' }}
+          className={`tracking-wide leading-snug line-clamp-2 ${
+            isFeatured ? 'text-sm sm:text-lg font-semibold text-white' : 'text-xs sm:text-[13px] font-medium text-zinc-100'
+          }`}
         >
           {item.name}
         </div>
+        {isFeatured && (
+          <span className="hidden md:inline-block shrink-0 px-2 py-0.5 bg-[#05070B]/80 border border-white/20 mono text-[9px] uppercase tracking-[0.2em] text-dawn-gold">
+            FEATURED
+          </span>
+        )}
       </div>
 
-      {hasVideo ? (
-        <div
-          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}
-          className="relative z-10 mt-auto pt-1 flex items-center gap-1 text-[10px] text-aurora-blue font-bold tracking-widest uppercase opacity-90 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 pointer-events-none"
-        >
-          <Play size={9} fill="currentColor" className="play-triangle-pulse" /> Play
-        </div>
-      ) : null}
+      {/* 左下角互動狀態 */}
+      <div className="relative z-10 mt-auto pt-2 flex items-center justify-between pointer-events-none">
+        {hasVideo ? (
+          <span
+            style={{ textShadow: '0 1px 4px rgba(0,0,0,0.85)' }}
+            className="inline-flex items-center gap-1.5 mono text-[10px] uppercase tracking-[0.22em] text-zinc-200 group-hover:text-white transition-colors"
+          >
+            <Play size={9} fill="currentColor" className="text-spectral-crimson" />
+            <span>Play</span>
+          </span>
+        ) : (
+          <span className="mono text-[9px] uppercase tracking-[0.22em] text-zinc-500">
+            Archive
+          </span>
+        )}
+      </div>
     </CardElement>
   );
 });
 
 BrandCard.displayName = 'BrandCard';
 
+/**
+ * 第四幕 VisualSynthesis：主推雙倍銀幕 Bento × 1px 髮絲線暗房燈箱膠片牆
+ * - 每個分類前 2 支有影片作品放大為 2x2 主推焦點，打破均質小格子疲勞感
+ */
 export default function VisualSynthesis({ onPlayVideo }) {
   const [activeTab, setActiveTab] = useState('food');
   const sectionRef = useRef(null);
   useOffscreenPause(sectionRef);
+
+  const prefetchCategory = (catId) => {
+    const target = categories.find((c) => c.id === catId);
+    if (!target) return;
+    target.items.slice(0, 10).forEach((raw) => {
+      const { bgImage } = normalizeItem(raw);
+      if (!bgImage || loadedImageCache.has(bgImage)) return;
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => loadedImageCache.add(bgImage);
+      img.src = bgImage;
+    });
+  };
 
   const handleTabChange = (newTabId) => {
     if (newTabId === activeTab) return;
@@ -219,28 +154,44 @@ export default function VisualSynthesis({ onPlayVideo }) {
 
   const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
 
-  return (
-    <section ref={sectionRef} id="vfx" className="w-full relative py-24">
-      {/* 滿版背景點綴網格 */}
-      <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
+  // 挑出該分類前 2 支有影片作品作為 2x2 視覺主推卡
+  const featuredIndices = React.useMemo(() => {
+    const indices = new Set();
+    for (let i = 0; i < currentCategory.items.length && indices.size < 2; i += 1) {
+      if (normalizeItem(currentCategory.items[i])?.hasVideo) {
+        indices.add(i);
+      }
+    }
+    return indices;
+  }, [currentCategory]);
 
-      <div className="max-w-6xl mx-auto px-8 relative z-10">
-        {/* 區段標頭 */}
-        <div className="text-center mb-16 relative z-10">
-          <h2 className="text-[clamp(2.5rem,11.5vw,9.5rem)] font-black tracking-[-0.04em] uppercase mb-6 glow-title text-white whitespace-nowrap leading-none w-full flex justify-between sm:justify-center items-center">
-            <span>ADVER</span>
-            <span className="text-aurora-blue">TISING</span>
-          </h2>
-          <p className="text-zinc-300 font-light max-w-2xl mx-auto text-sm md:text-lg leading-relaxed">
+  return (
+    <section
+      ref={sectionRef}
+      id="vfx"
+      className="w-full relative py-28 md:py-36 px-5 md:px-12 border-t border-white/[0.08]"
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* 左對齊編輯標頭 */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
+          <div>
+            <span className="mono text-xs uppercase tracking-[0.26em] text-spectral-crimson block mb-4">
+              03 / PRODUCTION FILES
+            </span>
+            <h2 className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
+              ADVERTISING
+            </h2>
+          </div>
+          <p className="text-zinc-300 font-light text-sm md:text-base leading-relaxed md:text-right">
             近期參與的廣告專案。
           </p>
         </div>
 
-        {/* 分類切換 Tab (手機版 2 欄整齊上下排網格 + layoutId 絲滑滑塊) */}
+        {/* 磨砂毛玻璃剪接軌道分類切換列 */}
         <div
           role="tablist"
           aria-label="作品專案分類"
-          className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:justify-center gap-2.5 lg:gap-4 max-w-5xl mx-auto px-2 md:px-4 mb-12 relative z-10 py-1"
+          className="optical-surface grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 mb-10"
         >
           {categories.map((tab) => {
             const engName = CATEGORY_ENG_MAP[tab.id] || tab.id.toUpperCase();
@@ -253,52 +204,62 @@ export default function VisualSynthesis({ onPlayVideo }) {
                 aria-selected={isActive}
                 aria-controls="vfx-tabpanel"
                 key={tab.id}
+                onPointerEnter={() => prefetchCategory(tab.id)}
+                onFocus={() => prefetchCategory(tab.id)}
                 onClick={() => handleTabChange(tab.id)}
-                className={`hud-btn relative px-3 lg:px-5 py-2.5 lg:py-3 flex flex-col items-center justify-center text-center w-full min-w-0 leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold focus-visible:ring-offset-2 focus-visible:ring-offset-bg-core rounded-sm ${isActive ? 'is-active text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
+                className={`relative px-4 py-3.5 flex flex-col items-start justify-between text-left border-b lg:border-b-0 border-r border-white/10 last:border-r-0 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+                  isActive ? 'bg-white/[0.06] text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.02]'
+                }`}
               >
-                {/* 絲滑液態金屬 Tab 高光滑塊 (無多餘二重內框) */}
                 {isActive && (
-                  <motion.div
+                  <m.div
                     layoutId="activeTabGlow"
-                    className="absolute inset-0 rounded-sm bg-dawn-gold/[0.12] shadow-[0_0_20px_rgba(212,175,55,0.25)] pointer-events-none z-0"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none"
+                    style={{ background: 'linear-gradient(90deg, #EB4A2E 0%, #D0346C 50%, #1276B8 100%)' }}
+                    transition={{ type: 'spring', stiffness: 420, damping: 32 }}
                   />
                 )}
-                <span className={`hud-eng relative z-10 text-[9px] lg:text-[10px] mono tracking-wider uppercase mb-1 whitespace-nowrap font-medium ${isActive ? 'text-dawn-gold' : 'text-zinc-400'
-                  }`}>{engName}</span>
-                <span className="hud-zht relative z-10 text-[11px] lg:text-xs font-normal tracking-wider whitespace-nowrap">{tab.name}</span>
+                <div className="w-full flex items-center justify-between gap-2 mb-1">
+                  <span className={`mono text-[9px] tracking-[0.18em] uppercase ${isActive ? 'text-spectral-crimson' : 'text-zinc-500'}`}>
+                    {engName}
+                  </span>
+                  <span className="mono text-[10px] tabular-nums text-zinc-500">
+                    [{String(tab.items.length).padStart(2, '0')}]
+                  </span>
+                </div>
+                <span className="text-xs sm:text-[13px] font-medium tracking-wider">
+                  {tab.name}
+                </span>
               </button>
             );
           })}
         </div>
 
-        {/* 品牌卡片 Grid - 手機版 3 欄 (grid-cols-3)、電腦版 5 欄 (md:grid-cols-5) */}
+        {/* 1px 細線無圓角膠片燈箱牆（桌機 4 欄 Bento，手機 2 欄完整 16:9 構圖） */}
         <div
           id="vfx-tabpanel"
           role="tabpanel"
           aria-labelledby={`vfx-tab-${activeTab}`}
-          className="relative z-10 min-h-[300px]"
+          className="relative min-h-[320px]"
         >
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{
-                duration: 0.22,
-                ease: [0.16, 1, 0.3, 1]
-              }}
-              className="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3.5"
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-[1px] bg-white/15 border border-white/15 grid-flow-dense"
             >
               {currentCategory.items.map((item, index) => (
                 <BrandCard
                   key={`${activeTab}-${item.name}-${index}`}
                   item={item}
+                  isFeatured={featuredIndices.has(index)}
                   onPlayVideo={onPlayVideo}
                 />
               ))}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </div>
       </div>

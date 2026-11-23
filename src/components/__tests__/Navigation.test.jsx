@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import Navigation from '../Navigation';
 
@@ -20,5 +20,45 @@ describe('Navigation 元件行動端對齊與互動測試', () => {
     const contactBtns = screen.getAllByText('建立聯繫');
     const mobileContactBtn = contactBtns[contactBtns.length - 1].closest('a');
     expect(mobileContactBtn).toHaveClass('px-6');
+  });
+
+  it('Scroll Spy 應在區塊進入視窗時標記 aria-current="location"，滑回頂部時清除', () => {
+    const originalIO = window.IntersectionObserver;
+    let observerCb = null;
+
+    class SpyIO {
+      constructor(cb) {
+        observerCb = cb;
+      }
+      observe() {}
+      disconnect() {}
+    }
+    window.IntersectionObserver = SpyIO;
+    global.IntersectionObserver = SpyIO;
+
+    const aboutEl = document.createElement('section');
+    aboutEl.id = 'about';
+    document.body.appendChild(aboutEl);
+
+    try {
+      render(<Navigation />);
+      const aboutLink = screen.getByText('視覺思考').closest('a');
+      expect(aboutLink).not.toHaveAttribute('aria-current');
+
+      act(() => {
+        observerCb([{ target: aboutEl, isIntersecting: true }]);
+      });
+      expect(aboutLink).toHaveAttribute('aria-current', 'location');
+
+      Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
+      act(() => {
+        window.dispatchEvent(new Event('scroll'));
+      });
+      expect(aboutLink).not.toHaveAttribute('aria-current');
+    } finally {
+      aboutEl.remove();
+      window.IntersectionObserver = originalIO;
+      global.IntersectionObserver = originalIO;
+    }
   });
 });

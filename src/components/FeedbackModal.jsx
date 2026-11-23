@@ -1,27 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 
-// 防止 Google Sheets 試算表公式注入攻擊 (CSV / Formula Injection)
 const sanitizeSheetInput = (str) => {
   if (!str) return '';
-  const trimmed = str.trim();
-  // 防禦字首與換行後的試算表公式觸發字元 (=, +, -, @, |, \t, \r)，強制補上前綴單引號轉義為純文字
-  const safeLines = trimmed.replace(/([\r\n]+)\s*([=+@\-\t\r|])/g, "$1'$2");
+  const cleaned = str.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+  const safeLines = cleaned.replace(/([\r\n]+)\s*([=+@\-\t\r|])/g, "$1'$2");
   if (/^[=+@\-\t\r|]/.test(safeLines)) {
     return `'${safeLines}`;
   }
   return safeLines;
 };
 
-// 結合 sessionStorage 與記憶體的防洪計時器 (單次成功後 20 秒冷卻，防止重新整理繞過)
 let lastSubmitTimestamp = 0;
 const COOLDOWN_MS = 20000;
+const COOLDOWN_STORAGE_KEY = 'fb_last_ts';
 const getLastSubmitTime = () => {
   try {
-    const stored = Number(sessionStorage.getItem('fb_last_ts') || 0);
+    const stored = Number(localStorage.getItem(COOLDOWN_STORAGE_KEY) || 0);
     return Math.max(lastSubmitTimestamp, stored);
   } catch {
     return lastSubmitTimestamp;
@@ -30,33 +28,36 @@ const getLastSubmitTime = () => {
 const setLastSubmitTime = (ts) => {
   lastSubmitTimestamp = ts;
   try {
-    sessionStorage.setItem('fb_last_ts', String(ts));
+    localStorage.setItem(COOLDOWN_STORAGE_KEY, String(ts));
   } catch {
-    // 忽略無痕模式或禁用 storage 的情況
+    // 忽略無痕或禁用 storage 環境
   }
 };
 
+/**
+ * 右側全高滑出式工業回饋抽屜 (Right-Side Optical Slide-Over Panel)
+ */
 export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [honeypot, setHoneypot] = useState('');
   const [openTime, setOpenTime] = useState(Date.now());
-  const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
+  const [status, setStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const closeTimerRef = useRef(null);
   const isSubmittingRef = useRef(false);
+  const hasUserInteractedRef = useRef(false);
   const abortControllerRef = useRef(null);
   const dialogRef = useRef(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
-  // 統一委託 useOverlayLock 處理背景滾動鎖定、捲軸補償、Lenis 暫停、自訂游標顯隱與焦點陷阱
   useOverlayLock(isOpen, onClose, { hideCursor: true, containerRef: dialogRef });
 
-  // 彈窗開啟與關閉時的表單狀態重設與進行中請求清理
   useEffect(() => {
     if (isOpen) {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
       isSubmittingRef.current = false;
+      hasUserInteractedRef.current = false;
       setOpenTime(Date.now());
       setHoneypot('');
       setStatus('idle');
@@ -67,9 +68,11 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
         abortControllerRef.current = null;
       };
     }
+    return undefined;
   }, [isOpen]);
 
   const handleChange = (e) => {
+    hasUserInteractedRef.current = true;
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (status === 'error') {
       setStatus('idle');
@@ -81,7 +84,6 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     e.preventDefault();
     if (isSubmittingRef.current || status === 'submitting' || status === 'success') return;
 
-    // 檢查必填項目 (姓名與留言)
     if (!formData.name || !formData.name.trim()) {
       setStatus('error');
       setErrorMessage('請填寫您的稱呼 / 姓名！');
@@ -94,7 +96,6 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
-    // 防刷冷卻保護：防止短時間內重複連擊浪費 API 配額
     const now = Date.now();
     const lastTs = getLastSubmitTime();
     if (now - lastTs < COOLDOWN_MS) {
@@ -104,8 +105,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
-    // 反自動化防禦：若機器人填入蜜罐欄位或表單開啟至送出少於 1 秒，靜默略過並偽裝成功
-    if (honeypot || (now - openTime < 1000)) {
+    if (honeypot || (now - openTime < 600 && !hasUserInteractedRef.current)) {
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
       closeTimerRef.current = setTimeout(() => {
@@ -131,12 +131,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
-      // 消毒與長度安全截斷處理
       const safeName = sanitizeSheetInput(formData.name.slice(0, 60));
       const safeEmail = sanitizeSheetInput(formData.email.slice(0, 100));
       const safeMessage = sanitizeSheetInput(formData.message.slice(0, 500));
 
-      // 改用 URLSearchParams 傳送標準表單格式，對 Google Apps Script 具備 100% 相容性
       const params = new URLSearchParams();
       params.append('name', safeName);
       params.append('email', safeEmail);
@@ -172,7 +170,6 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     }
   };
 
-  // 使用 React Portal 傳送至 document.body 脫離父層 transform 限制
   return ReactDOM.createPortal(
     <AnimatePresence>
       {isOpen && (
@@ -182,59 +179,71 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
           aria-modal="true"
           aria-labelledby="feedback-modal-title"
           data-lenis-prevent
-          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none"
+          className="fixed inset-0 z-[99999] flex justify-end select-none"
         >
-          {/* 高級暗黑毛玻璃背景遮罩 */}
-          <motion.div
+          {/* 暗房遮罩 */}
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/90 backdrop-blur-sm cursor-pointer z-0"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm cursor-pointer z-0"
           />
 
-          {/* Modal 主體奢華卡片 */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 25 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 25 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="relative w-full max-w-lg rounded-2xl bg-zinc-950 border border-white/10 p-6 sm:p-8 shadow-[0_0_90px_rgba(0,0,0,0.95)] z-10 overflow-hidden text-left my-auto"
+          {/* 右側全高滑出式磨砂毛玻璃面板 */}
+          <m.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+            className="relative w-full max-w-lg min-h-[100dvh] h-full bg-[#060912]/62 backdrop-blur-2xl backdrop-saturate-[185%] border-l border-white/18 p-7 sm:p-10 shadow-[-30px_0_80px_rgba(0,0,0,0.92)] z-10 overflow-y-auto flex flex-col justify-between text-left"
           >
-            {/* 頂部極細藍色漸層飾條 */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-aurora-blue to-transparent opacity-80" />
+            {/* 左緣光譜漫射細線 */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-y-0 left-0 w-[2px]"
+              style={{ background: 'linear-gradient(180deg, #FFFFFF 0%, #EB4A2E 42%, #D0346C 72%, #1276B8 100%)' }}
+            />
 
-            {/* 關閉按鈕 (Hover 微妙旋轉動態，符合 Apple HIG 44x44px 最小觸控熱區) */}
-            <button
-              onClick={onClose}
-              type="button"
-              className="group absolute top-4 right-4 min-w-[44px] min-h-[44px] p-2 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300 cursor-pointer z-20 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue"
-              aria-label="Close Modal"
-            >
-              <X size={18} className="transition-transform duration-300 group-hover:rotate-90" />
-            </button>
+            <div className="flex items-start justify-between border-b border-white/10 pb-6">
+              <div>
+                <span className="mono text-[10px] uppercase tracking-[0.24em] text-spectral-crimson block mb-2">
+                  DIRECT MESSAGE
+                </span>
+                <h3 id="feedback-modal-title" className="font-display text-2xl font-bold text-title-white uppercase tracking-tight">
+                  Feedback / 留下回饋
+                </h3>
+                <p className="text-xs text-zinc-400 mt-1.5 font-light">
+                  歡迎分享您的任何想法或優化建議
+                </p>
+              </div>
+
+              <button
+                onClick={onClose}
+                type="button"
+                className="min-w-[44px] min-h-[44px] -mr-2 -mt-1 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                aria-label="Close Modal"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
             {status === 'success' ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', damping: 20 }}
-                className="py-12 text-center flex flex-col items-center justify-center"
+              <m.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="my-auto py-16 text-center flex flex-col items-center justify-center"
               >
-                {/* 雙層黃光發光脈衝波紋 */}
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 rounded-full bg-amber-400/20 animate-ping duration-1000 pointer-events-none" />
-                  <div className="w-16 h-16 rounded-full bg-amber-400/10 border border-amber-400/50 flex items-center justify-center text-amber-400 shadow-[0_0_35px_rgba(251,191,36,0.45)] relative z-10">
-                    <CheckCircle2 size={32} />
-                  </div>
+                <div className="w-14 h-14 border border-spectral-crimson/60 bg-spectral-crimson/10 flex items-center justify-center text-spectral-crimson mb-6">
+                  <CheckCircle2 size={28} />
                 </div>
-                <h3 className="text-xl font-bold text-white tracking-wider">
+                <h4 className="text-xl font-semibold text-white tracking-wide">
                   感謝你的回饋
-                </h3>
-              </motion.div>
+                </h4>
+              </m.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                {/* 逼真偽裝的蜜罐欄位 (移至螢幕外，避開啟發式偵測，機器人填寫將觸發靜默攔截) */}
+              <form onSubmit={handleSubmit} className="space-y-6 my-auto py-8" noValidate>
                 <input
                   type="text"
                   name="corporate_organization"
@@ -246,20 +255,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   aria-hidden="true"
                 />
 
-                {/* Header 區塊 */}
-                <div className="mb-6">
-                  <h3 id="feedback-modal-title" className="text-xl sm:text-2xl font-black text-white tracking-tight uppercase glow-title">
-                    Feedback / 留下回饋
-                  </h3>
-                  <p className="text-xs text-zinc-400 mt-1.5 font-light">
-                    歡迎分享您的任何想法或優化建議
-                  </p>
-                </div>
-
-                {/* 稱呼欄位 */}
                 <div>
-                  <label htmlFor="feedback-name" className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Name / 您的稱呼 <span className="text-aurora-blue">*</span>
+                  <label htmlFor="feedback-name" className="block text-xs mono uppercase tracking-wider text-zinc-400 mb-2">
+                    Name / 您的稱呼 <span className="text-spectral-crimson">*</span>
                   </label>
                   <input
                     id="feedback-name"
@@ -269,13 +267,12 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="例如：Alex Chen"
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 select-text"
+                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors select-text"
                   />
                 </div>
 
-                {/* Email / LINE 欄位 */}
                 <div>
-                  <label htmlFor="feedback-email" className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
+                  <label htmlFor="feedback-email" className="block text-xs mono uppercase tracking-wider text-zinc-400 mb-2">
                     Email / LINE
                   </label>
                   <input
@@ -286,45 +283,42 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="name@example.com 或 LINE ID"
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 select-text"
+                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors select-text"
                   />
                 </div>
 
-                {/* 留言內容欄位 */}
                 <div>
-                  <label htmlFor="feedback-message" className="block text-xs font-medium mono uppercase tracking-wider text-zinc-400 mb-1.5">
-                    Message / 回饋內容 <span className="text-aurora-blue">*</span>
+                  <label htmlFor="feedback-message" className="block text-xs mono uppercase tracking-wider text-zinc-400 mb-2">
+                    Message / 回饋內容 <span className="text-spectral-crimson">*</span>
                   </label>
                   <textarea
                     id="feedback-message"
                     name="message"
-                    rows={4}
+                    rows={5}
                     maxLength={500}
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="請輸入您的寶貴建議..."
-                    className="w-full rounded-md bg-zinc-900/80 border border-white/10 px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-aurora-blue focus:ring-1 focus:ring-aurora-blue/40 focus:shadow-[0_0_20px_rgba(212,175,55,0.18)] transition-all duration-300 resize-none select-text"
+                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors resize-none select-text"
                   />
                 </div>
 
-                {/* 錯誤提示氣泡 */}
                 {status === 'error' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6 }}
+                  <m.div
+                    initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2.5 p-3.5 rounded-md bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs backdrop-blur-md"
+                    className="flex items-center gap-2.5 p-3.5 bg-spectral-crimson/10 border border-spectral-crimson/40 text-zinc-100 text-xs"
                   >
-                    <AlertCircle size={15} className="shrink-0 text-rose-400" />
+                    <AlertCircle size={15} className="shrink-0 text-spectral-crimson" />
                     <span>{errorMessage || '連線失敗，請檢查網路或稍後再試。'}</span>
-                  </motion.div>
+                  </m.div>
                 )}
 
-                {/* Action 按鈕組 */}
-                <div className="flex items-center justify-end gap-3 pt-3">
+                <div className="flex items-center justify-end gap-4 pt-4 border-t border-white/10">
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-5 py-2.5 rounded-md text-xs mono uppercase tracking-wider text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer active:scale-95"
+                    className="px-5 py-3 text-xs mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -332,7 +326,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="group relative flex items-center gap-2 px-6 py-2.5 rounded-md bg-aurora-blue text-black font-bold text-xs mono uppercase tracking-wider hover:bg-white transition-all duration-300 disabled:opacity-50 shadow-[0_0_20px_rgba(212,175,55,0.28)] hover:shadow-[0_0_25px_rgba(212,175,55,0.48)] cursor-pointer active:scale-[0.97]"
+                    className="spectral-cta flex items-center gap-2.5 px-7 py-3.5 text-xs mono uppercase tracking-[0.2em] disabled:opacity-50 cursor-pointer"
                   >
                     {status === 'submitting' ? (
                       <>
@@ -341,7 +335,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                       </>
                     ) : (
                       <>
-                        <Send size={14} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        <Send size={13} />
                         <span>Submit Feedback</span>
                       </>
                     )}
@@ -349,7 +343,11 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 </div>
               </form>
             )}
-          </motion.div>
+
+            <div className="pt-4 border-t border-white/[0.06] mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
+              BEARD CHOU STUDIO &middot; TAIPEI
+            </div>
+          </m.div>
         </div>
       )}
     </AnimatePresence>,

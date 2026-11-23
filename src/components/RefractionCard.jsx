@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 const hoverNoneQuery =
   typeof window !== 'undefined' ? window.matchMedia?.('(hover: none)') : null;
 
-export default function RefractionCard({ children, className = '', variant = 'glass', ...props }) {
+export default function RefractionCard({ children, className = '', ...props }) {
   const cardRef = useRef(null);
   const rafRef = useRef(null);
   const rectRef = useRef(null);
@@ -17,11 +17,9 @@ export default function RefractionCard({ children, className = '', variant = 'gl
   }, []);
 
   const handleMouseEnter = () => {
-    if (hoverNoneQuery?.matches) return;
-    if (cardRef.current) {
-      rectRef.current = cardRef.current.getBoundingClientRect();
-      scrollYRef.current = window.scrollY;
-    }
+    if (hoverNoneQuery?.matches || !cardRef.current) return;
+    rectRef.current = cardRef.current.getBoundingClientRect();
+    scrollYRef.current = window.scrollY;
   };
 
   const handleMouseMove = (e) => {
@@ -52,15 +50,13 @@ export default function RefractionCard({ children, className = '', variant = 'gl
     }
   };
 
-  const borderClass = variant === 'glass' ? 'glass-prism-border' : 'prism-border';
-
   return (
     <div
       ref={cardRef}
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`${borderClass} ${className}`}
+      className={`optical-surface ${className}`}
       {...props}
     >
       {children}

@@ -1,16 +1,16 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { emilSpring, tapFeedback } from '../utils/motion';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 
-// 錨點跳轉專用曲線（Lenis 全域已改 lerp，程式化跳轉在此個別帶入時間曲線）
+const SECTION_IDS = ['introduction', 'about', 'vfx', 'contact'];
+
 const LENIS_ANCHOR_OPTIONS = {
   duration: 1.05,
   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
 };
 
-// 獨立的平滑滾動 Helper
 let scrollRafId = null;
 const animateScrollTo = (targetY, duration = 400) => {
   if (scrollRafId) {
@@ -24,33 +24,32 @@ const animateScrollTo = (targetY, duration = 400) => {
   const startPosition = window.scrollY;
   const distance = targetY - startPosition;
   let startTime = null;
-
-  const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1);
 
   const step = (timestamp) => {
     if (!startTime) startTime = timestamp;
     const progress = timestamp - startTime;
     const percent = Math.min(progress / duration, 1);
-    const easedPercent = easeInOutCubic(percent);
-    window.scrollTo(0, startPosition + distance * easedPercent);
+    window.scrollTo(0, startPosition + distance * easeInOutCubic(percent));
     if (progress < duration) {
       scrollRafId = requestAnimationFrame(step);
     } else {
       scrollRafId = null;
     }
   };
-
   scrollRafId = requestAnimationFrame(step);
 };
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
   const drawerRef = useRef(null);
+  const progressBarRef = useRef(null);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (scrollRafId) {
         cancelAnimationFrame(scrollRafId);
@@ -59,25 +58,59 @@ export default function Navigation() {
     };
   }, []);
 
-  // 統一委託 useOverlayLock 處理背景滾動鎖定、捲軸補償、Lenis 暫停、Escape 關閉與焦點陷阱
+  // Scroll Spy + 頂部 1px 全站光譜滾動進度線（直寫 transform，零重排）
+  useEffect(() => {
+    let observer = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      const elements = SECTION_IDS.map((id) => document.getElementById(id)).filter(Boolean);
+      if (elements.length > 0) {
+        observer = new IntersectionObserver(
+          (entries) => {
+            for (let i = 0; i < entries.length; i += 1) {
+              if (entries[i].isIntersecting) {
+                setActiveSection(entries[i].target.id);
+              }
+            }
+          },
+          { rootMargin: '-35% 0px -55% 0px' }
+        );
+        elements.forEach((el) => observer.observe(el));
+      }
+    }
+
+    const handleScroll = () => {
+      if (window.scrollY < 160) {
+        setActiveSection((prev) => (prev ? '' : prev));
+      }
+      if (progressBarRef.current) {
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const ratio = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+        progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   useOverlayLock(isOpen, closeMenu, { containerRef: drawerRef });
 
-  // 當視窗拉寬至桌機斷點 (>= 768px) 時自動收合行動選單
-  React.useEffect(() => {
-    if (!isOpen) return;
+  useEffect(() => {
+    if (!isOpen) return undefined;
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsOpen(false);
-      }
+      if (window.innerWidth >= 768) setIsOpen(false);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [isOpen]);
 
   const menuItems = [
-    { name: '個人介紹', eng: 'CREATIVE PROFILE', href: '#introduction' },
-    { name: '視覺思考', eng: 'VISUAL LOGIC', href: '#about' },
-    { name: '作品案例', eng: 'PRODUCTION FILES', href: '#vfx' },
+    { name: '個人介紹', eng: '01 / PROFILE', href: '#introduction' },
+    { name: '視覺思考', eng: '02 / MANIFESTO', href: '#about' },
+    { name: '作品案例', eng: '03 / ARCHIVE', href: '#vfx' },
   ];
 
   const handleScroll = (e, href) => {
@@ -85,22 +118,23 @@ export default function Navigation() {
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
     if (!element) return;
-    
-    setIsOpen(false); // 關閉行動版選單
+
+    setActiveSection(targetId);
+    setIsOpen(false);
     document.body.style.overflow = '';
     document.body.classList.remove('modal-open');
 
     if (window.lenis) {
       window.lenis.start();
-      window.lenis.scrollTo(element, { offset: -85, ...LENIS_ANCHOR_OPTIONS });
+      window.lenis.scrollTo(element, { offset: -76, ...LENIS_ANCHOR_OPTIONS });
       return;
     }
-
-    animateScrollTo(element.getBoundingClientRect().top + window.scrollY - 85);
+    animateScrollTo(element.getBoundingClientRect().top + window.scrollY - 76);
   };
 
   const scrollToTop = (e) => {
     if (e) e.preventDefault();
+    setActiveSection('');
     setIsOpen(false);
     document.body.style.overflow = '';
     document.body.classList.remove('modal-open');
@@ -114,82 +148,93 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 px-4 md:px-8 py-4 md:py-6 flex justify-between items-center border-b border-border bg-bg-core/95 transition-colors duration-500">
-        {/* 導覽列底部極細微光漸層雷射線 */}
-        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-aurora-blue/40 to-transparent pointer-events-none opacity-70" />
+      <nav className="fixed top-0 w-full z-50 px-5 md:px-10 h-16 md:h-[72px] flex justify-between items-center border-b border-white/[0.12] bg-[#05080F]/45 backdrop-blur-xl backdrop-saturate-[180%] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)]">
+        {/* 頂部最上緣 1px 光譜滾動進度線 */}
+        <div
+          ref={progressBarRef}
+          aria-hidden="true"
+          style={{
+            transform: 'scaleX(0)',
+            background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 38%, #D0346C 68%, #1276B8 100%)',
+          }}
+          className="absolute top-0 left-0 right-0 h-[1.5px] origin-left pointer-events-none will-change-transform"
+        />
 
-        <div className="flex items-center gap-3 md:gap-6">
-          <motion.button
+        <div className="flex items-center gap-3 md:gap-5">
+          <m.button
             type="button"
             whileTap={tapFeedback}
             onClick={toggleMenu}
-            className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-white-or-black hover:text-aurora-blue transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
+            className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-title-white hover:text-spectral-crimson transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
             aria-label="Toggle Navigation Menu"
           >
-            <Menu size={24} />
-          </motion.button>
-          <motion.button
+            <Menu size={22} />
+          </m.button>
+
+          <button
             type="button"
-            whileTap={tapFeedback}
             onClick={scrollToTop}
-            className="text-lg md:text-xl font-black tracking-tighter font-space-mono text-white-or-black hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue cursor-pointer text-left rounded-sm"
+            className="group flex items-center gap-3 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson cursor-pointer"
             aria-label="Beard Showreel - Scroll to top"
           >
-            Beard<span className="text-aurora-blue"> Showreel</span>
-          </motion.button>
+            <span className="font-space-mono text-lg md:text-xl font-bold tracking-tighter text-title-white group-hover:opacity-85 transition-opacity">
+              Beard<span className="text-spectral-crimson"> Showreel</span>
+            </span>
+          </button>
         </div>
-        
-        <div className="flex items-center space-x-3">
-          {/* 熱區：每個連結加 px-5 py-3（與右側 CTA 同尺寸），間距由 space-x-12 改 space-x-2
-              → 文字之間視覺距離維持 48px（20 + 8 + 20），但整塊框框範圍都可感應 */}
-          <div className="hidden md:flex space-x-2">
-            {menuItems.map((item) => (
-              <motion.a
-                key={item.href}
-                href={item.href}
-                whileHover={{ y: -1 }}
-                whileTap={tapFeedback}
-                transition={emilSpring.snappy}
-                onClick={(e) => handleScroll(e, item.href)}
-                className="px-5 py-3 border border-transparent leading-none hover:text-dawn-gold transition-colors duration-300 group flex items-center justify-center focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none cursor-pointer"
-              >
-                {/* 底線掛在文字 span 上，寬度只跟文字等寬，不會被 padding 撐大 */}
-                <span className="relative text-xs font-normal tracking-wider">
-                  {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-dawn-gold transition-all duration-300 group-hover:w-full" />
-                </span>
-              </motion.a>
-            ))}
+
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="hidden md:flex items-center gap-1">
+            {menuItems.map((item) => {
+              const isCurrent = activeSection === item.href.slice(1);
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isCurrent ? 'location' : undefined}
+                  onClick={(e) => handleScroll(e, item.href)}
+                  className={`relative px-4 py-2.5 text-xs tracking-widest transition-colors duration-200 group focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson cursor-pointer ${
+                    isCurrent ? 'text-white font-medium' : 'text-zinc-400 hover:text-title-white'
+                  }`}
+                >
+                  <span>{item.name}</span>
+                  <span
+                    className={`absolute bottom-1 left-4 right-4 h-[1.5px] transition-transform duration-300 origin-left ${
+                      isCurrent ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                    }`}
+                    style={{
+                      background: 'linear-gradient(90deg, #EB4A2E 0%, #1276B8 100%)',
+                    }}
+                  />
+                </a>
+              );
+            })}
           </div>
 
-          <motion.a
+          <a
             href="#contact"
-            whileTap={tapFeedback}
-            whileHover={{ scale: 1.02 }}
-            transition={emilSpring.snappy}
+            aria-current={activeSection === 'contact' ? 'location' : undefined}
             onClick={(e) => handleScroll(e, '#contact')}
-            className="hidden md:flex hud-btn is-active px-5 py-3 items-center justify-center text-center leading-none focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm outline-none hover:shadow-[0_0_18px_rgba(212,175,55,0.25)] transition-shadow duration-300 cursor-pointer"
+            className="hidden md:inline-flex spectral-cta px-5 py-2.5 text-xs tracking-[0.18em] uppercase items-center justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson cursor-pointer"
           >
-            <span className="hud-zht text-xs font-normal uppercase tracking-widest">建立聯繫</span>
-          </motion.a>
+            <span>建立聯繫</span>
+          </a>
         </div>
       </nav>
 
-      {/* 行動裝置側邊選單：Emil Kowalski 物理彈簧抽屜 */}
+      {/* 行動裝置側邊選單：90 度銳利直角暗房面板 */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* 背景遮罩 */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={toggleMenu}
-              className="fixed inset-0 bg-black/50 backdrop-blur-md z-[999] md:hidden"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999] md:hidden"
             />
-            {/* 側邊選單主體 */}
-            <motion.div
+            <m.div
               ref={drawerRef}
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
@@ -197,46 +242,59 @@ export default function Navigation() {
               transition={emilSpring.gentle}
               data-lenis-prevent
               aria-label="行動版導覽選單"
-              className="fixed top-0 left-0 w-[80%] max-w-[320px] min-h-[100dvh] h-screen bg-bg-core/98 z-[1000] md:hidden flex flex-col justify-center p-8 gap-8 border-r border-border shadow-2xl"
+              className="fixed top-0 left-0 w-[82%] max-w-[320px] min-h-[100dvh] h-screen bg-[#060911]/72 backdrop-blur-2xl backdrop-saturate-[180%] z-[1000] md:hidden flex flex-col justify-between p-8 border-r border-white/15"
             >
-              <motion.button
-                type="button"
-                whileTap={tapFeedback}
-                onClick={toggleMenu}
-                className="absolute top-5 right-5 text-white-or-black hover:text-aurora-blue transition-colors min-w-[44px] min-h-[44px] p-2 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-full"
-                aria-label="Close Menu"
-              >
-                <X size={24} />
-              </motion.button>
-
-              <div className="flex flex-col gap-6">
-                {menuItems.map((item, index) => (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
-                    whileTap={tapFeedback}
-                    onClick={(e) => handleScroll(e, item.href)}
-                    className="text-base font-normal uppercase tracking-tighter mono text-white-or-black hover:text-aurora-blue transition-colors duration-200 flex flex-col px-6 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-blue rounded-sm"
-                  >
-                    <span className="text-[11px] text-zinc-400 font-medium tracking-widest mono mb-1">{item.eng}</span>
-                    {item.name}
-                  </motion.a>
-                ))}
+              <div className="flex items-center justify-between border-b border-white/10 pb-5">
+                <span className="mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+                  NAVIGATION
+                </span>
+                <button
+                  type="button"
+                  onClick={toggleMenu}
+                  className="text-title-white hover:text-spectral-crimson transition-colors min-w-[44px] min-h-[44px] -mr-2 flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                  aria-label="Close Menu"
+                >
+                  <X size={22} />
+                </button>
               </div>
 
-              <motion.a
+              <div className="flex flex-col gap-6 my-auto">
+                {menuItems.map((item, index) => {
+                  const isCurrent = activeSection === item.href.slice(1);
+                  return (
+                    <m.a
+                      key={item.href}
+                      href={item.href}
+                      aria-current={isCurrent ? 'location' : undefined}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
+                      onClick={(e) => handleScroll(e, item.href)}
+                      className={`text-lg font-medium tracking-tight transition-colors duration-200 flex flex-col px-6 py-1 border-l-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+                        isCurrent
+                          ? 'text-white border-spectral-crimson'
+                          : 'text-zinc-300 hover:text-white border-white/10'
+                      }`}
+                    >
+                      <span className={`text-[10px] mono tracking-[0.22em] mb-1 ${isCurrent ? 'text-spectral-crimson' : 'text-zinc-500'}`}>
+                        {item.eng}
+                      </span>
+                      {item.name}
+                    </m.a>
+                  );
+                })}
+              </div>
+
+              <a
                 href="#contact"
-                whileTap={tapFeedback}
+                aria-current={activeSection === 'contact' ? 'location' : undefined}
                 onClick={(e) => handleScroll(e, '#contact')}
-                className="hud-btn is-active w-fit px-6 py-3.5 flex flex-col items-start justify-center leading-none mt-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-dawn-gold rounded-sm"
+                className="spectral-cta w-full px-6 py-4 flex flex-col items-start justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
               >
-                <span className="hud-eng text-[10px] opacity-70 tracking-widest mono mb-1.5 uppercase">Establish Connection</span>
-                <span className="hud-zht text-base font-normal uppercase tracking-widest">建立聯繫</span>
-              </motion.a>
-            </motion.div>
+                <span className="text-[10px] opacity-70 tracking-[0.22em] mono mb-1.5 uppercase">Establish Connection</span>
+                <span className="text-base font-semibold tracking-widest">建立聯繫</span>
+              </a>
+            </m.div>
           </>
         )}
       </AnimatePresence>

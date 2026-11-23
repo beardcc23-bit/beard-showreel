@@ -149,3 +149,23 @@
   - `src/App.jsx` & `src/index.css`：根容器與 `body` 升級為 `overflow-x: clip` 消除雙層隱式捲動容器；為 `.ring-middle` 與 `.gold-flow-border::before` 補齊 `will-change: transform` 隔離旋轉合成層。
 - **測試覆蓋**：全站擴充至 13 個測試檔、39 項單元測試 100% 通過，`npm audit` 維持 `0 vulnerabilities`。
 
+## 2026-11-23
+
+### 已完成：v2 暗房光學磨砂玻璃視覺重塑與架構升級（舊版已封存於 `archive/v1-classic` / `v1.0.0`）
+- **舊版完整歸檔**：
+  - 原 v1 經典版（Commit `259f296`）已建立永久分支 `archive/v1-classic`、`v1.0.0` 版本標籤，並於本機保留 `beard-showreel-v1-archive` 實體備份。
+- **WebGL 流體色散光影引擎（`OpticalLightField.jsx`）**：
+  - 新增原生 WebGL GLSL 流體色散 Shader（無 WebGL 時自動降級至 `public/optical-streak.webp` 光譜備援層），光源固定於左側／左下角往右上 40°~45° 斜射，深黑底色（`#030407`）佔比維持 52%~58%，彈窗開啟或背景分頁時自動暫停 rAF。
+  - 移除舊版 `CursorGlow.jsx`、`MobileAuroraBackground.jsx` 與 `useParallaxOrbit.js`，恢復系統原生游標。
+- **純淨磨砂毛玻璃與 3D 導光厚邊（`src/index.css`）**：
+  - 統一 `.optical-surface` 柔霧磨砂玻璃，搭配 `::before`（右側 `8px` `skewY(-26.565deg)`）與 `::after`（頂部 `4px` `skewX(-63.435deg)`）無縫咬合 3D 玻璃厚度斷面，以暗房深黑底色摻雜慢速流轉色散光。
+- **全站字體與五幕版面重構**：
+  - 字體升級為 `Space Grotesk` + `Plus Jakarta Sans` + `JetBrains Mono` + `Noto Sans TC`。
+  - `Hero` / `CanvasSequence` 與 `Introduction` 肖像採無外框純淨呈現，並為備援序列導入滑動視窗（前方 24 格＋後方 6 格）記憶體回收。
+  - `Manifesto` 改為左欄 `sticky` 宣言＋右欄三層滾動堆疊磨砂分鏡卡；`VisualSynthesis` 升級為前 2 支主推 `2x2` Bento ＋ `1px` 燈箱牆。
+  - `Contact` 重構為瑞士 `7:5` 雙欄 `1px` 分割厚玻璃互動艙；`FeedbackModal` 改為右側全高滑出式磨砂玻璃抽屜。
+- **資安與測試強化**：
+  - `vercel.json` 收緊 `script-src 'self'` 與 `Cross-Origin-Opener-Policy: same-origin`；`Modal.jsx` 升級為 `youtube-nocookie.com` 搭配 `sandbox`；`url.js` 實作外部網域白名單與本地圖片路徑校驗；`robots.txt` 開放 `ChatGPT-User` 提升 AI 搜尋引用率。
+  - 全站 13 個測試檔、39 項單元測試與生產建置全數通過。
+
+

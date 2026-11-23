@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Check, MessageSquareText } from 'lucide-react';
+import { m } from 'framer-motion';
+import { Check, Copy, ArrowRight, MessageSquareText } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
 import { useClipboard } from '../hooks/useClipboard';
 
+/**
+ * 第五幕 Contact：瑞士雙欄分割厚玻璃艙（左艙信箱複製 × 右艙滑出式回饋抽屜觸發器）
+ */
 export default function Contact() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-  // 動態拼裝 Email，避免爬蟲透過靜態正則直接收割郵件地址
   const emailUser = 'beard.cc23';
   const emailDomain = 'gmail.com';
   const email = `${emailUser}@${emailDomain}`;
   const { copied, copy } = useClipboard(2500);
 
-  // 部署好的 Google Apps Script Web App URL (優先使用環境變數配置)
   const GAS_SCRIPT_URL =
     import.meta.env.VITE_GAS_SCRIPT_URL ||
     'https://script.google.com/macros/s/AKfycbyqnxsdu2s0De5mrIKdmeharnJiy__hLyRyAnhZKzKjEDmXoCjUQYHrlUmmvShbnS7O/exec';
@@ -27,100 +28,121 @@ export default function Contact() {
   }, []);
 
   return (
-    <section id="contact" className="relative overflow-hidden py-32">
-      {/* 科技光點背景 */}
-      <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+    <section
+      id="contact"
+      className="relative overflow-hidden py-32 md:py-44 px-5 md:px-12 border-t border-white/[0.08]"
+    >
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* 左對齊緊密收攏標頭 */}
+        <div className="max-w-2xl mb-12 md:mb-16">
+          <span className="mono text-xs uppercase tracking-[0.26em] text-spectral-crimson block mb-4">
+            04 / DIRECT INQUIRY
+          </span>
+          <m.h2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="font-display text-[clamp(2.6rem,7vw,5.75rem)] font-bold uppercase tracking-[-0.04em] leading-[0.94] text-title-white"
+          >
+            Let&apos;s Connect<span className="text-spectral-crimson">.</span>
+          </m.h2>
 
-      <div className="max-w-4xl mx-auto px-8 text-center relative z-10">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-[clamp(2.2rem,8.5vw,8.5rem)] font-black tracking-tighter uppercase mb-12 md:mb-16 glow-title text-center mx-auto whitespace-nowrap"
-        >
-          Let's <span className="text-aurora-blue">Connect</span>
-        </motion.h2>
+          <m.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.08 }}
+            className="mt-5 text-zinc-300 font-light text-sm sm:text-base leading-relaxed"
+          >
+            隨時歡迎來信交流，探討影像與設計的更多可能。
+          </m.p>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-zinc-300 mb-16 font-light text-sm sm:text-lg max-w-xl mx-auto leading-relaxed"
-        >
-          隨時歡迎來信交流，探討影像與設計的更多可能。
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col items-center justify-center gap-6"
-        >
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {/* Email 複製按鈕 */}
-            <button
-              type="button"
-              onClick={handleCopyEmail}
-              className="group relative overflow-hidden flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 focus-visible:ring-2 focus-visible:ring-aurora-blue outline-none transition-all duration-300 backdrop-blur-none sm:backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start text-left"
-              title="點擊複製 Email 地址"
-              aria-label={`複製 Email 地址: ${email}`}
-            >
-              {/* 寫實高透玻璃邊緣動態高光條 */}
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-              <span className={`p-2.5 rounded-sm transition-colors duration-300 flex items-center justify-center shrink-0 ${copied ? 'bg-aurora-blue text-black shadow-[0_0_15px_rgba(212,175,55,0.45)]' : 'bg-aurora-blue text-black group-hover:bg-white'}`}>
-                {copied ? <Check size={18} /> : <Mail size={18} />}
+        {/* 瑞士雙欄 1px 分割厚玻璃互動艙（保留外層無 overflow-hidden 以完整呈現右上 3D 玻璃厚度斷面） */}
+        <div className="optical-surface grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.10]">
+          {/* 左艙（7/12）：點擊複製信箱 */}
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            title="點擊複製 Email 地址"
+            aria-label={`複製 Email 地址: ${email}`}
+            className="lg:col-span-7 w-full min-h-[180px] sm:min-h-[220px] p-7 sm:p-10 md:p-11 flex flex-col justify-between text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group"
+          >
+            <span className="w-full flex flex-wrap items-center justify-between gap-3 mb-10">
+              <span className="mono text-[10px] uppercase tracking-[0.26em] text-zinc-400">
+                DIRECT MAIL
               </span>
+              {copied ? (
+                <span
+                  role="status"
+                  aria-live="polite"
+                  className="inline-flex items-center gap-1.5 mono text-[10px] uppercase tracking-[0.22em] text-spectral-crimson"
+                >
+                  <Check size={12} className="shrink-0" />
+                  <span>COPIED TO CLIPBOARD // 成功複製 EMAIL</span>
+                </span>
+              ) : (
+                <span className="mono text-[10px] uppercase tracking-[0.24em] text-zinc-500 group-hover:text-zinc-300 transition-colors">
+                  CLICK TO COPY
+                </span>
+              )}
+            </span>
 
-              <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300 truncate">
+            <span className="w-full flex items-end justify-between gap-4">
+              <span className="font-display text-[clamp(1.35rem,3.2vw,2.6rem)] font-medium tracking-[-0.02em] leading-none text-title-white group-hover:text-white transition-colors duration-300 break-all">
                 {email}
               </span>
-            </button>
-
-            {/* 回饋按鈕 */}
-            <button
-              type="button"
-              onClick={() => setIsFeedbackOpen(true)}
-              className="group relative overflow-hidden flex items-center gap-4 w-full sm:w-[330px] px-6 py-4 rounded-sm bg-white/[0.03] border border-white/10 hover:border-aurora-blue/80 focus-visible:ring-2 focus-visible:ring-aurora-blue outline-none transition-all duration-300 backdrop-blur-none sm:backdrop-blur-md shadow-xl hover:-translate-y-0.5 cursor-pointer justify-start"
-              aria-label="開啟回饋表單"
-            >
-              {/* 寫實高透玻璃邊緣動態高光條 */}
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              <span className="p-2.5 rounded-sm bg-aurora-blue text-black flex items-center justify-center shrink-0 group-hover:bg-white transition-colors duration-300">
-                <MessageSquareText size={18} />
+              <span className="w-10 h-10 shrink-0 border border-white/[0.12] bg-white/[0.02] group-hover:border-spectral-crimson/60 group-hover:bg-spectral-crimson/10 flex items-center justify-center transition-colors duration-300">
+                {copied ? (
+                  <Check size={17} className="text-spectral-crimson" />
+                ) : (
+                  <Copy
+                    size={16}
+                    className="text-zinc-400 group-hover:text-title-white transition-colors"
+                  />
+                )}
               </span>
-              <span className="mono text-sm sm:text-base tracking-wider text-zinc-200 group-hover:text-aurora-blue transition-colors duration-300 whitespace-nowrap">
-                FEEDBACK / 留下回饋
-              </span>
-            </button>
-          </div>
+            </span>
+          </button>
 
-          {/* 複製成功 HUD Toast 視覺提示 */}
-          <AnimatePresence>
-            {copied && (
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-                role="status"
-                aria-live="polite"
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950/95 border border-aurora-blue/40 text-aurora-blue shadow-[0_0_20px_rgba(212,175,55,0.22)] backdrop-blur-xl select-none"
-              >
-                <Check size={12} />
-                <span className="mono text-[10px] uppercase tracking-widest font-black">
-                  COPIED TO CLIPBOARD // 成功複製 EMAIL
+          {/* 右艙（5/12）：開啟右側滑出式回饋抽屜 */}
+          <button
+            type="button"
+            onClick={() => setIsFeedbackOpen(true)}
+            aria-label="開啟回饋表單"
+            className="lg:col-span-5 w-full min-h-[180px] sm:min-h-[220px] p-7 sm:p-10 md:p-11 flex flex-col justify-between text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group"
+          >
+            <span className="w-full flex items-center justify-between gap-3 mb-10">
+              <span className="mono text-[10px] uppercase tracking-[0.26em] text-zinc-400">
+                FEEDBACK
+              </span>
+              <MessageSquareText
+                size={14}
+                className="text-zinc-500 group-hover:text-spectral-crimson transition-colors duration-300"
+              />
+            </span>
+
+            <span className="w-full flex items-end justify-between gap-4">
+              <span>
+                <span className="block font-display text-[clamp(1.35rem,2.6vw,2.15rem)] font-medium tracking-[-0.02em] leading-none text-title-white">
+                  Leave a Note
                 </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+                <span className="block mt-2.5 text-xs sm:text-sm text-zinc-400 font-light tracking-wide group-hover:text-zinc-200 transition-colors">
+                  留下回饋與專案諮詢
+                </span>
+              </span>
+              <span className="w-10 h-10 shrink-0 border border-white/[0.12] bg-white/[0.02] group-hover:border-spectral-crimson/60 group-hover:bg-spectral-crimson/10 flex items-center justify-center transition-colors duration-300">
+                <ArrowRight
+                  size={16}
+                  className="text-zinc-400 group-hover:text-title-white group-hover:translate-x-0.5 transition-all duration-300"
+                />
+              </span>
+            </span>
+          </button>
+        </div>
       </div>
 
-      {/* 回饋 Modal 彈窗 */}
       <FeedbackModal
         isOpen={isFeedbackOpen}
         onClose={handleCloseFeedback}

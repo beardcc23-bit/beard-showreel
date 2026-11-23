@@ -2,30 +2,36 @@ import React, { useRef } from 'react';
 import CanvasSequence from './CanvasSequence';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
+/**
+ * 第一幕 Hero：純粹置中影像舞台（無任何疊壓文字遮擋作品畫面）
+ */
 export default function Hero({ onPlayVideo, isModalOpen, onLoaded }) {
   const sectionRef = useRef(null);
   useOffscreenPause(sectionRef);
 
   return (
-    <section ref={sectionRef} className="relative min-h-[100dvh] h-screen w-full flex items-center justify-center overflow-hidden bg-transparent">
-      {/* 語意化首頁核心標題 (提供搜尋引擎 AEO/SEO 與螢幕閱讀器，視覺隱藏保持電影純粹感) */}
+    <section
+      ref={sectionRef}
+      className="relative min-h-[100dvh] h-screen w-full flex items-center justify-center px-4 md:px-10 overflow-hidden bg-transparent"
+    >
+      {/* 語意化首頁標題（僅供搜尋引擎與無障礙讀取，畫面完全不顯示） */}
       <h1 className="sr-only">Beard Chou 周威全 | 視覺創造 (Autodesk Flame VFX)</h1>
 
-      {/* 序列圖畫布區：絕對置中，無重疊文字 */}
-      <div className="absolute inset-0 z-0">
-        {/* 電影感漸層遮罩：退至背景層，不遮擋畫布播放 */}
-        <div className="absolute inset-0 cinematic-gradient z-0 pointer-events-none" />
-        <CanvasSequence onPlayVideo={onPlayVideo} isModalOpen={isModalOpen} onLoaded={onLoaded} />
+      {/* 置中純淨連續圖 / 影片銀幕 */}
+      <div className="w-full max-w-[1060px] mx-auto relative z-10">
+        <CanvasSequence
+          onPlayVideo={onPlayVideo}
+          isModalOpen={isModalOpen}
+          onLoaded={onLoaded}
+        />
       </div>
 
-
-
-      {/* 下滑提示：科技感閃爍微箭頭 */}
-      <div className="absolute bottom-10 inset-x-0 z-30 flex flex-col items-center gap-2 animate-bounce pointer-events-none opacity-50">
-        <span className="mono text-[10px] sm:text-[11px] uppercase tracking-[0.25em] pl-[0.25em] text-white/80 font-medium">Scroll to Sync</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-aurora-blue">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
+      {/* 底部極簡靜謐下滑提示 */}
+      <div className="absolute bottom-8 inset-x-0 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-45">
+        <span className="mono text-[10px] uppercase tracking-[0.28em] pl-[0.28em] text-zinc-300">
+          Scroll
+        </span>
+        <span className="w-[1px] h-5 bg-gradient-to-b from-spectral-crimson to-transparent" />
       </div>
     </section>
   );

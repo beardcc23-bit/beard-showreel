@@ -58,7 +58,7 @@ describe('CanvasSequence（Hero 循環播放器）', () => {
     const onLoaded = vi.fn();
     render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} onLoaded={onLoaded} />);
     expect(playSpy).toHaveBeenCalled();
-    expect(screen.getByText('INITIALIZING VISUAL MATRIX')).toBeInTheDocument();
+    expect(screen.getByText('LOADING REEL')).toBeInTheDocument();
 
     unlock();
     expect(onLoaded).toHaveBeenCalledTimes(1);
@@ -125,5 +125,44 @@ describe('CanvasSequence（Hero 循環播放器）', () => {
 
     expect(video.currentTime).toBe(0);
     expect(playSpy).toHaveBeenCalled();
+  });
+
+  it('序列備援模式應採用滑動視窗載入影格，不一次將全部 145 格載入記憶體', async () => {
+    const requestedSrcs = [];
+    const OriginalImage = global.Image;
+    class TrackingImage {
+      set src(val) {
+        this._src = val;
+        if (val.includes('png-0_')) {
+          requestedSrcs.push(val);
+        }
+        if (typeof this.onload === 'function') {
+          this.onload();
+        }
+      }
+      get src() {
+        return this._src;
+      }
+    }
+    global.Image = TrackingImage;
+    window.Image = TrackingImage;
+
+    playSpy.mockImplementation(() =>
+      Promise.reject(Object.assign(new Error('blocked'), { name: 'NotAllowedError' }))
+    );
+
+    try {
+      render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      // 只預載前方滑動視窗（0 ~ 24 共 25 格），而非全部 145 格
+      expect(requestedSrcs.length).toBeGreaterThan(0);
+      expect(requestedSrcs.length).toBeLessThanOrEqual(25);
+    } finally {
+      global.Image = OriginalImage;
+      window.Image = OriginalImage;
+    }
   });
 });
