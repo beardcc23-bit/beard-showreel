@@ -86,19 +86,23 @@ export default function Manifesto({ onPlayVideo }) {
 
   useEffect(() => {
     if (!flamePreview) return undefined;
+    const startScrollY = window.scrollY;
+    const handleScroll = () => {
+      if (Math.abs(window.scrollY - startScrollY) > 20) {
+        setFlamePreview(null);
+      }
+    };
     const dismiss = () => setFlamePreview(null);
-    window.addEventListener('scroll', dismiss, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', dismiss, { passive: true });
-    window.addEventListener('blur', dismiss);
     return () => {
-      window.removeEventListener('scroll', dismiss);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', dismiss);
-      window.removeEventListener('blur', dismiss);
     };
   }, [flamePreview]);
 
   const handleFlameEnter = (e) => {
-    if (e.pointerType !== 'mouse') return;
+    if (e.pointerType === 'touch') return;
     const rect = e.currentTarget.getBoundingClientRect();
     const vw = window.innerWidth;
     const vh = window.innerHeight;
@@ -158,7 +162,9 @@ export default function Manifesto({ onPlayVideo }) {
                 tabIndex={0}
                 aria-label="檢視 Autodesk Flame 實際專案 Batch 節點介面"
                 onPointerEnter={handleFlameEnter}
+                onMouseEnter={handleFlameEnter}
                 onPointerLeave={() => setFlamePreview(null)}
+                onMouseLeave={() => setFlamePreview(null)}
                 onBlur={() => setFlamePreview(null)}
                 onClick={openFlameSchematic}
                 onKeyDown={(e) => {
@@ -271,26 +277,30 @@ export default function Manifesto({ onPlayVideo }) {
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 aria-hidden="true"
+                data-testid="flame-hover-preview"
                 style={{
+                  position: 'fixed',
                   left: `${flamePreview.left}px`,
                   top: `${flamePreview.top}px`,
                   width: `${flamePreview.width}px`,
                 }}
-                className="fixed z-[9990] pointer-events-none optical-surface p-2.5 md:p-3 shadow-[0_28px_80px_rgba(0,0,0,0.9)]"
+                className="fixed z-[9990] pointer-events-none"
               >
-                <div className="w-full aspect-[1920/902] border border-white/10 bg-black overflow-hidden">
-                  <img
-                    src={`${import.meta.env.BASE_URL}f1.webp`}
-                    alt="Autodesk Flame Batch Schematic"
-                    width="1920"
-                    height="902"
-                    decoding="async"
-                    className="block w-full h-full object-contain"
-                  />
-                </div>
-                <div className="mt-2.5 flex items-center gap-2 text-xs text-zinc-300 tracking-wide">
-                  <span className="w-1.5 h-1.5 bg-spectral-crimson shrink-0" />
-                  <span>實際專案 Batch 節點介面</span>
+                <div className="optical-surface p-2.5 md:p-3 shadow-[0_28px_80px_rgba(0,0,0,0.9)]">
+                  <div className="w-full aspect-[1920/902] border border-white/10 bg-black overflow-hidden">
+                    <img
+                      src={`${import.meta.env.BASE_URL}f1.webp`}
+                      alt="Autodesk Flame Batch Schematic"
+                      width="1920"
+                      height="902"
+                      decoding="async"
+                      className="block w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="mt-2.5 flex items-center gap-2 text-xs text-zinc-300 tracking-wide">
+                    <span className="w-1.5 h-1.5 bg-spectral-crimson shrink-0" />
+                    <span>實際專案 Batch 節點介面</span>
+                  </div>
                 </div>
               </m.div>
             )}
