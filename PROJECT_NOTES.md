@@ -172,5 +172,27 @@
   - **全站減法美學與元件統一**：全面清除各區多餘裝飾性英文小字與中括號編號（保留 Manifesto 右上角 `01`/`02`/`03` 浮水印）；主按鈕 `.spectral-cta` 升級為品牌橘紅半透線框（Crimson Ghost CTA）；數據卡改為數字右上上標 `+` 搭配純白底部對齊單位；`Autodesk Flame` 懸浮預覽改為 Portal 智慧定位於文字右下／右上方（`min(44vw, 680px)`、`1920×902` 零裁切）；聯絡區雙艙字級平衡並配品牌橘色圖示框。
   - **版本歸檔命名對齊**：昨天以前的原版（`259f296`）鎖定為 `v1`（本機 `beard-showreel-v1` + 遠端 `origin/v1` + 標籤 `v1.0.0`），現行版本為 `v2`（`origin/main`）。
 
+## 2026-11-24
+
+### 已完成：行動端體驗打磨、35mm 底片顆粒與全站排版防呆工程
+- **行動端漢堡選單與彈窗裁切根治（`Navigation.jsx`、`Modal.jsx`、`FeedbackModal.jsx`、`index.css`）**：
+  - 行動抽屜移除會遭手機網址列裁切的 `h-screen`，全面改為 `fixed inset-y-0 left-0 overflow-y-auto overscroll-contain` 並加入底部安全區 `env(safe-area-inset-bottom)`；修正 `.lenis.lenis-smooth [data-lenis-prevent]` 誤寫的 `overflow: clip;` 為 `overscroll-behavior: contain;`。
+  - `Modal` 與 `FeedbackModal` 同步改用 `max-h-[94dvh]` / `max-h-[100dvh]` 搭配 `overflow-y-auto overscroll-contain` 與底部安全區。
+- **永久排版防呆守門機制（`src/utils/__tests__/layoutGuard.test.js` & `.agents/AGENTS.md`）**：
+  - 新增 5 項靜態守門測試隨 `npm run test:run` 與 Git pre-commit hook 強制執行（禁用 `fixed` + `h-screen`、鎖定 `[data-lenis-prevent]` 僅用 `overscroll-behavior: contain`、禁用 `fixed` 與 `optical-surface` 同層覆蓋、禁止 `optical-surface` 外層 `overflow-hidden`、強制行動抽屜／彈窗含 `overflow-y-auto`）。
+  - 全站擴充至 **15 個測試檔 / 46 項單元測試** 100% 通過，`npm audit` 維持 `0 vulnerabilities`。
+- **背景光影行動端優化與 35mm 底片顆粒（`OpticalLightField.jsx` & `index.css`）**：
+  - Fragment Shader 加入直屏權重 `portrait = smoothstep(1.15, 0.55, aspect)`，將手機直屏深黑留白穩定收束至約 **60%**（桌機零影響），同步於 `@media (max-width: 767px)` 收束無 WebGL 降級光雲。
+  - 於同一 WebGL Pass 內建 **12fps 輕量 35mm 電影底片銀鹽顆粒**（強度 `0.034`，雙頻類高斯分佈＋中間調加權不發灰、零新增 DOM／圖層）。
+  - 行動端自動降耗約 **75%**：切為 `powerPreference: 'low-power'`、背景採樣 `0.55x`、幀率鎖定電影標準 `24fps`（並依幀率補償滾動阻尼手感）。
+- **細節文案與行動端版面精簡（`Contact.jsx`、`FeedbackModal.jsx`、`VisualSynthesis.jsx`）**：
+  - 聯絡區信箱字級統一對齊內文（`text-sm sm:text-base md:text-[17px]`、`tracking-wide`）。
+  - 回饋表單全數統一為純繁極簡文案（`您的稱呼`、`信箱 / LINE` / `選填，方便回覆您`、`回饋內容`、`取消` / `送出回饋`）。
+  - 作品欄行動端以 `hidden md:flex` 隱藏 17 筆無影片連結靜態作品並於行動預載跳過，保留 80 筆可播作品（桌機維持完整 97 筆）。
+
+### 下一步待辦
+- **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。
+
+
 
 
