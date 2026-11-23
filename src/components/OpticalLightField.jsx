@@ -142,8 +142,23 @@ void main() {
 
   color = 1.0 - exp(-color * 1.22);
 
-  float dither = (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;
-  gl_FragColor = vec4(clamp(color + dither, 0.0, 1.0), 1.0);
+  // 12fps 輕量 35mm 電影底片銀鹽顆粒（雙頻類高斯分佈 + 中間調加權，零新增圖層與額外耗能）
+  float grainFrame = floor(u_time * 12.0);
+  vec2 grainShift = vec2(
+    fract(grainFrame * 0.1373) * 197.3,
+    fract(grainFrame * 0.2719) * 263.7
+  );
+  float gFine = hash(gl_FragCoord.xy + grainShift);
+  float gOrganic = hash(gl_FragCoord.xy * 0.78 + grainShift.yx + vec2(17.3, 31.7));
+  float filmGrain = (gFine + gOrganic) - 1.0;
+
+  // 純黑暗房區壓低不發灰，中段流光區呈現細膩銀鹽質感並消色帶，極高光自然收斂
+  float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
+  float grainMask = mix(0.28, 1.0, smoothstep(0.015, 0.18, luma))
+                  * mix(1.0, 0.45, smoothstep(0.58, 0.96, luma));
+  color += filmGrain * 0.034 * grainMask;
+
+  gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
 }
 `;
 
@@ -172,11 +187,20 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     if (!canvas || typeof window === 'undefined') return undefined;
 
     const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const detectMobile = () =>
+      Boolean(window.matchMedia?.('(max-width: 767px), (pointer: coarse)').matches);
+    let isMobile = detectMobile();
 
     let gl = null;
     try {
       gl =
-        canvas.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance' }) ||
+        canvas.getContext('webgl', {
+          alpha: false,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          powerPreference: isMobile ? 'low-power' : 'high-performance',
+        }) ||
         canvas.getContext('experimental-webgl', { alpha: false, antialias: false });
     } catch {
       gl = null;
@@ -214,7 +238,10 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     const uVelocity = gl.getUniformLocation(program, 'u_velocity');
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5) * 0.7;
+      isMobile = detectMobile();
+      // 行動端微降背景畫布採樣（0.55x），大幅節省 GPU 填充率並讓底片銀鹽顆粒比例更自然
+      const scale = isMobile ? 0.55 : 0.7;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5) * scale;
       const w = Math.max(1, Math.floor(window.innerWidth * dpr));
       const h = Math.max(1, Math.floor(window.innerHeight * dpr));
       if (canvas.width !== w || canvas.height !== h) {
@@ -234,6 +261,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let currentPtrX = 0.25;
     let currentPtrY = 0.25;
     let rafId = null;
+    let lastRenderTime = 0;
     const startTime = performance.now();
 
     const handleScroll = () => {
@@ -257,10 +285,20 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
         return;
       }
 
-      currentScroll += (targetScroll - currentScroll) * 0.05;
-      velocity *= 0.92;
-      currentPtrX += (targetPtrX - currentPtrX) * 0.04;
-      currentPtrY += (targetPtrY - currentPtrY) * 0.04;
+      // 行動端鎖定 24fps 電影標準幀率（12fps 顆粒的 2 倍整數倍，降耗約 75% 且零抖動）
+      const minFrameMs = isMobile ? 1000 / 24 : 0;
+      if (minFrameMs > 0 && lastRenderTime > 0 && now - lastRenderTime < minFrameMs) {
+        rafId = requestAnimationFrame(renderFrame);
+        return;
+      }
+      lastRenderTime = now;
+
+      const scrollLerp = isMobile ? 0.12 : 0.05;
+      const ptrLerp = isMobile ? 0.10 : 0.04;
+      currentScroll += (targetScroll - currentScroll) * scrollLerp;
+      velocity *= isMobile ? 0.82 : 0.92;
+      currentPtrX += (targetPtrX - currentPtrX) * ptrLerp;
+      currentPtrY += (targetPtrY - currentPtrY) * ptrLerp;
 
       gl.useProgram(program);
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);

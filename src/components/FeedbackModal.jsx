@@ -220,7 +220,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 onClick={onClose}
                 type="button"
                 className="min-w-[44px] min-h-[44px] -mr-2 -mt-1 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-                aria-label="Close Modal"
+                aria-label="關閉回饋表單"
               >
                 <X size={20} />
               </button>
@@ -253,8 +253,8 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 />
 
                 <div>
-                  <label htmlFor="feedback-name" className="block text-xs mono uppercase tracking-wider text-zinc-400 mb-2">
-                    Name / 您的稱呼 <span className="text-spectral-crimson">*</span>
+                  <label htmlFor="feedback-name" className="block text-xs tracking-wider text-zinc-400 mb-2">
+                    您的稱呼 <span className="text-spectral-crimson">*</span>
                   </label>
                   <input
                     id="feedback-name"
@@ -263,14 +263,14 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     maxLength={60}
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="例如：Alex Chen"
+                    placeholder="請輸入稱呼"
                     className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors select-text"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="feedback-email" className="block text-xs mono uppercase tracking-wider text-zinc-400 mb-2">
-                    Email / LINE
+                  <label htmlFor="feedback-email" className="block text-xs tracking-wider text-zinc-400 mb-2">
+                    信箱 / LINE
                   </label>
                   <input
                     id="feedback-email"
@@ -279,14 +279,14 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     maxLength={100}
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="name@example.com 或 LINE ID"
+                    placeholder="選填，方便回覆您"
                     className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors select-text"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="feedback-message" className="block text-xs mono uppercase tracking-wider text-zinc-400 mb-2">
-                    Message / 回饋內容 <span className="text-spectral-crimson">*</span>
+                  <label htmlFor="feedback-message" className="block text-xs tracking-wider text-zinc-400 mb-2">
+                    回饋內容 <span className="text-spectral-crimson">*</span>
                   </label>
                   <textarea
                     id="feedback-message"
@@ -295,7 +295,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     maxLength={500}
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="請輸入您的寶貴建議..."
+                    placeholder="請輸入想說的話..."
                     className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors resize-none select-text"
                   />
                 </div>
@@ -315,25 +315,25 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-5 py-3 text-xs mono uppercase tracking-widest text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                    className="px-5 py-3 text-xs tracking-widest text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   >
-                    Cancel
+                    取消
                   </button>
 
                   <button
                     type="submit"
                     disabled={status === 'submitting'}
-                    className="spectral-cta flex items-center gap-2.5 px-7 py-3.5 text-xs mono uppercase tracking-[0.2em] disabled:opacity-50 cursor-pointer"
+                    className="spectral-cta flex items-center gap-2.5 px-7 py-3.5 text-xs tracking-[0.2em] disabled:opacity-50 cursor-pointer"
                   >
                     {status === 'submitting' ? (
                       <>
                         <Loader2 size={14} className="animate-spin" />
-                        <span>Sending...</span>
+                        <span>傳送中...</span>
                       </>
                     ) : (
                       <>
                         <Send size={13} />
-                        <span>Submit Feedback</span>
+                        <span>送出回饋</span>
                       </>
                     )}
                   </button>
