@@ -53,6 +53,9 @@ void main() {
   float aspect = u_resolution.x / max(u_resolution.y, 1.0);
   vec2 p = vec2(uv.x * aspect, uv.y);
 
+  // 直向手機螢幕收束補償權重（桌機 aspect >= 1.15 時為 0.0，完全維持桌機原比例；手機直屏維持 ~60% 純黑留白）
+  float portrait = smoothstep(1.15, 0.55, aspect);
+
   // 光源全程鎖定於左側／左下緣（絕不翻轉至右側），僅在左側垂直微幅呼吸游移
   float s1 = smoothstep(0.05, 0.40, u_scroll);
   float s2 = smoothstep(0.40, 0.75, u_scroll);
@@ -73,7 +76,7 @@ void main() {
 
   vec2 rel = p - origin;
   float along = dot(rel, dir);
-  float across = dot(rel, perp);
+  float across = dot(rel, perp) * mix(1.0, 1.22, portrait);
 
   // 大幅放慢色彩與光絲流動速度，營造沉穩悠長的電影慢快門流動感
   float t = u_time * 0.14;
@@ -89,12 +92,13 @@ void main() {
   float fineFilaments = noise(vec2(along * 1.35 - flow * 1.65, warpedAcross * 25.0 + broadStream * 1.8));
 
   float rawMask = broadStream * 0.50 + midStreak * 0.33 + fineFilaments * 0.17;
-  // 控制明暗切割與覆蓋範圍：讓全畫面維持約 52%~58% 純淨深黑，左下對角飽滿展現光影層次
-  float streakMask = pow(smoothstep(0.27, 0.88, rawMask), 1.36);
+  // 控制明暗切割與覆蓋範圍：桌機維持 ~55% 純黑，手機直屏收斂至 ~60% 純淨深黑留白
+  float streakMask = pow(smoothstep(mix(0.27, 0.30, portrait), 0.88, rawMask), 1.36);
 
-  // 放寬延伸距離至對角中段，右上半部 50%+ 區域自然沒入純淨深黑
-  float forwardFade = smoothstep(-0.22, 0.18, along) * exp(-max(along, 0.0) * 0.94);
-  float leftStageMask = smoothstep(1.18 * aspect, 0.30 * aspect, p.x + uv.y * 0.30 * aspect);
+  // 放寬延伸距離至對角中段，手機直屏收斂右上與上半部延伸量以保留 60% 深黑
+  float forwardFade = smoothstep(-0.22, 0.18, along) * exp(-max(along, 0.0) * mix(0.94, 1.18, portrait));
+  float stageMetric = p.x + uv.y * mix(0.30, 0.40, portrait) * aspect;
+  float leftStageMask = smoothstep(mix(1.18, 1.08, portrait) * aspect, mix(0.30, 0.22, portrait) * aspect, stageMetric);
 
   // 錯位緩慢流動的光譜通道（上翼朱紅、中軸洋紅、下翼與底部加強深海藍與冰藍）
   float rBand = exp(-pow((warpedAcross - 0.14 - sin(t * 0.55 + along * 1.1) * 0.065) * 3.6, 2.0));
@@ -102,7 +106,7 @@ void main() {
   float cBand = exp(-pow((warpedAcross + 0.15 - sin(t * 0.40 - along * 0.95) * 0.075) * 2.9, 2.0));
 
   // 畫面下方專屬深藍副光帶（呼應參考圖底部濃郁的藍色拉絲，並在滾動至頁面最下方時進一步增強）
-  float bottomBlueZone = smoothstep(0.58, 0.0, uv.y) * exp(-pow((warpedAcross + 0.24) * 2.5, 2.0));
+  float bottomBlueZone = smoothstep(mix(0.58, 0.48, portrait), 0.0, uv.y) * exp(-pow((warpedAcross + 0.24) * 2.5, 2.0));
   float bottomBlueStreak = smoothstep(0.30, 0.86, midStreak * 0.65 + fineFilaments * 0.35) * bottomBlueZone * forwardFade;
 
   // 滾動至頁面最下方 (s3) 時大幅拉高藍色光譜比重、收斂暖紅
@@ -130,7 +134,7 @@ void main() {
   float corePresence = mix(1.0, 0.48, s1) + s3 * 0.45;
   float corePulse = 0.90 + 0.10 * sin(t * 1.1);
   float coreDist = length(vec2(max(along, -0.12) * 1.25, warpedAcross * 2.15));
-  float whiteBurn = exp(-coreDist * 3.6) * (0.48 + 0.65 * streakMask) * corePresence * corePulse * leftStageMask;
+  float whiteBurn = exp(-coreDist * mix(3.6, 3.95, portrait)) * (0.48 + 0.65 * streakMask) * corePresence * corePulse * leftStageMask;
 
   // 極深純黑底色 (#030407)，確保高反差暗房光影感
   vec3 baseVoid = vec3(0.011, 0.015, 0.026);

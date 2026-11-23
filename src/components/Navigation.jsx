@@ -242,9 +242,9 @@ export default function Navigation() {
               transition={emilSpring.gentle}
               data-lenis-prevent
               aria-label="行動版導覽選單"
-              className="fixed top-0 left-0 w-[82%] max-w-[320px] min-h-[100dvh] h-screen bg-[#060911]/72 backdrop-blur-2xl backdrop-saturate-[180%] z-[1000] md:hidden flex flex-col justify-between p-8 border-r border-white/15"
+              className="fixed inset-y-0 left-0 w-[82%] max-w-[320px] overflow-y-auto overscroll-contain bg-[#060911]/72 backdrop-blur-2xl backdrop-saturate-[180%] z-[1000] md:hidden flex flex-col justify-between px-8 pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))] border-r border-white/15"
             >
-              <div className="flex items-center justify-end border-b border-white/10 pb-5">
+              <div className="flex items-center justify-end border-b border-white/10 pb-5 shrink-0">
                 <button
                   type="button"
                   onClick={toggleMenu}
@@ -255,7 +255,7 @@ export default function Navigation() {
                 </button>
               </div>
 
-              <div className="flex flex-col gap-6 my-auto">
+              <div className="flex-1 flex flex-col justify-center gap-6 py-6">
                 {menuItems.map((item, index) => {
                   const isCurrent = activeSection === item.href.slice(1);
                   return (
@@ -283,7 +283,7 @@ export default function Navigation() {
                 href="#contact"
                 aria-current={activeSection === 'contact' ? 'location' : undefined}
                 onClick={(e) => handleScroll(e, '#contact')}
-                className="spectral-cta w-full px-6 py-4 flex items-center justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
+                className="spectral-cta shrink-0 w-full px-6 py-4 flex items-center justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
               >
                 <span className="text-base font-semibold tracking-widest">建立聯繫</span>
               </a>

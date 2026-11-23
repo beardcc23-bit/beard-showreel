@@ -69,7 +69,7 @@ export default function Contact() {
             )}
 
             <span className="w-full flex items-center justify-between gap-4">
-              <span className="font-display text-[clamp(1.15rem,2.2vw,1.9rem)] font-medium tracking-[-0.015em] leading-none text-title-white group-hover:text-white transition-colors duration-300 break-all">
+              <span className="font-display text-sm sm:text-base md:text-[17px] font-medium tracking-wide leading-none text-title-white group-hover:text-white transition-colors duration-300 break-all">
                 {email}
               </span>
               <span className="w-10 h-10 shrink-0 border border-spectral-crimson/35 bg-spectral-crimson/[0.06] group-hover:border-spectral-crimson/80 group-hover:bg-spectral-crimson/15 flex items-center justify-center transition-colors duration-300">

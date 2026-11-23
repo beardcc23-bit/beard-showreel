@@ -70,6 +70,25 @@
   :root {
     --glass-blur: 10px;
   }
+
+  /* 手機無 WebGL 備援時收束背景光雲，維持約 60% 深黑暗房留白 */
+  .optical-blob-warm {
+    width: 76vw;
+    height: 54vh;
+    opacity: calc(var(--beam-warm-opacity) * 0.78);
+  }
+
+  .optical-blob-cool {
+    width: 82vw;
+    height: 58vh;
+    opacity: calc(var(--beam-cool-opacity) * 0.78);
+  }
+
+  .optical-reference-layer {
+    width: 82vw;
+    height: 62vh;
+    opacity: calc(0.18 + var(--beam-white-opacity) * 0.24);
+  }
 }
 
 body {
@@ -490,7 +509,7 @@ html.lenis body {
 }
 
 .lenis.lenis-smooth [data-lenis-prevent] {
-  overflow: clip;
+  overscroll-behavior: contain;
 }
 
 .lenis.lenis-stopped {

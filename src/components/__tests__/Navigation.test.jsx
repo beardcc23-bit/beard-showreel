@@ -16,10 +16,16 @@ describe('Navigation 元件行動端對齊與互動測試', () => {
     const mobileProfileLink = profileLinks[profileLinks.length - 1].closest('a');
     expect(mobileProfileLink).toHaveClass('px-6');
 
-    // 驗證下方建立聯繫按鈕亦包含 px-6，文字起點一致
+    // 驗證下方建立聯繫按鈕亦包含 px-6，文字起點一致，且抽屜使用 inset-y-0 避免手機 100vh 裁切底部按鈕
     const contactBtns = screen.getAllByText('建立聯繫');
     const mobileContactBtn = contactBtns[contactBtns.length - 1].closest('a');
     expect(mobileContactBtn).toHaveClass('px-6');
+    expect(mobileContactBtn).toHaveAttribute('href', '#contact');
+
+    const drawer = screen.getByLabelText('行動版導覽選單');
+    expect(drawer).toHaveClass('inset-y-0');
+    expect(drawer).toHaveClass('overflow-y-auto');
+    expect(drawer).not.toHaveClass('h-screen');
   });
 
   it('Scroll Spy 應在區塊進入視窗時標記 aria-current="location"，滑回頂部時清除', () => {
