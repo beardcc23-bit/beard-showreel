@@ -28,7 +28,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
     }
   }, [isOpen, type, data?.videoId, data?.videoUrl]);
 
-  useOverlayLock(isOpen, onClose, { hideCursor: true, containerRef: dialogRef });
+  useOverlayLock(isOpen, onClose, { containerRef: dialogRef });
 
   if (typeof document === 'undefined') return null;
 

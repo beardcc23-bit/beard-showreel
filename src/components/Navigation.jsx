@@ -151,8 +151,6 @@ export default function Navigation() {
 
     setActiveSection(targetId);
     setIsOpen(false);
-    document.body.style.overflow = '';
-    document.body.classList.remove('modal-open');
 
     if (window.lenis) {
       window.lenis.start();
@@ -166,8 +164,6 @@ export default function Navigation() {
     if (e) e.preventDefault();
     setActiveSection('');
     setIsOpen(false);
-    document.body.style.overflow = '';
-    document.body.classList.remove('modal-open');
     const targetY = getHeroFinalFrameY();
     if (window.lenis) {
       window.lenis.start();
@@ -179,7 +175,10 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 px-5 md:px-10 h-16 md:h-[72px] flex justify-between items-center border-b border-white/[0.12] bg-[#05080F]/45 backdrop-blur-xl backdrop-saturate-[180%] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)]">
+      <nav
+        style={{ right: 'var(--scrollbar-comp, 0px)' }}
+        className="fixed top-0 left-0 z-50 px-5 md:px-10 h-16 md:h-[72px] flex justify-between items-center border-b border-white/[0.12] bg-[#05080F]/45 backdrop-blur-xl backdrop-saturate-[180%] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)]"
+      >
         {/* 頂部最上緣 1px 光譜滾動進度線 */}
         <div
           ref={progressBarRef}

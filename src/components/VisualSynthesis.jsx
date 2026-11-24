@@ -133,14 +133,14 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
         )}
       </div>
 
-      {/* 下方半透明透光磨砂文字欄（無黑底；無連結項目右側留白、無 icon、不觸發 hover 高亮） */}
+      {/* 下方暗房微透文字欄（移除多餘 backdrop-blur，消除手機同屏 20 張卡片的離屏模糊合成開銷） */}
       <div
-        className={`w-full border-t border-white/[0.12] backdrop-blur-md backdrop-saturate-[160%] flex items-center justify-between pointer-events-none ${
+        className={`w-full border-t border-white/[0.12] flex items-center justify-between pointer-events-none ${
           isFeatured ? 'px-3.5 sm:px-4 py-3 gap-3' : 'px-2.5 sm:px-4 py-2.5 sm:py-3 gap-1.5 sm:gap-3'
         } ${
           isInteractive
-            ? 'bg-white/[0.06] group-hover:bg-white/[0.10] transition-colors duration-300'
-            : 'bg-white/[0.04]'
+            ? 'bg-[#0B0F18]/88 group-hover:bg-[#121826]/95 transition-colors duration-300'
+            : 'bg-[#090C14]/80'
         }`}
       >
         <span

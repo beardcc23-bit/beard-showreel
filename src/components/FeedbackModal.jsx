@@ -51,7 +51,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
-  useOverlayLock(isOpen, onClose, { hideCursor: true, containerRef: dialogRef });
+  useOverlayLock(isOpen, onClose, { containerRef: dialogRef });
 
   useEffect(() => {
     if (isOpen) {

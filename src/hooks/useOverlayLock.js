@@ -1,19 +1,18 @@
 import { useEffect, useRef } from 'react';
 
 let lockCount = 0;
-let cursorHideCount = 0;
 const escapeStack = [];
 
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
- * 統一管理彈窗與側邊選單的背景滾動鎖定、捲軸補償、Lenis 暫停、自訂游標顯隱、Escape 堆疊關閉與無障礙焦點陷阱
+ * 統一管理彈窗與側邊選單的背景滾動鎖定、捲軸補償（含 fixed 導覽列）、Lenis 暫停、Escape 堆疊關閉與無障礙焦點陷阱
  */
 export function useOverlayLock(
   isOpen,
   onClose,
-  { hideCursor = false, containerRef = null, restoreFocus = true } = {}
+  { containerRef = null, restoreFocus = true } = {}
 ) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
@@ -29,17 +28,11 @@ export function useOverlayLock(
       document.body.classList.add('modal-open');
       if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
+        document.documentElement.style.setProperty('--scrollbar-comp', `${scrollbarWidth}px`);
       }
       window.lenis?.stop();
     }
     lockCount += 1;
-
-    if (hideCursor) {
-      if (cursorHideCount === 0) {
-        window.dispatchEvent(new CustomEvent('hide-custom-cursor'));
-      }
-      cursorHideCount += 1;
-    }
 
     const closeHandler = () => onCloseRef.current?.();
     escapeStack.push(closeHandler);
@@ -105,15 +98,9 @@ export function useOverlayLock(
       if (lockCount === 0) {
         document.body.style.overflow = '';
         document.body.style.paddingRight = '';
+        document.documentElement.style.removeProperty('--scrollbar-comp');
         document.body.classList.remove('modal-open');
         window.lenis?.start();
-      }
-
-      if (hideCursor) {
-        cursorHideCount = Math.max(0, cursorHideCount - 1);
-        if (cursorHideCount === 0) {
-          window.dispatchEvent(new CustomEvent('show-custom-cursor'));
-        }
       }
 
       if (
@@ -125,5 +112,5 @@ export function useOverlayLock(
         previousFocused.focus({ preventScroll: true });
       }
     };
-  }, [isOpen, hideCursor, containerRef, restoreFocus]);
+  }, [isOpen, containerRef, restoreFocus]);
 }

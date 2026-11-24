@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Check, Copy, ArrowRight } from 'lucide-react';
-import FeedbackModal from './FeedbackModal';
 import RevealHeading from './common/RevealHeading';
 import { useClipboard } from '../hooks/useClipboard';
+
+const loadFeedbackModal = () => import('./FeedbackModal');
+const FeedbackModal = React.lazy(loadFeedbackModal);
 
 /**
  * 第五幕 Contact：瑞士雙欄分割厚玻璃艙（左艙信箱複製 × 右艙滑出式回饋抽屜觸發器）
  */
 export default function Contact() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [hasFeedbackMounted, setHasFeedbackMounted] = useState(false);
   const emailUser = 'beard.cc23';
   const emailDomain = 'gmail.com';
   const email = `${emailUser}@${emailDomain}`;
@@ -79,10 +82,15 @@ export default function Contact() {
             </span>
           </button>
 
-          {/* 右艙（5/12）：開啟右側滑出式回饋抽屜 */}
+          {/* 右艙（5/12）：開啟右側滑出式回饋抽屜（懸停／聚焦預熱 chunk，點擊秒開） */}
           <button
             type="button"
-            onClick={() => setIsFeedbackOpen(true)}
+            onPointerEnter={loadFeedbackModal}
+            onFocus={loadFeedbackModal}
+            onClick={() => {
+              setHasFeedbackMounted(true);
+              setIsFeedbackOpen(true);
+            }}
             aria-label="開啟回饋表單"
             className="lg:col-span-5 w-full py-9 sm:py-11 md:py-12 px-7 sm:px-10 md:px-11 flex items-center text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group"
           >
@@ -106,11 +114,15 @@ export default function Contact() {
         </div>
       </div>
 
-      <FeedbackModal
-        isOpen={isFeedbackOpen}
-        onClose={handleCloseFeedback}
-        scriptUrl={GAS_SCRIPT_URL}
-      />
+      {hasFeedbackMounted && (
+        <Suspense fallback={null}>
+          <FeedbackModal
+            isOpen={isFeedbackOpen}
+            onClose={handleCloseFeedback}
+            scriptUrl={GAS_SCRIPT_URL}
+          />
+        </Suspense>
+      )}
     </section>
   );
 }

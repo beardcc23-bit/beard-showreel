@@ -545,7 +545,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
             onPointerUp={handleRailPointerUp}
             onPointerCancel={handleRailPointerUp}
             onKeyDown={handleRailKeyDown}
-            className="group relative flex flex-col items-center self-stretch select-none pt-[2px] md:pt-[3px] pr-[4px] md:pr-[5px] cursor-ns-resize touch-none focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+            className="group relative before:content-[''] before:absolute before:inset-y-0 before:-left-4 before:-right-2 flex flex-col items-center self-stretch select-none pt-[2px] md:pt-[3px] pr-[4px] md:pr-[5px] cursor-ns-resize touch-none focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
           >
             {/* 3D 暗房透光厚玻璃本體（無 overflow-hidden 確保右側 5px 與頂部 2.5px 斜切面完整立體顯現） */}
             <div ref={railRef} className="hero-glass-rail relative flex-1 w-[4px] md:w-[5px]">

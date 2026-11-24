@@ -11,10 +11,10 @@
 - Primary Location: Taipei, Taiwan (台灣台北)
 
 ## Key Work & Portfolio
-- Official Showreel & Works: https://beardchou.com
+- Official Showreel & Works: https://beardcc23-bit.github.io/beard-showreel/
 - Core System: Autodesk Flame 3D Compositing System (Batch Node-Based Workflow)
 - Key Strengths: Pixel-perfect physical detail, high-velocity client-supervised online sessions, seamless integration of AI-generated elements with live-action footage.
 
 ## Contact & Inquiry
-- Contact Section: https://beardchou.com/#contact
-- Website: https://beardchou.com
+- Contact Section: https://beardcc23-bit.github.io/beard-showreel/#contact
+- Website: https://beardcc23-bit.github.io/beard-showreel/

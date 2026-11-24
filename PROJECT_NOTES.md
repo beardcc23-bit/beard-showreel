@@ -207,7 +207,13 @@
   - **全站底層效能、流量與瘦身總整理（同日第四波）**：
     - `index.html` & `CanvasSequence.jsx`：Favicon 與首屏 `<link rel="preload">` 全改為 `%BASE_URL%` 並直接對準真實首幀 `png-0_00000000.webp?v=3`（消除首屏 136KB 重複下載與 GitHub Pages 子路徑失效）；YouTube `preconnect` 改指向實際使用的 `https://www.youtube-nocookie.com`。
     - `OpticalLightField.jsx` & `Navigation.jsx`：桌機 WebGL 背景鎖定 `36fps`（`12fps` 底片顆粒 3 倍整數倍，120Hz 筆電 GPU 耗電降約 70%）；行動端跳過全域 `mousemove`；兩處滾動監聽全面改用 `ResizeObserver` 快取 `maxScroll` 達成滾動期 0 次同步 Layout 讀取。
-    - `Modal.jsx` & `index.css` & `public/`：彈窗內層殘留 `vh` 全面升級 `dvh`；清除 `index.css` 內 106 行已淘汰舊版死碼；刪除 `public/` 下 7 支零引用舊影片與廢圖（`hero*.mp4/webm`、`hero-poster*.webp`、`youtube-logo.webp`，部署包減重約 **8.6 MB**），全站 **16 個測試檔 / 48 項測試**全綠過關。
+    - `Modal.jsx` & `index.css` & `public/`：彈窗內層殘留 `vh` 全面升級 `dvh`；清除 `index.css` 內 106 行已淘汰舊版死碼；刪除 `public/` 下 7 支零引用舊影片與廢圖（`hero*.mp4/webm`、`hero-poster*.webp`、`youtube-logo.webp`，部署包減重約 **8.6 MB**）。
+  - **深水區效能拆包、無障礙與社群分享預覽總補強（同日第五波）**：
+    - `VisualSynthesis.jsx`：移除作品卡片文字底欄多餘的 `backdrop-blur-md backdrop-saturate-[160%]` 改用暗房深色微透底襯，徹底消除手機滑過 20 張兩欄小卡時的離屏高斯模糊合成壓力。
+    - `Contact.jsx`：`FeedbackModal`（351 行）改為 `React.lazy` 按需拆分獨立 chunk，並於懸停／聚焦按鈕時預熱載入，維持點擊秒開與離場滑出動畫。
+    - `index.html`、`public/og-cover.jpg`、`sitemap.xml`、`robots.txt`、`llms.txt`：Google Fonts 改為 `media="print" onload` 非阻塞載入加速 FCP；產製 `1200×630` 橫式主視覺分享海報 `og-cover.jpg`（91KB），並將全站 Canonical、Open Graph、Twitter Card、JSON-LD 與 Sitemap 同步對齊實際線上網址 `https://beardcc23-bit.github.io/beard-showreel/`，解決 LINE / FB 貼連結破圖問題。
+    - `useOverlayLock.js` & `Navigation.jsx`：新增 `--scrollbar-comp` CSS 變數同步補償 `fixed` 頂部導覽列右緣（消除開彈窗時導覽列跳動 `15px`），移除已廢棄之自訂游標事件與手動覆寫 `body` 類別之越權操作。
+    - `AnimatedCounter.jsx` & `CanvasSequence.jsx`：數據牆補齊 `aria-label` 真實數值（避免爬蟲與螢幕閱讀器讀到 `0+`）與 `prefers-reduced-motion` 直顯終值；手機右側 `4px` 3D 玻璃滑桿以透明偽元素隱形擴展觸控熱區至 `38px`，全站 **16 個測試檔 / 48 項測試**全綠過關。
 
 ### 下一步待辦
 - **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。

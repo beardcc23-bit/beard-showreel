@@ -20,4 +20,4 @@ Disallow: /
 User-agent: Diffbot
 Disallow: /
 
-Sitemap: https://beardchou.com/sitemap.xml
+Sitemap: https://beardcc23-bit.github.io/beard-showreel/sitemap.xml

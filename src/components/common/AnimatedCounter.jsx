@@ -9,9 +9,16 @@ const AnimatedCounter = React.memo(function AnimatedCounter({ value, trigger, du
   const targetValue = typeof value === 'number' && !isNaN(value) ? value : 0;
 
   useEffect(() => {
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+    if (prefersReduced) {
+      if (spanRef.current) spanRef.current.textContent = String(targetValue);
+      return undefined;
+    }
     if (!trigger) {
       if (spanRef.current) spanRef.current.textContent = '0';
-      return;
+      return undefined;
     }
 
     let startTime = null;
@@ -43,7 +50,11 @@ const AnimatedCounter = React.memo(function AnimatedCounter({ value, trigger, du
     };
   }, [trigger, targetValue, duration]);
 
-  return <span ref={spanRef}>0</span>;
+  return (
+    <span aria-label={String(targetValue)}>
+      <span ref={spanRef} aria-hidden="true">0</span>
+    </span>
+  );
 });
 
 export default AnimatedCounter;

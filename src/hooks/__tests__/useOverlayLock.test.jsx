@@ -3,9 +3,9 @@ import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { useOverlayLock } from '../useOverlayLock';
 
-function OverlayFixture({ isOpen, onClose, hideCursor = false }) {
+function OverlayFixture({ isOpen, onClose }) {
   const ref = useRef(null);
-  useOverlayLock(isOpen, onClose, { hideCursor, containerRef: ref });
+  useOverlayLock(isOpen, onClose, { containerRef: ref });
   if (!isOpen) return null;
   return (
     <div ref={ref}>
@@ -16,53 +16,54 @@ function OverlayFixture({ isOpen, onClose, hideCursor = false }) {
 }
 
 describe('useOverlayLock Hook 測試', () => {
-  it('雙層覆蓋層疊加時應維持參照計數，僅在最後一層關閉時解鎖背景與恢復游標', () => {
+  it('雙層覆蓋層疊加時應維持參照計數、同步設定 --scrollbar-comp 補償 fixed 導覽列，並僅在最後一層關閉時解鎖', () => {
     const closeA = vi.fn();
     const closeB = vi.fn();
-    const hideSpy = vi.fn();
-    const showSpy = vi.fn();
-    window.addEventListener('hide-custom-cursor', hideSpy);
-    window.addEventListener('show-custom-cursor', showSpy);
+    const originalInnerWidth = window.innerWidth;
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
+    Object.defineProperty(document.documentElement, 'clientWidth', { configurable: true, value: 1425 });
 
-    const { rerender } = render(
-      <>
-        <OverlayFixture isOpen={true} onClose={closeA} hideCursor />
-        <OverlayFixture isOpen={true} onClose={closeB} hideCursor />
-      </>
-    );
+    try {
+      const { rerender } = render(
+        <>
+          <OverlayFixture isOpen={true} onClose={closeA} />
+          <OverlayFixture isOpen={true} onClose={closeB} />
+        </>
+      );
 
-    expect(document.body).toHaveClass('modal-open');
-    expect(document.body.style.overflow).toBe('hidden');
-    expect(hideSpy).toHaveBeenCalledTimes(1);
+      expect(document.body).toHaveClass('modal-open');
+      expect(document.body.style.overflow).toBe('hidden');
+      expect(document.body.style.paddingRight).toBe('15px');
+      expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('15px');
 
-    // 按下 Escape 應僅觸發最上層 B 的關閉函式（LIFO）
-    fireEvent.keyDown(window, { key: 'Escape' });
-    expect(closeB).toHaveBeenCalledTimes(1);
-    expect(closeA).not.toHaveBeenCalled();
+      // 按下 Escape 應僅觸發最上層 B 的關閉函式（LIFO）
+      fireEvent.keyDown(window, { key: 'Escape' });
+      expect(closeB).toHaveBeenCalledTimes(1);
+      expect(closeA).not.toHaveBeenCalled();
 
-    // 關閉上層 B 時，A 仍開啟，背景不得提前解鎖
-    rerender(
-      <>
-        <OverlayFixture isOpen={true} onClose={closeA} hideCursor />
-        <OverlayFixture isOpen={false} onClose={closeB} hideCursor />
-      </>
-    );
-    expect(document.body).toHaveClass('modal-open');
-    expect(showSpy).not.toHaveBeenCalled();
+      // 關閉上層 B 時，A 仍開啟，背景與 --scrollbar-comp 不得提前解鎖
+      rerender(
+        <>
+          <OverlayFixture isOpen={true} onClose={closeA} />
+          <OverlayFixture isOpen={false} onClose={closeB} />
+        </>
+      );
+      expect(document.body).toHaveClass('modal-open');
+      expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('15px');
 
-    // 關閉最後一層 A 時，應解鎖背景並發送恢復游標事件
-    rerender(
-      <>
-        <OverlayFixture isOpen={false} onClose={closeA} hideCursor />
-        <OverlayFixture isOpen={false} onClose={closeB} hideCursor />
-      </>
-    );
-    expect(document.body).not.toHaveClass('modal-open');
-    expect(document.body.style.overflow).toBe('');
-    expect(showSpy).toHaveBeenCalledTimes(1);
-
-    window.removeEventListener('hide-custom-cursor', hideSpy);
-    window.removeEventListener('show-custom-cursor', showSpy);
+      // 關閉最後一層 A 時，應解鎖背景並移除 --scrollbar-comp
+      rerender(
+        <>
+          <OverlayFixture isOpen={false} onClose={closeA} />
+          <OverlayFixture isOpen={false} onClose={closeB} />
+        </>
+      );
+      expect(document.body).not.toHaveClass('modal-open');
+      expect(document.body.style.overflow).toBe('');
+      expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('');
+    } finally {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth });
+    }
   });
 
   it('應執行 Tab / Shift+Tab 焦點循環並在關閉時歸還原焦點', () => {
