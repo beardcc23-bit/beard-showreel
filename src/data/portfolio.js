@@ -25,11 +25,50 @@ export const categories = [
     "name": "食品與飲料",
     "items": [
       {
+        "name": "UCC",
+        "bgImage": "/vfx/A/A-004.webp",
+        "url": "https://www.youtube.com/watch?v=AuuxyMIutf8",
+        "videoId": "AuuxyMIutf8",
+        "featured": true
+      },
+      {
         "name": "Extra",
         "bgImage": "/vfx/A/A-001.webp",
         "url": "https://www.youtube.com/shorts/n3c3DDBMUnA",
         "videoId": "n3c3DDBMUnA",
         "aspect": "portrait"
+      },
+      {
+        "name": "德克士炸雞",
+        "bgImage": "/vfx/A/A-027.webp",
+        "url": "https://www.facebook.com/reel/1958394558203679",
+        "videoId": "1958394558203679",
+        "isFacebook": true,
+        "aspect": "portrait"
+      },
+      {
+        "name": "桂格 企業形象影片",
+        "bgImage": "/vfx/A/A-018.webp",
+        "url": "https://www.youtube.com/watch?v=lxRJO_qPcWQ",
+        "videoId": "lxRJO_qPcWQ"
+      },
+      {
+        "name": "柏克金啤酒",
+        "bgImage": "/vfx/A/A-011.webp",
+        "url": "https://www.youtube.com/watch?v=aKYv6_VMPFI",
+        "videoId": "aKYv6_VMPFI"
+      },
+      {
+        "name": "黑松茶花",
+        "bgImage": "/vfx/A/A-022.webp",
+        "url": "https://www.youtube.com/watch?v=cKbH-CxdjxY",
+        "videoId": "cKbH-CxdjxY"
+      },
+      {
+        "name": "維他露P+",
+        "bgImage": "/vfx/A/A-026.webp",
+        "url": "https://www.youtube.com/watch?v=AyQQZ37OPfU",
+        "videoId": "AyQQZ37OPfU"
       },
       {
         "name": "Johnnie Walker",
@@ -40,13 +79,6 @@ export const categories = [
         "bgImage": "/vfx/A/A-003.webp",
         "url": "https://www.youtube.com/watch?v=exDc-2Xnb4E&t=1s",
         "videoId": "exDc-2Xnb4E"
-      },
-      {
-        "name": "UCC",
-        "bgImage": "/vfx/A/A-004.webp",
-        "url": "https://www.youtube.com/watch?v=AuuxyMIutf8",
-        "videoId": "AuuxyMIutf8",
-        "featured": true
       },
       {
         "name": "好侍咖哩",
@@ -77,12 +109,6 @@ export const categories = [
         "bgImage": "/vfx/A/A-010.webp"
       },
       {
-        "name": "柏克金啤酒",
-        "bgImage": "/vfx/A/A-011.webp",
-        "url": "https://www.youtube.com/watch?v=aKYv6_VMPFI",
-        "videoId": "aKYv6_VMPFI"
-      },
-      {
         "name": "金門高粱千日醇",
         "bgImage": "/vfx/A/A-012.webp",
         "url": "https://www.youtube.com/watch?v=8rl7u3SPQpY",
@@ -109,12 +135,6 @@ export const categories = [
         "isFacebook": true
       },
       {
-        "name": "桂格 企業形象影片",
-        "bgImage": "/vfx/A/A-018.webp",
-        "url": "https://www.youtube.com/watch?v=lxRJO_qPcWQ",
-        "videoId": "lxRJO_qPcWQ"
-      },
-      {
         "name": "泰山八寶粥",
         "bgImage": "/vfx/A/A-019.webp",
         "url": "https://www.youtube.com/watch?v=ry5k_i-XhVE",
@@ -125,12 +145,6 @@ export const categories = [
         "bgImage": "/vfx/A/A-020.webp",
         "url": "https://www.youtube.com/watch?v=qJqmBWZxbdo",
         "videoId": "qJqmBWZxbdo"
-      },
-      {
-        "name": "黑松茶花",
-        "bgImage": "/vfx/A/A-022.webp",
-        "url": "https://www.youtube.com/watch?v=cKbH-CxdjxY",
-        "videoId": "cKbH-CxdjxY"
       },
       {
         "name": "瑞穗鮮乳",
@@ -147,20 +161,6 @@ export const categories = [
       {
         "name": "裸雀威士忌",
         "bgImage": "/vfx/A/A-025.webp"
-      },
-      {
-        "name": "維他露P+",
-        "bgImage": "/vfx/A/A-026.webp",
-        "url": "https://www.youtube.com/watch?v=AyQQZ37OPfU",
-        "videoId": "AyQQZ37OPfU"
-      },
-      {
-        "name": "德克士炸雞",
-        "bgImage": "/vfx/A/A-027.webp",
-        "url": "https://www.facebook.com/reel/1958394558203679",
-        "videoId": "1958394558203679",
-        "isFacebook": true,
-        "aspect": "portrait"
       }
     ]
   },
@@ -169,16 +169,45 @@ export const categories = [
     "name": "3C與家電",
     "items": [
       {
-        "name": "Panasonic 溫水洗淨便座",
-        "bgImage": "/vfx/B/B-01.webp",
-        "url": "https://www.youtube.com/watch?v=SMCldr-5kbg",
-        "videoId": "SMCldr-5kbg"
+        "name": "Samsung Galaxy Tab S11 Ultra",
+        "bgImage": "/vfx/B/B-10.webp",
+        "url": "https://www.facebook.com/reel/1338163857656555",
+        "videoId": "1338163857656555",
+        "isFacebook": true,
+        "aspect": "portrait",
+        "featured": true,
+        "imagePosition": "50% 34%"
+      },
+      {
+        "name": "Tokuyo 按摩椅",
+        "bgImage": "/vfx/B/B-12.webp",
+        "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
+        "videoId": "_SENfBsNjgE"
       },
       {
         "name": "Panasonic Viera 電視",
         "bgImage": "/vfx/B/B-02.webp",
         "url": "https://www.youtube.com/watch?v=J8IkANYZD3s",
         "videoId": "J8IkANYZD3s"
+      },
+      {
+        "name": "Samsung Galaxy S22",
+        "bgImage": "/vfx/B/B-06.webp",
+        "url": "https://www.youtube.com/watch?v=UkSewV5ScR0",
+        "videoId": "UkSewV5ScR0"
+      },
+      {
+        "name": "Samsung Z Fold2 / Z Flip2",
+        "bgImage": "/vfx/B/B-07.webp",
+        "url": "https://www.facebook.com/watch/?v=1046986065709266",
+        "videoId": "1046986065709266",
+        "isFacebook": true
+      },
+      {
+        "name": "Panasonic 溫水洗淨便座",
+        "bgImage": "/vfx/B/B-01.webp",
+        "url": "https://www.youtube.com/watch?v=SMCldr-5kbg",
+        "videoId": "SMCldr-5kbg"
       },
       {
         "name": "Panasonic 蒸氣電熨斗",
@@ -209,19 +238,6 @@ export const categories = [
         "isFacebook": true
       },
       {
-        "name": "Samsung Galaxy S22",
-        "bgImage": "/vfx/B/B-06.webp",
-        "url": "https://www.youtube.com/watch?v=UkSewV5ScR0",
-        "videoId": "UkSewV5ScR0"
-      },
-      {
-        "name": "Samsung Z Fold2 / Z Flip2",
-        "bgImage": "/vfx/B/B-07.webp",
-        "url": "https://www.facebook.com/watch/?v=1046986065709266",
-        "videoId": "1046986065709266",
-        "isFacebook": true
-      },
-      {
         "name": "Samsung Z Fold3 / Z Flip3",
         "bgImage": "/vfx/B/B-08.webp",
         "url": "https://www.facebook.com/watch/?v=558217842125093",
@@ -233,24 +249,8 @@ export const categories = [
         "bgImage": "/vfx/B/B-09.webp"
       },
       {
-        "name": "Samsung Galaxy Tab S11 Ultra",
-        "bgImage": "/vfx/B/B-10.webp",
-        "url": "https://www.facebook.com/reel/1338163857656555",
-        "videoId": "1338163857656555",
-        "isFacebook": true,
-        "aspect": "portrait",
-        "featured": true,
-        "imagePosition": "50% 34%"
-      },
-      {
         "name": "Sony Xperia",
         "bgImage": "/vfx/B/B-11.webp"
-      },
-      {
-        "name": "Tokuyo 按摩椅",
-        "bgImage": "/vfx/B/B-12.webp",
-        "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
-        "videoId": "_SENfBsNjgE"
       },
       {
         "name": "三菱重工空調",
@@ -276,17 +276,23 @@ export const categories = [
     "name": "交通工具",
     "items": [
       {
-        "name": "Audi",
-        "bgImage": "/vfx/C/C-01.webp",
-        "url": "https://www.youtube.com/watch?v=vgf14stUB0w",
-        "videoId": "vgf14stUB0w"
-      },
-      {
         "name": "Foxtron Caviar",
         "bgImage": "/vfx/C/C-02.webp",
         "url": "https://youtu.be/pCBQA1vEDig?si=lbbvGmTm90P5Vx4P",
         "videoId": "pCBQA1vEDig",
         "featured": true
+      },
+      {
+        "name": "Mazda",
+        "bgImage": "/vfx/C/C-07.webp",
+        "url": "https://www.youtube.com/watch?v=V7t6AvjDl80",
+        "videoId": "V7t6AvjDl80"
+      },
+      {
+        "name": "Gogoro Pulse",
+        "bgImage": "/vfx/C/C-04.webp",
+        "url": "https://www.youtube.com/watch?v=Wyijlye4kMg",
+        "videoId": "Wyijlye4kMg"
       },
       {
         "name": "Gogoro EZZY",
@@ -295,10 +301,16 @@ export const categories = [
         "videoId": "4apkzFFsV4E"
       },
       {
-        "name": "Gogoro Pulse",
-        "bgImage": "/vfx/C/C-04.webp",
-        "url": "https://www.youtube.com/watch?v=Wyijlye4kMg",
-        "videoId": "Wyijlye4kMg"
+        "name": "長榮航空",
+        "bgImage": "/vfx/C/C-10.webp",
+        "url": "https://www.youtube.com/watch?v=bQZxUBpimgY",
+        "videoId": "bQZxUBpimgY"
+      },
+      {
+        "name": "Audi",
+        "bgImage": "/vfx/C/C-01.webp",
+        "url": "https://www.youtube.com/watch?v=vgf14stUB0w",
+        "videoId": "vgf14stUB0w"
       },
       {
         "name": "Gogoro JEGO",
@@ -313,12 +325,6 @@ export const categories = [
         "videoId": "I8jdO9GQVkM"
       },
       {
-        "name": "Mazda",
-        "bgImage": "/vfx/C/C-07.webp",
-        "url": "https://www.youtube.com/watch?v=V7t6AvjDl80",
-        "videoId": "V7t6AvjDl80"
-      },
-      {
         "name": "Momentum Bicycles",
         "bgImage": "/vfx/C/C-08.webp",
         "url": "https://www.youtube.com/watch?v=iIdgx-eoAT0",
@@ -329,12 +335,6 @@ export const categories = [
         "bgImage": "/vfx/C/C-09.webp",
         "url": "https://www.youtube.com/watch?v=8YC6qYvByU8",
         "videoId": "8YC6qYvByU8"
-      },
-      {
-        "name": "長榮航空",
-        "bgImage": "/vfx/C/C-10.webp",
-        "url": "https://www.youtube.com/watch?v=bQZxUBpimgY",
-        "videoId": "bQZxUBpimgY"
       },
       {
         "name": "長榮航空 Bizfam",
@@ -356,6 +356,37 @@ export const categories = [
     "name": "生活與百貨",
     "items": [
       {
+        "name": "新光三越",
+        "bgImage": "/vfx/D/D-13.webp",
+        "url": "https://www.youtube.com/watch?v=wZhogI5TPB8",
+        "videoId": "wZhogI5TPB8",
+        "featured": true
+      },
+      {
+        "name": "LaLaport 南港",
+        "bgImage": "/vfx/D/D-05.webp",
+        "url": "https://www.youtube.com/watch?v=tDANOqHSnTE",
+        "videoId": "tDANOqHSnTE"
+      },
+      {
+        "name": "錦鋐氣密窗",
+        "bgImage": "/vfx/D/D-17.webp",
+        "url": "https://www.youtube.com/watch?v=BOj8-iDaB0s",
+        "videoId": "BOj8-iDaB0s"
+      },
+      {
+        "name": "HOLA",
+        "bgImage": "/vfx/D/D-03.webp",
+        "url": "https://www.youtube.com/watch?v=Q9LzOnPCeNY",
+        "videoId": "Q9LzOnPCeNY"
+      },
+      {
+        "name": "東和鋼鐵",
+        "bgImage": "/vfx/D/D-09.webp",
+        "url": "https://www.youtube.com/watch?v=rYPjfcAH-rc",
+        "videoId": "rYPjfcAH-rc"
+      },
+      {
         "name": "Ariel 抗菌洗衣精",
         "bgImage": "/vfx/D/D-01.webp"
       },
@@ -365,21 +396,9 @@ export const categories = [
       },
       {
         "name": "HOLA",
-        "bgImage": "/vfx/D/D-03.webp",
-        "url": "https://www.youtube.com/watch?v=Q9LzOnPCeNY",
-        "videoId": "Q9LzOnPCeNY"
-      },
-      {
-        "name": "HOLA",
         "bgImage": "/vfx/D/D-04.webp",
         "url": "https://www.youtube.com/watch?v=j8XBx4yFsN8",
         "videoId": "j8XBx4yFsN8"
-      },
-      {
-        "name": "LaLaport 南港",
-        "bgImage": "/vfx/D/D-05.webp",
-        "url": "https://www.youtube.com/watch?v=tDANOqHSnTE",
-        "videoId": "tDANOqHSnTE"
       },
       {
         "name": "UberEats",
@@ -396,12 +415,6 @@ export const categories = [
         "bgImage": "/vfx/D/D-08.webp",
         "url": "https://www.youtube.com/watch?v=nFl6OMheFho",
         "videoId": "nFl6OMheFho"
-      },
-      {
-        "name": "東和鋼鐵",
-        "bgImage": "/vfx/D/D-09.webp",
-        "url": "https://www.youtube.com/watch?v=rYPjfcAH-rc",
-        "videoId": "rYPjfcAH-rc"
       },
       {
         "name": "東和鋼鐵",
@@ -423,13 +436,6 @@ export const categories = [
       },
       {
         "name": "新光三越",
-        "bgImage": "/vfx/D/D-13.webp",
-        "url": "https://www.youtube.com/watch?v=wZhogI5TPB8",
-        "videoId": "wZhogI5TPB8",
-        "featured": true
-      },
-      {
-        "name": "新光三越",
         "bgImage": "/vfx/D/D-14.webp",
         "url": "https://www.youtube.com/watch?v=xS3VLzTJxs0",
         "videoId": "xS3VLzTJxs0"
@@ -447,12 +453,6 @@ export const categories = [
         "videoId": "QC2Adq-3lOc"
       },
       {
-        "name": "錦鋐氣密窗",
-        "bgImage": "/vfx/D/D-17.webp",
-        "url": "https://www.youtube.com/watch?v=BOj8-iDaB0s",
-        "videoId": "BOj8-iDaB0s"
-      },
-      {
         "name": "魔術靈",
         "bgImage": "/vfx/D/D-18.webp"
       }
@@ -462,6 +462,40 @@ export const categories = [
     "id": "beauty",
     "name": "美妝與健康",
     "items": [
+      {
+        "name": "活沛多",
+        "bgImage": "/vfx/A/A-014.webp",
+        "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
+        "videoId": "Y4CG2QNa5hs",
+        "featured": true
+      },
+      {
+        "name": "Calm Night Day 淨日夜沐浴露",
+        "bgImage": "/vfx/E/E-04.webp",
+        "url": "https://www.youtube.com/watch?v=_ociCDswXUI",
+        "videoId": "_ociCDswXUI"
+      },
+      {
+        "name": "TKLAB",
+        "bgImage": "/vfx/E/E-08.webp",
+        "url": "https://www.facebook.com/TKLAB.tw/videos/1495921932163292",
+        "videoId": "1495921932163292",
+        "isFacebook": true,
+        "aspect": "square"
+      },
+      {
+        "name": "LUX 髮的補給",
+        "bgImage": "/vfx/E/E-06.webp",
+        "url": "https://www.facebook.com/watch/?v=822528356385191",
+        "videoId": "822528356385191",
+        "isFacebook": true
+      },
+      {
+        "name": "EMSCULPT 肌動減脂",
+        "bgImage": "/vfx/E/E-05.webp",
+        "url": "https://www.youtube.com/watch?v=SJqwyPXT1CI",
+        "videoId": "SJqwyPXT1CI"
+      },
       {
         "name": "1028 睫毛膏",
         "bgImage": "/vfx/E/E-01.webp",
@@ -482,42 +516,8 @@ export const categories = [
         "aspect": "portrait"
       },
       {
-        "name": "Calm Night Day 淨日夜沐浴露",
-        "bgImage": "/vfx/E/E-04.webp",
-        "url": "https://www.youtube.com/watch?v=_ociCDswXUI",
-        "videoId": "_ociCDswXUI"
-      },
-      {
-        "name": "EMSCULPT 肌動減脂",
-        "bgImage": "/vfx/E/E-05.webp",
-        "url": "https://www.youtube.com/watch?v=SJqwyPXT1CI",
-        "videoId": "SJqwyPXT1CI"
-      },
-      {
-        "name": "LUX 髮的補給",
-        "bgImage": "/vfx/E/E-06.webp",
-        "url": "https://www.facebook.com/watch/?v=822528356385191",
-        "videoId": "822528356385191",
-        "isFacebook": true
-      },
-      {
         "name": "MAMA 永恆光燦系列",
         "bgImage": "/vfx/E/E-07.webp"
-      },
-      {
-        "name": "TKLAB",
-        "bgImage": "/vfx/E/E-08.webp",
-        "url": "https://www.facebook.com/TKLAB.tw/videos/1495921932163292",
-        "videoId": "1495921932163292",
-        "isFacebook": true,
-        "aspect": "square"
-      },
-      {
-        "name": "活沛多",
-        "bgImage": "/vfx/A/A-014.webp",
-        "url": "https://www.youtube.com/watch?v=Y4CG2QNa5hs",
-        "videoId": "Y4CG2QNa5hs",
-        "featured": true
       },
       {
         "name": "大本山 益生菌",
@@ -565,10 +565,11 @@ export const categories = [
     "name": "金融與保險",
     "items": [
       {
-        "name": "中國信託 點燃生命之火",
-        "bgImage": "/vfx/F/F-01.webp",
-        "url": "https://www.youtube.com/watch?v=u1uWyX51Prc&list=PLfRfUZjsbf4RuYO75RLGDmhQ3hhbX0Ul5&index=37",
-        "videoId": "u1uWyX51Prc"
+        "name": "磊山保經",
+        "bgImage": "/vfx/F/F-09.webp",
+        "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
+        "videoId": "Rwrn87N2PUc",
+        "featured": true
       },
       {
         "name": "台灣Pay",
@@ -577,10 +578,10 @@ export const categories = [
         "videoId": "gsQScjFurQs"
       },
       {
-        "name": "台灣Pay",
-        "bgImage": "/vfx/F/F-03.webp",
-        "url": "https://www.youtube.com/watch?v=ckgbItI0kaw",
-        "videoId": "ckgbItI0kaw"
+        "name": "渣打銀行",
+        "bgImage": "/vfx/F/F-08.webp",
+        "url": "https://www.youtube.com/watch?v=OBTrK1ukstc",
+        "videoId": "OBTrK1ukstc"
       },
       {
         "name": "安聯人壽",
@@ -588,6 +589,18 @@ export const categories = [
         "url": "https://www.facebook.com/AllianzTaiwanLife/videos/1014825593450292/",
         "videoId": "1014825593450292",
         "isFacebook": true
+      },
+      {
+        "name": "台灣Pay",
+        "bgImage": "/vfx/F/F-03.webp",
+        "url": "https://www.youtube.com/watch?v=ckgbItI0kaw",
+        "videoId": "ckgbItI0kaw"
+      },
+      {
+        "name": "中國信託 點燃生命之火",
+        "bgImage": "/vfx/F/F-01.webp",
+        "url": "https://www.youtube.com/watch?v=u1uWyX51Prc&list=PLfRfUZjsbf4RuYO75RLGDmhQ3hhbX0Ul5&index=37",
+        "videoId": "u1uWyX51Prc"
       },
       {
         "name": "復華投信",
@@ -606,19 +619,6 @@ export const categories = [
         "bgImage": "/vfx/F/F-07.webp",
         "url": "https://www.youtube.com/watch?v=0OEmLKIjAtk",
         "videoId": "0OEmLKIjAtk"
-      },
-      {
-        "name": "渣打銀行",
-        "bgImage": "/vfx/F/F-08.webp",
-        "url": "https://www.youtube.com/watch?v=OBTrK1ukstc",
-        "videoId": "OBTrK1ukstc"
-      },
-      {
-        "name": "磊山保經",
-        "bgImage": "/vfx/F/F-09.webp",
-        "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
-        "videoId": "Rwrn87N2PUc",
-        "featured": true
       },
       {
         "name": "國泰世華 財富管理",

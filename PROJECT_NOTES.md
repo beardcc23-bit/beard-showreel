@@ -189,6 +189,10 @@
   - 聯絡區信箱字級統一對齊內文（`text-sm sm:text-base md:text-[17px]`、`tracking-wide`）。
   - 回饋表單全數統一為純繁極簡文案（`您的稱呼`、`信箱 / LINE` / `選填，方便回覆您`、`回饋內容`、`取消` / `送出回饋`）。
   - 作品欄行動端以 `hidden md:flex` 隱藏 17 筆無影片連結靜態作品並於行動預載跳過，保留 80 筆可播作品（桌機維持完整 97 筆）。
+- **外部連結修復、3C 大圖置換、CI 升級與 6 大分類優先排序（同日下午第二波）**：
+  - **外部社群連結修復（`url.js`、`VisualSynthesis.jsx`、`Manifesto.jsx`）**：移除 `openSafeExternalUrl` 因 `noopener` 回傳 `null` 而誤觸 `window.location.assign` 覆寫原分頁的 Bug；抽離 `getSafeExternalUrl` 白名單校驗，全站所有 Facebook / Instagram 外部作品改用原生 `<a target="_blank" rel="noopener noreferrer">`，確保桌機與手機 100% 保留原網站分頁。
+  - **3C 主推大圖與 6 大分類黃金排序（`portfolio.js`、`B-10.webp`、`VisualSynthesis.jsx`）**：將 3C 主推大圖更換為 `Samsung Galaxy Tab S11 Ultra`（`910×946` 高畫質 WebP 搭配 `imagePosition: "50% 34%"` 焦點校正防削頭），並依最新指定完成 6 大分類前排優先順序重排與 97 筆完整性測試。
+  - **GitHub Pages 部署升級（`.github/workflows/deploy.yml`）**：拆分官方標準 `build` ➔ `deploy`（`needs: build`）雙作業並全面升級至 Node 22 與新版官方 Actions（`checkout@v7`、`setup-node@v7`、`configure-pages@v6`、`upload-pages-artifact@v5`、`deploy-pages@v5`），消除 Artifact 索引競態失敗與 Node 20 棄用警告。
 
 ### 下一步待辦
 - **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。

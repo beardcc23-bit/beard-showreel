@@ -61,24 +61,66 @@ describe('portfolio.js 最佳化邏輯測試', () => {
     });
   });
 
-  describe('生活百貨分類排序驗證', () => {
-    it('生活百貨類別中，新光三越首部作品排在犀牛盾之後', () => {
-      const lifestyle = categories.find(c => c.id === 'lifestyle');
-      expect(lifestyle).toBeDefined();
+  describe('六大分類優先排序與完整性驗證', () => {
+    it('各分類前排優先作品排序正確，且同品牌其餘支數置於後段', () => {
+      const getNames = (id, count) =>
+        categories.find((c) => c.id === id).items.slice(0, count).map((i) => i.name);
 
-      const rhinoIndex = lifestyle.items.findIndex(i => i.name === '犀牛盾');
-      const skmItems = lifestyle.items
-        .map((item, idx) => ({ ...item, originalIndex: idx }))
-        .filter(item => item.name === '新光三越');
+      expect(getNames('food', 7)).toEqual([
+        'UCC',
+        'Extra',
+        '德克士炸雞',
+        '桂格 企業形象影片',
+        '柏克金啤酒',
+        '黑松茶花',
+        '維他露P+',
+      ]);
+      expect(getNames('tech', 5)).toEqual([
+        'Samsung Galaxy Tab S11 Ultra',
+        'Tokuyo 按摩椅',
+        'Panasonic Viera 電視',
+        'Samsung Galaxy S22',
+        'Samsung Z Fold2 / Z Flip2',
+      ]);
+      expect(getNames('vehicle', 5)).toEqual([
+        'Foxtron Caviar',
+        'Mazda',
+        'Gogoro Pulse',
+        'Gogoro EZZY',
+        '長榮航空',
+      ]);
+      expect(getNames('lifestyle', 5)).toEqual([
+        '新光三越',
+        'LaLaport 南港',
+        '錦鋐氣密窗',
+        'HOLA',
+        '東和鋼鐵',
+      ]);
+      // 確認生活百貨首位新光三越、HOLA、東和鋼鐵皆為原排序首支版本
+      const lifestyleItems = categories.find((c) => c.id === 'lifestyle').items;
+      expect(lifestyleItems[0].bgImage).toBe('/vfx/D/D-13.webp');
+      expect(lifestyleItems[3].bgImage).toBe('/vfx/D/D-03.webp');
+      expect(lifestyleItems[4].bgImage).toBe('/vfx/D/D-09.webp');
 
-      expect(rhinoIndex).toBeGreaterThan(-1);
-      expect(skmItems.length).toBeGreaterThan(0);
+      expect(getNames('beauty', 5)).toEqual([
+        '活沛多',
+        'Calm Night Day 淨日夜沐浴露',
+        'TKLAB',
+        'LUX 髮的補給',
+        'EMSCULPT 肌動減脂',
+      ]);
+      expect(getNames('finance', 5)).toEqual([
+        '磊山保經',
+        '台灣Pay',
+        '渣打銀行',
+        '安聯人壽',
+        '台灣Pay',
+      ]);
 
-      // 第一個新光三越必須緊接在犀牛盾之後
-      const firstSkm = skmItems[0];
-      expect(firstSkm.originalIndex).toBe(rhinoIndex + 1);
-      expect(firstSkm.videoId).toBe('wZhogI5TPB8');
-      expect(firstSkm.bgImage).toBe('/vfx/D/D-13.webp');
+      // 驗證全站 97 筆作品無遺漏、無重複 bgImage
+      const allImages = categories.flatMap((c) => c.items.map((i) => i.bgImage));
+      expect(allImages).toHaveLength(97);
+      expect(new Set(allImages).size).toBe(97);
     });
   });
 });
