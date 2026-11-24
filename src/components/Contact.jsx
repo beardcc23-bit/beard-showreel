@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { m } from 'framer-motion';
 import { Check, Copy, ArrowRight } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
+import RevealHeading from './common/RevealHeading';
 import { useClipboard } from '../hooks/useClipboard';
 
 /**
@@ -35,15 +35,9 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* 左對齊標頭 */}
         <div className="max-w-2xl mb-12 md:mb-16">
-          <m.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="font-display text-[clamp(2.6rem,7vw,5.75rem)] font-bold uppercase tracking-[-0.04em] leading-[0.94] text-title-white"
-          >
+          <RevealHeading className="font-display text-[clamp(2.6rem,7vw,5.75rem)] font-bold uppercase tracking-[-0.04em] leading-[0.94] text-title-white">
             Let&apos;s Connect<span className="text-spectral-crimson">.</span>
-          </m.h2>
+          </RevealHeading>
         </div>
 
         {/* 瑞士雙欄 1px 分割厚玻璃互動艙（保留外層無 overflow-hidden 以完整呈現右上 3D 玻璃厚度斷面） */}

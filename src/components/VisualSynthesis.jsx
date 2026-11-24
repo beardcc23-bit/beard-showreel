@@ -4,6 +4,7 @@ import { Play, ArrowUpRight } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
+import RevealHeading from './common/RevealHeading';
 
 const loadedImageCache = new Set();
 
@@ -259,9 +260,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
       <div className="max-w-7xl mx-auto">
         {/* 左對齊編輯標頭 */}
         <div className="mb-12 md:mb-16">
-          <h2 className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
+          <RevealHeading className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
             ADVERTISING
-          </h2>
+          </RevealHeading>
         </div>
 
         {/* 磨砂毛玻璃剪接軌道分類切換列 */}

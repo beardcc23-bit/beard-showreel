@@ -3,6 +3,7 @@ import { m, useInView } from 'framer-motion';
 import { Play } from 'lucide-react';
 import AnimatedCounter from './common/AnimatedCounter';
 import ScrubText from './common/ScrubText';
+import RevealHeading from './common/RevealHeading';
 import ExperienceTimeline from './ExperienceTimeline';
 import { achievementStats } from '../data/experience';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
@@ -49,15 +50,9 @@ export default function Introduction({ onPlayVideo }) {
 
           {/* 右側：標題、三段文案與 SHOWREEL 按鈕 */}
           <div className="md:col-span-7 lg:col-span-8 flex flex-col items-start">
-            <m.h2
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="font-display text-5xl sm:text-6xl lg:text-8xl font-bold tracking-[-0.04em] leading-[0.92] text-title-white mb-10"
-            >
+            <RevealHeading className="font-display text-5xl sm:text-6xl lg:text-8xl font-bold tracking-[-0.04em] leading-[0.92] text-title-white mb-10">
               Beard <span className="text-spectral-crimson">Chou</span>
-            </m.h2>
+            </RevealHeading>
 
             <div className="text-zinc-300 text-sm sm:text-base md:text-[17px] font-light leading-[1.9] tracking-wide space-y-6 max-w-[62ch]">
               <ScrubText text="重力與空氣的流動、光線穿透塵埃的折射軌跡、人物肌膚的毛孔質感——這些構築真實感的微小物理，是我的日常畫面。" />

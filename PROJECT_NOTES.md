@@ -198,7 +198,8 @@
   - **右側纖細 3D 暗房厚玻璃棱柱滑桿（`index.css`、`CanvasSequence.jsx`）**：復刻全站 `.optical-surface` 26.565° 立體斜切玻璃斷面（`5px` 寬、`5px/2.5px` 零毛刺咬合切面，移去細條 `backdrop-filter` 避免 GPU Readback），搭配半透明橘紅中空指針方塊與同軸置中紅色向下箭頭（`73% → 83%` 淡出）；支援點擊／按住拖曳 0ms 直刷 145 格與鍵盤無障礙操作。
   - **首次進站閒置自動演繹（`src/hooks/useIdleHeroAutoScroll.js`）**：首次載完首幀且無操作滿 `3.5 秒` 時，以 `4.8 秒` `easeInOutSine` 自動柔順推進全序列並帶進「個人介紹」；全程僅觸發一次，於 `capture` 捕獲階段監聽 `pointerdown` / `touchstart` 與 `wheel` / `keydown` / `body.modal-open` 做到 0ms 瞬停不搶捲軸、不覆蓋滑桿點擊。
   - **左上角返回定版（`Navigation.jsx`）**：點擊 `Beard Showreel` 精準回到 Hero 最後一張滿版定版位置（`HERO_FINAL_FRAME_PROGRESS = 0.855`），並與 `CanvasSequence` 共用 `src/constants/heroScroll.js` 單一常數來源。
-  - **3C 主推大圖裁切與 Grid 防撐高（`B-10.webp`、`VisualSynthesis.jsx`、`portfolio.js`）**：將正方形 `B-10.webp`（`910×946`）依構圖精準裁切上下為 `910×574`（41KB），同時為主推 2×2 大圖 `<img>` 加上 `lg:absolute lg:inset-0` 脫離 Grid 固有高度計算，徹底消除右側 4 張小卡下方黑色間隔；全站擴充至 **15 個測試檔 / 46 項測試**全綠過關。
+  - **3C 主推大圖裁切與 Grid 防撐高（`B-10.webp`、`VisualSynthesis.jsx`、`portfolio.js`）**：將正方形 `B-10.webp`（`910×946`）依構圖精準裁切上下為 `910×574`（41KB），同時為主推 2×2 大圖 `<img>` 加上 `lg:absolute lg:inset-0` 脫離 Grid 固有高度計算，徹底消除右側 4 張小卡下方黑色間隔。
+  - **全站巨型幕標 VFX 光學快門掃光顯影（`src/components/common/RevealHeading.jsx`）**：新增共用大標動效元件並統一套用至 `Beard Chou`、`THE MANIFESTO`、`ADVERTISING`、`Let's Connect.`；進視口單次觸發純 GPU `clip-path` 橫向曝光＋2px 光譜光刃掃描（致敬 Flame Before/After Wipe），支援 `prefers-reduced-motion` 與單一語意 `<h2>`，全站擴充至 **16 個測試檔 / 47 項測試**全綠過關。
 
 ### 下一步待辦
 - **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。

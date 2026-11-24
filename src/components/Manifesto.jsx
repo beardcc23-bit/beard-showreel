@@ -4,6 +4,7 @@ import { m, AnimatePresence } from 'framer-motion';
 import { Play, ArrowUpRight } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
+import RevealHeading from './common/RevealHeading';
 import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
@@ -146,9 +147,9 @@ export default function Manifesto({ onPlayVideo }) {
       <div className="max-w-7xl mx-auto">
         {/* 左對齊編輯標頭 */}
         <div className="mb-16 md:mb-24">
-          <h2 className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
+          <RevealHeading className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
             THE MANIFESTO
-          </h2>
+          </RevealHeading>
         </div>
 
         {/* 左欄 Sticky 釘選宣言 × 右欄 Sticky-Stack 三層光譜大卡 */}
