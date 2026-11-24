@@ -18,4 +18,21 @@ describe('Manifesto 元件懸浮預覽與互動測試', () => {
 
     fireEvent.mouseLeave(trigger);
   });
+
+  it('01 / 02 / 03 三層分鏡卡在手機與桌機皆應以獨立 sticky 容器依序疊壓且不被 optical-surface 覆蓋', () => {
+    render(<Manifesto onPlayVideo={vi.fn()} />);
+
+    const s1 = screen.getByTestId('manifesto-stack-01');
+    const s2 = screen.getByTestId('manifesto-stack-02');
+    const s3 = screen.getByTestId('manifesto-stack-03');
+
+    [s1, s2, s3].forEach((wrapper) => {
+      expect(wrapper).toHaveClass('sticky');
+      expect(wrapper.className).not.toContain('optical-surface');
+      expect(wrapper.querySelector('.optical-surface')).not.toBeNull();
+    });
+
+    expect(Number(s2.style.zIndex)).toBeGreaterThan(Number(s1.style.zIndex));
+    expect(Number(s3.style.zIndex)).toBeGreaterThan(Number(s2.style.zIndex));
+  });
 });

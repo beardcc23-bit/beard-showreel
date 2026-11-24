@@ -27,7 +27,7 @@ export default function Hero({ isModalOpen, onLoaded }) {
       <h1 className="sr-only">Beard Chou 周威全 | 視覺創造 (Autodesk Flame VFX)</h1>
 
       {/* Sticky 釘選舞台：隨外層軌道滾動鎖定於視窗視覺中央（扣除頂部導覽列高度） */}
-      <div className="sticky top-0 h-[100dvh] w-full flex items-center justify-center px-3 sm:px-4 md:px-10 pt-14 md:pt-16">
+      <div className="sticky top-0 h-[100dvh] w-full flex items-center justify-center px-2.5 sm:px-4 md:px-10 pt-14 md:pt-16">
         <div className="w-full max-w-[1136px] mx-auto relative z-10">
           <CanvasSequence
             containerRef={sectionRef}

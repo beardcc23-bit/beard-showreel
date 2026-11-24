@@ -10,24 +10,28 @@ describe('VisualSynthesis Component', () => {
 
     expect(screen.getByRole('heading', { level: 2, name: /advertising/i })).toBeInTheDocument();
 
-    // Extra 是 portrait Shorts 不應被選為 2x2 主推，UCC 為食品與飲料分類指定的唯一 lg:col-span-2 主推大圖
+    // Extra 是 portrait Shorts 不應被選為主推，UCC 為食品與飲料分類指定的唯一 col-span-2（手機滿版、桌機 2x2）主推大圖
     const portraitBtn = screen.getByRole('button', { name: /播放影片：Extra/i });
     const featuredBtn = screen.getByRole('button', { name: /播放影片：UCC/i });
-    expect(portraitBtn.className).not.toContain('lg:col-span-2');
-    expect(featuredBtn.className).toContain('lg:col-span-2');
+    expect(portraitBtn.className).not.toContain('col-span-2');
+    expect(featuredBtn.className).toContain('col-span-2');
+    expect(featuredBtn.className).toContain('lg:row-span-2');
+    // 驗證手機版採 2 欄網格（首張滿版、其餘縮小一半兩欄並排）
+    expect(featuredBtn.parentElement.className).toContain('grid-cols-2');
 
     // 切換至「3C與家電」分類，驗證 Samsung Galaxy Tab S11 Ultra 為指定主推大圖並以原生 <a target="_blank" rel="noopener noreferrer"> 另開分頁
     fireEvent.click(screen.getByRole('tab', { name: '3C與家電' }));
     const samsungTabLink = screen.getByRole('link', { name: /開啟外部影片：Samsung Galaxy Tab S11 Ultra/i });
     const tokuyoBtn = screen.getByRole('button', { name: /播放影片：Tokuyo 按摩椅/i });
-    expect(samsungTabLink.className).toContain('lg:col-span-2');
+    expect(samsungTabLink.className).toContain('col-span-2');
+    expect(samsungTabLink.className).toContain('lg:row-span-2');
     const samsungImg = samsungTabLink.querySelector('img');
     expect(samsungImg.className).toContain('lg:absolute');
     expect(samsungImg.className).toContain('lg:inset-0');
     expect(samsungTabLink).toHaveAttribute('target', '_blank');
     expect(samsungTabLink).toHaveAttribute('rel', 'noopener noreferrer');
     expect(samsungTabLink).toHaveAttribute('href', 'https://www.facebook.com/reel/1338163857656555');
-    expect(tokuyoBtn.className).not.toContain('lg:col-span-2');
+    expect(tokuyoBtn.className).not.toContain('col-span-2');
   });
 
   it('routes inline YouTube video clicks and keeps linkless cards non-interactive without icons', () => {

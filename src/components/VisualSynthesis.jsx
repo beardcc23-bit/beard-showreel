@@ -81,7 +81,7 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
         isInteractive
           ? 'flex border-white/[0.14] hover:border-white/[0.28] cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson'
           : 'hidden md:flex border-white/[0.08] cursor-default'
-      } ${isFeatured ? 'lg:col-span-2 lg:row-span-2' : ''}`}
+      } ${isFeatured ? 'col-span-2 lg:row-span-2' : ''}`}
     >
       {/* 上方純淨 16:9 無壓字商業劇照銀幕（桌機主推卡透過 lg:flex-1 與右側雙排小卡像素級等高對齊） */}
       <div
@@ -135,7 +135,9 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
 
       {/* 下方半透明透光磨砂文字欄（無黑底；無連結項目右側留白、無 icon、不觸發 hover 高亮） */}
       <div
-        className={`w-full px-3.5 sm:px-4 py-3 border-t border-white/[0.12] backdrop-blur-md backdrop-saturate-[160%] flex items-center justify-between gap-3 pointer-events-none ${
+        className={`w-full border-t border-white/[0.12] backdrop-blur-md backdrop-saturate-[160%] flex items-center justify-between pointer-events-none ${
+          isFeatured ? 'px-3.5 sm:px-4 py-3 gap-3' : 'px-2.5 sm:px-4 py-2.5 sm:py-3 gap-1.5 sm:gap-3'
+        } ${
           isInteractive
             ? 'bg-white/[0.06] group-hover:bg-white/[0.10] transition-colors duration-300'
             : 'bg-white/[0.04]'
@@ -146,8 +148,8 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
             isFeatured
               ? 'text-sm sm:text-[15px] font-semibold text-white'
               : isInteractive
-              ? 'text-xs sm:text-[13px] font-medium text-zinc-100 group-hover:text-white'
-              : 'text-xs sm:text-[13px] font-medium text-zinc-300'
+              ? 'text-[11px] sm:text-[13px] font-medium text-zinc-100 group-hover:text-white'
+              : 'text-[11px] sm:text-[13px] font-medium text-zinc-300'
           }`}
         >
           {item.name}
@@ -328,7 +330,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
               initial="enter"
               animate="center"
               exit="exit"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 md:gap-4 grid-flow-dense"
+              className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 md:gap-4 grid-flow-dense"
             >
               {orderedItems.map((item, index) => (
                 <BrandCard

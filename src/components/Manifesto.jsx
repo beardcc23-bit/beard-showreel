@@ -13,7 +13,7 @@ const lawCategories = [
     id: '01',
     subtitle: 'AI 智慧影像生成',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(235, 74, 46, 0.16) 0%, transparent 62%)',
-    stickyTop: 'md:top-24',
+    stickyTop: 'top-[76px] md:top-24',
     quote: '「AI 負責拓寬創意的邊界，而我負責將其無縫封裝落地。」',
     desc: 'AI 生成看似帶來無限想像，實則伴隨著物理邏輯崩壞、畫面閃爍與無規律的細節錯誤。我專注於從這些隨機不可控的片段中，精準篩選並萃取可用元素，將零散的 AI 生成素材，無痕合成為符合大片質感的高階商業畫面。',
     params: [
@@ -33,7 +33,7 @@ const lawCategories = [
     id: '02',
     subtitle: '綠幕去背合成',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(208, 52, 108, 0.16) 0%, transparent 62%)',
-    stickyTop: 'md:top-32',
+    stickyTop: 'top-[92px] md:top-32',
     quote: '「乾淨的去背不是把背景切掉，而是把環境光找回來。」',
     desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
     params: [
@@ -53,7 +53,7 @@ const lawCategories = [
     id: '03',
     subtitle: '人物美體膚質精修',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(18, 118, 184, 0.18) 0%, transparent 62%)',
-    stickyTop: 'md:top-40',
+    stickyTop: 'top-[108px] md:top-40',
     quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
     desc: '極致的人像修飾，是讓主角展現無瑕面容與完美體態，卻不失真實溫度。我藉由精確的動態轉描與肌理微調，在避免塑膠感的同時，精修出最符合黃金比例的自然物理動態。',
     params: [
@@ -192,93 +192,97 @@ export default function Manifesto({ onPlayVideo }) {
             </ScrubText>
           </div>
 
-          {/* 右側：三層滾動堆疊磨砂毛玻璃分鏡面板 (Sticky-Stack) */}
-          <div className="md:col-span-7 flex flex-col gap-10 md:gap-14">
-            {lawCategories.map((cat) => (
-              <RefractionCard
+          {/* 右側：三層滾動堆疊磨砂毛玻璃分鏡面板 (Sticky-Stack，桌機與手機皆由 01 -> 02 -> 03 依序疊壓) */}
+          <div className="md:col-span-7 flex flex-col gap-8 md:gap-14">
+            {lawCategories.map((cat, idx) => (
+              <div
                 key={cat.id}
-                className={`w-full p-7 sm:p-10 md:sticky ${cat.stickyTop}`}
+                data-testid={`manifesto-stack-${cat.id}`}
+                style={{ zIndex: 11 + idx }}
+                className={`sticky ${cat.stickyTop}`}
               >
-                {/* 內層裁切裝飾容器（保留外層 3D 立體玻璃厚邊不被 overflow-hidden 裁掉） */}
-                <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
-                  <div className="absolute top-0 left-0 right-0 h-[2px] spectral-flow-line" />
-                  <div className="absolute inset-0" style={{ background: cat.ambientGlow }} />
-                  <span className="font-display text-7xl sm:text-8xl font-bold text-white/[0.04] absolute top-4 right-6 leading-none select-none">
-                    {cat.id}
-                  </span>
-                </div>
-
-                <div className="relative z-10">
-                  <h3 className="text-xl sm:text-2xl font-semibold text-title-white tracking-tight mb-5">
-                    {cat.subtitle}
-                  </h3>
-
-                  <blockquote
-                    className="text-zinc-100 font-normal text-base sm:text-lg leading-relaxed border-l-2 border-white/30 py-0.5 mb-5"
-                    style={{ textIndent: '-1em', paddingLeft: 'calc(1rem + 1em)' }}
-                  >
-                    {cat.quote}
-                  </blockquote>
-
-                  <p className="text-sm sm:text-[15px] text-zinc-300 font-light leading-[1.85] mb-8">
-                    {cat.desc}
-                  </p>
-
-                  {/* 實戰案例播放條 */}
-                  <div className="border-t border-white/10 divide-y divide-white/[0.08]">
-                    {cat.params.map((param) => {
-                      const hasVideo = Boolean(param.videoId);
-                      const safeExternalUrl = param.isFacebook ? getSafeExternalUrl(param.url) : null;
-                      const triggerVideo = () => {
-                        if (!hasVideo) return;
-                        if (onPlayVideo) {
-                          onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
-                        }
-                      };
-
-                      return (
-                        <div key={param.key} className="py-4 first:pt-5 last:pb-0">
-                          {safeExternalUrl ? (
-                            <a
-                              href={safeExternalUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group/play w-full flex items-center justify-between text-left mb-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-                            >
-                              <span className="inline-flex items-center gap-2.5 text-sm sm:text-[15px] font-medium text-title-white group-hover/play:text-dawn-gold transition-colors">
-                                <Play
-                                  size={11}
-                                  fill="currentColor"
-                                  className="text-spectral-crimson transition-transform duration-200 group-hover/play:scale-125"
-                                />
-                                <span>{param.key}</span>
-                              </span>
-                            </a>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={triggerVideo}
-                              className="group/play w-full flex items-center justify-between text-left mb-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-                            >
-                              <span className="inline-flex items-center gap-2.5 text-sm sm:text-[15px] font-medium text-title-white group-hover/play:text-dawn-gold transition-colors">
-                                <Play
-                                  size={11}
-                                  fill="currentColor"
-                                  className="text-spectral-crimson transition-transform duration-200 group-hover/play:scale-125"
-                                />
-                                <span>{param.key}</span>
-                              </span>
-                            </button>
-                          )}
-                          <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed pl-5">
-                            {param.value}
-                          </p>
-                        </div>
-                      );
-                    })}
+                <RefractionCard className="w-full p-7 sm:p-10 !bg-[#060911]/[0.92]">
+                  {/* 內層裁切裝飾容器（保留外層 3D 立體玻璃厚邊不被 overflow-hidden 裁掉） */}
+                  <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] spectral-flow-line" />
+                    <div className="absolute inset-0" style={{ background: cat.ambientGlow }} />
+                    <span className="font-display text-7xl sm:text-8xl font-bold text-white/[0.04] absolute top-4 right-6 leading-none select-none">
+                      {cat.id}
+                    </span>
                   </div>
-                </div>
-              </RefractionCard>
+
+                  <div className="relative z-10">
+                    <h3 className="text-xl sm:text-2xl font-semibold text-title-white tracking-tight mb-5">
+                      {cat.subtitle}
+                    </h3>
+
+                    <blockquote
+                      className="text-zinc-100 font-normal text-base sm:text-lg leading-relaxed border-l-2 border-white/30 py-0.5 mb-5"
+                      style={{ textIndent: '-1em', paddingLeft: 'calc(1rem + 1em)' }}
+                    >
+                      {cat.quote}
+                    </blockquote>
+
+                    <p className="text-sm sm:text-[15px] text-zinc-300 font-light leading-[1.85] mb-8">
+                      {cat.desc}
+                    </p>
+
+                    {/* 實戰案例播放條 */}
+                    <div className="border-t border-white/10 divide-y divide-white/[0.08]">
+                      {cat.params.map((param) => {
+                        const hasVideo = Boolean(param.videoId);
+                        const safeExternalUrl = param.isFacebook ? getSafeExternalUrl(param.url) : null;
+                        const triggerVideo = () => {
+                          if (!hasVideo) return;
+                          if (onPlayVideo) {
+                            onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
+                          }
+                        };
+
+                        return (
+                          <div key={param.key} className="py-4 first:pt-5 last:pb-0">
+                            {safeExternalUrl ? (
+                              <a
+                                href={safeExternalUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group/play w-full flex items-center justify-between text-left mb-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                              >
+                                <span className="inline-flex items-center gap-2.5 text-sm sm:text-[15px] font-medium text-title-white group-hover/play:text-dawn-gold transition-colors">
+                                  <Play
+                                    size={11}
+                                    fill="currentColor"
+                                    className="text-spectral-crimson transition-transform duration-200 group-hover/play:scale-125"
+                                  />
+                                  <span>{param.key}</span>
+                                </span>
+                              </a>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={triggerVideo}
+                                className="group/play w-full flex items-center justify-between text-left mb-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                              >
+                                <span className="inline-flex items-center gap-2.5 text-sm sm:text-[15px] font-medium text-title-white group-hover/play:text-dawn-gold transition-colors">
+                                  <Play
+                                    size={11}
+                                    fill="currentColor"
+                                    className="text-spectral-crimson transition-transform duration-200 group-hover/play:scale-125"
+                                  />
+                                  <span>{param.key}</span>
+                                </span>
+                              </button>
+                            )}
+                            <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed pl-5">
+                              {param.value}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </RefractionCard>
+              </div>
             ))}
           </div>
         </div>

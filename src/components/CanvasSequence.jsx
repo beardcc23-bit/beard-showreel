@@ -487,7 +487,10 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
         {/* 桌機左側隱形對稱平衡欄，防止銀幕因右側立體玻璃滑桿往左偏移 */}
         {!prefersReduced && <div className="hidden md:block" aria-hidden="true" />}
 
-        <div className="relative w-full aspect-[5/4] md:aspect-video bg-[#030407] shadow-[0_32px_90px_rgba(0,0,0,0.85)] overflow-hidden">
+        <div
+          data-testid="hero-screen"
+          className="relative w-full aspect-[3/4] max-h-[72dvh] md:max-h-none md:aspect-video bg-[#030407] shadow-[0_32px_90px_rgba(0,0,0,0.85)] overflow-hidden"
+        >
           {/* 極簡暗房載入遮罩 */}
           {isLoading && (
             <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#030407]/90 backdrop-blur-md">

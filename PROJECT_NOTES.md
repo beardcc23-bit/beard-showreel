@@ -199,7 +199,11 @@
   - **首次進站閒置自動演繹（`src/hooks/useIdleHeroAutoScroll.js`）**：首次載完首幀且無操作滿 `3.5 秒` 時，以 `4.8 秒` `easeInOutSine` 自動柔順推進全序列並帶進「個人介紹」；全程僅觸發一次，於 `capture` 捕獲階段監聽 `pointerdown` / `touchstart` 與 `wheel` / `keydown` / `body.modal-open` 做到 0ms 瞬停不搶捲軸、不覆蓋滑桿點擊。
   - **左上角返回定版（`Navigation.jsx`）**：點擊 `Beard Showreel` 精準回到 Hero 最後一張滿版定版位置（`HERO_FINAL_FRAME_PROGRESS = 0.855`），並與 `CanvasSequence` 共用 `src/constants/heroScroll.js` 單一常數來源。
   - **3C 主推大圖裁切與 Grid 防撐高（`B-10.webp`、`VisualSynthesis.jsx`、`portfolio.js`）**：將正方形 `B-10.webp`（`910×946`）依構圖精準裁切上下為 `910×574`（41KB），同時為主推 2×2 大圖 `<img>` 加上 `lg:absolute lg:inset-0` 脫離 Grid 固有高度計算，徹底消除右側 4 張小卡下方黑色間隔。
-  - **全站巨型幕標 VFX 光學快門掃光顯影（`src/components/common/RevealHeading.jsx`）**：新增共用大標動效元件並統一套用至 `Beard Chou`、`THE MANIFESTO`、`ADVERTISING`、`Let's Connect.`；進視口單次觸發純 GPU `clip-path` 橫向曝光＋2px 光譜光刃掃描（致敬 Flame Before/After Wipe），支援 `prefers-reduced-motion` 與單一語意 `<h2>`，全站擴充至 **16 個測試檔 / 47 項測試**全綠過關。
+  - **全站巨型幕標 VFX 光學快門掃光顯影（`src/components/common/RevealHeading.jsx`）**：新增共用大標動效元件並統一套用至 `Beard Chou`、`THE MANIFESTO`、`ADVERTISING`、`Let's Connect.`；進視口單次觸發純 GPU `clip-path` 橫向曝光＋2px 光譜光刃掃描（致敬 Flame Before/After Wipe），支援 `prefers-reduced-motion` 與單一語意 `<h2>`。
+  - **行動端首屏與排版三大升級（`CanvasSequence.jsx`、`Hero.jsx`、`Manifesto.jsx`、`VisualSynthesis.jsx`）**：
+    - 手機首屏改為直向 `3:4`（`aspect-[3/4] max-h-[72dvh]`）滿版 `object-cover` 居中裁切左右，強化直屏視覺張力並兼顧 664px 矮視口提示不裁切。
+    - `Manifesto` 三層卡片將 `sticky` 抽離至獨立外層容器（解除 `.optical-surface` 的 `position: relative` 覆蓋），於手機版實現 `top-[76px]` → `top-[92px]` → `top-[108px]` 與遞增 `zIndex`（11/12/13）依序疊壓，並加入 `!bg-[#060911]/[0.92]` 暗房底襯杜絕底下文字穿幫重影。
+    - `VisualSynthesis` 手機版改為 `grid-cols-2`（首張主推卡 `col-span-2` 滿版大圖、其餘作品自動縮半兩欄並排並精調小卡底欄字級與間距），全站擴充至 **16 個測試檔 / 48 項測試**全綠過關。
 
 ### 下一步待辦
 - **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。
