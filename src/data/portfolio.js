@@ -238,7 +238,9 @@ export const categories = [
         "url": "https://www.facebook.com/reel/1338163857656555",
         "videoId": "1338163857656555",
         "isFacebook": true,
-        "aspect": "portrait"
+        "aspect": "portrait",
+        "featured": true,
+        "imagePosition": "50% 34%"
       },
       {
         "name": "Sony Xperia",
@@ -248,8 +250,7 @@ export const categories = [
         "name": "Tokuyo 按摩椅",
         "bgImage": "/vfx/B/B-12.webp",
         "url": "https://www.youtube.com/watch?v=_SENfBsNjgE",
-        "videoId": "_SENfBsNjgE",
-        "featured": true
+        "videoId": "_SENfBsNjgE"
       },
       {
         "name": "三菱重工空調",

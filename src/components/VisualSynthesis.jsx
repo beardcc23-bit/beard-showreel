@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
 import { Play, ArrowUpRight } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
-import { openSafeExternalUrl } from '../utils/url';
+import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 const loadedImageCache = new Set();
@@ -44,10 +44,11 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
   const { hasVideo } = item;
   const bgImageUrl = getDisplayImageUrl(item);
   const isInlineVideo = Boolean(item.videoId && !item.isFacebook);
-  const isExternalVideo = Boolean(hasVideo && !isInlineVideo);
+  const safeExternalUrl = !isInlineVideo && hasVideo ? getSafeExternalUrl(item.url) : null;
+  const isExternalVideo = Boolean(safeExternalUrl);
   const isInteractive = isInlineVideo || isExternalVideo;
 
-  const CardElement = isInteractive ? m.button : m.div;
+  const CardElement = isInlineVideo ? m.button : isExternalVideo ? m.a : m.div;
   const [isImageLoaded, setIsImageLoaded] = useState(() =>
     bgImageUrl ? loadedImageCache.has(bgImageUrl) : false
   );
@@ -56,8 +57,6 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
   const handleClick = () => {
     if (isInlineVideo) {
       onPlayVideo(item.videoId, false, item.aspect);
-    } else if (isExternalVideo) {
-      openSafeExternalUrl(item.url);
     }
   };
 
@@ -69,8 +68,11 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
 
   return (
     <CardElement
-      type={isInteractive ? 'button' : undefined}
-      onClick={isInteractive ? handleClick : undefined}
+      type={isInlineVideo ? 'button' : undefined}
+      href={isExternalVideo ? safeExternalUrl : undefined}
+      target={isExternalVideo ? '_blank' : undefined}
+      rel={isExternalVideo ? 'noopener noreferrer' : undefined}
+      onClick={isInlineVideo ? handleClick : undefined}
       aria-label={ariaLabel}
       custom={{ dir: direction, index }}
       variants={CARD_VARIANTS}
@@ -96,6 +98,7 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
               height={isFeatured ? 675 : 337}
               loading={isFeatured ? 'eager' : 'lazy'}
               decoding="async"
+              style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
               onLoad={() => {
                 loadedImageCache.add(bgImageUrl);
                 setIsImageLoaded(true);

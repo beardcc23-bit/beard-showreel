@@ -15,6 +15,16 @@ describe('VisualSynthesis Component', () => {
     const featuredBtn = screen.getByRole('button', { name: /播放影片：UCC/i });
     expect(portraitBtn.className).not.toContain('lg:col-span-2');
     expect(featuredBtn.className).toContain('lg:col-span-2');
+
+    // 切換至「3C與家電」分類，驗證 Samsung Galaxy Tab S11 Ultra 為指定主推大圖並以原生 <a target="_blank" rel="noopener noreferrer"> 另開分頁
+    fireEvent.click(screen.getByRole('tab', { name: '3C與家電' }));
+    const samsungTabLink = screen.getByRole('link', { name: /開啟外部影片：Samsung Galaxy Tab S11 Ultra/i });
+    const tokuyoBtn = screen.getByRole('button', { name: /播放影片：Tokuyo 按摩椅/i });
+    expect(samsungTabLink.className).toContain('lg:col-span-2');
+    expect(samsungTabLink).toHaveAttribute('target', '_blank');
+    expect(samsungTabLink).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(samsungTabLink).toHaveAttribute('href', 'https://www.facebook.com/reel/1338163857656555');
+    expect(tokuyoBtn.className).not.toContain('lg:col-span-2');
   });
 
   it('routes inline YouTube video clicks and keeps linkless cards non-interactive without icons', () => {

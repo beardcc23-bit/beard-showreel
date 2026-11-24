@@ -4,7 +4,7 @@ import { m, AnimatePresence } from 'framer-motion';
 import { Play, ArrowUpRight } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
-import { openSafeExternalUrl } from '../utils/url';
+import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 const lawCategories = [
@@ -227,31 +227,48 @@ export default function Manifesto({ onPlayVideo }) {
                   <div className="border-t border-white/10 divide-y divide-white/[0.08]">
                     {cat.params.map((param) => {
                       const hasVideo = Boolean(param.videoId);
+                      const safeExternalUrl = param.isFacebook ? getSafeExternalUrl(param.url) : null;
                       const triggerVideo = () => {
                         if (!hasVideo) return;
-                        if (param.isFacebook && param.url) {
-                          openSafeExternalUrl(param.url);
-                        } else if (onPlayVideo) {
+                        if (onPlayVideo) {
                           onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
                         }
                       };
 
                       return (
                         <div key={param.key} className="py-4 first:pt-5 last:pb-0">
-                          <button
-                            type="button"
-                            onClick={triggerVideo}
-                            className="group/play w-full flex items-center justify-between text-left mb-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-                          >
-                            <span className="inline-flex items-center gap-2.5 text-sm sm:text-[15px] font-medium text-title-white group-hover/play:text-dawn-gold transition-colors">
-                              <Play
-                                size={11}
-                                fill="currentColor"
-                                className="text-spectral-crimson transition-transform duration-200 group-hover/play:scale-125"
-                              />
-                              <span>{param.key}</span>
-                            </span>
-                          </button>
+                          {safeExternalUrl ? (
+                            <a
+                              href={safeExternalUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group/play w-full flex items-center justify-between text-left mb-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                            >
+                              <span className="inline-flex items-center gap-2.5 text-sm sm:text-[15px] font-medium text-title-white group-hover/play:text-dawn-gold transition-colors">
+                                <Play
+                                  size={11}
+                                  fill="currentColor"
+                                  className="text-spectral-crimson transition-transform duration-200 group-hover/play:scale-125"
+                                />
+                                <span>{param.key}</span>
+                              </span>
+                            </a>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={triggerVideo}
+                              className="group/play w-full flex items-center justify-between text-left mb-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                            >
+                              <span className="inline-flex items-center gap-2.5 text-sm sm:text-[15px] font-medium text-title-white group-hover/play:text-dawn-gold transition-colors">
+                                <Play
+                                  size={11}
+                                  fill="currentColor"
+                                  className="text-spectral-crimson transition-transform duration-200 group-hover/play:scale-125"
+                                />
+                                <span>{param.key}</span>
+                              </span>
+                            </button>
+                          )}
                           <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed pl-5">
                             {param.value}
                           </p>
