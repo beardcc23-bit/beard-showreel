@@ -203,7 +203,11 @@
   - **行動端首屏與排版三大升級（`CanvasSequence.jsx`、`Hero.jsx`、`Manifesto.jsx`、`VisualSynthesis.jsx`）**：
     - 手機首屏改為直向 `3:4`（`aspect-[3/4] max-h-[72dvh]`）滿版 `object-cover` 居中裁切左右，強化直屏視覺張力並兼顧 664px 矮視口提示不裁切。
     - `Manifesto` 三層卡片將 `sticky` 抽離至獨立外層容器（解除 `.optical-surface` 的 `position: relative` 覆蓋），於手機版實現 `top-[76px]` → `top-[92px]` → `top-[108px]` 與遞增 `zIndex`（11/12/13）依序疊壓，並加入 `!bg-[#060911]/[0.92]` 暗房底襯杜絕底下文字穿幫重影。
-    - `VisualSynthesis` 手機版改為 `grid-cols-2`（首張主推卡 `col-span-2` 滿版大圖、其餘作品自動縮半兩欄並排並精調小卡底欄字級與間距），全站擴充至 **16 個測試檔 / 48 項測試**全綠過關。
+    - `VisualSynthesis` 手機版改為 `grid-cols-2`（首張主推卡 `col-span-2` 滿版大圖、其餘作品自動縮半兩欄並排並精調小卡底欄字級與間距）。
+  - **全站底層效能、流量與瘦身總整理（同日第四波）**：
+    - `index.html` & `CanvasSequence.jsx`：Favicon 與首屏 `<link rel="preload">` 全改為 `%BASE_URL%` 並直接對準真實首幀 `png-0_00000000.webp?v=3`（消除首屏 136KB 重複下載與 GitHub Pages 子路徑失效）；YouTube `preconnect` 改指向實際使用的 `https://www.youtube-nocookie.com`。
+    - `OpticalLightField.jsx` & `Navigation.jsx`：桌機 WebGL 背景鎖定 `36fps`（`12fps` 底片顆粒 3 倍整數倍，120Hz 筆電 GPU 耗電降約 70%）；行動端跳過全域 `mousemove`；兩處滾動監聽全面改用 `ResizeObserver` 快取 `maxScroll` 達成滾動期 0 次同步 Layout 讀取。
+    - `Modal.jsx` & `index.css` & `public/`：彈窗內層殘留 `vh` 全面升級 `dvh`；清除 `index.css` 內 106 行已淘汰舊版死碼；刪除 `public/` 下 7 支零引用舊影片與廢圖（`hero*.mp4/webm`、`hero-poster*.webp`、`youtube-logo.webp`，部署包減重約 **8.6 MB**），全站 **16 個測試檔 / 48 項測試**全綠過關。
 
 ### 下一步待辦
 - **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。

@@ -197,40 +197,6 @@ body {
   will-change: transform, opacity;
 }
 
-/* 真實上傳光譜圖動態呼吸融合層（與 WebGL 流體光束疊加產生雙層視差流動感） */
-@keyframes reference-silk-flow {
-  0% {
-    transform: translate3d(-4%, 3%, 0) scale(1.04) rotate(-1.5deg);
-    opacity: 0.24;
-  }
-
-  50% {
-    transform: translate3d(3%, -4%, 0) scale(1.14) rotate(1.5deg);
-    opacity: 0.42;
-  }
-
-  100% {
-    transform: translate3d(-2%, 2%, 0) scale(1.08) rotate(-0.8deg);
-    opacity: 0.28;
-  }
-}
-
-.optical-reference-overlay {
-  position: absolute;
-  left: -8%;
-  bottom: -10%;
-  width: min(96vw, 1240px);
-  height: 115vh;
-  background-size: cover;
-  background-position: left bottom;
-  background-repeat: no-repeat;
-  mix-blend-mode: screen;
-  mask-image: radial-gradient(ellipse 85% 82% at 18% 85%, black 15%, rgba(0, 0, 0, 0.45) 55%, transparent 82%);
-  -webkit-mask-image: radial-gradient(ellipse 85% 82% at 18% 85%, black 15%, rgba(0, 0, 0, 0.45) 55%, transparent 82%);
-  animation: reference-silk-flow 14s ease-in-out infinite alternate;
-  will-change: transform, opacity;
-}
-
 /* 前景切面流動光譜細線（模擬背景流動光影掠過玻璃邊緣的即時折射） */
 @keyframes spectral-edge-stream {
   0% {
@@ -253,27 +219,6 @@ body {
   animation: spectral-edge-stream 16s linear infinite;
 }
 
-.spectral-flow-line-vertical {
-  background: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      #EB4A2E 28%,
-      #D0346C 55%,
-      #1276B8 82%,
-      rgba(255, 255, 255, 0.95) 100%);
-  background-size: 100% 200%;
-  animation: spectral-edge-stream-v 18s linear infinite;
-}
-
-@keyframes spectral-edge-stream-v {
-  0% {
-    background-position: 50% 0%;
-  }
-
-  100% {
-    background-position: 50% 200%;
-  }
-}
-
 /* 真實上傳光譜圖融合層（無 WebGL 時備援） */
 .optical-reference-layer {
   position: absolute;
@@ -290,53 +235,6 @@ body {
   mask-image: radial-gradient(ellipse 88% 86% at 14% 88%, black 18%, rgba(0, 0, 0, 0.5) 52%, transparent 82%);
   -webkit-mask-image: radial-gradient(ellipse 88% 86% at 14% 88%, black 18%, rgba(0, 0, 0, 0.5) 52%, transparent 82%);
   will-change: transform, opacity;
-}
-
-/* 4K 離屏渲染 45° 光學拉絲層 */
-.optical-streak-canvas {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: min(100vw, 1380px);
-  height: min(100vh, 1180px);
-  mix-blend-mode: screen;
-  opacity: calc(0.28 + var(--beam-warm-opacity) * 0.38);
-  transform: translate3d(calc(var(--beam-shift-x) * 0.6), calc(var(--beam-shift-y) * 0.6), 0);
-  will-change: transform, opacity;
-}
-
-/* 左下角高曝光純白熾光核（首屏與終章綻放，中段收斂） */
-.optical-core-burn {
-  position: absolute;
-  left: -12vw;
-  bottom: -18vh;
-  width: 58vw;
-  height: 58vh;
-  background: radial-gradient(ellipse 70% 55% at 18% 82%,
-      rgba(248, 250, 252, 0.72) 0%,
-      rgba(255, 214, 198, 0.32) 28%,
-      rgba(235, 74, 46, 0.12) 52%,
-      transparent 76%);
-  opacity: var(--beam-white-opacity);
-  will-change: opacity;
-}
-
-/* 右上與中央深淵暗角：鎖定全程深黑底色主導權 */
-.optical-void-vignette {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(225deg, #05070B 18%, rgba(5, 7, 11, 0.86) 46%, rgba(5, 7, 11, 0.32) 76%, rgba(5, 7, 11, 0.12) 100%),
-    radial-gradient(circle at 82% 18%, #05070B 0%, transparent 62%);
-}
-
-/* 極細微靜態底片微粒（消除漸層色階斷層） */
-.optical-film-grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.035;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.75) 0.6px, transparent 0.6px);
-  background-size: 3px 3px;
 }
 
 /* ==========================================================================
@@ -612,15 +510,12 @@ body.is-scrolling .optical-surface {
 .section-offscreen .optical-surface::after,
 .section-offscreen .hero-glass-rail::before,
 .section-offscreen .spectral-flow-line,
-.section-offscreen .spectral-flow-line-vertical,
 body.modal-open .optical-blob-warm,
 body.modal-open .optical-blob-cool,
 body.modal-open .optical-surface::before,
 body.modal-open .optical-surface::after,
 body.modal-open .hero-glass-rail::before,
-body.modal-open .optical-reference-overlay,
-body.modal-open .spectral-flow-line,
-body.modal-open .spectral-flow-line-vertical {
+body.modal-open .spectral-flow-line {
   animation-play-state: paused !important;
 }
 

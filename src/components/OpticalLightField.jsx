@@ -263,13 +263,17 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let rafId = null;
     let lastRenderTime = 0;
     const startTime = performance.now();
+    let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+
+    const updateMaxScroll = () => {
+      cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
 
     const handleScroll = () => {
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const sy = window.scrollY;
       velocity = Math.max(-2.5, Math.min(2.5, (sy - lastScrollY) * 0.02));
       lastScrollY = sy;
-      targetScroll = Math.max(0, Math.min(1, sy / maxScroll));
+      targetScroll = Math.max(0, Math.min(1, sy / cachedMaxScroll));
     };
 
     const handlePointerMove = (e) => {
@@ -285,18 +289,18 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
         return;
       }
 
-      // 行動端鎖定 24fps 電影標準幀率（12fps 顆粒的 2 倍整數倍，降耗約 75% 且零抖動）
-      const minFrameMs = isMobile ? 1000 / 24 : 0;
-      if (minFrameMs > 0 && lastRenderTime > 0 && now - lastRenderTime < minFrameMs) {
+      // 手機鎖定 24fps、桌機鎖定 36fps（皆為 12fps 電影顆粒的整數倍，大幅降低筆電 120Hz GPU 耗電且零視覺差異）
+      const minFrameMs = isMobile ? 1000 / 24 : 1000 / 36;
+      if (lastRenderTime > 0 && now - lastRenderTime < minFrameMs) {
         rafId = requestAnimationFrame(renderFrame);
         return;
       }
       lastRenderTime = now;
 
-      const scrollLerp = isMobile ? 0.12 : 0.05;
-      const ptrLerp = isMobile ? 0.10 : 0.04;
+      const scrollLerp = isMobile ? 0.12 : 0.085;
+      const ptrLerp = isMobile ? 0.10 : 0.07;
       currentScroll += (targetScroll - currentScroll) * scrollLerp;
-      velocity *= isMobile ? 0.82 : 0.92;
+      velocity *= isMobile ? 0.82 : 0.88;
       currentPtrX += (targetPtrX - currentPtrX) * ptrLerp;
       currentPtrY += (targetPtrY - currentPtrY) * ptrLerp;
 
@@ -336,6 +340,11 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       }
     };
 
+    const handleResize = () => {
+      resize();
+      updateMaxScroll();
+    };
+
     const bodyObserver = new MutationObserver(() => {
       if (!document.body.classList.contains('modal-open')) {
         startLoop();
@@ -343,9 +352,16 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     });
     bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
-    window.addEventListener('resize', resize, { passive: true });
+    const docResizeObserver =
+      typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateMaxScroll) : null;
+    docResizeObserver?.observe(document.documentElement);
+
+    const pointerListening = !isMobile;
+    window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    if (pointerListening) {
+      window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    }
     document.addEventListener('visibilitychange', handleVisibility);
 
     startLoop();
@@ -353,9 +369,12 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     return () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
       bodyObserver.disconnect();
-      window.removeEventListener('resize', resize);
+      docResizeObserver?.disconnect();
+      window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handlePointerMove);
+      if (pointerListening) {
+        window.removeEventListener('mousemove', handlePointerMove);
+      }
       document.removeEventListener('visibilitychange', handleVisibility);
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);

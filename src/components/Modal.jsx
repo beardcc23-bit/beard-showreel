@@ -58,9 +58,9 @@ export default function Modal({ isOpen, onClose, type, data }) {
             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
             className={`relative w-full bg-[#05070B] border border-white/20 shadow-[0_30px_100px_rgba(0,0,0,0.95)] z-10 flex flex-col max-h-[94dvh] overflow-y-auto overscroll-contain ${
               currentType === 'video' && currentData.aspect === 'portrait'
-                ? 'max-w-[45vh] md:max-w-[50vh]'
+                ? 'max-w-[45dvh] md:max-w-[50dvh]'
                 : currentType === 'video' && currentData.aspect === 'square'
-                ? 'max-w-[70vh] md:max-w-[75vh]'
+                ? 'max-w-[70dvh] md:max-w-[75dvh]'
                 : currentType === 'image'
                 ? 'max-w-5xl'
                 : 'max-w-5xl'
@@ -86,9 +86,9 @@ export default function Modal({ isOpen, onClose, type, data }) {
               <div
                 className={`bg-black mx-auto overflow-hidden w-full relative ${
                   currentData.aspect === 'portrait'
-                    ? 'aspect-[9/16] h-[80vh]'
+                    ? 'aspect-[9/16] h-[80dvh]'
                     : currentData.aspect === 'square'
-                    ? 'aspect-square h-[70vh] md:h-[75vh]'
+                    ? 'aspect-square h-[70dvh] md:h-[75dvh]'
                     : 'aspect-video'
                 }`}
               >
@@ -145,7 +145,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                       width="1920"
                       height="902"
                       decoding="async"
-                      className="w-full h-auto max-h-[78vh] object-contain"
+                      className="w-full h-auto max-h-[78dvh] object-contain"
                     />
                   )}
                 </div>

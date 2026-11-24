@@ -90,25 +90,39 @@ export default function Navigation() {
       }
     }
 
-    const handleScroll = () => {
+    let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    let cachedHeroClearThreshold = 160;
+
+    const updateScrollMetrics = () => {
+      cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const heroEl = document.getElementById('hero');
-      const heroClearThreshold = heroEl
+      cachedHeroClearThreshold = heroEl
         ? Math.max(160, heroEl.getBoundingClientRect().height - window.innerHeight * 0.5)
         : 160;
-      if (window.scrollY < heroClearThreshold) {
+    };
+    updateScrollMetrics();
+
+    const handleScroll = () => {
+      if (window.scrollY < cachedHeroClearThreshold) {
         setActiveSection((prev) => (prev ? '' : prev));
       }
       if (progressBarRef.current) {
-        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const ratio = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+        const ratio = Math.max(0, Math.min(1, window.scrollY / cachedMaxScroll));
         progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
       }
     };
 
+    const docResizeObserver =
+      typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateScrollMetrics) : null;
+    docResizeObserver?.observe(document.documentElement);
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', updateScrollMetrics, { passive: true });
     return () => {
       observer?.disconnect();
+      docResizeObserver?.disconnect();
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateScrollMetrics);
     };
   }, []);
 

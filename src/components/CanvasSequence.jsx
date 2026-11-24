@@ -99,8 +99,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   );
 
   const basePath = import.meta.env.BASE_URL;
-  const suffix = isMobile ? '-mobile' : '';
-  const posterSrc = `${basePath}hero-poster${suffix}.webp`;
+  const folder = isMobile ? 'png-0-mobile' : 'png-0';
+  const posterSrc = `${basePath}${folder}/png-0_00000000.webp?v=3`;
 
   // 尋找距離目標 slot 最近的已載入影格，確保網路載入期間刷動永不黑屏
   const findNearestLoadedSlot = (targetSlot) => {
