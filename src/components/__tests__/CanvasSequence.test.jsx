@@ -249,6 +249,23 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
       // 情境 3：行動漢堡選單開啟（body.modal-open）期間不應偷捲
       mockScrollTo.mockClear();
       document.body.classList.add('modal-open');
+      const { unmount: unmountModalCase } = render(
+        <CanvasSequence containerRef={ref} isModalOpen={false} />
+      );
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      act(() => {
+        vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS + 1000);
+      });
+      expect(mockScrollTo).not.toHaveBeenCalled();
+      unmountModalCase();
+      document.body.classList.remove('modal-open');
+
+      // 情境 4：手機版（innerWidth < 768）不應觸發 3.5 秒自動往下捲動
+      mockScrollTo.mockClear();
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
       render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
       await act(async () => {
         await Promise.resolve();

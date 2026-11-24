@@ -87,6 +87,11 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [isTouchOnly] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      Boolean(window.matchMedia?.('(hover: none) and (pointer: coarse)').matches)
+  );
   const [prefersReduced] = useState(
     () =>
       typeof window !== 'undefined' &&
@@ -467,9 +472,9 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     }
   }, [isModalOpen]);
 
-  // 首次進站無操作 3.5 秒後溫柔自動推進至「個人介紹」
+  // 僅於桌機（非手機／非純觸控）首次進站無操作 3.5 秒後溫柔自動推進至「個人介紹」
   useIdleHeroAutoScroll({
-    enabled: !isLoading && !prefersReduced,
+    enabled: !isLoading && !prefersReduced && !isMobile && !isTouchOnly,
     containerRef,
     isModalOpenRef,
   });
