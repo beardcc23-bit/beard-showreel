@@ -3,8 +3,20 @@ import { Menu, X } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { emilSpring, tapFeedback } from '../utils/motion';
 import { useOverlayLock } from '../hooks/useOverlayLock';
+import { NAV_SCROLL_OFFSET, HERO_FINAL_FRAME_PROGRESS } from '../constants/heroScroll';
 
 const SECTION_IDS = ['introduction', 'about', 'vfx', 'contact'];
+
+// 計算 Hero 逐幀序列「最後一張定版（F 145）」對應的垂直捲動座標
+const getHeroFinalFrameY = () => {
+  const heroEl = document.getElementById('hero');
+  if (!heroEl) return 0;
+  const rect = heroEl.getBoundingClientRect();
+  const scrollable = Math.max(0, rect.height - window.innerHeight);
+  if (scrollable <= 0) return 0;
+  const heroTop = rect.top + window.scrollY;
+  return Math.round(heroTop + scrollable * HERO_FINAL_FRAME_PROGRESS);
+};
 
 const LENIS_ANCHOR_OPTIONS = {
   duration: 1.05,
@@ -79,7 +91,11 @@ export default function Navigation() {
     }
 
     const handleScroll = () => {
-      if (window.scrollY < 160) {
+      const heroEl = document.getElementById('hero');
+      const heroClearThreshold = heroEl
+        ? Math.max(160, heroEl.getBoundingClientRect().height - window.innerHeight * 0.5)
+        : 160;
+      if (window.scrollY < heroClearThreshold) {
         setActiveSection((prev) => (prev ? '' : prev));
       }
       if (progressBarRef.current) {
@@ -126,24 +142,25 @@ export default function Navigation() {
 
     if (window.lenis) {
       window.lenis.start();
-      window.lenis.scrollTo(element, { offset: -76, ...LENIS_ANCHOR_OPTIONS });
+      window.lenis.scrollTo(element, { offset: -NAV_SCROLL_OFFSET, ...LENIS_ANCHOR_OPTIONS });
       return;
     }
-    animateScrollTo(element.getBoundingClientRect().top + window.scrollY - 76);
+    animateScrollTo(element.getBoundingClientRect().top + window.scrollY - NAV_SCROLL_OFFSET);
   };
 
-  const scrollToTop = (e) => {
+  const scrollToHeroEnd = (e) => {
     if (e) e.preventDefault();
     setActiveSection('');
     setIsOpen(false);
     document.body.style.overflow = '';
     document.body.classList.remove('modal-open');
+    const targetY = getHeroFinalFrameY();
     if (window.lenis) {
       window.lenis.start();
-      window.lenis.scrollTo(0, LENIS_ANCHOR_OPTIONS);
+      window.lenis.scrollTo(targetY, LENIS_ANCHOR_OPTIONS);
       return;
     }
-    animateScrollTo(0);
+    animateScrollTo(targetY);
   };
 
   return (
@@ -173,9 +190,9 @@ export default function Navigation() {
 
           <button
             type="button"
-            onClick={scrollToTop}
+            onClick={scrollToHeroEnd}
             className="group flex items-center gap-3 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson cursor-pointer"
-            aria-label="Beard Showreel - Scroll to top"
+            aria-label="Beard Showreel - 回到首頁主視覺定版"
           >
             <span className="font-space-mono text-lg md:text-xl font-bold tracking-tighter text-title-white group-hover:opacity-85 transition-opacity">
               Beard<span className="text-spectral-crimson"> Showreel</span>

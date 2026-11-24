@@ -175,8 +175,7 @@ export const categories = [
         "videoId": "1338163857656555",
         "isFacebook": true,
         "aspect": "portrait",
-        "featured": true,
-        "imagePosition": "50% 34%"
+        "featured": true
       },
       {
         "name": "Tokuyo 按摩椅",

@@ -74,7 +74,6 @@ export default function App() {
           {/* 主頁面五幕式區段 */}
           <main className="relative z-10">
             <Hero
-              onPlayVideo={handleOpenVideoModal}
               isModalOpen={modalState.isOpen}
               onLoaded={handlePageLoaded}
             />

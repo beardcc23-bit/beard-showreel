@@ -193,6 +193,12 @@
   - **外部社群連結修復（`url.js`、`VisualSynthesis.jsx`、`Manifesto.jsx`）**：移除 `openSafeExternalUrl` 因 `noopener` 回傳 `null` 而誤觸 `window.location.assign` 覆寫原分頁的 Bug；抽離 `getSafeExternalUrl` 白名單校驗，全站所有 Facebook / Instagram 外部作品改用原生 `<a target="_blank" rel="noopener noreferrer">`，確保桌機與手機 100% 保留原網站分頁。
   - **3C 主推大圖與 6 大分類黃金排序（`portfolio.js`、`B-10.webp`、`VisualSynthesis.jsx`）**：將 3C 主推大圖更換為 `Samsung Galaxy Tab S11 Ultra`（`910×946` 高畫質 WebP 搭配 `imagePosition: "50% 34%"` 焦點校正防削頭），並依最新指定完成 6 大分類前排優先順序重排與 97 筆完整性測試。
   - **GitHub Pages 部署升級（`.github/workflows/deploy.yml`）**：拆分官方標準 `build` ➔ `deploy`（`needs: build`）雙作業並全面升級至 Node 22 與新版官方 Actions（`checkout@v7`、`setup-node@v7`、`configure-pages@v6`、`upload-pages-artifact@v5`、`deploy-pages@v5`），消除 Artifact 索引競態失敗與 Node 20 棄用警告。
+- **首頁 Hero 改版為滾動逐幀時間軸＋3D 玻璃棱柱滑桿＋3C 大圖版面根治（同日第三波）**：
+  - **滾動驅動逐幀舞台（`Hero.jsx`、`CanvasSequence.jsx`、`src/constants/heroScroll.js`）**：淘汰首屏自動循環影片與中央懸停 `WATCH FULL SHOWREEL` 按鈕；改為 Sticky 滾動刷幀（桌機 `280vh` 抽樣 73 格 `8.29 MB`、手機 `230dvh` 抽樣 49 格 `1.81 MB`），向下滑正播、向上滑倒轉，尾段 `86% → 100%` 微縮淡出銜接「個人介紹」；導入時間無關指數衰減阻尼（60Hz / 120Hz 一致手感）、離屏早退守衛（下方 97 筆作品捲動 0 rAF）、`img.decode()` 背景預解碼與彈窗／分頁復原收斂。
+  - **右側纖細 3D 暗房厚玻璃棱柱滑桿（`index.css`、`CanvasSequence.jsx`）**：復刻全站 `.optical-surface` 26.565° 立體斜切玻璃斷面（`5px` 寬、`5px/2.5px` 零毛刺咬合切面，移去細條 `backdrop-filter` 避免 GPU Readback），搭配半透明橘紅中空指針方塊與同軸置中紅色向下箭頭（`73% → 83%` 淡出）；支援點擊／按住拖曳 0ms 直刷 145 格與鍵盤無障礙操作。
+  - **首次進站閒置自動演繹（`src/hooks/useIdleHeroAutoScroll.js`）**：首次載完首幀且無操作滿 `3.5 秒` 時，以 `4.8 秒` `easeInOutSine` 自動柔順推進全序列並帶進「個人介紹」；全程僅觸發一次，於 `capture` 捕獲階段監聽 `pointerdown` / `touchstart` 與 `wheel` / `keydown` / `body.modal-open` 做到 0ms 瞬停不搶捲軸、不覆蓋滑桿點擊。
+  - **左上角返回定版（`Navigation.jsx`）**：點擊 `Beard Showreel` 精準回到 Hero 最後一張滿版定版位置（`HERO_FINAL_FRAME_PROGRESS = 0.855`），並與 `CanvasSequence` 共用 `src/constants/heroScroll.js` 單一常數來源。
+  - **3C 主推大圖裁切與 Grid 防撐高（`B-10.webp`、`VisualSynthesis.jsx`、`portfolio.js`）**：將正方形 `B-10.webp`（`910×946`）依構圖精準裁切上下為 `910×574`（41KB），同時為主推 2×2 大圖 `<img>` 加上 `lg:absolute lg:inset-0` 脫離 Grid 固有高度計算，徹底消除右側 4 張小卡下方黑色間隔；全站擴充至 **15 個測試檔 / 46 項測試**全綠過關。
 
 ### 下一步待辦
 - **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。

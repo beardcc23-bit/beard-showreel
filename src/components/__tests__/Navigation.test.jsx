@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import Navigation from '../Navigation';
+import { HERO_FINAL_FRAME_PROGRESS } from '../../constants/heroScroll';
 
 describe('Navigation 元件行動端對齊與互動測試', () => {
   it('開啟行動端選單後，選單文字與按鈕文字均具有 px-6 對齊樣式', () => {
@@ -65,6 +66,45 @@ describe('Navigation 元件行動端對齊與互動測試', () => {
       aboutEl.remove();
       window.IntersectionObserver = originalIO;
       global.IntersectionObserver = originalIO;
+    }
+  });
+
+  it('點擊左上角 Beard Showreel 按鈕應捲動至 Hero 最後一張定版位置而非第一張', () => {
+    const heroEl = document.createElement('section');
+    heroEl.id = 'hero';
+    heroEl.getBoundingClientRect = () => ({
+      top: -2000,
+      height: 2520,
+      bottom: 520,
+      left: 0,
+      right: 1440,
+      width: 1440,
+    });
+    document.body.appendChild(heroEl);
+
+    const originalInnerHeight = window.innerHeight;
+    const originalScrollY = window.scrollY;
+    const originalLenis = window.lenis;
+    const mockScrollTo = vi.fn();
+
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: 900 });
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 2000 });
+    window.lenis = { start: vi.fn(), scrollTo: mockScrollTo };
+
+    try {
+      render(<Navigation />);
+      const brandBtn = screen.getByLabelText('Beard Showreel - 回到首頁主視覺定版');
+      fireEvent.click(brandBtn);
+
+      const expectedY = Math.round((2520 - 900) * HERO_FINAL_FRAME_PROGRESS);
+      expect(mockScrollTo).toHaveBeenCalledTimes(1);
+      expect(mockScrollTo.mock.calls[0][0]).toBe(expectedY);
+      expect(expectedY).toBeGreaterThan(0);
+    } finally {
+      heroEl.remove();
+      Object.defineProperty(window, 'innerHeight', { configurable: true, value: originalInnerHeight });
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: originalScrollY });
+      window.lenis = originalLenis;
     }
   });
 });

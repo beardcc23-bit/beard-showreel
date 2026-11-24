@@ -21,6 +21,9 @@ describe('VisualSynthesis Component', () => {
     const samsungTabLink = screen.getByRole('link', { name: /開啟外部影片：Samsung Galaxy Tab S11 Ultra/i });
     const tokuyoBtn = screen.getByRole('button', { name: /播放影片：Tokuyo 按摩椅/i });
     expect(samsungTabLink.className).toContain('lg:col-span-2');
+    const samsungImg = samsungTabLink.querySelector('img');
+    expect(samsungImg.className).toContain('lg:absolute');
+    expect(samsungImg.className).toContain('lg:inset-0');
     expect(samsungTabLink).toHaveAttribute('target', '_blank');
     expect(samsungTabLink).toHaveAttribute('rel', 'noopener noreferrer');
     expect(samsungTabLink).toHaveAttribute('href', 'https://www.facebook.com/reel/1338163857656555');

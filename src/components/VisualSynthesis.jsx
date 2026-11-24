@@ -37,7 +37,7 @@ const CARD_VARIANTS = {
 
 const getDisplayImageUrl = (item) => {
   if (!item?.bgImage) return null;
-  return item.featured ? `${item.bgImage}?v=2` : item.bgImage;
+  return item.featured ? `${item.bgImage}?v=3` : item.bgImage;
 };
 
 const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction }) => {
@@ -108,6 +108,8 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
                 setIsImageLoaded(true);
               }}
               className={`w-full h-full object-cover transition-[opacity,transform] duration-500 ease-out ${
+                isFeatured ? 'lg:absolute lg:inset-0' : ''
+              } ${
                 isInteractive ? 'group-hover:scale-[1.04]' : ''
               } ${
                 isImageLoaded

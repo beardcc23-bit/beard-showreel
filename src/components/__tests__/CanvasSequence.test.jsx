@@ -2,167 +2,366 @@ import React from 'react';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import CanvasSequence from '../CanvasSequence';
+import {
+  HERO_SCRUB_END_PROGRESS,
+  HERO_IDLE_AUTO_SCROLL_MS,
+  HERO_AUTO_SCROLL_DURATION_MS,
+} from '../../constants/heroScroll';
 
-describe('CanvasSequence（Hero 循環播放器）', () => {
-  let playSpy;
-  let pauseSpy;
+describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => {
+  const OriginalImage = global.Image;
+  const originalInnerHeight = window.innerHeight;
+  const originalInnerWidth = window.innerWidth;
+  let requestedSrcs = [];
 
   beforeEach(() => {
     vi.useFakeTimers();
-    // jsdom 未實作媒體播放：以 spy 模擬，並讓 paused 反映 play()/pause() 狀態
-    playSpy = vi.spyOn(window.HTMLMediaElement.prototype, 'play').mockImplementation(function () {
-      this.__playing = true;
-      return Promise.resolve();
-    });
-    pauseSpy = vi.spyOn(window.HTMLMediaElement.prototype, 'pause').mockImplementation(function () {
-      this.__playing = false;
-    });
-    Object.defineProperty(window.HTMLMediaElement.prototype, 'paused', {
-      configurable: true,
-      get() {
-        return !this.__playing;
-      },
-    });
-  });
+    requestedSrcs = [];
 
-  afterEach(() => {
-    vi.useRealTimers();
-    vi.restoreAllMocks();
-  });
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: 900 });
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
 
-  const unlock = () => {
-    // jsdom 不會真的載入 poster，靠 3 秒保底計時器解鎖
-    act(() => {
-      vi.advanceTimersByTime(3000);
-    });
-  };
-
-  it('應渲染 <video> 並提供 AV1 webm 優先、H.264 mp4 備援來源，且靜音屬性寫入 DOM', () => {
-    const { container } = render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
-    const video = container.querySelector('video');
-    expect(video).toBeInTheDocument();
-    expect(video).toHaveAttribute('playsinline');
-    expect(video).toHaveAttribute('muted');
-    expect(video).toHaveAttribute('loop');
-
-    const sources = video.querySelectorAll('source');
-    expect(sources).toHaveLength(2);
-    expect(sources[0].getAttribute('src')).toMatch(/hero(-mobile)?\.webm$/);
-    expect(sources[0].getAttribute('type')).toContain('av01');
-    expect(sources[1].getAttribute('src')).toMatch(/hero(-mobile)?\.mp4$/);
-    // 正常情況不啟用序列備援
-    expect(container.querySelector('canvas')).toBeNull();
-  });
-
-  it('掛載即開始播放，不必等 poster；poster 解鎖後呼叫 onLoaded', () => {
-    const onLoaded = vi.fn();
-    render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} onLoaded={onLoaded} />);
-    expect(playSpy).toHaveBeenCalled();
-    expect(screen.getByText('LOADING REEL')).toBeInTheDocument();
-
-    unlock();
-    expect(onLoaded).toHaveBeenCalledTimes(1);
-  });
-
-  it('Modal 開啟時應暫停影片', () => {
-    const { rerender } = render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
-    unlock();
-    pauseSpy.mockClear();
-
-    rerender(<CanvasSequence onPlayVideo={() => {}} isModalOpen={true} />);
-    expect(pauseSpy).toHaveBeenCalled();
-  });
-
-  it('游標進入中央感應區停格、移開續播，點擊開啟 YouTube Reel', () => {
-    const onPlayVideo = vi.fn();
-    render(<CanvasSequence onPlayVideo={onPlayVideo} isModalOpen={false} />);
-    unlock();
-    const hotspot = screen.getByTestId('hero-hotspot');
-
-    pauseSpy.mockClear();
-    fireEvent.mouseEnter(hotspot);
-    expect(pauseSpy).toHaveBeenCalled();
-
-    playSpy.mockClear();
-    fireEvent.mouseLeave(hotspot);
-    expect(playSpy).toHaveBeenCalled();
-
-    fireEvent.click(hotspot);
-    expect(onPlayVideo).toHaveBeenCalledWith('s6s2p87fPdA');
-  });
-
-  it('自動播放被拒絕 (NotAllowedError) 時應退回序列 Canvas 模式', async () => {
-    playSpy.mockImplementation(() =>
-      Promise.reject(Object.assign(new Error('blocked'), { name: 'NotAllowedError' }))
-    );
-    const { container } = render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
-    await act(async () => {
-      await Promise.resolve();
-    });
-    expect(container.querySelector('canvas')).toBeInTheDocument();
-    expect(container.querySelector('video')).toHaveClass('hidden');
-  });
-
-  it('play() 未 reject 但始終未播放（靜默阻擋）時，看門狗應退回序列模式', () => {
-    playSpy.mockImplementation(() => Promise.resolve()); // 不改變 paused 狀態
-    const { container } = render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
-    expect(container.querySelector('canvas')).toBeNull();
-
-    act(() => {
-      vi.advanceTimersByTime(2000);
-    });
-    expect(container.querySelector('canvas')).toBeInTheDocument();
-  });
-
-  it('video 播畢觸發 ended 事件時應強制重設 currentTime 為 0 並繼續播放', () => {
-    const { container } = render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
-    const video = container.querySelector('video');
-    unlock();
-    playSpy.mockClear();
-
-    video.currentTime = 4.83;
-    fireEvent.ended(video);
-
-    expect(video.currentTime).toBe(0);
-    expect(playSpy).toHaveBeenCalled();
-  });
-
-  it('序列備援模式應採用滑動視窗載入影格，不一次將全部 145 格載入記憶體', async () => {
-    const requestedSrcs = [];
-    const OriginalImage = global.Image;
-    class TrackingImage {
+    class MockImage {
+      constructor() {
+        this.naturalWidth = 1920;
+        this.naturalHeight = 1080;
+      }
       set src(val) {
         this._src = val;
-        if (val.includes('png-0_')) {
-          requestedSrcs.push(val);
-        }
-        if (typeof this.onload === 'function') {
-          this.onload();
-        }
+        requestedSrcs.push(val);
+        // 透過微任務觸發 onload 模擬真實非同步載入
+        Promise.resolve().then(() => {
+          if (typeof this.onload === 'function') this.onload();
+        });
       }
       get src() {
         return this._src;
       }
     }
-    global.Image = TrackingImage;
-    window.Image = TrackingImage;
+    global.Image = MockImage;
+    window.Image = MockImage;
+  });
 
-    playSpy.mockImplementation(() =>
-      Promise.reject(Object.assign(new Error('blocked'), { name: 'NotAllowedError' }))
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+    global.Image = OriginalImage;
+    window.Image = OriginalImage;
+    Object.defineProperty(window, 'innerHeight', { configurable: true, value: originalInnerHeight });
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth });
+  });
+
+  const makeContainerRef = (topValue = 0, height = 2520) => {
+    let currentTop = topValue;
+    const el = {
+      getBoundingClientRect: () => ({
+        top: currentTop,
+        height,
+        bottom: currentTop + height,
+        left: 0,
+        right: 1440,
+        width: 1440,
+      }),
+    };
+    return {
+      ref: { current: el },
+      setTop: (nextTop) => {
+        currentTop = nextTop;
+      },
+    };
+  };
+
+  it('應渲染純 Canvas 銀幕（無自動播放 <video>、無影格數字）、右側垂直滑桿與向下滑動提示', async () => {
+    const { ref } = makeContainerRef(0);
+    const onLoaded = vi.fn();
+    const { container } = render(
+      <CanvasSequence containerRef={ref} isModalOpen={false} onLoaded={onLoaded} />
     );
 
+    const canvas = container.querySelector('canvas');
+    expect(canvas).toBeInTheDocument();
+    expect(canvas.dataset.frame).toBe('1');
+    expect(container.querySelector('video')).toBeNull();
+    expect(screen.getByTestId('hero-vertical-progress')).toBeInTheDocument();
+    expect(screen.getByTestId('hero-progress-fill').style.transform).toBe('scaleY(0.0000)');
+    expect(screen.queryByTestId('hero-frame-counter')).toBeNull();
+    expect(screen.getByTestId('hero-scroll-hint')).toHaveTextContent('向下滑動推進');
+
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(onLoaded).toHaveBeenCalledTimes(1);
+  });
+
+  it('桌機與手機應自動抽幀減重（桌機 73 格、手機 49 格）且不一次載入全部 145 格', async () => {
+    const { ref } = makeContainerRef(0);
+    render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+
+    await act(async () => {
+      for (let i = 0; i < 30; i += 1) {
+        await Promise.resolve();
+      }
+    });
+    expect(requestedSrcs.length).toBe(73);
+    expect(requestedSrcs[0]).toContain('png-0_00000000.webp');
+    expect(requestedSrcs[1]).toContain('png-0_00000144.webp');
+
+    // 切換手機寬度驗證抽樣為 49 格且使用 png-0-mobile
+    requestedSrcs = [];
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+    await act(async () => {
+      for (let i = 0; i < 20; i += 1) {
+        await Promise.resolve();
+      }
+    });
+    expect(requestedSrcs.length).toBe(49);
+    expect(requestedSrcs[0]).toContain('png-0-mobile/png-0_00000000.webp');
+  });
+
+  it('往下滑應前進影格且中段維持提示，快到底才淡出並於尾段 85%→100% 觸發微縮轉場，往上滑應倒轉', async () => {
+    const { ref, setTop } = makeContainerRef(0, 2520); // scrollable = 2520 - 900 = 1620
+    const { container } = render(
+      <CanvasSequence containerRef={ref} isModalOpen={false} />
+    );
+
+    const canvas = container.querySelector('canvas');
+    const hint = screen.getByTestId('hero-scroll-hint');
+    const fill = screen.getByTestId('hero-progress-fill');
+    const thumb = screen.getByTestId('hero-progress-thumb');
+    const stage = container.firstElementChild;
+
+    // 往下滑至 50% 行程（-810px）：影格前進、右側垂直軌道向下延伸且提示文字維持顯示
+    setTop(-810);
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+      vi.advanceTimersByTime(1200);
+    });
+    expect(Number(canvas.dataset.frame)).toBeGreaterThan(60);
+    expect(fill.style.transform).toContain('scaleY(');
+    expect(thumb.style.transform).toContain('translate3d(0,');
+    expect(Number(hint.style.opacity)).toBe(1);
+
+    // 滑至 100% 行程（-1620px）：應定版在第 145 格、垂直進度滿格、提示文字淡出且銀幕微縮淡出
+    setTop(-1620);
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+      vi.advanceTimersByTime(1500);
+    });
+    expect(canvas.dataset.frame).toBe('145');
+    expect(fill.style.transform).toBe('scaleY(1.0000)');
+    expect(thumb.style.transform).toBe('translate3d(0, 100.000%, 0)');
+    expect(Number(hint.style.opacity)).toBe(0);
+    expect(stage.style.transform).toContain('scale(');
+    expect(Number(stage.style.opacity)).toBeLessThan(0.5);
+
+    // 往回滑至頂部（0px）：應倒轉回第 1 格並恢復完整顯示
+    setTop(0);
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+      vi.advanceTimersByTime(1500);
+    });
+    expect(canvas.dataset.frame).toBe('1');
+    expect(Number(stage.style.opacity)).toBe(1);
+    expect(Number(hint.style.opacity)).toBe(1);
+  });
+
+  it('銀幕應保持純粹無懸停按鈕連結遮擋，且 Canvas 應保護資產不被 dump', async () => {
+    const { ref } = makeContainerRef(0);
+    const { container } = render(
+      <CanvasSequence containerRef={ref} isModalOpen={false} />
+    );
+
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(screen.queryByTestId('hero-hotspot')).toBeNull();
+    expect(screen.queryByText(/watch full showreel/i)).toBeNull();
+
+    const canvas = container.querySelector('canvas');
+    expect(canvas.toDataURL()).toContain('data:image/gif');
+    expect(canvas.toBlob()).toBeNull();
+  });
+
+  it('首次進站載完首幀後閒置 3.5 秒應自動溫柔推進至個人介紹，且任一互動應立即取消不搶捲軸', async () => {
+    const introEl = document.createElement('section');
+    introEl.id = 'introduction';
+    introEl.getBoundingClientRect = () => ({
+      top: 2520,
+      height: 1200,
+      bottom: 3720,
+      left: 0,
+      right: 1440,
+      width: 1440,
+    });
+    document.body.appendChild(introEl);
+
+    const originalScrollY = window.scrollY;
+    const originalLenis = window.lenis;
+    const mockScrollTo = vi.fn();
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
+    window.lenis = { start: vi.fn(), scrollTo: mockScrollTo };
+
     try {
-      render(<CanvasSequence onPlayVideo={() => {}} isModalOpen={false} />);
+      // 情境 1：完全無操作，載入完成滿 3.5 秒應觸發自動平滑捲動至 #introduction（含導覽列緩衝 -76px）
+      const { ref } = makeContainerRef(0);
+      const { unmount } = render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+
       await act(async () => {
+        await Promise.resolve();
         await Promise.resolve();
       });
 
-      // 只預載前方滑動視窗（0 ~ 24 共 25 格），而非全部 145 格
-      expect(requestedSrcs.length).toBeGreaterThan(0);
-      expect(requestedSrcs.length).toBeLessThanOrEqual(25);
+      act(() => {
+        vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS - 100);
+      });
+      expect(mockScrollTo).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(150);
+      });
+      expect(mockScrollTo).toHaveBeenCalledTimes(1);
+      expect(mockScrollTo.mock.calls[0][0]).toBe(2520 - 76);
+      expect(mockScrollTo.mock.calls[0][1].duration).toBe(HERO_AUTO_SCROLL_DURATION_MS / 1000);
+      unmount();
+
+      // 情境 2：3.5 秒內使用者已觸發滾輪互動，倒數應立即取消、絕不搶捲軸
+      mockScrollTo.mockClear();
+      render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(1000);
+        window.dispatchEvent(new Event('wheel'));
+        vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS + 1000);
+      });
+      expect(mockScrollTo).not.toHaveBeenCalled();
+
+      // 情境 3：行動漢堡選單開啟（body.modal-open）期間不應偷捲
+      mockScrollTo.mockClear();
+      document.body.classList.add('modal-open');
+      render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      act(() => {
+        vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS + 1000);
+      });
+      expect(mockScrollTo).not.toHaveBeenCalled();
     } finally {
-      global.Image = OriginalImage;
-      window.Image = OriginalImage;
+      document.body.classList.remove('modal-open');
+      introEl.remove();
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: originalScrollY });
+      window.lenis = originalLenis;
+    }
+  });
+
+  it('點擊或拖曳右側 3D 玻璃滑桿應直接精準捲動至對應影格位置（Direct Scrubbing）', () => {
+    const { ref } = makeContainerRef(0, 2520); // scrollable = 1620
+    const originalScrollY = window.scrollY;
+    const originalLenis = window.lenis;
+    const mockScrollTo = vi.fn();
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
+    window.lenis = { start: vi.fn(), scrollTo: mockScrollTo };
+
+    try {
+      render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+      const slider = screen.getByTestId('hero-vertical-progress');
+      const glassRail = slider.querySelector('.hero-glass-rail');
+      glassRail.getBoundingClientRect = () => ({
+        top: 100,
+        bottom: 600,
+        height: 500,
+        left: 1000,
+        right: 1010,
+        width: 10,
+      });
+
+      // 點擊滑桿正中央（clientY = 350 => 50%），應 0ms 即時同步進度條與捲動座標
+      fireEvent.pointerDown(slider, { clientY: 350, pointerId: 1 });
+      const expectedMidY = Math.round(1620 * (0.5 * HERO_SCRUB_END_PROGRESS));
+      expect(mockScrollTo).toHaveBeenCalledWith(expectedMidY, { immediate: true });
+      expect(screen.getByTestId('hero-progress-fill').style.transform).toBe('scaleY(0.5000)');
+
+      // 按住拖曳至滑桿最底端（clientY = 600 => 100%）
+      fireEvent.pointerMove(slider, { clientY: 600, pointerId: 1 });
+      const expectedEndY = Math.round(1620 * HERO_SCRUB_END_PROGRESS);
+      expect(mockScrollTo).toHaveBeenLastCalledWith(expectedEndY, { immediate: true });
+      expect(screen.getByTestId('hero-progress-fill').style.transform).toBe('scaleY(1.0000)');
+
+      // 放開後再移動滑鼠不應再觸發刷幀
+      mockScrollTo.mockClear();
+      fireEvent.pointerUp(slider, { pointerId: 1 });
+      fireEvent.pointerMove(slider, { clientY: 200, pointerId: 1 });
+      expect(mockScrollTo).not.toHaveBeenCalled();
+    } finally {
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: originalScrollY });
+      window.lenis = originalLenis;
+    }
+  });
+
+  it('自動推進途中點擊右側 3D 滑桿應先於 capture 階段煞停自動捲動，不被冒泡覆蓋回原點', async () => {
+    const introEl = document.createElement('section');
+    introEl.id = 'introduction';
+    introEl.getBoundingClientRect = () => ({
+      top: 2520,
+      height: 1200,
+      bottom: 3720,
+      left: 0,
+      right: 1440,
+      width: 1440,
+    });
+    document.body.appendChild(introEl);
+
+    const { ref, setTop } = makeContainerRef(0, 2520);
+    const originalScrollY = window.scrollY;
+    const originalLenis = window.lenis;
+    const mockScrollTo = vi.fn();
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
+    window.lenis = { start: vi.fn(), scrollTo: mockScrollTo };
+
+    try {
+      render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+
+      // 觸發 3.5 秒自動推進進入進行中狀態
+      act(() => {
+        vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS + 50);
+      });
+      expect(mockScrollTo).toHaveBeenCalledTimes(1);
+
+      // 模擬自動推進已捲至 200px 後（Hero rect.top = -200），使用者點擊滑桿中段（50%）
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: 200 });
+      setTop(-200);
+      const slider = screen.getByTestId('hero-vertical-progress');
+      const glassRail = slider.querySelector('.hero-glass-rail');
+      glassRail.getBoundingClientRect = () => ({
+        top: 100,
+        bottom: 600,
+        height: 500,
+        left: 1000,
+        right: 1005,
+        width: 5,
+      });
+
+      fireEvent.pointerDown(slider, { clientY: 350, pointerId: 1 });
+      const expectedMidY = Math.round(1620 * (0.5 * HERO_SCRUB_END_PROGRESS));
+      // 最後一次 scrollTo 必須是滑桿的新目標座標（而非被冒泡拉回 200）
+      expect(mockScrollTo).toHaveBeenLastCalledWith(expectedMidY, { immediate: true });
+    } finally {
+      introEl.remove();
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: originalScrollY });
+      window.lenis = originalLenis;
     }
   });
 });
