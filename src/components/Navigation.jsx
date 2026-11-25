@@ -7,12 +7,14 @@ import { NAV_SCROLL_OFFSET, HERO_FINAL_FRAME_PROGRESS } from '../constants/heroS
 
 const SECTION_IDS = ['introduction', 'about', 'vfx', 'contact'];
 
-// 計算 Hero 逐幀序列「最後一張定版（F 145）」對應的垂直捲動座標
+// 計算 Hero 逐幀序列「清晰定版格」對應的垂直捲動座標
 const getHeroFinalFrameY = () => {
   const heroEl = document.getElementById('hero');
   if (!heroEl) return 0;
   const rect = heroEl.getBoundingClientRect();
-  const scrollable = Math.max(0, rect.height - window.innerHeight);
+  const stickyEl = heroEl.querySelector?.('[data-hero-sticky]');
+  const stickyH = stickyEl?.offsetHeight || window.innerHeight;
+  const scrollable = Math.max(0, rect.height - stickyH);
   if (scrollable <= 0) return 0;
   const heroTop = rect.top + window.scrollY;
   return Math.round(heroTop + scrollable * HERO_FINAL_FRAME_PROGRESS);

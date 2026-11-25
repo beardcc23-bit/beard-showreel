@@ -12,9 +12,13 @@ describe('Contact 元件 TDD 單元測試', () => {
   it('應該正確渲染 Contact 區塊標題與 Email 地址', () => {
     render(<Contact />);
 
-    // 檢查標題與 Email 資訊
+    // 檢查標題與 Email 資訊，且 Email 與 Leave a Note 應統一字體大小與字重
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/Let's Connect/i);
-    expect(screen.getByText('beard.cc23@gmail.com')).toBeInTheDocument();
+    const emailEl = screen.getByText('beard.cc23@gmail.com');
+    const noteEl = screen.getByText('Leave a Note');
+    expect(emailEl).toBeInTheDocument();
+    expect(emailEl).toHaveClass('text-lg', 'sm:text-xl', 'md:text-2xl', 'font-bold');
+    expect(noteEl).toHaveClass('text-lg', 'sm:text-xl', 'md:text-2xl', 'font-bold');
   });
 
   it('點擊 Email 按鈕時應該觸發複製剪貼簿並顯示成功訊息', async () => {

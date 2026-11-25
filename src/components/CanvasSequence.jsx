@@ -10,7 +10,7 @@ import { useIdleHeroAutoScroll } from '../hooks/useIdleHeroAutoScroll';
 const TOTAL_SOURCE_FRAMES = 117;
 const LAST_SOURCE_FRAME = TOTAL_SOURCE_FRAMES - 1;
 const MAX_CONCURRENT_LOADS = 6;
-const SEQUENCE_VERSION = 'v7';
+const SEQUENCE_VERSION = 'v8';
 
 /**
  * 依裝置抽樣影格索引（頭尾必保留 0 與 116），並排出「首尾 -> 均勻骨架 -> 細節補間」兩階段載入順序
@@ -88,7 +88,9 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   isModalOpenRef.current = Boolean(isModalOpen);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth < 768
+  );
   const [isTouchOnly] = useState(
     () =>
       typeof window !== 'undefined' &&
@@ -99,6 +101,16 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       typeof window !== 'undefined' &&
       Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
   );
+
+  // 視窗縮放跨過 768px 斷點時自動切換桌機橫圖與手機直圖，避免縮放預覽時殘留錯版比例圖檔
+  useEffect(() => {
+    const handleViewportChange = () => {
+      const nextMobile = window.innerWidth < 768;
+      setIsMobile((prev) => (prev === nextMobile ? prev : nextMobile));
+    };
+    window.addEventListener('resize', handleViewportChange, { passive: true });
+    return () => window.removeEventListener('resize', handleViewportChange);
+  }, []);
 
   const basePath = import.meta.env.BASE_URL;
   const folder = isMobile ? 'png-0-mobile' : 'png-0';
@@ -199,11 +211,17 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   };
 
   // 將指定刷幀比例 [0, 1] 轉換為實際頁面垂直捲動座標（支援滑桿直接點擊／拖曳／鍵盤微調）
+  const getStickyScrollable = (container, rect) => {
+    const stickyEl = container.querySelector?.('[data-hero-sticky]');
+    const stickyH = stickyEl?.offsetHeight || window.innerHeight;
+    return Math.max(0, rect.height - stickyH);
+  };
+
   const scrollToScrubRatio = (ratio) => {
     const container = containerRef?.current;
     if (!container) return;
     const rect = container.getBoundingClientRect();
-    const scrollable = Math.max(0, rect.height - window.innerHeight);
+    const scrollable = getStickyScrollable(container, rect);
     if (scrollable <= 0) return;
     const clampedRatio = clamp01(ratio);
     const heroTop = rect.top + window.scrollY;
@@ -376,7 +394,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       const container = containerRef?.current;
       if (!container) return 0;
       const rect = container.getBoundingClientRect();
-      const scrollable = Math.max(1, rect.height - window.innerHeight);
+      const scrollable = Math.max(1, getStickyScrollable(container, rect));
       return Math.max(0, Math.min(HERO_EXIT_END_PROGRESS, -rect.top / scrollable));
     };
 
@@ -485,7 +503,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   });
 
   return (
-    <div ref={stageRef} className="w-full will-change-transform">
+    <div ref={stageRef} className="w-full origin-top will-change-transform">
       {/* 手機版隱藏右側滑桿吃滿全寬；桌機採左右 24px 對稱平衡網格維持銀幕置中，右側掛載 3D 玻璃棱柱滑桿 */}
       <div
         className={
@@ -499,7 +517,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
         <div
           data-testid="hero-screen"
-          className="relative w-full h-[80dvh] md:h-auto md:aspect-video bg-transparent md:bg-[#030407] shadow-none md:shadow-[0_32px_90px_rgba(0,0,0,0.85)] max-md:[mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] overflow-hidden"
+          className="relative w-full h-[62dvh] md:h-auto md:aspect-video bg-transparent md:bg-[#030407] shadow-none md:shadow-[0_32px_90px_rgba(0,0,0,0.85)] max-md:[mask-image:linear-gradient(to_bottom,black_0%,black_82%,transparent_100%)] overflow-hidden"
         >
           {/* 極簡暗房載入遮罩 */}
           {isLoading && (
@@ -522,11 +540,11 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
           >
             <canvas
               ref={canvasRef}
-              className="w-full h-full block pointer-events-none object-cover"
+              className="w-full h-full block pointer-events-none object-cover object-top md:object-center"
               style={{
                 backgroundImage: `url(${posterSrc})`,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundPosition: isMobile ? 'top center' : 'center',
               }}
               aria-hidden="true"
             />

@@ -49,15 +49,14 @@ export default function Contact() {
           <button
             type="button"
             onClick={handleCopyEmail}
-            title="點擊複製 Email 地址"
             aria-label={`複製 Email 地址: ${email}`}
-            className="lg:col-span-7 w-full py-9 sm:py-11 md:py-12 px-7 sm:px-10 md:px-11 flex items-center text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group relative"
+            className="lg:col-span-7 w-full py-9 sm:py-11 md:py-12 px-6 sm:px-10 md:px-11 flex items-center text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group relative"
           >
             {copied && (
               <span
                 role="status"
                 aria-live="polite"
-                className="absolute top-3.5 left-7 sm:left-10 md:left-11 inline-flex items-center gap-1.5 text-xs text-spectral-crimson"
+                className="absolute top-3.5 left-6 sm:left-10 md:left-11 inline-flex items-center gap-1.5 text-xs text-spectral-crimson"
               >
                 <Check size={13} className="shrink-0" />
                 <span className="sr-only">COPIED TO CLIPBOARD</span>
@@ -66,7 +65,7 @@ export default function Contact() {
             )}
 
             <span className="w-full flex items-center justify-between gap-4">
-              <span className="font-display text-sm sm:text-base md:text-[17px] font-medium tracking-wide leading-none text-title-white group-hover:text-white transition-colors duration-300 break-all">
+              <span className="font-display text-lg sm:text-xl md:text-2xl font-bold tracking-[-0.02em] leading-none text-title-white group-hover:text-white transition-colors duration-300 truncate">
                 {email}
               </span>
               <span className="w-10 h-10 shrink-0 border border-spectral-crimson/35 bg-spectral-crimson/[0.06] group-hover:border-spectral-crimson/80 group-hover:bg-spectral-crimson/15 flex items-center justify-center transition-colors duration-300">
@@ -92,11 +91,11 @@ export default function Contact() {
               setIsFeedbackOpen(true);
             }}
             aria-label="開啟回饋表單"
-            className="lg:col-span-5 w-full py-9 sm:py-11 md:py-12 px-7 sm:px-10 md:px-11 flex items-center text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group"
+            className="lg:col-span-5 w-full py-9 sm:py-11 md:py-12 px-6 sm:px-10 md:px-11 flex items-center text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group"
           >
             <span className="w-full flex items-center justify-between gap-4">
               <span>
-                <span className="block font-display text-[clamp(1.25rem,2.2vw,1.9rem)] font-bold tracking-[-0.02em] leading-none text-title-white">
+                <span className="block font-display text-lg sm:text-xl md:text-2xl font-bold tracking-[-0.02em] leading-none text-title-white group-hover:text-white transition-colors duration-300">
                   Leave a Note
                 </span>
                 <span className="block mt-2.5 text-xs sm:text-sm text-zinc-400 font-light tracking-wide group-hover:text-zinc-200 transition-colors">

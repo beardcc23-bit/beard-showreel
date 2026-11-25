@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import VisualSynthesis from '../VisualSynthesis';
+import { categories } from '../../data/portfolio';
 
 describe('VisualSynthesis Component', () => {
   it('renders ADVERTISING title and promotes the designated featured item to the lead 2x2 slot', () => {
@@ -60,5 +61,51 @@ describe('VisualSynthesis Component', () => {
     expect(imageModalListener).not.toHaveBeenCalled();
 
     window.removeEventListener('open-image-modal', imageModalListener);
+  });
+
+  it('行動端底部應僅呈現極簡單一「下一分類名稱 + 箭頭」按鈕，點擊切換下一分類並捲回分類選單頂端（含末項循環）', () => {
+    const originalScrollY = window.scrollY;
+    const originalScrollTo = window.scrollTo;
+    const scrollToSpy = vi.fn();
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 2400 });
+    window.scrollTo = scrollToSpy;
+
+    try {
+      render(<VisualSynthesis onPlayVideo={vi.fn()} />);
+
+      const bottomNav = screen.getByTestId('mobile-vfx-bottom-nav');
+      expect(bottomNav).toHaveClass('lg:hidden');
+      expect(screen.queryByTestId('mobile-back-to-tabs-btn')).toBeNull();
+
+      const tablist = screen.getByRole('tablist', { name: '作品專案分類' });
+      tablist.getBoundingClientRect = () => ({
+        top: -1200,
+        height: 96,
+        bottom: -1104,
+        left: 0,
+        right: 390,
+        width: 390,
+      });
+
+      const nextBtn = screen.getByTestId('mobile-next-category-btn');
+      expect(nextBtn).toHaveClass('optical-surface');
+      expect(nextBtn.textContent).toBe('3C與家電');
+
+      // 1. 點擊「3C與家電」：自動切換至「3C與家電」、平滑捲回 tablist 位置 (2400 - 1200 - 88 = 1112)，按鈕更新為「交通工具」
+      fireEvent.click(nextBtn);
+      expect(screen.getByRole('tab', { name: '3C與家電' })).toHaveAttribute('aria-selected', 'true');
+      expect(scrollToSpy).toHaveBeenLastCalledWith({ top: 1112, behavior: 'smooth' });
+      expect(nextBtn.textContent).toBe('交通工具');
+
+      // 2. 切到最後一類時，按鈕應循環顯示第一類「食品與飲料」
+      const lastCatName = categories[categories.length - 1].name;
+      fireEvent.click(screen.getByRole('tab', { name: lastCatName }));
+      expect(nextBtn.textContent).toBe('食品與飲料');
+      fireEvent.click(nextBtn);
+      expect(screen.getByRole('tab', { name: '食品與飲料' })).toHaveAttribute('aria-selected', 'true');
+    } finally {
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: originalScrollY });
+      window.scrollTo = originalScrollTo;
+    }
   });
 });

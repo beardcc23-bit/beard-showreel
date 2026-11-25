@@ -22,7 +22,7 @@ export default function Introduction({ onPlayVideo }) {
     <section
       ref={sectionRef}
       id="introduction"
-      className="relative py-28 md:py-36 px-5 md:px-12 border-t border-white/[0.08]"
+      className="relative pt-6 pb-24 md:py-36 px-5 md:px-12 md:border-t md:border-white/[0.08]"
     >
       <div className="max-w-7xl mx-auto w-full">
         {/* 不對稱雙欄：左肖像 + 右大標與文案 */}

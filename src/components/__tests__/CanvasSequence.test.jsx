@@ -82,7 +82,7 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     expect(canvas).toBeInTheDocument();
     expect(canvas.dataset.frame).toBe('1');
     const heroScreen = screen.getByTestId('hero-screen');
-    expect(heroScreen).toHaveClass('h-[80dvh]');
+    expect(heroScreen).toHaveClass('h-[62dvh]');
     expect(heroScreen).toHaveClass('md:aspect-video');
     expect(container.querySelector('video')).toBeNull();
     const slider = screen.getByTestId('hero-vertical-progress');

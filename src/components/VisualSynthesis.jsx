@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { m, AnimatePresence } from 'framer-motion';
-import { Play, ArrowUpRight } from 'lucide-react';
+import { Play, ArrowUpRight, ArrowRight } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
+import { NAV_SCROLL_OFFSET } from '../constants/heroScroll';
 import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 import RevealHeading from './common/RevealHeading';
@@ -180,6 +181,7 @@ BrandCard.displayName = 'BrandCard';
 export default function VisualSynthesis({ onPlayVideo }) {
   const [{ activeTab, direction }, setTabState] = useState({ activeTab: 'food', direction: 1 });
   const sectionRef = useRef(null);
+  const tabListRef = useRef(null);
   const prefetchTimerRef = useRef(null);
   useOffscreenPause(sectionRef);
 
@@ -230,15 +232,38 @@ export default function VisualSynthesis({ onPlayVideo }) {
     }
   };
 
-  const handleTabChange = (newTabId) => {
+  const handleTabChange = (newTabId, forceDirection) => {
     if (newTabId === activeTab) return;
     cancelPrefetch();
     const prevIdx = categories.findIndex((c) => c.id === activeTab);
     const nextIdx = categories.findIndex((c) => c.id === newTabId);
-    setTabState({ activeTab: newTabId, direction: nextIdx >= prevIdx ? 1 : -1 });
+    const nextDir = forceDirection ?? (nextIdx >= prevIdx ? 1 : -1);
+    setTabState({ activeTab: newTabId, direction: nextDir });
   };
 
-  const currentCategory = categories.find((c) => c.id === activeTab) || categories[0];
+  const scrollToTabs = () => {
+    const el = tabListRef.current;
+    if (!el) return;
+    const offset = NAV_SCROLL_OFFSET + 12;
+    if (window.lenis) {
+      window.lenis.start();
+      window.lenis.scrollTo(el, { offset: -offset, duration: 0.75 });
+      return;
+    }
+    const targetTop = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
+    const prefersReduced = Boolean(
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    );
+    window.scrollTo({
+      top: targetTop,
+      behavior: prefersReduced ? 'auto' : 'smooth',
+    });
+  };
+
+  const rawCategoryIdx = categories.findIndex((c) => c.id === activeTab);
+  const currentCategoryIdx = rawCategoryIdx === -1 ? 0 : rawCategoryIdx;
+  const currentCategory = categories[currentCategoryIdx];
+  const nextCategory = categories[(currentCategoryIdx + 1) % categories.length];
 
   // 優先將指定 featured 主推作品置於左上角第一位，構成 1 大帶 4 小黃金比例
   const orderedItems = React.useMemo(() => {
@@ -269,6 +294,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
 
         {/* 磨砂毛玻璃剪接軌道分類切換列 */}
         <div
+          ref={tabListRef}
           role="tablist"
           aria-label="作品專案分類"
           onPointerLeave={cancelPrefetch}
@@ -344,6 +370,34 @@ export default function VisualSynthesis({ onPlayVideo }) {
               ))}
             </m.div>
           </AnimatePresence>
+        </div>
+
+        {/* 行動端作品牆底部極簡單鍵：採用與上方作品牆完全相同的雙欄網格與內距，1:1 對齊上方單欄寬高 */}
+        <div
+          data-testid="mobile-vfx-bottom-nav"
+          className="mt-5 grid grid-cols-2 gap-2.5 sm:gap-3.5 md:gap-4 lg:hidden"
+        >
+          <button
+            type="button"
+            data-testid="mobile-next-category-btn"
+            aria-label={`切換至下一分類：${nextCategory.name}`}
+            onPointerEnter={() => schedulePrefetch(nextCategory.id)}
+            onFocus={() => schedulePrefetch(nextCategory.id)}
+            onBlur={cancelPrefetch}
+            onClick={() => {
+              handleTabChange(nextCategory.id, 1);
+              scrollToTabs();
+            }}
+            className="optical-surface w-full px-2.5 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-3 text-left text-title-white hover:bg-white/[0.03] active:bg-white/[0.07] transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson group"
+          >
+            <span className="text-[11px] sm:text-[13px] font-medium text-zinc-100 group-hover:text-white tracking-wide truncate">
+              {nextCategory.name}
+            </span>
+            <ArrowRight
+              size={14}
+              className="shrink-0 text-spectral-crimson transition-transform duration-200 group-hover:translate-x-0.5"
+            />
+          </button>
         </div>
       </div>
     </section>
