@@ -51,7 +51,7 @@ export default function Introduction({ onPlayVideo }) {
 
           {/* 右側：標題、三段文案與 SHOWREEL 按鈕 */}
           <div className="md:col-span-7 lg:col-span-8 flex flex-col items-start">
-            <RevealHeading className="font-display text-5xl sm:text-6xl lg:text-8xl font-extrabold tracking-[-0.035em] leading-[0.94] text-title-white mb-10">
+            <RevealHeading className="font-display text-[clamp(2.5rem,5.4vw,6rem)] whitespace-nowrap font-extrabold tracking-[-0.035em] leading-[0.94] text-title-white mb-10">
               Beard <span className="text-spectral-crimson">Chou</span>
             </RevealHeading>
 

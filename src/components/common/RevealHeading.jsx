@@ -1,12 +1,13 @@
 import React, { useRef } from 'react';
 import { m, useInView, useReducedMotion } from 'framer-motion';
 
-const SHUTTER_EASE = [0.16, 1, 0.3, 1];
-const SHUTTER_DURATION = 0.88;
+const SHUTTER_EASE = [0.24, 0.82, 0.32, 1];
+const SHUTTER_DURATION = 1.6;
+const SHUTTER_BASE_DELAY = 0.12;
 
 /**
- * RevealHeading：VFX 光學快門掃光顯影大標（方案 B：Optical Shutter Wipe）
- * - 致敬 Autodesk Flame / Nuke 的 Before-After Wipe 切幕比對線
+ * RevealHeading：VFX 光學快門與橘色橫條導引顯影大標
+ * - 固定單排呈現（whitespace-nowrap），由橘紅橫條與快門光帶從左至右沉穩導引視線逐字曝光
  * - 全程僅走 GPU 合成層（clip-path + transform + opacity），零重排、僅進場觸發一次
  * - 內部裝飾層皆標記 aria-hidden，維持純淨單一 <h2> 語意供 SEO 與無障礙讀取
  */
@@ -15,57 +16,58 @@ export default function RevealHeading({ children, className = '', delay = 0 }) {
   const prefersReduced = useReducedMotion();
   const isInView = useInView(headingRef, {
     once: true,
-    amount: 0.35,
-    margin: '0px 0px -60px 0px',
+    amount: 0.5,
+    margin: '0px 0px -10% 0px',
   });
+  const startDelay = delay + SHUTTER_BASE_DELAY;
 
   if (prefersReduced) {
     return (
       <h2 ref={headingRef} className={className}>
-        {children}
+        <span className="inline-block whitespace-nowrap">{children}</span>
       </h2>
     );
   }
 
   return (
     <h2 ref={headingRef} className={className}>
-      {/* inline-block 精準鎖定掃光寬度等於文字實際寬度，不浪費在右側空白處 */}
-      <span className="relative inline-block">
+      {/* inline-block + whitespace-nowrap 強制鎖定單排並讓掃光寬度 1:1 貼合文字實寬 */}
+      <span className="relative inline-block whitespace-nowrap">
         {/* 底層未曝光暗影輪廓：提供進場前的視覺錨點，快門切開後柔和隱去避免重影 */}
         <m.span
           aria-hidden="true"
-          initial={{ opacity: 0.08 }}
-          animate={isInView ? { opacity: 0 } : { opacity: 0.08 }}
-          transition={{ duration: SHUTTER_DURATION * 0.75, delay: delay + 0.25, ease: 'easeOut' }}
+          initial={{ opacity: 0.1 }}
+          animate={isInView ? { opacity: 0 } : { opacity: 0.1 }}
+          transition={{ duration: SHUTTER_DURATION * 0.8, delay: startDelay + 0.35, ease: 'easeOut' }}
           className="block select-none pointer-events-none"
         >
           {children}
         </m.span>
 
-        {/* 主文字快門顯影層：與光刃同步由左向右俐落切開曝光 */}
+        {/* 主文字快門顯影層：隨橘色橫條與光刃由左向右沉穩切開曝光 */}
         <m.span
           data-testid="reveal-heading-content"
           initial={{
-            clipPath: 'inset(-8% 100% -12% 0%)',
-            x: -10,
-            opacity: 0.25,
+            clipPath: 'inset(-10% 100% -16% 0%)',
+            x: -12,
+            opacity: 0.2,
           }}
           animate={
             isInView
               ? {
-                  clipPath: 'inset(-8% -2% -12% 0%)',
+                  clipPath: 'inset(-10% -3% -16% 0%)',
                   x: 0,
                   opacity: 1,
                 }
               : {
-                  clipPath: 'inset(-8% 100% -12% 0%)',
-                  x: -10,
-                  opacity: 0.25,
+                  clipPath: 'inset(-10% 100% -16% 0%)',
+                  x: -12,
+                  opacity: 0.2,
                 }
           }
           transition={{
             duration: SHUTTER_DURATION,
-            delay,
+            delay: startDelay,
             ease: SHUTTER_EASE,
           }}
           className="block absolute inset-0 will-change-[clip-path,transform,opacity]"
@@ -73,10 +75,45 @@ export default function RevealHeading({ children, className = '', delay = 0 }) {
           {children}
         </m.span>
 
-        {/* VFX 光學快門掃描線（Shutter Wipe Blade）：緊貼 clip-path 邊界同步滑過文字全寬 */}
+        {/* 底部品牌橘紅導引橫條：隨文字顯影同步由左向右延伸領跑視線，定版後柔和收隱 */}
+        <m.span
+          aria-hidden="true"
+          data-testid="reveal-heading-bar"
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={
+            isInView
+              ? {
+                  scaleX: [0, 1, 1],
+                  opacity: [0, 1, 1, 0],
+                }
+              : { scaleX: 0, opacity: 0 }
+          }
+          transition={{
+            scaleX: {
+              duration: SHUTTER_DURATION * 1.12,
+              delay: startDelay,
+              times: [0, 0.89, 1],
+              ease: SHUTTER_EASE,
+            },
+            opacity: {
+              duration: SHUTTER_DURATION * 1.28,
+              delay: startDelay,
+              times: [0, 0.06, 0.78, 1],
+              ease: 'easeOut',
+            },
+          }}
+          className="pointer-events-none select-none block absolute left-0 right-0 -bottom-[0.1em] h-[3px] sm:h-[4px] origin-left will-change-[transform,opacity]"
+          style={{
+            background:
+              'linear-gradient(90deg, rgba(235, 74, 46, 0.18) 0%, #EB4A2E 62%, #FF8A6C 100%)',
+            boxShadow: '0 0 16px rgba(235, 74, 46, 0.75)',
+          }}
+        />
+
+        {/* VFX 橘紅光學快門掃描帶（Shutter Wipe Blade）：緊貼 clip-path 邊界從容滑過整排文字 */}
         <span
           aria-hidden="true"
-          className="pointer-events-none select-none absolute -top-[8%] -bottom-[8%] inset-x-0 overflow-hidden"
+          className="pointer-events-none select-none absolute -top-[10%] -bottom-[14%] inset-x-0 overflow-hidden"
         >
           <m.span
             data-testid="reveal-heading-blade"
@@ -90,32 +127,32 @@ export default function RevealHeading({ children, className = '', delay = 0 }) {
                 : { x: '0%', opacity: 0 }
             }
             transition={{
-              x: { duration: SHUTTER_DURATION, delay, ease: SHUTTER_EASE },
+              x: { duration: SHUTTER_DURATION, delay: startDelay, ease: SHUTTER_EASE },
               opacity: {
                 duration: SHUTTER_DURATION,
-                delay,
-                times: [0, 0.08, 0.8, 1],
+                delay: startDelay,
+                times: [0, 0.06, 0.86, 1],
                 ease: 'linear',
               },
             }}
             className="block relative w-full h-full will-change-[transform,opacity]"
           >
-            {/* 左側暗房色散拖尾餘暉 */}
+            {/* 左側加長熾熱橘紅橫向拖尾光帶 */}
             <span
-              className="block absolute top-0 bottom-0 left-0 -translate-x-full w-12 sm:w-16 md:w-24"
+              className="block absolute top-0 bottom-0 left-0 -translate-x-full w-20 sm:w-28 md:w-40"
               style={{
                 background:
-                  'linear-gradient(270deg, rgba(235, 74, 46, 0.36) 0%, rgba(208, 52, 108, 0.16) 46%, transparent 100%)',
+                  'linear-gradient(270deg, rgba(235, 74, 46, 0.56) 0%, rgba(235, 74, 46, 0.24) 48%, transparent 100%)',
               }}
             />
-            {/* 核心 2px 光譜快門光刃（純白→熾熱橘紅→光學冰藍） */}
+            {/* 核心 3px 熾熱橘紅前導光刃 */}
             <span
-              className="block absolute top-0 bottom-0 left-0 -translate-x-1/2 w-[2px]"
+              className="block absolute top-0 bottom-0 left-0 -translate-x-1/2 w-[3px]"
               style={{
                 background:
-                  'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, #FFFFFF 28%, #EB4A2E 62%, #1276B8 100%)',
+                  'linear-gradient(180deg, rgba(255, 138, 108, 0.35) 0%, #FF8A6C 24%, #EB4A2E 68%, rgba(235, 74, 46, 0.45) 100%)',
                 boxShadow:
-                  '0 0 14px rgba(235, 74, 46, 0.9), 0 0 6px rgba(255, 255, 255, 0.85)',
+                  '0 0 20px rgba(235, 74, 46, 0.95), 0 0 8px rgba(255, 138, 108, 0.9)',
               }}
             />
           </m.span>

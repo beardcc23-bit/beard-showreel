@@ -13,7 +13,9 @@ describe('RevealHeading（VFX 光學快門掃光顯影大標）', () => {
 
     const heading = screen.getByRole('heading', { level: 2, name: 'THE MANIFESTO' });
     expect(heading).toBeInTheDocument();
+    expect(heading.firstElementChild).toHaveClass('whitespace-nowrap');
     expect(screen.getByTestId('reveal-heading-content')).toHaveTextContent('THE MANIFESTO');
+    expect(screen.getByTestId('reveal-heading-bar')).toBeInTheDocument();
     expect(screen.getByTestId('reveal-heading-blade')).toBeInTheDocument();
   });
 });

@@ -35,9 +35,9 @@ export default function Contact() {
       className="relative overflow-hidden py-32 md:py-44 px-5 md:px-12 border-t border-white/[0.08]"
     >
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* 左對齊標頭 */}
-        <div className="max-w-2xl mb-12 md:mb-16">
-          <RevealHeading className="font-display text-[clamp(2.25rem,6.6vw,5.5rem)] font-extrabold uppercase tracking-[-0.035em] leading-[0.94] text-title-white">
+        {/* 左對齊標頭（移除寬度限制以固定單排呈現） */}
+        <div className="mb-12 md:mb-16">
+          <RevealHeading className="font-display text-[clamp(1.75rem,6.5vw,5.5rem)] whitespace-nowrap font-extrabold uppercase tracking-[-0.035em] leading-[0.94] text-title-white">
             Let&apos;s Connect<span className="text-spectral-crimson">.</span>
           </RevealHeading>
         </div>

@@ -246,5 +246,8 @@
     - 新增 `src/constants/siteConfig.js` 與 `src/utils/scroll.js`，擴充 `src/constants/heroScroll.js`（`getHeroStickyScrollable`、`getHeroFinalFrameY`），清理 `index.css`、`tailwind.config.js`（移除零引用 `aurora-blue`）與 `url.js` 遺留死碼；`vite.config.js` 鎖定 `server.port: 5173` 與 `build.target: 'es2020'`。
     - `VisualSynthesis.jsx` 分類列實作完整 WAI-ARIA `tablist` 左右方向鍵／`Home`／`End` 與 Roving `tabIndex`；`useOverlayLock.js` 於鎖定期間對 `<main>` 與 `<footer>` 掛載原生 `inert`；`Modal.jsx` 關閉鈕移至獨立頂欄並設 8 秒 iframe 看門狗；`FeedbackModal.jsx` 修復 12 秒逾時 `didTimeout` 防卡死、補齊 `autoComplete` / `aria-required` / `role="alert"` / `0 / 500` 字數統計與漏填自動 `focus()`；`useClipboard.js` 檢查 `execCommand` 回傳值。
     - `src/test/setup.js` 補齊 `scrollTo` 與 `getContext` 樁，全站擴充至 **16 個測試檔 / 51 項單元測試** 100% 通過且 **0 stderr 警告**。
+  - **全站大字幕標單排鎖定與橘色導引橫條顯影升級（`RevealHeading.jsx`、`Contact.jsx`、`Introduction.jsx`、`Manifesto.jsx`、`VisualSynthesis.jsx`）**：
+    - 移除 `Contact.jsx` 標頭 `max-w-2xl` 寬度限制，全站四處大字幕標（`Beard Chou`、`THE MANIFESTO`、`ADVERTISING`、`LET'S CONNECT.`）統一鎖定 `whitespace-nowrap` 與對應流體 `clamp()` 字級，確保任意視窗尺寸皆固定單排不折行。
+    - `RevealHeading.jsx` 進場時長放慢至 `1.6s`（勻順曲線 `[0.24, 0.82, 0.32, 1]`、視窗 `50%` 觸發），並於底緣新增同步由左至右延伸領跑的 `3~4px` 品牌熾熱橘紅導引橫條（定版後柔和消隱）與加長橘紅掃描光帶，強化視覺由左至右的閱讀引導。
 
 

@@ -277,7 +277,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
       <div className="max-w-7xl mx-auto">
         {/* 左對齊編輯標頭 */}
         <div className="mb-12 md:mb-16">
-          <RevealHeading className="font-display text-[clamp(2.15rem,6.8vw,5.8rem)] font-extrabold uppercase leading-[0.92] tracking-[-0.035em] text-title-white">
+          <RevealHeading className="font-display text-[clamp(2rem,6.8vw,5.8rem)] whitespace-nowrap font-extrabold uppercase leading-[0.92] tracking-[-0.035em] text-title-white">
             ADVERTISING
           </RevealHeading>
         </div>
