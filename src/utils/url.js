@@ -36,20 +36,3 @@ export function getSafeExternalUrl(url) {
     return null;
   }
 }
-
-/**
- * 安全開啟外部 HTTPS 連結：僅於新分頁開啟並啟用 noopener,noreferrer。
- * 注意：HTML 規範中帶 noopener 的 window.open() 即使成功開新分頁亦會回傳 null，
- * 故禁止於回傳 null 時以 window.location.assign 覆寫當前原分頁。
- */
-export function openSafeExternalUrl(url) {
-  const safeHref = getSafeExternalUrl(url);
-  if (!safeHref) {
-    return false;
-  }
-  const newWindow = window.open(safeHref, '_blank', 'noopener,noreferrer');
-  if (newWindow) {
-    newWindow.opener = null;
-  }
-  return true;
-}

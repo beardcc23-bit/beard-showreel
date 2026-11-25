@@ -30,6 +30,8 @@ export function useOverlayLock(
         document.body.style.paddingRight = `${scrollbarWidth}px`;
         document.documentElement.style.setProperty('--scrollbar-comp', `${scrollbarWidth}px`);
       }
+      // 對背景主區段標記原生 inert，阻斷行動螢幕閱讀器滑動穿透背景內容
+      document.querySelectorAll('main, footer').forEach((el) => el.setAttribute('inert', ''));
       window.lenis?.stop();
     }
     lockCount += 1;
@@ -100,6 +102,7 @@ export function useOverlayLock(
         document.body.style.paddingRight = '';
         document.documentElement.style.removeProperty('--scrollbar-comp');
         document.body.classList.remove('modal-open');
+        document.querySelectorAll('main, footer').forEach((el) => el.removeAttribute('inert'));
         window.lenis?.start();
       }
 

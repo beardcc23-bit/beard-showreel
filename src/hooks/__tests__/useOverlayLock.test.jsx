@@ -24,8 +24,10 @@ describe('useOverlayLock Hook 測試', () => {
     Object.defineProperty(document.documentElement, 'clientWidth', { configurable: true, value: 1425 });
 
     try {
-      const { rerender } = render(
+      const { rerender, getByTestId } = render(
         <>
+          <main data-testid="bg-main">Main</main>
+          <footer data-testid="bg-footer">Footer</footer>
           <OverlayFixture isOpen={true} onClose={closeA} />
           <OverlayFixture isOpen={true} onClose={closeB} />
         </>
@@ -35,6 +37,8 @@ describe('useOverlayLock Hook 測試', () => {
       expect(document.body.style.overflow).toBe('hidden');
       expect(document.body.style.paddingRight).toBe('15px');
       expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('15px');
+      expect(getByTestId('bg-main')).toHaveAttribute('inert');
+      expect(getByTestId('bg-footer')).toHaveAttribute('inert');
 
       // 按下 Escape 應僅觸發最上層 B 的關閉函式（LIFO）
       fireEvent.keyDown(window, { key: 'Escape' });
@@ -44,16 +48,21 @@ describe('useOverlayLock Hook 測試', () => {
       // 關閉上層 B 時，A 仍開啟，背景與 --scrollbar-comp 不得提前解鎖
       rerender(
         <>
+          <main data-testid="bg-main">Main</main>
+          <footer data-testid="bg-footer">Footer</footer>
           <OverlayFixture isOpen={true} onClose={closeA} />
           <OverlayFixture isOpen={false} onClose={closeB} />
         </>
       );
       expect(document.body).toHaveClass('modal-open');
       expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('15px');
+      expect(getByTestId('bg-main')).toHaveAttribute('inert');
 
-      // 關閉最後一層 A 時，應解鎖背景並移除 --scrollbar-comp
+      // 關閉最後一層 A 時，應解鎖背景並移除 --scrollbar-comp 與 inert
       rerender(
         <>
+          <main data-testid="bg-main">Main</main>
+          <footer data-testid="bg-footer">Footer</footer>
           <OverlayFixture isOpen={false} onClose={closeA} />
           <OverlayFixture isOpen={false} onClose={closeB} />
         </>
@@ -61,6 +70,8 @@ describe('useOverlayLock Hook 測試', () => {
       expect(document.body).not.toHaveClass('modal-open');
       expect(document.body.style.overflow).toBe('');
       expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('');
+      expect(getByTestId('bg-main')).not.toHaveAttribute('inert');
+      expect(getByTestId('bg-footer')).not.toHaveAttribute('inert');
     } finally {
       Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth });
     }

@@ -6,6 +6,7 @@ import ScrubText from './common/ScrubText';
 import RevealHeading from './common/RevealHeading';
 import ExperienceTimeline from './ExperienceTimeline';
 import { achievementStats } from '../data/experience';
+import { MAIN_SHOWREEL_VIDEO_ID } from '../constants/siteConfig';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 /**
@@ -63,7 +64,7 @@ export default function Introduction({ onPlayVideo }) {
             <div className="mt-10">
               <button
                 type="button"
-                onClick={() => onPlayVideo('s6s2p87fPdA')}
+                onClick={() => onPlayVideo(MAIN_SHOWREEL_VIDEO_ID)}
                 className="group spectral-cta px-10 py-4 inline-flex items-center gap-3 mono text-xs uppercase tracking-[0.26em] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
               >
                 <Play

@@ -3,20 +3,16 @@ import Lenis from 'lenis';
 
 /**
  * 自訂 Hook: 初始化電影級平滑滾動 Lenis
+ * - 靜止收斂與開啟彈窗（modal-open）時自動進入 0 rAF 休眠，有滾動／錨點跳轉互動時 0ms 喚醒
  */
 export function useLenisScroll() {
   useEffect(() => {
-    // 檢測是否為純觸控手機/平板（無精確指針滑鼠）
-    const isPureTouch = ('ontouchstart' in window) && !window.matchMedia('(pointer: fine)').matches;
-    if (isPureTouch) return; // 純行動裝置交由原生 120Hz 慣性滾動，杜絕任何卡頓
+    const isPureTouch =
+      'ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches;
+    if (isPureTouch) return undefined;
 
-    // 使用者偏好減少動態：不啟用慣性平滑滾動，交回原生捲動
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
 
-    // 滾輪改用 lerp 阻尼追隨：Lenis 若設定 duration + easing 會優先走時間曲線，
-    // 且每個 wheel 事件都呼叫 fromTo() 把 currentTime 歸零，導致速度鋸齒（卡頓感）。
-    // 錨點跳轉的電影感曲線改由 Navigation 的 scrollTo 個別帶入。
-    // 滾輪改用 lerp 阻尼追隨，並調校為 0.18（單次滾動在 180ms 內迅速煞停，兼具絲滑感與精準跟手性）
     const lenis = new Lenis({
       lerp: 0.18,
       orientation: 'vertical',
@@ -24,14 +20,13 @@ export function useLenisScroll() {
       smoothWheel: true,
       wheelMultiplier: 1.0,
     });
-    window.lenis = lenis;
 
-    // 滾動進行中掛載 is-scrolling 類別，關閉卡片指針互動，消除滾動時掠過卡片的重排與掉幀
-    // 以區域布林快取與時間戳延遲檢查取代每幀 clearTimeout/setTimeout，避免 120Hz 下每秒數百次計時器分配
     const SCROLL_IDLE_MS = 120;
     let isBodyScrolling = false;
     let lastScrollTime = 0;
     let scrollEndTimer = null;
+    let rafId = null;
+    let idleFrames = 0;
 
     const checkScrollEnd = () => {
       const elapsed = performance.now() - lastScrollTime;
@@ -44,27 +39,34 @@ export function useLenisScroll() {
       }
     };
 
-    const handleScroll = () => {
-      lastScrollTime = performance.now();
-      if (!isBodyScrolling) {
-        isBodyScrolling = true;
-        document.body.classList.add('is-scrolling');
-        scrollEndTimer = setTimeout(checkScrollEnd, SCROLL_IDLE_MS);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    let rafId = null;
-
     function raf(time) {
+      if (document.hidden || document.body.classList.contains('modal-open')) {
+        rafId = null;
+        return;
+      }
+
       lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
+
+      const remaining = Math.abs((lenis.targetScroll ?? 0) - (lenis.animatedScroll ?? 0));
+      if (lenis.isScrolling || remaining > 0.1) {
+        idleFrames = 0;
+        rafId = requestAnimationFrame(raf);
+      } else if (idleFrames < 2) {
+        idleFrames += 1;
+        rafId = requestAnimationFrame(raf);
+      } else {
+        rafId = null;
+      }
     }
 
     const startRaf = () => {
-      if (rafId === null && !document.hidden) {
-        // 重置 Lenis 內部時間基準，防止從背景分頁切回首幀 deltaTime 暴衝導致滾動瞬移跳格
+      idleFrames = 0;
+      if (
+        rafId === null &&
+        !document.hidden &&
+        !document.body.classList.contains('modal-open')
+      ) {
+        // 重置內部時間基準，防止從休眠／背景分頁喚醒首幀 deltaTime 暴衝導致滾動瞬移跳格
         lenis.time = 0;
         rafId = requestAnimationFrame(raf);
       }
@@ -77,22 +79,65 @@ export function useLenisScroll() {
       }
     };
 
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        stopRaf();
-      } else {
+    // 包裝 scrollTo 確保外部錨點跳轉／滑桿刷幀呼叫時自動喚醒休眠中的 rAF
+    const originalScrollTo = lenis.scrollTo.bind(lenis);
+    lenis.scrollTo = (...args) => {
+      startRaf();
+      return originalScrollTo(...args);
+    };
+    window.lenis = lenis;
+
+    const handleScroll = () => {
+      lastScrollTime = performance.now();
+      if (!isBodyScrolling) {
+        isBodyScrolling = true;
+        document.body.classList.add('is-scrolling');
+        scrollEndTimer = setTimeout(checkScrollEnd, SCROLL_IDLE_MS);
+      }
+      startRaf();
+    };
+
+    const handleKeyWake = (e) => {
+      if (
+        ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Space', ' ', 'Home', 'End'].includes(e.key)
+      ) {
         startRaf();
       }
     };
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopRaf();
+      } else if (lenis.isScrolling) {
+        startRaf();
+      }
+    };
+
+    const bodyObserver = new MutationObserver(() => {
+      if (document.body.classList.contains('modal-open')) {
+        stopRaf();
+      } else if (lenis.isScrolling) {
+        startRaf();
+      }
+    });
+    bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    window.addEventListener('wheel', startRaf, { passive: true });
+    window.addEventListener('touchstart', startRaf, { passive: true });
+    window.addEventListener('keydown', handleKeyWake);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     document.addEventListener('visibilitychange', handleVisibilityChange);
     startRaf();
 
     return () => {
       stopRaf();
+      bodyObserver.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearTimeout(scrollEndTimer);
       document.body.classList.remove('is-scrolling');
+      window.removeEventListener('wheel', startRaf);
+      window.removeEventListener('touchstart', startRaf);
+      window.removeEventListener('keydown', handleKeyWake);
       window.removeEventListener('scroll', handleScroll);
       window.lenis = null;
       lenis.destroy();

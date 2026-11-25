@@ -87,12 +87,14 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     if (!formData.name || !formData.name.trim()) {
       setStatus('error');
       setErrorMessage('請填寫您的稱呼 / 姓名！');
+      dialogRef.current?.querySelector('#feedback-name')?.focus();
       return;
     }
 
     if (!formData.message || !formData.message.trim()) {
       setStatus('error');
       setErrorMessage('請填寫回饋內容！');
+      dialogRef.current?.querySelector('#feedback-message')?.focus();
       return;
     }
 
@@ -128,7 +130,11 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     abortControllerRef.current?.abort();
     const controller = new AbortController();
     abortControllerRef.current = controller;
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
+    let didTimeout = false;
+    const timeoutId = setTimeout(() => {
+      didTimeout = true;
+      controller.abort();
+    }, 12000);
 
     try {
       const safeName = sanitizeSheetInput(formData.name.slice(0, 60));
@@ -161,10 +167,12 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       }, 2500);
     } catch (err) {
       clearTimeout(timeoutId);
-      if (controller.signal.aborted) return;
-      console.error('Feedback submission error:', err);
+      if (controller.signal.aborted && !didTimeout) return;
+      if (!didTimeout) console.error('Feedback submission error:', err);
       setStatus('error');
-      setErrorMessage('連線失敗，請檢查網路或稍後再試。');
+      setErrorMessage(
+        didTimeout ? '連線逾時，請檢查網路或稍後再試。' : '連線失敗，請檢查網路或稍後再試。'
+      );
     } finally {
       isSubmittingRef.current = false;
     }
@@ -260,6 +268,8 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     id="feedback-name"
                     type="text"
                     name="name"
+                    autoComplete="name"
+                    aria-required="true"
                     maxLength={60}
                     value={formData.name}
                     onChange={handleChange}
@@ -276,6 +286,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     id="feedback-email"
                     type="text"
                     name="email"
+                    autoComplete="email"
                     maxLength={100}
                     value={formData.email}
                     onChange={handleChange}
@@ -285,13 +296,19 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 </div>
 
                 <div>
-                  <label htmlFor="feedback-message" className="block text-xs tracking-wider text-zinc-400 mb-2">
-                    回饋內容 <span className="text-spectral-crimson">*</span>
-                  </label>
+                  <div className="flex items-baseline justify-between mb-2">
+                    <label htmlFor="feedback-message" className="block text-xs tracking-wider text-zinc-400">
+                      回饋內容 <span className="text-spectral-crimson">*</span>
+                    </label>
+                    <span className="mono text-[11px] text-zinc-500 tabular-nums" aria-live="off">
+                      {formData.message.length} / 500
+                    </span>
+                  </div>
                   <textarea
                     id="feedback-message"
                     name="message"
                     rows={5}
+                    aria-required="true"
                     maxLength={500}
                     value={formData.message}
                     onChange={handleChange}
@@ -302,6 +319,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
                 {status === 'error' && (
                   <m.div
+                    role="alert"
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-2.5 p-3.5 bg-spectral-crimson/10 border border-spectral-crimson/40 text-zinc-100 text-xs"

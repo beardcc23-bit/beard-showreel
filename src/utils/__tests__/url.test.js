@@ -1,49 +1,16 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { getSafeExternalUrl, openSafeExternalUrl, isSafeLocalImageUrl } from '../url';
+import { describe, it, expect } from 'vitest';
+import { getSafeExternalUrl, isSafeLocalImageUrl } from '../url';
 
 describe('url 安全工具函式測試', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it('getSafeExternalUrl 與 openSafeExternalUrl 應攔截非 HTTPS、惡意協定與非白名單網域', () => {
-    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+  it('getSafeExternalUrl 應僅放行白名單 HTTPS 網址，並攔截非 HTTPS、惡意協定與偽造網域', () => {
     expect(getSafeExternalUrl('javascript:alert(1)')).toBeNull();
+    expect(getSafeExternalUrl('http://www.youtube.com/watch?v=123')).toBeNull();
     expect(getSafeExternalUrl('https://evil.example.com/phish')).toBeNull();
+    expect(getSafeExternalUrl('https://www.youtube.com.evil.com/x')).toBeNull();
+    expect(getSafeExternalUrl('')).toBeNull();
     expect(getSafeExternalUrl('https://www.facebook.com/reel/1338163857656555')).toBe(
       'https://www.facebook.com/reel/1338163857656555'
     );
-    expect(openSafeExternalUrl('javascript:alert(1)')).toBe(false);
-    expect(openSafeExternalUrl('http://www.youtube.com/watch?v=123')).toBe(false);
-    expect(openSafeExternalUrl('https://evil.example.com/phish')).toBe(false);
-    expect(openSafeExternalUrl('https://www.youtube.com.evil.com/x')).toBe(false);
-    expect(openSafeExternalUrl('')).toBe(false);
-    expect(openSpy).not.toHaveBeenCalled();
-  });
-
-  it('openSafeExternalUrl 帶入 noopener 回傳 null 時不應覆蓋當前原分頁（window.location.assign）', () => {
-    const openSpy = vi.spyOn(window, 'open').mockReturnValue(null);
-    const assignSpy = vi.fn();
-    const originalLocation = window.location;
-    Object.defineProperty(window, 'location', {
-      configurable: true,
-      value: { ...originalLocation, assign: assignSpy },
-    });
-
-    try {
-      expect(openSafeExternalUrl('https://www.facebook.com/watch/?v=123')).toBe(true);
-      expect(openSpy).toHaveBeenCalledWith(
-        'https://www.facebook.com/watch/?v=123',
-        '_blank',
-        'noopener,noreferrer'
-      );
-      expect(assignSpy).not.toHaveBeenCalled();
-    } finally {
-      Object.defineProperty(window, 'location', {
-        configurable: true,
-        value: originalLocation,
-      });
-    }
   });
 
   it('isSafeLocalImageUrl 應僅放行合法同源圖片並阻擋路徑遍歷與外部網址', () => {

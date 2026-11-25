@@ -224,9 +224,10 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
 
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    // 單一 3 頂點全螢幕三角形（Full-Screen Triangle），消除傳統 6 頂點雙三角形對角線的 2x2 Quad Overdraw
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      new Float32Array([-1, -1, 3, -1, -1, 3]),
       gl.STATIC_DRAW
     );
 
@@ -262,6 +263,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let currentPtrY = 0.25;
     let rafId = null;
     let lastRenderTime = 0;
+    let prevSimTime = 0;
     const startTime = performance.now();
     let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
 
@@ -286,6 +288,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     const renderFrame = (now) => {
       if (document.hidden || document.body.classList.contains('modal-open')) {
         rafId = null;
+        prevSimTime = 0;
         return;
       }
 
@@ -297,12 +300,15 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       }
       lastRenderTime = now;
 
-      const scrollLerp = isMobile ? 0.12 : 0.085;
-      const ptrLerp = isMobile ? 0.10 : 0.07;
-      currentScroll += (targetScroll - currentScroll) * scrollLerp;
-      velocity *= isMobile ? 0.82 : 0.88;
-      currentPtrX += (targetPtrX - currentPtrX) * ptrLerp;
-      currentPtrY += (targetPtrY - currentPtrY) * ptrLerp;
+      // 時間無關指數衰減：確保 24fps 與 36fps 下滾動光影跟隨速率一致
+      const dt = prevSimTime ? Math.min(0.1, Math.max(0.001, (now - prevSimTime) * 0.001)) : 1 / 36;
+      prevSimTime = now;
+      const scrollAlpha = 1 - Math.exp(-3.2 * dt);
+      const ptrAlpha = 1 - Math.exp(-2.6 * dt);
+      currentScroll += (targetScroll - currentScroll) * scrollAlpha;
+      velocity *= Math.exp(-4.5 * dt);
+      currentPtrX += (targetPtrX - currentPtrX) * ptrAlpha;
+      currentPtrY += (targetPtrY - currentPtrY) * ptrAlpha;
 
       gl.useProgram(program);
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -316,7 +322,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       gl.uniform2f(uPointer, currentPtrX, currentPtrY);
       gl.uniform1f(uVelocity, velocity);
 
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       if (!prefersReduced) {
         rafId = requestAnimationFrame(renderFrame);
@@ -356,7 +362,19 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateMaxScroll) : null;
     docResizeObserver?.observe(document.documentElement);
 
+    // 監聽 WebGL Context 遺失（如行動端背景喚醒或系統重置 GPU），自動優雅降級至 CSS 光譜備援層防死黑
+    const handleContextLost = (e) => {
+      e.preventDefault();
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      prevSimTime = 0;
+      setWebglActive(false);
+    };
+
     const pointerListening = !isMobile;
+    canvas.addEventListener('webglcontextlost', handleContextLost);
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     if (pointerListening) {
@@ -370,6 +388,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       if (rafId !== null) cancelAnimationFrame(rafId);
       bodyObserver.disconnect();
       docResizeObserver?.disconnect();
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
       if (pointerListening) {

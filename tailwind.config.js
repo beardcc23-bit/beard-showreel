@@ -10,7 +10,6 @@ export default {
         'bg-core': 'rgb(var(--rgb-bg-core) / <alpha-value>)',
         'bg-mist': 'rgb(var(--rgb-bg-mist) / <alpha-value>)',
         'bg-shadow': 'rgb(var(--rgb-bg-shadow) / <alpha-value>)',
-        'aurora-blue': 'rgb(var(--rgb-accent) / <alpha-value>)',
         'dawn-gold': 'rgb(var(--rgb-highlight) / <alpha-value>)',
         'spectral-crimson': 'rgb(var(--rgb-accent) / <alpha-value>)',
         'spectral-magenta': 'rgb(var(--rgb-magenta) / <alpha-value>)',

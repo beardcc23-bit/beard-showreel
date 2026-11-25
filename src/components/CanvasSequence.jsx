@@ -2,15 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ArrowDown } from 'lucide-react';
 import {
   HERO_SCRUB_END_PROGRESS,
+  HERO_REDUCED_MOTION_FRAME,
   HERO_OUTRO_START_PROGRESS,
   HERO_EXIT_END_PROGRESS,
+  getHeroStickyScrollable,
 } from '../constants/heroScroll';
 import { useIdleHeroAutoScroll } from '../hooks/useIdleHeroAutoScroll';
 
 const TOTAL_SOURCE_FRAMES = 117;
 const LAST_SOURCE_FRAME = TOTAL_SOURCE_FRAMES - 1;
 const MAX_CONCURRENT_LOADS = 6;
-const SEQUENCE_VERSION = 'v8';
+const SEQUENCE_VERSION = 'v10';
 
 /**
  * 依裝置抽樣影格索引（頭尾必保留 0 與 116），並排出「首尾 -> 均勻骨架 -> 細節補間」兩階段載入順序
@@ -115,7 +117,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   const basePath = import.meta.env.BASE_URL;
   const folder = isMobile ? 'png-0-mobile' : 'png-0';
   const step = isMobile ? 2 : 1;
-  const posterSrc = `${basePath}${folder}/png-0_00000000.webp?${SEQUENCE_VERSION}`;
+  const initialFrameIdx = prefersReduced ? HERO_REDUCED_MOTION_FRAME : 0;
+  const posterSrc = `${basePath}${folder}/png-0_${String(initialFrameIdx).padStart(8, '0')}.webp?${SEQUENCE_VERSION}`;
 
   // 尋找距離目標 slot 最近的已載入影格，確保網路載入期間刷動永不黑屏
   const findNearestLoadedSlot = (targetSlot) => {
@@ -191,11 +194,12 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       scrollArrowRef.current.style.opacity = hintOpacity;
     }
 
-    // 尾段 86% -> 100% 銀幕微縮半透明，100% -> 155% 隨上滑離場柔和融化並持續轉動餘韻影格
+    // 尾段 86% -> 100% 銀幕微縮半透明，100% -> 126% 隨上滑離場柔和歸零並切換 visibility: hidden 剔除合成層
     if (stageRef.current) {
       if (prefersReduced) {
         stageRef.current.style.transform = '';
         stageRef.current.style.opacity = '1';
+        stageRef.current.style.visibility = 'visible';
       } else {
         const stickyOutro = clamp01(
           (progress - HERO_OUTRO_START_PROGRESS) / (1 - HERO_OUTRO_START_PROGRESS)
@@ -203,25 +207,20 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
         const exitOutro = clamp01((progress - 1) / (HERO_EXIT_END_PROGRESS - 1));
         const scale = 1 - stickyOutro * 0.055 - exitOutro * 0.025;
         const translateY = -stickyOutro * 22;
-        const opacity = 1 - stickyOutro * 0.62 - exitOutro * 0.34;
+        const opacity = Math.max(0, 1 - stickyOutro * 0.62 - exitOutro * 0.38);
         stageRef.current.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
         stageRef.current.style.opacity = opacity.toFixed(3);
+        stageRef.current.style.visibility = opacity <= 0.002 ? 'hidden' : 'visible';
       }
     }
   };
 
   // 將指定刷幀比例 [0, 1] 轉換為實際頁面垂直捲動座標（支援滑桿直接點擊／拖曳／鍵盤微調）
-  const getStickyScrollable = (container, rect) => {
-    const stickyEl = container.querySelector?.('[data-hero-sticky]');
-    const stickyH = stickyEl?.offsetHeight || window.innerHeight;
-    return Math.max(0, rect.height - stickyH);
-  };
-
   const scrollToScrubRatio = (ratio) => {
     const container = containerRef?.current;
     if (!container) return;
     const rect = container.getBoundingClientRect();
-    const scrollable = getStickyScrollable(container, rect);
+    const scrollable = getHeroStickyScrollable(container, rect);
     if (scrollable <= 0) return;
     const clampedRatio = clamp01(ratio);
     const heroTop = rect.top + window.scrollY;
@@ -297,11 +296,11 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     return () => canvas.removeEventListener('contextmenu', blockMenu);
   }, []);
 
-  // 兩階段骨架交錯預解碼載入（桌機全 117 格原生 30fps / 手機 59 格減重；減少動態模式僅載首幀）
+  // 兩階段骨架交錯預解碼載入（桌機全 117 格原生 30fps / 手機 59 格減重；減少動態模式直接載入第 80 格清晰定版幀）
   useEffect(() => {
     let isCancelled = false;
     let unlocked = false;
-    const sampled = prefersReduced ? [0] : buildSampledFrames(step);
+    const sampled = prefersReduced ? [HERO_REDUCED_MOTION_FRAME] : buildSampledFrames(step);
     sampledIndicesRef.current = sampled;
     framesRef.current = new Array(sampled.length).fill(null);
     drawnSlotRef.current = -1;
@@ -394,7 +393,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       const container = containerRef?.current;
       if (!container) return 0;
       const rect = container.getBoundingClientRect();
-      const scrollable = Math.max(1, getStickyScrollable(container, rect));
+      const scrollable = Math.max(1, getHeroStickyScrollable(container, rect));
       return Math.max(0, Math.min(HERO_EXIT_END_PROGRESS, -rect.top / scrollable));
     };
 

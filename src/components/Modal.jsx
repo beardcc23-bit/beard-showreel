@@ -23,9 +23,11 @@ export default function Modal({ isOpen, onClose, type, data }) {
   const hasValidVideoSource = currentType === 'video' && (currentData?.isFacebook ? Boolean(safeVideoUrl || safeVideoId) : Boolean(safeVideoId));
 
   useEffect(() => {
-    if (isOpen && type === 'video') {
-      setIframeLoading(true);
-    }
+    if (!isOpen || type !== 'video') return undefined;
+    setIframeLoading(true);
+    // 8 秒載入看門狗：若企業防火牆阻擋外部嵌入插件或 onLoad 延遲，自動揭開遮罩防永久卡死
+    const watchdog = setTimeout(() => setIframeLoading(false), 8000);
+    return () => clearTimeout(watchdog);
   }, [isOpen, type, data?.videoId, data?.videoUrl]);
 
   useOverlayLock(isOpen, onClose, { containerRef: dialogRef });
@@ -66,21 +68,23 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 : 'max-w-5xl'
             }`}
           >
-            {/* 頂緣光譜細線 */}
+            {/* 頂緣光譜細線與獨立暗房頂部控制列（避免壓在 YouTube 右上角控制鈕上方造成手機橫屏誤觸） */}
             <div
               aria-hidden="true"
-              className="h-[2px] w-full"
+              className="h-[2px] w-full shrink-0"
               style={{ background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 40%, #1276B8 100%)' }}
             />
 
-            <button
-              type="button"
-              onClick={onClose}
-              className="absolute top-3.5 right-3.5 z-50 min-w-[44px] min-h-[44px] bg-black/75 text-white hover:text-spectral-crimson transition-colors border border-white/20 flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-              aria-label="Close modal"
-            >
-              <X size={18} />
-            </button>
+            <div className="flex items-center justify-end px-2.5 py-1.5 bg-[#05070B] border-b border-white/10 shrink-0">
+              <button
+                type="button"
+                onClick={onClose}
+                className="min-w-[40px] min-h-[40px] text-zinc-300 hover:text-spectral-crimson transition-colors flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
+            </div>
 
             {currentType === 'video' ? (
               <div

@@ -14,9 +14,10 @@ export default defineConfig({
     legalComments: 'none',
   },
   server: {
-    port: 5175,
+    port: 5173,
   },
   build: {
+    target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks: {

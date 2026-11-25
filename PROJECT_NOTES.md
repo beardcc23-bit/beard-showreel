@@ -235,8 +235,16 @@
 - **全站展示英文字體統一與履歷精簡（`index.html`、`tailwind.config.js`、`index.css`、`experience.js` 等）**：
   - 全站大英文標題與數據（`Beard Showreel`、`Beard Chou`、`THE MANIFESTO`、`ADVERTISING`、`Let's Connect.`、`Leave a Note`、數據牆）淘汰 `Space Grotesk`，統一更換為與首頁影片一致的 `Montserrat`（`800 ExtraBold`），並微調手機端 `clamp` 確保長單字不超框。
   - 自 `src/data/experience.js` 刪除 2011 美可特與 2009 冉色斯兩筆實習紀錄，同步更新單元測試。
-
-
-
+- **全站兩輪共 38 項深度效能、架構與無障礙優化總收斂（同日晚間收工波）**：
+  - **資產與首屏減重**：桌機 `public/png-0/*.webp` 117 格對齊最大顯示尺寸 `1680×945` 並以 `cwebp -q 78 -m 6 -sharp_yuv` 精準壓縮（解碼記憶體省 24%、快取升版至 `?v=10`）；`public/favicon.png` 量化縮至 `192×192`（`54KB → 11KB`）、`public/avatar.jpg` 縮至 `52KB`；移除 `index.html` 零引用之 `i.ytimg.com` 連線並補齊主 Showreel `VideoObject` 結構化資料，`sitemap.xml` `lastmod` 更新至 `2026-11-25`。
+  - **休眠省電與 GPU 渲染管線升級**：
+    - `useLenisScroll.js` 升級為按需休眠架構：頁面靜止（`idleFrames >= 2`）或彈窗開啟時自動停止 `requestAnimationFrame` 達成 **0 CPU 閒置喚醒**，於滾輪／觸控／鍵盤／`scrollTo` 時 0ms 喚醒並重置 `lenis.time = 0` 防首幀跳動。
+    - `OpticalLightField.jsx` 升級為 3 頂點全螢幕三角形（Full-Screen Triangle）消除對角線 Overdraw、導入 `dt` 時間無關指數阻尼，並補上 `webglcontextlost` 自動降級至 CSS 光譜備援層。
+    - `CanvasSequence.jsx` 離場終點自動歸零 `opacity` 並切換 `visibility: hidden` 剔除離屏合成層，`prefers-reduced-motion` 下直接載入第 80 格清晰定版幀（`00000079`）；`ScrubText.jsx` 滾過後自動歸還 `will-change: auto`；`RefractionCard.jsx` 離場自動歸位光暈座標。
+    - `App.jsx` 首屏就緒後閒置預熱 `Modal` chunk；`Manifesto.jsx` 進入視窗前預熱 `f1.webp` 並收斂為單一 Pointer 事件；`VisualSynthesis.jsx` 六大分類排序提升至模組頂層 `ORDERED_ITEMS_BY_ID` 一次性預算，前 5 張首屏卡片設為 `eager` 搭配原生 `fetchpriority`。
+  - **單一資料源（SSOT）、無障礙與表單韌性**：
+    - 新增 `src/constants/siteConfig.js` 與 `src/utils/scroll.js`，擴充 `src/constants/heroScroll.js`（`getHeroStickyScrollable`、`getHeroFinalFrameY`），清理 `index.css`、`tailwind.config.js`（移除零引用 `aurora-blue`）與 `url.js` 遺留死碼；`vite.config.js` 鎖定 `server.port: 5173` 與 `build.target: 'es2020'`。
+    - `VisualSynthesis.jsx` 分類列實作完整 WAI-ARIA `tablist` 左右方向鍵／`Home`／`End` 與 Roving `tabIndex`；`useOverlayLock.js` 於鎖定期間對 `<main>` 與 `<footer>` 掛載原生 `inert`；`Modal.jsx` 關閉鈕移至獨立頂欄並設 8 秒 iframe 看門狗；`FeedbackModal.jsx` 修復 12 秒逾時 `didTimeout` 防卡死、補齊 `autoComplete` / `aria-required` / `role="alert"` / `0 / 500` 字數統計與漏填自動 `focus()`；`useClipboard.js` 檢查 `execCommand` 回傳值。
+    - `src/test/setup.js` 補齊 `scrollTo` 與 `getContext` 樁，全站擴充至 **16 個測試檔 / 51 項單元測試** 100% 通過且 **0 stderr 警告**。
 
 

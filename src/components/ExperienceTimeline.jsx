@@ -16,9 +16,9 @@ export default function ExperienceTimeline() {
       className="w-full mt-16 md:mt-20"
     >
       <ol className="optical-surface px-6 sm:px-8 py-2 divide-y divide-white/[0.10]">
-        {careerHistory.map((item, idx) => (
+        {careerHistory.map((item) => (
           <li
-            key={idx}
+            key={`${item.period}-${item.title}`}
             className="group relative grid grid-cols-1 sm:grid-cols-12 gap-1.5 sm:gap-6 py-5 sm:items-baseline transition-colors duration-300 hover:bg-white/[0.03] px-2 -mx-2"
           >
             {/* 左側懸停朱紅光標 */}

@@ -3,11 +3,29 @@ import { m, AnimatePresence } from 'framer-motion';
 import { Play, ArrowUpRight, ArrowRight } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 import { NAV_SCROLL_OFFSET } from '../constants/heroScroll';
+import { smoothScrollTo } from '../utils/scroll';
 import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 import RevealHeading from './common/RevealHeading';
 
 const loadedImageCache = new Set();
+
+// 模組載入時一次性預先正規化 97 筆靜態作品並排好主推首位（切換分類 Tab 時 O(1) 零陣列重新配置）
+function buildOrderedCategoryItems(category) {
+  const list = category.items.map((raw) => normalizeItem(raw));
+  let featIdx = list.findIndex((it) => it.featured);
+  if (featIdx === -1) {
+    featIdx = list.findIndex(
+      (it) => it.videoId && !it.isFacebook && it.aspect !== 'portrait' && it.aspect !== 'square'
+    );
+  }
+  if (featIdx <= 0) return list;
+  return [list[featIdx], ...list.slice(0, featIdx), ...list.slice(featIdx + 1)];
+}
+
+const ORDERED_ITEMS_BY_ID = new Map(
+  categories.map((cat) => [cat.id, buildOrderedCategoryItems(cat)])
+);
 
 const GRID_VARIANTS = {
   enter: { opacity: 1 },
@@ -98,7 +116,8 @@ const BrandCard = React.memo(({ item, onPlayVideo, isFeatured, index, direction 
               alt={item.name}
               width={isFeatured ? 1200 : 600}
               height={isFeatured ? 675 : 337}
-              loading={isFeatured ? 'eager' : 'lazy'}
+              loading={index < 5 ? 'eager' : 'lazy'}
+              fetchpriority={isFeatured ? 'high' : 'auto'}
               decoding="async"
               style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
               onLoad={() => {
@@ -194,15 +213,11 @@ export default function VisualSynthesis({ onPlayVideo }) {
   }, []);
 
   const prefetchCategory = (catId, limit = 6) => {
-    const target = categories.find((c) => c.id === catId);
-    if (!target) return;
-    const isMobileViewport = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 767px)').matches;
-    const featured = target.items.find((it) => it.featured);
-    const ordered = featured
-      ? [featured, ...target.items.filter((it) => it !== featured)]
-      : target.items;
+    const ordered = ORDERED_ITEMS_BY_ID.get(catId);
+    if (!ordered) return;
+    const isMobileViewport =
+      typeof window !== 'undefined' && window.matchMedia?.('(max-width: 767px)').matches;
     ordered
-      .map((raw) => normalizeItem(raw))
       .filter((item) => !isMobileViewport || item.hasVideo)
       .slice(0, limit)
       .forEach((normalized) => {
@@ -244,39 +259,14 @@ export default function VisualSynthesis({ onPlayVideo }) {
   const scrollToTabs = () => {
     const el = tabListRef.current;
     if (!el) return;
-    const offset = NAV_SCROLL_OFFSET + 12;
-    if (window.lenis) {
-      window.lenis.start();
-      window.lenis.scrollTo(el, { offset: -offset, duration: 0.75 });
-      return;
-    }
-    const targetTop = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
-    const prefersReduced = Boolean(
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    );
-    window.scrollTo({
-      top: targetTop,
-      behavior: prefersReduced ? 'auto' : 'smooth',
-    });
+    smoothScrollTo(el, { offset: -(NAV_SCROLL_OFFSET + 12), duration: 0.75 });
   };
 
   const rawCategoryIdx = categories.findIndex((c) => c.id === activeTab);
   const currentCategoryIdx = rawCategoryIdx === -1 ? 0 : rawCategoryIdx;
   const currentCategory = categories[currentCategoryIdx];
   const nextCategory = categories[(currentCategoryIdx + 1) % categories.length];
-
-  // 優先將指定 featured 主推作品置於左上角第一位，構成 1 大帶 4 小黃金比例
-  const orderedItems = React.useMemo(() => {
-    const list = currentCategory.items.map((raw) => normalizeItem(raw));
-    let featIdx = list.findIndex((it) => it.featured);
-    if (featIdx === -1) {
-      featIdx = list.findIndex(
-        (it) => it.videoId && !it.isFacebook && it.aspect !== 'portrait' && it.aspect !== 'square'
-      );
-    }
-    if (featIdx <= 0) return list;
-    return [list[featIdx], ...list.slice(0, featIdx), ...list.slice(featIdx + 1)];
-  }, [currentCategory]);
+  const orderedItems = ORDERED_ITEMS_BY_ID.get(currentCategory.id) || [];
 
   return (
     <section
@@ -300,19 +290,39 @@ export default function VisualSynthesis({ onPlayVideo }) {
           onPointerLeave={cancelPrefetch}
           className="optical-surface grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 mb-10"
         >
-          {categories.map((tab) => {
+          {categories.map((tab, idx) => {
             const isActive = activeTab === tab.id;
+            const handleTabKeyDown = (e) => {
+              let targetIdx = -1;
+              if (e.key === 'ArrowRight') {
+                targetIdx = (idx + 1) % categories.length;
+              } else if (e.key === 'ArrowLeft') {
+                targetIdx = (idx - 1 + categories.length) % categories.length;
+              } else if (e.key === 'Home') {
+                targetIdx = 0;
+              } else if (e.key === 'End') {
+                targetIdx = categories.length - 1;
+              }
+              if (targetIdx === -1) return;
+              e.preventDefault();
+              const next = categories[targetIdx];
+              handleTabChange(next.id, e.key === 'ArrowLeft' || e.key === 'Home' ? -1 : 1);
+              document.getElementById(`vfx-tab-${next.id}`)?.focus();
+            };
+
             return (
               <button
                 type="button"
                 role="tab"
                 id={`vfx-tab-${tab.id}`}
+                tabIndex={isActive ? 0 : -1}
                 aria-selected={isActive}
                 aria-controls="vfx-tabpanel"
                 key={tab.id}
                 onPointerEnter={() => schedulePrefetch(tab.id)}
                 onFocus={() => schedulePrefetch(tab.id)}
                 onBlur={cancelPrefetch}
+                onKeyDown={handleTabKeyDown}
                 onClick={() => handleTabChange(tab.id)}
                 className={`relative px-4 py-4 flex items-center justify-center text-center border-b lg:border-b-0 border-r border-white/10 last:border-r-0 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
                   isActive ? 'text-white' : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.02]'

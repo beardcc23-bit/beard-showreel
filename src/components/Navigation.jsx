@@ -3,56 +3,15 @@ import { Menu, X } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
 import { emilSpring, tapFeedback } from '../utils/motion';
 import { useOverlayLock } from '../hooks/useOverlayLock';
-import { NAV_SCROLL_OFFSET, HERO_FINAL_FRAME_PROGRESS } from '../constants/heroScroll';
+import { NAV_SCROLL_OFFSET, getHeroFinalFrameY } from '../constants/heroScroll';
+import { smoothScrollTo } from '../utils/scroll';
 
 const SECTION_IDS = ['introduction', 'about', 'vfx', 'contact'];
-
-// 計算 Hero 逐幀序列「清晰定版格」對應的垂直捲動座標
-const getHeroFinalFrameY = () => {
-  const heroEl = document.getElementById('hero');
-  if (!heroEl) return 0;
-  const rect = heroEl.getBoundingClientRect();
-  const stickyEl = heroEl.querySelector?.('[data-hero-sticky]');
-  const stickyH = stickyEl?.offsetHeight || window.innerHeight;
-  const scrollable = Math.max(0, rect.height - stickyH);
-  if (scrollable <= 0) return 0;
-  const heroTop = rect.top + window.scrollY;
-  return Math.round(heroTop + scrollable * HERO_FINAL_FRAME_PROGRESS);
-};
-
-const LENIS_ANCHOR_OPTIONS = {
-  duration: 1.05,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-};
-
-let scrollRafId = null;
-const animateScrollTo = (targetY, duration = 400) => {
-  if (scrollRafId) {
-    cancelAnimationFrame(scrollRafId);
-    scrollRafId = null;
-  }
-  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-    window.scrollTo(0, targetY);
-    return;
-  }
-  const startPosition = window.scrollY;
-  const distance = targetY - startPosition;
-  let startTime = null;
-  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1);
-
-  const step = (timestamp) => {
-    if (!startTime) startTime = timestamp;
-    const progress = timestamp - startTime;
-    const percent = Math.min(progress / duration, 1);
-    window.scrollTo(0, startPosition + distance * easeInOutCubic(percent));
-    if (progress < duration) {
-      scrollRafId = requestAnimationFrame(step);
-    } else {
-      scrollRafId = null;
-    }
-  };
-  scrollRafId = requestAnimationFrame(step);
-};
+const MENU_ITEMS = [
+  { name: '個人介紹', href: '#introduction' },
+  { name: '視覺思考', href: '#about' },
+  { name: '作品案例', href: '#vfx' },
+];
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,15 +21,6 @@ export default function Navigation() {
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const closeMenu = useCallback(() => setIsOpen(false), []);
-
-  useEffect(() => {
-    return () => {
-      if (scrollRafId) {
-        cancelAnimationFrame(scrollRafId);
-        scrollRafId = null;
-      }
-    };
-  }, []);
 
   // Scroll Spy + 頂部 1px 全站光譜滾動進度線（直寫 transform，零重排）
   useEffect(() => {
@@ -94,6 +44,7 @@ export default function Navigation() {
 
     let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     let cachedHeroClearThreshold = 160;
+    let lastRatio = -1;
 
     const updateScrollMetrics = () => {
       cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -110,7 +61,10 @@ export default function Navigation() {
       }
       if (progressBarRef.current) {
         const ratio = Math.max(0, Math.min(1, window.scrollY / cachedMaxScroll));
-        progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
+        if (Math.abs(ratio - lastRatio) >= 0.0005) {
+          lastRatio = ratio;
+          progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
+        }
       }
     };
 
@@ -139,12 +93,6 @@ export default function Navigation() {
     return () => window.removeEventListener('resize', handleResize);
   }, [isOpen]);
 
-  const menuItems = [
-    { name: '個人介紹', href: '#introduction' },
-    { name: '視覺思考', href: '#about' },
-    { name: '作品案例', href: '#vfx' },
-  ];
-
   const handleScroll = (e, href) => {
     if (e) e.preventDefault();
     const targetId = href.replace('#', '');
@@ -153,26 +101,14 @@ export default function Navigation() {
 
     setActiveSection(targetId);
     setIsOpen(false);
-
-    if (window.lenis) {
-      window.lenis.start();
-      window.lenis.scrollTo(element, { offset: -NAV_SCROLL_OFFSET, ...LENIS_ANCHOR_OPTIONS });
-      return;
-    }
-    animateScrollTo(element.getBoundingClientRect().top + window.scrollY - NAV_SCROLL_OFFSET);
+    smoothScrollTo(element, { offset: -NAV_SCROLL_OFFSET });
   };
 
   const scrollToHeroEnd = (e) => {
     if (e) e.preventDefault();
     setActiveSection('');
     setIsOpen(false);
-    const targetY = getHeroFinalFrameY();
-    if (window.lenis) {
-      window.lenis.start();
-      window.lenis.scrollTo(targetY, LENIS_ANCHOR_OPTIONS);
-      return;
-    }
-    animateScrollTo(targetY);
+    smoothScrollTo(getHeroFinalFrameY());
   };
 
   return (
@@ -217,7 +153,7 @@ export default function Navigation() {
 
         <div className="flex items-center gap-2 md:gap-4">
           <div className="hidden md:flex items-center gap-1">
-            {menuItems.map((item) => {
+            {MENU_ITEMS.map((item) => {
               const isCurrent = activeSection === item.href.slice(1);
               return (
                 <a
@@ -288,7 +224,7 @@ export default function Navigation() {
               </div>
 
               <div className="flex-1 flex flex-col justify-center gap-6 py-6">
-                {menuItems.map((item, index) => {
+                {MENU_ITEMS.map((item, index) => {
                   const isCurrent = activeSection === item.href.slice(1);
                   return (
                     <m.a

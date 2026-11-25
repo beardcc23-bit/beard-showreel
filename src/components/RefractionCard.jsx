@@ -48,6 +48,8 @@ export default function RefractionCard({ children, className = '', ...props }) {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     }
+    cardRef.current?.style.setProperty('--mouse-x', '-400px');
+    cardRef.current?.style.setProperty('--mouse-y', '-400px');
   };
 
   return (

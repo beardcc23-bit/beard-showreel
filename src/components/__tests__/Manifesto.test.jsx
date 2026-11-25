@@ -8,7 +8,7 @@ describe('Manifesto 元件懸浮預覽與互動測試', () => {
     render(<Manifesto onPlayVideo={vi.fn()} />);
 
     const trigger = screen.getByRole('button', { name: /Autodesk Flame/i });
-    fireEvent.mouseEnter(trigger);
+    fireEvent.pointerEnter(trigger, { pointerType: 'mouse' });
 
     const previewWrapper = screen.getByTestId('flame-hover-preview');
     expect(previewWrapper).toBeInTheDocument();
@@ -16,7 +16,7 @@ describe('Manifesto 元件懸浮預覽與互動測試', () => {
     expect(previewWrapper.className).not.toContain('optical-surface');
     expect(previewWrapper.querySelector('.optical-surface')).not.toBeNull();
 
-    fireEvent.mouseLeave(trigger);
+    fireEvent.pointerLeave(trigger);
   });
 
   it('01 / 02 / 03 三層分鏡卡在手機與桌機皆應以獨立 sticky 容器依序疊壓且不被 optical-surface 覆蓋', () => {

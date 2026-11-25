@@ -85,6 +85,35 @@ export default function Manifesto({ onPlayVideo }) {
   const [flamePreview, setFlamePreview] = useState(null);
   useOffscreenPause(sectionRef);
 
+  // 區塊進入視窗前背景預熱 f1.webp（115KB），確保首次懸停 Autodesk Flame 時 0ms 無黑底秒出節點圖
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof window === 'undefined') return undefined;
+    let preloaded = false;
+    const preloadSchematic = () => {
+      if (preloaded) return;
+      preloaded = true;
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = `${import.meta.env.BASE_URL}f1.webp`;
+    };
+    if (typeof IntersectionObserver === 'undefined') {
+      preloadSchematic();
+      return undefined;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          preloadSchematic();
+          io.disconnect();
+        }
+      },
+      { rootMargin: '320px 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!flamePreview) return undefined;
     const startScrollY = window.scrollY;
@@ -163,9 +192,7 @@ export default function Manifesto({ onPlayVideo }) {
                 tabIndex={0}
                 aria-label="檢視 Autodesk Flame 實際專案 Batch 節點介面"
                 onPointerEnter={handleFlameEnter}
-                onMouseEnter={handleFlameEnter}
                 onPointerLeave={() => setFlamePreview(null)}
-                onMouseLeave={() => setFlamePreview(null)}
                 onBlur={() => setFlamePreview(null)}
                 onClick={openFlameSchematic}
                 onKeyDown={(e) => {

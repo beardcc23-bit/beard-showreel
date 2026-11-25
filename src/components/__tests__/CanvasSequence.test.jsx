@@ -307,7 +307,7 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     }
   });
 
-  it('點擊或拖曳右側 3D 玻璃滑桿應直接精準捲動至對應影格位置（Direct Scrubbing）', () => {
+  it('點擊或拖曳右側 3D 玻璃滑桿應直接精準捲動至對應影格位置（Direct Scrubbing）', async () => {
     const { ref } = makeContainerRef(0, 2520); // scrollable = 1620
     const originalScrollY = window.scrollY;
     const originalLenis = window.lenis;
@@ -317,6 +317,11 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
 
     try {
       render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      mockScrollTo.mockClear();
       const slider = screen.getByTestId('hero-vertical-progress');
       const glassRail = slider.querySelector('.hero-glass-rail');
       glassRail.getBoundingClientRect = () => ({
@@ -406,6 +411,33 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
       introEl.remove();
       Object.defineProperty(window, 'scrollY', { configurable: true, value: originalScrollY });
       window.lenis = originalLenis;
+    }
+  });
+
+  it('使用者開啟 prefers-reduced-motion 時應直接載入第 80 格清晰定版幀（00000079），而非模糊首幀', async () => {
+    const originalMatchMedia = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: query === '(prefers-reduced-motion: reduce)',
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }));
+
+    try {
+      const { ref } = makeContainerRef(0);
+      const { container } = render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+
+      await act(async () => {
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+
+      expect(requestedSrcs).toHaveLength(1);
+      expect(requestedSrcs[0]).toContain('png-0_00000079.webp');
+      const canvas = container.querySelector('canvas');
+      expect(canvas.dataset.frame).toBe('80');
+    } finally {
+      window.matchMedia = originalMatchMedia;
     }
   });
 });

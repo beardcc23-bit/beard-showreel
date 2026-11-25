@@ -108,4 +108,26 @@ describe('VisualSynthesis Component', () => {
       window.scrollTo = originalScrollTo;
     }
   });
+
+  it('分類 tablist 應支援 WAI-ARIA 左右方向鍵、Home 與 End 鍵盤導覽及 Roving tabIndex', () => {
+    render(<VisualSynthesis onPlayVideo={vi.fn()} />);
+
+    const foodTab = screen.getByRole('tab', { name: '食品與飲料' });
+    const techTab = screen.getByRole('tab', { name: '3C與家電' });
+    const lastTab = screen.getByRole('tab', { name: categories[categories.length - 1].name });
+
+    expect(foodTab).toHaveAttribute('tabIndex', '0');
+    expect(techTab).toHaveAttribute('tabIndex', '-1');
+
+    fireEvent.keyDown(foodTab, { key: 'ArrowRight' });
+    expect(techTab).toHaveAttribute('aria-selected', 'true');
+    expect(techTab).toHaveAttribute('tabIndex', '0');
+    expect(foodTab).toHaveAttribute('tabIndex', '-1');
+
+    fireEvent.keyDown(techTab, { key: 'End' });
+    expect(lastTab).toHaveAttribute('aria-selected', 'true');
+
+    fireEvent.keyDown(lastTab, { key: 'Home' });
+    expect(foodTab).toHaveAttribute('aria-selected', 'true');
+  });
 });

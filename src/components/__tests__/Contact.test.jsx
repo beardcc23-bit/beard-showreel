@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -47,5 +47,41 @@ describe('Contact 元件 TDD 單元測試', () => {
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
+  });
+
+  it('回饋表單送出若超過 12 秒連線逾時，應解除 submitting 並顯示逾時錯誤提示（不卡死）', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation(
+      (_url, opts) =>
+        new Promise((_resolve, reject) => {
+          opts?.signal?.addEventListener('abort', () => {
+            reject(new DOMException('Aborted', 'AbortError'));
+          });
+        })
+    );
+
+    try {
+      render(<Contact />);
+      fireEvent.click(screen.getByRole('button', { name: /開啟回饋表單/i }));
+      const dialog = await screen.findByRole('dialog');
+      expect(dialog).toBeInTheDocument();
+
+      fireEvent.change(screen.getByLabelText(/您的稱呼/i), { target: { value: 'Beard' } });
+      fireEvent.change(screen.getByLabelText(/回饋內容/i), { target: { value: '測試逾時防卡死' } });
+      expect(screen.getByText('7 / 500')).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+      expect(screen.getByText('傳送中...')).toBeInTheDocument();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(12500);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toHaveTextContent(/連線逾時/);
+      });
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

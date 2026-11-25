@@ -30,9 +30,15 @@ class MockResizeObserver {
 global.ResizeObserver = MockResizeObserver;
 window.ResizeObserver = MockResizeObserver;
 
-// 模擬 HTMLMediaElement.prototype.load（避免 jsdom 印出 Not implemented 警告）
-if (typeof window !== 'undefined' && window.HTMLMediaElement) {
-  window.HTMLMediaElement.prototype.load = () => {};
+// 模擬 HTMLMediaElement.prototype.load、window.scrollTo 與 HTMLCanvasElement.prototype.getContext（消除 jsdom 未實作洗版警告）
+if (typeof window !== 'undefined') {
+  if (window.HTMLMediaElement) {
+    window.HTMLMediaElement.prototype.load = () => {};
+  }
+  window.scrollTo = () => {};
+  if (window.HTMLCanvasElement) {
+    window.HTMLCanvasElement.prototype.getContext = () => null;
+  }
 }
 
 // 初始化 navigator.clipboard

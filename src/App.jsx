@@ -10,7 +10,8 @@ import Contact from './components/Contact';
 import { useLenisScroll } from './hooks/useLenisScroll';
 import { isSafeLocalImageUrl } from './utils/url';
 
-const Modal = React.lazy(() => import('./components/Modal'));
+const loadModal = () => import('./components/Modal');
+const Modal = React.lazy(loadModal);
 
 export default function App() {
   const [modalState, setModalState] = useState({
@@ -55,6 +56,14 @@ export default function App() {
 
   const handlePageLoaded = React.useCallback(() => {
     setIsPageLoaded(true);
+    // 首屏就緒後利用瀏覽器閒置期預熱 Modal chunk，確保首次點擊播放影片 0ms 秒開
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(() => loadModal(), { timeout: 1500 });
+      } else {
+        setTimeout(() => loadModal(), 600);
+      }
+    }
   }, []);
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import { Check, Copy, ArrowRight } from 'lucide-react';
 import RevealHeading from './common/RevealHeading';
+import { DEFAULT_GAS_SCRIPT_URL } from '../constants/siteConfig';
 import { useClipboard } from '../hooks/useClipboard';
 
 const loadFeedbackModal = () => import('./FeedbackModal');
@@ -17,9 +18,7 @@ export default function Contact() {
   const email = `${emailUser}@${emailDomain}`;
   const { copied, copy } = useClipboard(2500);
 
-  const GAS_SCRIPT_URL =
-    import.meta.env.VITE_GAS_SCRIPT_URL ||
-    'https://script.google.com/macros/s/AKfycbyqnxsdu2s0De5mrIKdmeharnJiy__hLyRyAnhZKzKjEDmXoCjUQYHrlUmmvShbnS7O/exec';
+  const GAS_SCRIPT_URL = import.meta.env.VITE_GAS_SCRIPT_URL || DEFAULT_GAS_SCRIPT_URL;
 
   const handleCopyEmail = () => {
     if (copied) return;

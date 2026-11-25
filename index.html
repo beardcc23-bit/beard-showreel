@@ -13,11 +13,9 @@
   <link rel="shortcut icon" type="image/x-icon" href="%BASE_URL%favicon.ico?v=4" />
   <link rel="apple-touch-icon" href="%BASE_URL%favicon.png?v=4" />
 
-  <!-- CDN DNS Prefetch & Preconnect (YouTube 隱私域名預先握手秒開) -->
+  <!-- 外部影音網域輕量 DNS 預解析（移除未使用之 i.ytimg.com 與首屏阻塞型 preconnect） -->
   <link rel="dns-prefetch" href="https://www.youtube-nocookie.com" />
-  <link rel="dns-prefetch" href="https://i.ytimg.com" />
   <link rel="dns-prefetch" href="https://www.facebook.com" />
-  <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin />
 
   <!-- SEO & Social Media Optimization -->
   <title>Beard Chou | 視覺創造</title>
@@ -51,9 +49,9 @@
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="image" href="%BASE_URL%png-0/png-0_00000000.webp?v=8" type="image/webp" media="(min-width: 768px)"
+  <link rel="preload" as="image" href="%BASE_URL%png-0/png-0_00000000.webp?v=10" type="image/webp" media="(min-width: 768px)"
     fetchpriority="high" />
-  <link rel="preload" as="image" href="%BASE_URL%png-0-mobile/png-0_00000000.webp?v=8" type="image/webp" media="(max-width: 767px)"
+  <link rel="preload" as="image" href="%BASE_URL%png-0-mobile/png-0_00000000.webp?v=10" type="image/webp" media="(max-width: 767px)"
     fetchpriority="high" />
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
@@ -64,35 +62,51 @@
       rel="stylesheet" />
   </noscript>
 
-  <!-- Structured Data for AEO / GEO (AI Search Citation Optimization) -->
+  <!-- Structured Data for AEO / GEO & Video Rich Snippet -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Beard Chou",
-    "alternateName": ["周威全", "Beard"],
-    "jobTitle": "VFX Artist / Autodesk Flame Compositor",
-    "url": "https://beardcc23-bit.github.io/beard-showreel/",
-    "image": "https://beardcc23-bit.github.io/beard-showreel/avatar.jpg",
-    "sameAs": ["https://beardcc23-bit.github.io/beard-showreel/#contact"],
-    "worksFor": {
-      "@type": "Organization",
-      "name": "遇見未來影像創作有限公司"
-    },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Taipei",
-      "addressCountry": "Taiwan"
-    },
-    "description": "深耕 Autodesk Flame 視覺合成。融合電影級精準視覺與極速直覺，雕琢每一格畫面的物理細節。",
-    "knowsAbout": [
-      "Autodesk Flame",
-      "VFX Compositing",
-      "AI Video Synthesis",
-      "Chroma Keying",
-      "Beauty Retouching",
-      "Commercial Post-Production",
-      "Color Grading"
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://beardcc23-bit.github.io/beard-showreel/#person",
+        "name": "Beard Chou",
+        "alternateName": ["周威全", "Beard"],
+        "jobTitle": "VFX Artist / Autodesk Flame Compositor",
+        "url": "https://beardcc23-bit.github.io/beard-showreel/",
+        "image": "https://beardcc23-bit.github.io/beard-showreel/avatar.jpg",
+        "sameAs": ["https://beardcc23-bit.github.io/beard-showreel/#contact"],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "遇見未來影像創作有限公司"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Taipei",
+          "addressCountry": "Taiwan"
+        },
+        "description": "深耕 Autodesk Flame 視覺合成。融合電影級精準視覺與極速直覺，雕琢每一格畫面的物理細節。",
+        "knowsAbout": [
+          "Autodesk Flame",
+          "VFX Compositing",
+          "AI Video Synthesis",
+          "Chroma Keying",
+          "Beauty Retouching",
+          "Commercial Post-Production",
+          "Color Grading"
+        ]
+      },
+      {
+        "@type": "VideoObject",
+        "name": "Beard Chou VFX Showreel (Autodesk Flame)",
+        "description": "周威全 (Beard Chou) Autodesk Flame 商業廣告視覺特效合成代表作品集。",
+        "thumbnailUrl": "https://beardcc23-bit.github.io/beard-showreel/og-cover.jpg",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/s6s2p87fPdA",
+        "uploadDate": "2026-01-01",
+        "creator": {
+          "@id": "https://beardcc23-bit.github.io/beard-showreel/#person"
+        }
+      }
     ]
   }
   </script>
