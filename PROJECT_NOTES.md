@@ -235,8 +235,8 @@
 - **全站展示英文字體統一與履歷精簡（`index.html`、`tailwind.config.js`、`index.css`、`experience.js` 等）**：
   - 全站大英文標題與數據（`Beard Showreel`、`Beard Chou`、`THE MANIFESTO`、`ADVERTISING`、`Let's Connect.`、`Leave a Note`、數據牆）淘汰 `Space Grotesk`，統一更換為與首頁影片一致的 `Montserrat`（`800 ExtraBold`），並微調手機端 `clamp` 確保長單字不超框。
   - 自 `src/data/experience.js` 刪除 2011 美可特與 2009 冉色斯兩筆實習紀錄，同步更新單元測試。
-- **全站兩輪共 38 項深度效能、架構與無障礙優化總收斂（同日晚間收工波）**：
-  - **資產與首屏減重**：桌機 `public/png-0/*.webp` 117 格對齊最大顯示尺寸 `1680×945` 並以 `cwebp -q 78 -m 6 -sharp_yuv` 精準壓縮（解碼記憶體省 24%、快取升版至 `?v=10`）；`public/favicon.png` 量化縮至 `192×192`（`54KB → 11KB`）、`public/avatar.jpg` 縮至 `52KB`；移除 `index.html` 零引用之 `i.ytimg.com` 連線並補齊主 Showreel `VideoObject` 結構化資料，`sitemap.xml` `lastmod` 更新至 `2026-11-25`。
+- **全站兩輪深度效能、架構與無障礙優化總收斂（同日晚間收工波）**：
+  - **資產與首屏減重（首頁維持第一代原生 Full HD 畫質）**：桌機 `public/png-0/*.webp` 117 格維持第一代原生 `1920×1080` 無二次損耗畫質（`10.54 MB`、首幀 `33KB`、快取升版至 `?v=11`）；`public/favicon.png` 量化縮至 `192×192`（`54KB → 11KB`）、`public/avatar.jpg` 縮至 `52KB`；移除 `index.html` 零引用之 `i.ytimg.com` 連線並補齊主 Showreel `VideoObject` 結構化資料，`sitemap.xml` `lastmod` 更新至 `2026-11-25`。
   - **休眠省電與 GPU 渲染管線升級**：
     - `useLenisScroll.js` 升級為按需休眠架構：頁面靜止（`idleFrames >= 2`）或彈窗開啟時自動停止 `requestAnimationFrame` 達成 **0 CPU 閒置喚醒**，於滾輪／觸控／鍵盤／`scrollTo` 時 0ms 喚醒並重置 `lenis.time = 0` 防首幀跳動。
     - `OpticalLightField.jsx` 升級為 3 頂點全螢幕三角形（Full-Screen Triangle）消除對角線 Overdraw、導入 `dt` 時間無關指數阻尼，並補上 `webglcontextlost` 自動降級至 CSS 光譜備援層。

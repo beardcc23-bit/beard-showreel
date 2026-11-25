@@ -12,7 +12,7 @@ import { useIdleHeroAutoScroll } from '../hooks/useIdleHeroAutoScroll';
 const TOTAL_SOURCE_FRAMES = 117;
 const LAST_SOURCE_FRAME = TOTAL_SOURCE_FRAMES - 1;
 const MAX_CONCURRENT_LOADS = 6;
-const SEQUENCE_VERSION = 'v10';
+const SEQUENCE_VERSION = 'v11';
 
 /**
  * 依裝置抽樣影格索引（頭尾必保留 0 與 116），並排出「首尾 -> 均勻骨架 -> 細節補間」兩階段載入順序
