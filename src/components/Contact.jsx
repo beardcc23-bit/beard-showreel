@@ -38,7 +38,7 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* 左對齊標頭 */}
         <div className="max-w-2xl mb-12 md:mb-16">
-          <RevealHeading className="font-display text-[clamp(2.6rem,7vw,5.75rem)] font-bold uppercase tracking-[-0.04em] leading-[0.94] text-title-white">
+          <RevealHeading className="font-display text-[clamp(2.25rem,6.6vw,5.5rem)] font-extrabold uppercase tracking-[-0.035em] leading-[0.94] text-title-white">
             Let&apos;s Connect<span className="text-spectral-crimson">.</span>
           </RevealHeading>
         </div>
@@ -96,7 +96,7 @@ export default function Contact() {
           >
             <span className="w-full flex items-center justify-between gap-4">
               <span>
-                <span className="block font-display text-[clamp(1.25rem,2.2vw,1.9rem)] font-medium tracking-[-0.015em] leading-none text-title-white">
+                <span className="block font-display text-[clamp(1.25rem,2.2vw,1.9rem)] font-bold tracking-[-0.02em] leading-none text-title-white">
                   Leave a Note
                 </span>
                 <span className="block mt-2.5 text-xs sm:text-sm text-zinc-400 font-light tracking-wide group-hover:text-zinc-200 transition-colors">

@@ -50,7 +50,7 @@ export default function Introduction({ onPlayVideo }) {
 
           {/* 右側：標題、三段文案與 SHOWREEL 按鈕 */}
           <div className="md:col-span-7 lg:col-span-8 flex flex-col items-start">
-            <RevealHeading className="font-display text-5xl sm:text-6xl lg:text-8xl font-bold tracking-[-0.04em] leading-[0.92] text-title-white mb-10">
+            <RevealHeading className="font-display text-5xl sm:text-6xl lg:text-8xl font-extrabold tracking-[-0.035em] leading-[0.94] text-title-white mb-10">
               Beard <span className="text-spectral-crimson">Chou</span>
             </RevealHeading>
 
@@ -97,13 +97,13 @@ export default function Introduction({ onPlayVideo }) {
                 </span>
               </div>
               <div className="mt-3 flex items-baseline gap-x-2.5 gap-y-1.5 flex-wrap">
-                <div className="inline-flex items-baseline font-display text-5xl md:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-title-white tabular-nums leading-none">
+                <div className="inline-flex items-baseline font-display text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-[-0.035em] text-title-white tabular-nums leading-none">
                   <AnimatedCounter value={stat.getValue()} trigger={statsInView} />
-                  <sup className="static self-start text-spectral-crimson text-2xl md:text-3xl lg:text-4xl font-bold leading-none ml-0.5 -mt-1">
+                  <sup className="static self-start text-spectral-crimson text-2xl md:text-3xl lg:text-4xl font-extrabold leading-none ml-0.5 -mt-1">
                     +
                   </sup>
                 </div>
-                <span className="font-display text-xs md:text-sm font-medium uppercase tracking-[0.16em] text-white leading-none">
+                <span className="font-display text-xs md:text-sm font-bold uppercase tracking-[0.14em] text-white leading-none">
                   {stat.unit.replace(/^\/\//, '')}
                 </span>
               </div>

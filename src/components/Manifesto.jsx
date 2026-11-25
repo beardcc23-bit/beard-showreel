@@ -147,7 +147,7 @@ export default function Manifesto({ onPlayVideo }) {
       <div className="max-w-7xl mx-auto">
         {/* 左對齊編輯標頭 */}
         <div className="mb-16 md:mb-24">
-          <RevealHeading className="font-display text-[clamp(2.6rem,7.5vw,6.2rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-title-white">
+          <RevealHeading className="font-display text-[clamp(2.25rem,6.8vw,5.8rem)] font-extrabold uppercase leading-[0.92] tracking-[-0.035em] text-title-white">
             THE MANIFESTO
           </RevealHeading>
         </div>
@@ -206,7 +206,7 @@ export default function Manifesto({ onPlayVideo }) {
                   <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 left-0 right-0 h-[2px] spectral-flow-line" />
                     <div className="absolute inset-0" style={{ background: cat.ambientGlow }} />
-                    <span className="font-display text-7xl sm:text-8xl font-bold text-white/[0.04] absolute top-4 right-6 leading-none select-none">
+                    <span className="font-display text-7xl sm:text-8xl font-extrabold text-white/[0.04] absolute top-4 right-6 leading-none select-none">
                       {cat.id}
                     </span>
                   </div>

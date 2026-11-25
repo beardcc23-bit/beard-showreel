@@ -30,13 +30,9 @@ describe('ExperienceTimeline 元件單元測試', () => {
     expect(screen.getByText('戰車駕駛兵')).toBeInTheDocument();
     expect(screen.getByText('2011 - 2012')).toBeInTheDocument();
 
-    // 美可特品牌企劃設計 實習
-    expect(screen.getByText('美可特品牌企劃設計')).toBeInTheDocument();
-    expect(screen.getByText('2011')).toBeInTheDocument();
-
-    // 冉色斯創意影像有限公司 實習
-    expect(screen.getByText('冉色斯創意影像有限公司')).toBeInTheDocument();
-    expect(screen.getByText('2009')).toBeInTheDocument();
+    // 兩筆實習紀錄應已移除
+    expect(screen.queryByText('美可特品牌企劃設計')).not.toBeInTheDocument();
+    expect(screen.queryByText('冉色斯創意影像有限公司')).not.toBeInTheDocument();
 
     // 環球科技大學 視覺傳達設計系
     expect(screen.getByText('環球科技大學')).toBeInTheDocument();

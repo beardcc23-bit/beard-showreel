@@ -26,9 +26,9 @@ export default function Hero({ isModalOpen, onLoaded }) {
       {/* 語意化首頁標題（僅供搜尋引擎與無障礙讀取，畫面完全不顯示） */}
       <h1 className="sr-only">Beard Chou 周威全 | 視覺創造 (Autodesk Flame VFX)</h1>
 
-      {/* Sticky 釘選舞台：隨外層軌道滾動鎖定於視窗視覺中央（扣除頂部導覽列高度） */}
-      <div className="sticky top-0 h-[100dvh] w-full flex items-center justify-center px-2.5 sm:px-4 md:px-10 pt-14 md:pt-16">
-        <div className="w-full max-w-[1136px] mx-auto relative z-10">
+      {/* Sticky 釘選舞台：手機 px-0 零邊距貼邊直式滿版；桌機解鎖至 1760px 劇院級大銀幕並依視窗高度自適應防裁切 */}
+      <div className="sticky top-0 h-[100dvh] w-full flex items-center justify-center px-0 md:px-6 pt-14 md:pt-16">
+        <div className="w-full md:max-w-[min(1760px,calc((100dvh-6.75rem)*1.7778+80px))] mx-auto relative z-10">
           <CanvasSequence
             containerRef={sectionRef}
             isModalOpen={isModalOpen}

@@ -207,7 +207,7 @@ export default function Navigation() {
             className="group flex items-center gap-3 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson cursor-pointer"
             aria-label="Beard Showreel - 回到首頁主視覺定版"
           >
-            <span className="font-space-mono text-lg md:text-xl font-bold tracking-tighter text-title-white group-hover:opacity-85 transition-opacity">
+            <span className="font-display text-lg md:text-xl font-extrabold tracking-[-0.03em] text-title-white group-hover:opacity-85 transition-opacity">
               Beard<span className="text-spectral-crimson"> Showreel</span>
             </span>
           </button>

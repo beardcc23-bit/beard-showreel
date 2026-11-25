@@ -19,7 +19,7 @@ export default {
         'info-gold-gray': 'rgb(var(--rgb-info-gold-gray) / <alpha-value>)',
       },
       fontFamily: {
-        display: ['"Space Grotesk"', '"Noto Sans TC"', 'sans-serif'],
+        display: ['"Montserrat"', '"Noto Sans TC"', 'sans-serif'],
         sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },

@@ -49,16 +49,6 @@ export const careerHistory = [
     role: '戰車駕駛兵'
   },
   {
-    period: '2011',
-    title: '美可特品牌企劃設計',
-    role: '實習'
-  },
-  {
-    period: '2009',
-    title: '冉色斯創意影像有限公司',
-    role: '實習'
-  },
-  {
     period: '2007 - 2011',
     title: '環球科技大學',
     role: '視覺傳達設計系'

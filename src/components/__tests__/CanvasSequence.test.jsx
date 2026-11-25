@@ -82,10 +82,14 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     expect(canvas).toBeInTheDocument();
     expect(canvas.dataset.frame).toBe('1');
     const heroScreen = screen.getByTestId('hero-screen');
-    expect(heroScreen).toHaveClass('aspect-[3/4]');
+    expect(heroScreen).toHaveClass('h-[80dvh]');
     expect(heroScreen).toHaveClass('md:aspect-video');
     expect(container.querySelector('video')).toBeNull();
-    expect(screen.getByTestId('hero-vertical-progress')).toBeInTheDocument();
+    const slider = screen.getByTestId('hero-vertical-progress');
+    expect(slider).toBeInTheDocument();
+    // 手機版隱藏右側直條滑桿，僅桌機（md:flex）顯示
+    expect(slider).toHaveClass('hidden');
+    expect(slider).toHaveClass('md:flex');
     expect(screen.getByTestId('hero-progress-fill').style.transform).toBe('scaleY(0.0000)');
     expect(screen.queryByTestId('hero-frame-counter')).toBeNull();
     expect(screen.getByTestId('hero-scroll-hint')).toHaveTextContent('向下滑動推進');
@@ -97,33 +101,33 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     expect(onLoaded).toHaveBeenCalledTimes(1);
   });
 
-  it('桌機與手機應自動抽幀減重（桌機 73 格、手機 49 格）且不一次載入全部 145 格', async () => {
+  it('桌機應載入完整 117 格原生幀確保滾動零跳格，手機應自動抽幀減重為 59 格', async () => {
     const { ref } = makeContainerRef(0);
     render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
 
+    await act(async () => {
+      for (let i = 0; i < 40; i += 1) {
+        await Promise.resolve();
+      }
+    });
+    expect(requestedSrcs.length).toBe(117);
+    expect(requestedSrcs[0]).toContain('png-0_00000000.webp');
+    expect(requestedSrcs[1]).toContain('png-0_00000116.webp');
+
+    // 切換手機寬度驗證抽樣為 59 格且使用 png-0-mobile
+    requestedSrcs = [];
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
     await act(async () => {
       for (let i = 0; i < 30; i += 1) {
         await Promise.resolve();
       }
     });
-    expect(requestedSrcs.length).toBe(73);
-    expect(requestedSrcs[0]).toContain('png-0_00000000.webp');
-    expect(requestedSrcs[1]).toContain('png-0_00000144.webp');
-
-    // 切換手機寬度驗證抽樣為 49 格且使用 png-0-mobile
-    requestedSrcs = [];
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
-    render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
-    await act(async () => {
-      for (let i = 0; i < 20; i += 1) {
-        await Promise.resolve();
-      }
-    });
-    expect(requestedSrcs.length).toBe(49);
+    expect(requestedSrcs.length).toBe(59);
     expect(requestedSrcs[0]).toContain('png-0-mobile/png-0_00000000.webp');
   });
 
-  it('往下滑應前進影格且中段維持提示，快到底才淡出並於尾段 85%→100% 觸發微縮轉場，往上滑應倒轉', async () => {
+  it('往下滑應以單一等速線性推進影格，於變透明與離場上滑區（86%→126%）緊貼滑動速度走完第 117 格，往上滑應倒轉', async () => {
     const { ref, setTop } = makeContainerRef(0, 2520); // scrollable = 2520 - 900 = 1620
     const { container } = render(
       <CanvasSequence containerRef={ref} isModalOpen={false} />
@@ -141,23 +145,43 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
       window.dispatchEvent(new Event('scroll'));
       vi.advanceTimersByTime(1200);
     });
-    expect(Number(canvas.dataset.frame)).toBeGreaterThan(60);
+    expect(Number(canvas.dataset.frame)).toBeGreaterThan(40);
     expect(fill.style.transform).toContain('scaleY(');
     expect(thumb.style.transform).toContain('translate3d(0,');
     expect(Number(hint.style.opacity)).toBe(1);
 
-    // 滑至 100% 行程（-1620px）：應定版在第 145 格、垂直進度滿格、提示文字淡出且銀幕微縮淡出
+    // 滑至 86% 主觀賞區終點（-1393.2px）：滑桿走滿 100%、停在清晰不透明定版格（第 80 格）
+    setTop(-1393.2);
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+      vi.advanceTimersByTime(1500);
+    });
+    const mainHoldFrame = Number(canvas.dataset.frame);
+    expect(mainHoldFrame).toBe(80);
+    expect(fill.style.transform).toBe('scaleY(1.0000)');
+    expect(thumb.style.transform).toBe('translate3d(0, 100.000%, 0)');
+    expect(Number(stage.style.opacity)).toBe(1);
+
+    // 滑至 100% Sticky 終點（-1620px）：銀幕進入微縮半透明，且影格以相同斜率等速推進
     setTop(-1620);
     act(() => {
       window.dispatchEvent(new Event('scroll'));
       vi.advanceTimersByTime(1500);
     });
-    expect(canvas.dataset.frame).toBe('145');
-    expect(fill.style.transform).toBe('scaleY(1.0000)');
-    expect(thumb.style.transform).toBe('translate3d(0, 100.000%, 0)');
+    const stickyEndFrame = Number(canvas.dataset.frame);
+    expect(stickyEndFrame).toBeGreaterThan(mainHoldFrame);
+    expect(stickyEndFrame).toBeLessThan(117);
     expect(Number(hint.style.opacity)).toBe(0);
     expect(stage.style.transform).toContain('scale(');
     expect(Number(stage.style.opacity)).toBeLessThan(0.5);
+
+    // 繼續往下滑至離場上滑終點（126% 行程 = -2041.2px）：變透明上滑途中等速推進完第 117 格
+    setTop(-2041.2);
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+      vi.advanceTimersByTime(1500);
+    });
+    expect(canvas.dataset.frame).toBe('117');
 
     // 往回滑至頂部（0px）：應倒轉回第 1 格並恢復完整顯示
     setTop(0);

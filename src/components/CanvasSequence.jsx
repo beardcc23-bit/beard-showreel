@@ -3,15 +3,17 @@ import { ArrowDown } from 'lucide-react';
 import {
   HERO_SCRUB_END_PROGRESS,
   HERO_OUTRO_START_PROGRESS,
+  HERO_EXIT_END_PROGRESS,
 } from '../constants/heroScroll';
 import { useIdleHeroAutoScroll } from '../hooks/useIdleHeroAutoScroll';
 
-const TOTAL_SOURCE_FRAMES = 145;
+const TOTAL_SOURCE_FRAMES = 117;
 const LAST_SOURCE_FRAME = TOTAL_SOURCE_FRAMES - 1;
-const MAX_CONCURRENT_LOADS = 4;
+const MAX_CONCURRENT_LOADS = 6;
+const SEQUENCE_VERSION = 'v7';
 
 /**
- * 依裝置抽樣影格索引（頭尾必保留 0 與 144），並排出「首尾 -> 均勻骨架 -> 細節補間」兩階段載入順序
+ * 依裝置抽樣影格索引（頭尾必保留 0 與 116），並排出「首尾 -> 均勻骨架 -> 細節補間」兩階段載入順序
  */
 function buildSampledFrames(step) {
   const indices = [];
@@ -61,7 +63,7 @@ const clamp01 = (v) => Math.max(0, Math.min(1, v));
 /**
  * Hero 滾動驅動逐幀時間軸播放器（方案 B：滾動＋右側 3D 玻璃滑桿直拖控制前進／倒轉 ＋ 尾段微縮淡出銜接）
  * - 靜止與離屏時 0 rAF 休眠（0% 耗電），時間無關指數衰減確保 60Hz / 120Hz 手感一致
- * - 採兩階段抽幀預解碼載入（桌機 73 格／手機 49 格）與最近影格回退，杜絕黑格與倒刷卡頓
+ * - 採兩階段骨架交錯預解碼載入（桌機全 117 格原生幀／手機 59 格）與最近影格回退，杜絕黑格與跳格卡頓
  */
 export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) {
   const stageRef = useRef(null);
@@ -100,7 +102,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
   const basePath = import.meta.env.BASE_URL;
   const folder = isMobile ? 'png-0-mobile' : 'png-0';
-  const posterSrc = `${basePath}${folder}/png-0_00000000.webp?v=3`;
+  const step = isMobile ? 2 : 1;
+  const posterSrc = `${basePath}${folder}/png-0_00000000.webp?${SEQUENCE_VERSION}`;
 
   // 尋找距離目標 slot 最近的已載入影格，確保網路載入期間刷動永不黑屏
   const findNearestLoadedSlot = (targetSlot) => {
@@ -134,12 +137,14 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     return true;
   };
 
-  // 將正規化進度 [0, 1] 同步反映至 Canvas 影格、3D 玻璃滑桿光柱／游標與結尾微縮淡出轉場
+  // 將進度 [0, HERO_EXIT_END_PROGRESS] 同步反映至 Canvas 影格、3D 玻璃滑桿與離場疊化轉場
   const applyProgress = (progress) => {
     const sampled = sampledIndicesRef.current;
-    const scrubRatio = clamp01(progress / HERO_SCRUB_END_PROGRESS);
+    const railRatio = clamp01(progress / HERO_SCRUB_END_PROGRESS);
+    // 全程單一等速線性耦合（0 ~ 1.26）：確保變透明與往上滑離場時，影格播放速率 1:1 緊貼滑動速度不降速卡頓
+    const frameRatio = clamp01(progress / HERO_EXIT_END_PROGRESS);
     const maxSlot = Math.max(0, sampled.length - 1);
-    const targetSlot = Math.round(scrubRatio * maxSlot);
+    const targetSlot = Math.round(frameRatio * maxSlot);
     const displayFrame = sampled[targetSlot] ?? 0;
 
     if (targetSlot !== drawnSlotRef.current) {
@@ -150,11 +155,11 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     }
 
     if (progressBarRef.current) {
-      progressBarRef.current.style.transform = `scaleY(${scrubRatio.toFixed(4)})`;
+      progressBarRef.current.style.transform = `scaleY(${railRatio.toFixed(4)})`;
     }
 
     if (progressThumbRef.current) {
-      progressThumbRef.current.style.transform = `translate3d(0, ${(scrubRatio * 100).toFixed(3)}%, 0)`;
+      progressThumbRef.current.style.transform = `translate3d(0, ${(railRatio * 100).toFixed(3)}%, 0)`;
     }
 
     const frameNumber = String(displayFrame + 1);
@@ -165,7 +170,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       sliderRef.current.setAttribute('aria-valuenow', frameNumber);
     }
 
-    // 全程保留「向下滑動推進」與滑桿底端箭頭引導，快刷到底定版前（73% -> 83%）同步淡出
+    // 全程保留「向下滑動推進」與滑桿底端箭頭引導，快刷到主定版前（73% -> 83%）同步淡出
     const hintOpacity = clamp01(1 - (progress - 0.73) / 0.1).toFixed(3);
     if (scrollHintRef.current) {
       scrollHintRef.current.style.opacity = hintOpacity;
@@ -174,18 +179,19 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       scrollArrowRef.current.style.opacity = hintOpacity;
     }
 
-    // 方案 B：尾段 86% -> 100% 銀幕微縮並柔和淡出，順暢銜接下方「個人介紹」
+    // 尾段 86% -> 100% 銀幕微縮半透明，100% -> 155% 隨上滑離場柔和融化並持續轉動餘韻影格
     if (stageRef.current) {
       if (prefersReduced) {
         stageRef.current.style.transform = '';
         stageRef.current.style.opacity = '1';
       } else {
-        const outro = clamp01(
+        const stickyOutro = clamp01(
           (progress - HERO_OUTRO_START_PROGRESS) / (1 - HERO_OUTRO_START_PROGRESS)
         );
-        const scale = 1 - outro * 0.055;
-        const translateY = -outro * 22;
-        const opacity = 1 - outro * 0.85;
+        const exitOutro = clamp01((progress - 1) / (HERO_EXIT_END_PROGRESS - 1));
+        const scale = 1 - stickyOutro * 0.055 - exitOutro * 0.025;
+        const translateY = -stickyOutro * 22;
+        const opacity = 1 - stickyOutro * 0.62 - exitOutro * 0.34;
         stageRef.current.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
         stageRef.current.style.opacity = opacity.toFixed(3);
       }
@@ -273,12 +279,10 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     return () => canvas.removeEventListener('contextmenu', blockMenu);
   }, []);
 
-  // 兩階段交錯序列預解碼載入（桌機 73 格 / 手機 49 格；減少動態模式僅載首幀）
+  // 兩階段骨架交錯預解碼載入（桌機全 117 格原生 30fps / 手機 59 格減重；減少動態模式僅載首幀）
   useEffect(() => {
     let isCancelled = false;
     let unlocked = false;
-    const folder = isMobile ? 'png-0-mobile' : 'png-0';
-    const step = isMobile ? 3 : 2;
     const sampled = prefersReduced ? [0] : buildSampledFrames(step);
     sampledIndicesRef.current = sampled;
     framesRef.current = new Array(sampled.length).fill(null);
@@ -344,7 +348,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
           if (slot === 0) unlock();
           done();
         };
-        img.src = `${basePath}${folder}/png-0_${String(frameNum).padStart(8, '0')}.webp?v=3`;
+        img.src = `${basePath}${folder}/png-0_${String(frameNum).padStart(8, '0')}.webp?${SEQUENCE_VERSION}`;
       }
     };
 
@@ -362,7 +366,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       framesRef.current = [];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMobile, prefersReduced, basePath]);
+  }, [isMobile, prefersReduced, basePath, folder, step]);
 
   // 滾動監聽 ＋ 時間無關指數衰減阻尼引擎（60Hz / 120Hz 一致手感，離屏與靜止 0 rAF 休眠）
   useEffect(() => {
@@ -373,7 +377,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       if (!container) return 0;
       const rect = container.getBoundingClientRect();
       const scrollable = Math.max(1, rect.height - window.innerHeight);
-      return clamp01(-rect.top / scrollable);
+      return Math.max(0, Math.min(HERO_EXIT_END_PROGRESS, -rect.top / scrollable));
     };
 
     const tick = (now) => {
@@ -386,7 +390,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       const target = targetProgressRef.current;
       const diff = target - currentProgressRef.current;
 
-      if (Math.abs(diff) < 0.0005 || prefersReduced) {
+      // 若全域 Lenis 已對 scrollY 做平滑插值，直接 1:1 零延遲同步影格，消除雙重阻尼造成的上滑拖慢卡頓
+      if (window.lenis || Math.abs(diff) < 0.0005 || prefersReduced) {
         currentProgressRef.current = target;
         applyProgress(target);
         rafIdRef.current = null;
@@ -394,11 +399,11 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
         return;
       }
 
-      // 時間無關指數衰減：消除 60Hz 與 120Hz ProMotion 螢幕阻尼速率差異
+      // 無 Lenis 環境（如純觸控原生捲動）：高響應時間無關追隨，緊貼手指滑動速度
       const ts = typeof now === 'number' ? now : performance.now();
       const dt = lastFrameTime ? Math.min(0.05, Math.max(0.001, (ts - lastFrameTime) / 1000)) : 1 / 60;
       lastFrameTime = ts;
-      const lambda = isMobile ? 22 : 14;
+      const lambda = 42;
       const lerpFactor = 1 - Math.exp(-lambda * dt);
 
       currentProgressRef.current += diff * lerpFactor;
@@ -481,12 +486,12 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
   return (
     <div ref={stageRef} className="w-full will-change-transform">
-      {/* 桌機採左右 24px 對稱平衡網格維持銀幕絕對置中，右側掛載纖細可拖曳 3D 暗房透光厚玻璃棱柱滑桿 */}
+      {/* 手機版隱藏右側滑桿吃滿全寬；桌機採左右 24px 對稱平衡網格維持銀幕置中，右側掛載 3D 玻璃棱柱滑桿 */}
       <div
         className={
           prefersReduced
             ? 'w-full'
-            : 'grid grid-cols-[minmax(0,1fr)_18px] md:grid-cols-[24px_minmax(0,1fr)_24px] gap-2.5 md:gap-4 items-stretch'
+            : 'w-full md:grid md:grid-cols-[24px_minmax(0,1fr)_24px] md:gap-4 items-stretch'
         }
       >
         {/* 桌機左側隱形對稱平衡欄，防止銀幕因右側立體玻璃滑桿往左偏移 */}
@@ -494,7 +499,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
         <div
           data-testid="hero-screen"
-          className="relative w-full aspect-[3/4] max-h-[72dvh] md:max-h-none md:aspect-video bg-[#030407] shadow-[0_32px_90px_rgba(0,0,0,0.85)] overflow-hidden"
+          className="relative w-full h-[80dvh] md:h-auto md:aspect-video bg-transparent md:bg-[#030407] shadow-none md:shadow-[0_32px_90px_rgba(0,0,0,0.85)] max-md:[mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] overflow-hidden"
         >
           {/* 極簡暗房載入遮罩 */}
           {isLoading && (
@@ -545,7 +550,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
             onPointerUp={handleRailPointerUp}
             onPointerCancel={handleRailPointerUp}
             onKeyDown={handleRailKeyDown}
-            className="group relative before:content-[''] before:absolute before:inset-y-0 before:-left-4 before:-right-2 flex flex-col items-center self-stretch select-none pt-[2px] md:pt-[3px] pr-[4px] md:pr-[5px] cursor-ns-resize touch-none focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+            className="hidden md:flex group relative before:content-[''] before:absolute before:inset-y-0 before:-left-4 before:-right-2 flex-col items-center self-stretch select-none pt-[3px] pr-[5px] cursor-ns-resize touch-none focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
           >
             {/* 3D 暗房透光厚玻璃本體（無 overflow-hidden 確保右側 5px 與頂部 2.5px 斜切面完整立體顯現） */}
             <div ref={railRef} className="hero-glass-rail relative flex-1 w-[4px] md:w-[5px]">
@@ -577,17 +582,17 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
         )}
       </div>
 
-      {/* 銀幕下方資訊列：沿用完全相同的網格欄寬與右切面偏移補償，讓紅箭頭與 3D 玻璃正面中軸 100% 同軸置中 */}
+      {/* 銀幕下方資訊列：手機版置中呈現提示與箭頭；桌機版沿用對稱網格讓紅箭頭與右側 3D 玻璃柱中軸同軸對齊 */}
       {!prefersReduced && (
         <div
-          className="mt-3 grid grid-cols-[minmax(0,1fr)_18px] md:grid-cols-[24px_minmax(0,1fr)_24px] gap-2.5 md:gap-4 items-center select-none text-[11px] text-zinc-200/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]"
+          className="mt-3 flex items-center justify-center gap-1.5 md:grid md:grid-cols-[24px_minmax(0,1fr)_24px] md:gap-4 select-none text-[11px] text-zinc-200/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]"
           aria-hidden="true"
         >
           {/* 桌機左側隱形對稱平衡欄 */}
           <div className="hidden md:block" />
 
-          {/* 銀幕欄：提示文字靠右切齊銀幕右緣，極簡無影格數字干擾 */}
-          <div className="flex items-center justify-end">
+          {/* 銀幕欄：手機置中、桌機靠右切齊銀幕右緣 */}
+          <div className="flex items-center justify-center md:justify-end">
             <span
               ref={scrollHintRef}
               data-testid="hero-scroll-hint"
@@ -597,10 +602,10 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
             </span>
           </div>
 
-          {/* 右側同軸欄：補償 3D 玻璃右切面寬度，使紅箭頭精準對齊 3D 玻璃正面與橘紅方塊中軸 */}
+          {/* 右側同軸欄：桌機補償 3D 玻璃右切面寬度對齊滑桿中軸，手機緊隨提示文字右側 */}
           <div
             ref={scrollArrowRef}
-            className="flex items-center justify-center pr-[4px] md:pr-[5px] transition-opacity duration-300"
+            className="flex items-center justify-center md:pr-[5px] transition-opacity duration-300"
           >
             <ArrowDown size={13} className="text-spectral-crimson animate-bounce" />
           </div>

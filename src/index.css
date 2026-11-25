@@ -6,16 +6,16 @@
 
   h1,
   .h1 {
-    font-family: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+    font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
     font-size: 32px;
-    font-weight: 700;
+    font-weight: 800;
   }
 
   h2,
   .h2 {
-    font-family: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+    font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 800;
   }
 
   h3,
@@ -117,11 +117,11 @@ body {
 }
 
 .font-space-mono {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .font-display {
-  font-family: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+  font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
 }
 
 /* ==========================================================================

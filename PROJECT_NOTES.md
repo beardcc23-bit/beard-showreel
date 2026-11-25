@@ -218,6 +218,21 @@
 ### 下一步待辦
 - **Showreel 片頭重製（Velvet Edition）**：已於 `/Users/beard/Desktop/1/showreel_intro_concepts/velvet_edition/` 備妥 4 張貼合網站平行 45° 煙燻藕紫＋冰鋼藍絲絨光場的大反差首尾幀與 8 秒高動態 Prompt；待切換有額度之影片生成帳號產出片頭後，可再以 `ffmpeg` 精剪 6 秒並轉製網站 `hero.webm` / `hero.mp4` / `hero-poster.webp` 及 Flame ProRes 母帶。
 
+## 2026-11-25
+
+### 已完成：首頁新序列替換（Timeline 4_1）、離場等速滑動耦合、全站 Montserrat 字體統一與劇院級／直式滿版升級
+- **首頁 117 格序列全面重製與滿版化（`public/png-0/`、`public/png-0-mobile/`、`public/og-cover.jpg`、`Hero.jsx`、`CanvasSequence.jsx`）**：
+  - 將首頁序列更新為 `Timeline 4_1.mov` 全 117 格（`00000000` ～ `00000116`），快取參數升版至 `?v=7`，並以第 99 格正面定版更新 `1200×630` 社群分享縮圖 `og-cover.jpg`。
+  - **桌機劇院級滿版（方案 1）**：解鎖 `Hero.jsx` 原本 `max-w-[1136px]` 限制至 `1760px`（搭配視窗高度自適應公式防底部提示裁切），並將 `public/png-0/` 升級為原生 `1920×1080` Full HD 全 117 格載入（`11MB`），大銀幕放大依然銳利零跳格。
+  - **手機直式暗房無縫延伸滿版（方案 A）**：以 `uv` + Pillow + NumPy 將 `public/png-0-mobile/` 重製為 `648×1152`（`9:16`）直式畫布（`3.7MB`、抽樣 59 格），中央 100% 保留完整 `Beard Showreel` 字體不切字，上下以同源暗房光暈平滑漫射延伸；搭配 `px-0`、`h-[80dvh]` 與頂底 `10%` `mask-image` 羽化遮罩無框融入背景光場，並於手機端隱藏右側直條滑桿、底部提示改置中。
+- **尾段變透明與離場上滑 1:1 等速耦合（`src/constants/heroScroll.js`、`CanvasSequence.jsx`）**：
+  - 解除原本 `progress = 1.0` 的封頂限制，將追蹤區間延伸至 `HERO_EXIT_END_PROGRESS = 1.26`，並採單一等速線性斜率推進影格：滑至 `86%` 定版點（第 80 格清晰轉正）時滑桿走滿 `100%`，進入變透明微縮與 Sticky 放開上滑離場區（`86% → 126%`）時，水晶圓環緊貼滑動速度等速走完第 `81 ～ 117` 格餘韻幀。
+  - 移除桌機 Lenis 啟用時的雙重阻尼滯後（改為同幀 1:1 零延遲同步，純觸控手機提升至 `lambda = 42`），徹底消除快速上滑時的掉拍卡頓感。
+- **全站展示英文字體統一與履歷精簡（`index.html`、`tailwind.config.js`、`index.css`、`experience.js` 等）**：
+  - 全站大英文標題與數據（`Beard Showreel`、`Beard Chou`、`THE MANIFESTO`、`ADVERTISING`、`Let's Connect.`、`Leave a Note`、數據牆）淘汰 `Space Grotesk`，統一更換為與首頁影片一致的 `Montserrat`（`800 ExtraBold`），並微調手機端 `clamp` 確保長單字不超框。
+  - 自 `src/data/experience.js` 刪除 2011 美可特與 2009 冉色斯兩筆實習紀錄，同步更新單元測試，全站 **16 個測試檔 / 48 項測試**全數通過。
+
+
 
 
 
