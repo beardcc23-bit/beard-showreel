@@ -318,4 +318,8 @@
   - **應徵前全站影片可播性與品牌正名校準（`portfolio.js`、`Manifesto.jsx`、`portfolio.test.js`、`Modal.test.jsx`）**：
     - 對全站 63 支 YouTube 作品與兩支 Showreel 執行 oEmbed 可播性實彈稽核：修正「美妝與健康」分類 `Accu-Chek 羅氏血糖機` 品牌拼字，並移除客戶已轉為私人影片之失效連結 `HUaASbBDOSM`（轉為純劇照展示卡）；同步將鴻華先進概念車名統一校正為官方正名 `Foxtron Cavira`。
     - 清理 4 筆外部連結冗餘參數（移除 `Panasonic 冷萃咖啡機` 馬來西亞語系 `?locale=ms_MY`、`中國信託` 播放清單、`TOBLERONE` 時間碼與 `Foxtron Cavira` 追蹤碼）；對齊 `農純鄉 大本山益生菌`、`foodpanda`、`Uber Eats` 官方標準字；並將聯絡區抽屜（`Contact.jsx`、`FeedbackModal.jsx`）文案由網站意見回饋升級為「傳送訊息／專案合作洽詢、職務邀約或影像交流」專業商務語氣。
+  - **第十一輪全站光學構圖裁切、同品牌篇名區隔與 CSP 字體載入深度打磨（`portfolio.js`、`VisualSynthesis.jsx`、`Manifesto.jsx`、`index.html`、`vercel.json`）**：
+    - **直式與 4:3 劇照構圖對位**：為 `Samsung Z Fold3 / Z Flip3`（`50% 28%`）、`蕾妮亞`（`50% 24%`）、`Bifesta 碧菲絲特`（`50% 38%`）補齊垂直焦點定位，消除預設居中裁切造成的切額頭與切標題問題。
+    - **小卡遮幅黑邊裁除與滿框齊平**：裁除 `Audi`（`C-01.webp` 頂部 42px 單側黑邊）、`桂格`（`A-018.webp`）、`Gogoro Pulse`（`C-04.webp`，搭配 `20% 50%` 完整保留左上 Logo 與翹孤輪騎士）及 `瑞穗鮮乳`（`A-023.webp`，搭配 `22% 50%`）之遮幅黑邊，並將 `VFX_ASSET_VERSION` 升至 `v6`。
+    - **同品牌多支作品篇名區隔、外連標示與 CSP 相容**：為「生活與百貨」與「金融與保險」重複同名之 `新光三越`（×4）、`東和鋼鐵`（×3）、`HOLA`（×2）、`台灣Pay`（×2）補上官方篇名副標達成全站同分類零撞名；`Manifesto.jsx` 外部社群案例補齊右上 `ArrowUpRight` 圖示並將 `Autodesk Flame` 升級為原生 `<button>`；移除 `index.html` 字體 `<link onload>` 行內腳本並清理 `vercel.json` 廢棄網域。
 

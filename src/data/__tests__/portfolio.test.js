@@ -95,11 +95,11 @@ describe('portfolio.js 最佳化邏輯測試', () => {
         '長榮航空',
       ]);
       expect(getNames('lifestyle', 5)).toEqual([
-        '新光三越',
+        '新光三越 週年慶',
         'LaLaport 南港',
         '錦鋐氣密窗',
-        'HOLA',
-        '東和鋼鐵',
+        'HOLA 老相機篇',
+        '東和鋼鐵 百分百足重篇',
       ]);
       // 確認生活百貨首位新光三越、HOLA、東和鋼鐵皆為原排序首支版本
       const lifestyleItems = categories.find((c) => c.id === 'lifestyle').items;
@@ -116,10 +116,10 @@ describe('portfolio.js 最佳化邏輯測試', () => {
       ]);
       expect(getNames('finance', 5)).toEqual([
         '渣打銀行',
-        '台灣Pay',
+        '台灣Pay 你的Pay配不配',
         '磊山保經',
         '安聯人壽',
-        '台灣Pay',
+        '台灣Pay 共榮生活圈',
       ]);
 
       // 驗證全站 97 筆作品無遺漏、無重複 bgImage

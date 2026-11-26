@@ -137,7 +137,8 @@ export const categories = [
       {
         "name": "瑞穗鮮乳",
         "bgImage": "/vfx/A/A-023.webp",
-        "url": "https://www.youtube.com/watch?v=owT3Sj_So60"
+        "url": "https://www.youtube.com/watch?v=owT3Sj_So60",
+        "imagePosition": "22% 50%"
       },
       {
         "name": "義美生機",
@@ -223,7 +224,8 @@ export const categories = [
         "bgImage": "/vfx/B/B-08.webp",
         "url": "https://www.facebook.com/watch/?v=558217842125093",
         "videoId": "558217842125093",
-        "isFacebook": true
+        "isFacebook": true,
+        "imagePosition": "50% 28%"
       },
       {
         "name": "Samsung Z Fold4 / Z Flip4",
@@ -270,7 +272,8 @@ export const categories = [
       {
         "name": "Gogoro Pulse",
         "bgImage": "/vfx/C/C-04.webp",
-        "url": "https://www.youtube.com/watch?v=Wyijlye4kMg"
+        "url": "https://www.youtube.com/watch?v=Wyijlye4kMg",
+        "imagePosition": "20% 50%"
       },
       {
         "name": "Gogoro EZZY",
@@ -326,7 +329,7 @@ export const categories = [
     "name": "生活與百貨",
     "items": [
       {
-        "name": "新光三越",
+        "name": "新光三越 週年慶",
         "bgImage": "/vfx/D/D-13.webp",
         "url": "https://www.youtube.com/watch?v=wZhogI5TPB8",
         "featured": true
@@ -342,12 +345,12 @@ export const categories = [
         "url": "https://www.youtube.com/watch?v=BOj8-iDaB0s"
       },
       {
-        "name": "HOLA",
+        "name": "HOLA 老相機篇",
         "bgImage": "/vfx/D/D-03.webp",
         "url": "https://www.youtube.com/watch?v=Q9LzOnPCeNY"
       },
       {
-        "name": "東和鋼鐵",
+        "name": "東和鋼鐵 百分百足重篇",
         "bgImage": "/vfx/D/D-09.webp",
         "url": "https://www.youtube.com/watch?v=rYPjfcAH-rc"
       },
@@ -360,7 +363,7 @@ export const categories = [
         "bgImage": "/vfx/D/D-02.webp"
       },
       {
-        "name": "HOLA",
+        "name": "HOLA 新年遊戲篇",
         "bgImage": "/vfx/D/D-04.webp",
         "url": "https://www.youtube.com/watch?v=j8XBx4yFsN8"
       },
@@ -379,12 +382,12 @@ export const categories = [
         "url": "https://www.youtube.com/watch?v=nFl6OMheFho"
       },
       {
-        "name": "東和鋼鐵",
+        "name": "東和鋼鐵 人生地震",
         "bgImage": "/vfx/D/D-10.webp",
         "url": "https://www.youtube.com/watch?v=F7SOWrCCJyM"
       },
       {
-        "name": "東和鋼鐵",
+        "name": "東和鋼鐵 鋼好篇",
         "bgImage": "/vfx/D/D-11.webp",
         "url": "https://www.youtube.com/watch?v=UFPNdAaG0_M"
       },
@@ -394,17 +397,17 @@ export const categories = [
         "url": "https://www.youtube.com/watch?v=yjl03-QCzbM"
       },
       {
-        "name": "新光三越",
+        "name": "新光三越 母親節寵愛篇",
         "bgImage": "/vfx/D/D-14.webp",
         "url": "https://www.youtube.com/watch?v=xS3VLzTJxs0"
       },
       {
-        "name": "新光三越",
+        "name": "新光三越 母親節媽吉篇",
         "bgImage": "/vfx/D/D-15.webp",
         "url": "https://www.youtube.com/watch?v=7bpKC3naivA"
       },
       {
-        "name": "新光三越",
+        "name": "新光三越 夏天卡利HIGH",
         "bgImage": "/vfx/D/D-16.webp",
         "url": "https://www.youtube.com/watch?v=QC2Adq-3lOc"
       },
@@ -462,7 +465,8 @@ export const categories = [
         "name": "Bifesta 碧菲絲特",
         "bgImage": "/vfx/E/E-03.webp",
         "url": "https://www.youtube.com/shorts/jPH0atsz3UY",
-        "aspect": "portrait"
+        "aspect": "portrait",
+        "imagePosition": "50% 38%"
       },
       {
         "name": "MAMA 永恆光燦系列",
@@ -493,7 +497,8 @@ export const categories = [
       {
         "name": "蕾妮亞",
         "bgImage": "/vfx/E/E-13.webp",
-        "url": "https://www.instagram.com/reels/DLjzvwEyK6A/"
+        "url": "https://www.instagram.com/reels/DLjzvwEyK6A/",
+        "imagePosition": "50% 24%"
       },
       {
         "name": "義美生醫 鈣D加",
@@ -518,7 +523,7 @@ export const categories = [
         "featured": true
       },
       {
-        "name": "台灣Pay",
+        "name": "台灣Pay 你的Pay配不配",
         "bgImage": "/vfx/F/F-02.webp",
         "url": "https://www.youtube.com/watch?v=gsQScjFurQs"
       },
@@ -535,7 +540,7 @@ export const categories = [
         "isFacebook": true
       },
       {
-        "name": "台灣Pay",
+        "name": "台灣Pay 共榮生活圈",
         "bgImage": "/vfx/F/F-03.webp",
         "url": "https://www.youtube.com/watch?v=ckgbItI0kaw"
       },

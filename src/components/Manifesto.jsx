@@ -214,9 +214,8 @@ export default function Manifesto({ onPlayVideo }) {
           <div className="md:col-span-5 md:sticky md:top-28 space-y-8 text-zinc-300 text-sm md:text-[16px] leading-[1.9] font-light">
             <p>
               作為台灣俗稱的 <span className="text-white font-normal">D1 技師 (VFX Artist)</span>，我接手廣告製作的最後一步。一支廣告片從前期創意發想、實際拍攝、Offline 剪接再到調光，最後檔案來到我手中，使用{' '}
-              <span
-                role="button"
-                tabIndex={0}
+              <button
+                type="button"
                 aria-label="檢視 Autodesk Flame 實際專案 Batch 節點介面"
                 onPointerEnter={handleFlameEnter}
                 onPointerLeave={(e) => {
@@ -228,23 +227,20 @@ export default function Manifesto({ onPlayVideo }) {
                 onBlur={() => setFlamePreview(null)}
                 onClick={openFlameSchematic}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openFlameSchematic();
-                  } else if (e.key === 'Escape' && flamePreview) {
+                  if (e.key === 'Escape' && flamePreview) {
                     e.preventDefault();
                     e.stopPropagation();
                     setFlamePreview(null);
                   }
                 }}
-                className="relative inline-flex items-center gap-1 group/flame cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                className="relative inline-flex items-center gap-1 group/flame cursor-pointer bg-transparent border-0 p-0 align-baseline focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
               >
                 <span className="text-white group-hover/flame:text-dawn-gold font-medium transition-colors duration-300">
                   Autodesk Flame
                 </span>
                 <ArrowUpRight size={13} className="text-spectral-crimson transition-transform duration-300 group-hover/flame:translate-x-0.5 group-hover/flame:-translate-y-0.5" />
                 <span className="absolute bottom-0 left-0 w-full h-[1.5px] spectral-underline" />
-              </span>{' '}
+              </button>{' '}
               進行 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 <span className="text-white font-normal">SC 播帶</span>，完成這次專案。
             </p>
 
@@ -325,6 +321,10 @@ export default function Manifesto({ onPlayVideo }) {
                                   />
                                   <span>{param.key}</span>
                                 </span>
+                                <ArrowUpRight
+                                  size={14}
+                                  className="shrink-0 text-zinc-500 group-hover/play:text-spectral-crimson group-hover/play:translate-x-0.5 group-hover/play:-translate-y-0.5 transition-[color,transform] duration-200"
+                                />
                               </a>
                             ) : (
                               <button
