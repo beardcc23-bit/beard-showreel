@@ -7,7 +7,10 @@ import RevealHeading from './common/RevealHeading';
 import RefractionCard from './RefractionCard';
 import ExperienceTimeline from './ExperienceTimeline';
 import { achievementStats } from '../data/experience';
-import { MAIN_SHOWREEL_VIDEO_ID } from '../constants/siteConfig';
+import {
+  SHOWREEL_2026_VIDEO_ID,
+  SHOWREEL_2025_VIDEO_ID,
+} from '../constants/siteConfig';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 
 /**
@@ -73,18 +76,35 @@ export default function Introduction({ onPlayVideo }) {
               <ScrubText text="我習慣將這份對細節的敏銳，投射在螢幕彼端，那雙尋找解答也渴望被美感觸動的眼睛。不論是追求極致視覺的宏大敘事，還是需要嚴謹邏輯的商業落地。在光影與像素之間，創造下一個讓人駐足的瞬間。" />
             </div>
 
-            <div className="mt-10">
+            <div className="mt-10 w-full sm:w-auto grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3 sm:gap-4">
               <button
                 type="button"
-                onClick={() => onPlayVideo(MAIN_SHOWREEL_VIDEO_ID)}
-                className="group spectral-cta px-10 py-4 inline-flex items-center gap-3 mono text-xs uppercase tracking-[0.26em] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
+                onClick={() =>
+                  onPlayVideo(SHOWREEL_2026_VIDEO_ID, false, 'video', null, '2026 SHOWREEL')
+                }
+                className="group spectral-cta px-3 sm:px-8 py-4 inline-flex items-center justify-center gap-2 sm:gap-3 mono text-[11px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.22em] whitespace-nowrap active:scale-[0.985] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
               >
                 <Play
-                  size={12}
+                  size={11}
                   fill="currentColor"
-                  className="text-spectral-crimson group-hover:text-white transition-colors duration-300"
+                  className="shrink-0 text-spectral-crimson group-hover:text-white transition-colors duration-300"
                 />
-                <span>SHOWREEL</span>
+                <span>2026 SHOWREEL</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  onPlayVideo(SHOWREEL_2025_VIDEO_ID, false, 'video', null, '2025 SHOWREEL')
+                }
+                className="group spectral-cta-secondary px-3 sm:px-8 py-4 inline-flex items-center justify-center gap-2 sm:gap-3 mono text-[11px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.22em] whitespace-nowrap active:scale-[0.985] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-cyan"
+              >
+                <Play
+                  size={11}
+                  fill="currentColor"
+                  className="shrink-0 text-zinc-400 group-hover:text-white transition-colors duration-300"
+                />
+                <span>2025 SHOWREEL</span>
               </button>
             </div>
           </div>

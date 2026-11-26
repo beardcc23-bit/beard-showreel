@@ -304,6 +304,10 @@
   - **資產瘦身、建置精簡與雙向守門防線（21～22、27～30）**：刪除重複之 `public/avatar.jpg`（減重 `52 KB`，JSON-LD 對齊 `avatar.webp`）與 `public/vfx/.DS_Store`；`vite.config.js` 設定 `modulePreload: { polyfill: false }`（轉換模組降至 `431`）；更新 `deploy.yml`、`scripts/pre-commit.sh` 系統檔攔截與核心資產檢查，並於 `portfolio.test.js` 新增 `public/vfx` 97 張雙向 `1:1` 零孤兒檔守門測試（`28/28` 測試檔、`84/84` 項測試全過）。
   - **主 Showreel 影片升級為 2026 最新版（`siteConfig.js`、`index.html`、`Introduction.test.jsx`、`sitemap.xml`）**：
     - 將 `MAIN_SHOWREEL_VIDEO_ID` 與 JSON-LD `VideoObject` 嵌入網址同步更新為 `n4qMRlAlqjg`（`https://youtu.be/n4qMRlAlqjg`），更新結構化資料上傳日期與 Sitemap 日期至 `2026-11-26`。
-
-
+- **雙年度 Showreel 並排按鈕升級與 WebGL 渲染迴圈 TDZ 修復（同日傍晚第十波）**：
+  - **個人介紹雙年度 Showreel 並排雙鍵（`siteConfig.js`、`Introduction.jsx`、`index.css`、`Introduction.test.jsx`）**：
+    - 定義 `SHOWREEL_2026_VIDEO_ID`（`n4qMRlAlqjg`）與 `SHOWREEL_2025_VIDEO_ID`（`s6s2p87fPdA`），保留 `MAIN_SHOWREEL_VIDEO_ID` 相容別名。
+    - 個人介紹區升級為**方案 A 雙鍵並排**：左鍵為主推品牌橘紅光譜框 `▶ 2026 SHOWREEL`（`.spectral-cta`），右鍵為暗房冷霧玻璃次要框 `▶ 2025 SHOWREEL`（`.spectral-cta-secondary`，支援 Hover 青藍微光與 `prefers-reduced-transparency` 無障礙降級）；手機端採 `grid-cols-2` 單排等寬並排、桌機端靠左並排，點擊時審片燈箱頂欄同步顯示對應年度標題。
+  - **修復 `OpticalLightField.jsx` WebGL 初始化 TDZ `ReferenceError`（`OpticalLightField.jsx`、`OpticalLightField.test.jsx`）**：
+    - 將 `renderFrame` 改為具名函式宣告支援提升，並移除初始化階段多餘的同步 `handleScroll()` 呼叫（改直接計算初始捲動值），根除真實 WebGL 環境下因 `wakeFromIdle` 早於 `const renderFrame` 宣告觸發之 TDZ 拋錯，同步補齊模擬完整 WebGL Context 之防回歸單元測試（全站 **28 個測試檔 / 85 項單元測試** 100% 通過）。
 

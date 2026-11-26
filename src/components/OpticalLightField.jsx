@@ -359,9 +359,10 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       wakeFromIdle();
     };
 
-    handleScroll();
+    targetScroll = Math.max(0, Math.min(1, window.scrollY / cachedMaxScroll));
+    currentScroll = targetScroll;
 
-    const renderFrame = (now) => {
+    function renderFrame(now) {
       if (document.hidden || document.body.classList.contains('modal-open')) {
         rafId = null;
         prevSimTime = 0;

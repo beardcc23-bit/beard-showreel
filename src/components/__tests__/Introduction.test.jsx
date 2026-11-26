@@ -16,14 +16,31 @@ describe('Introduction 元件 TDD 單元測試', () => {
     expect(screen.getByText('播放版本')).toBeInTheDocument();
   });
 
-  it('點擊 SHOWREEL 按鈕時應該觸發 onPlayVideo 並帶入影片 ID', () => {
+  it('點擊 2026 SHOWREEL 與 2025 SHOWREEL 雙按鈕時應分別觸發對應影片 ID 與燈箱標題', () => {
     const handlePlayVideo = vi.fn();
     render(<Introduction onPlayVideo={handlePlayVideo} />);
 
-    const showreelBtn = screen.getByRole('button', { name: /SHOWREEL/i });
-    fireEvent.click(showreelBtn);
+    const btn2026 = screen.getByRole('button', { name: /2026 SHOWREEL/i });
+    const btn2025 = screen.getByRole('button', { name: /2025 SHOWREEL/i });
+    expect(btn2026).toHaveClass('spectral-cta');
+    expect(btn2025).toHaveClass('spectral-cta-secondary');
 
-    // 驗證是否傳遞預設的 YouTube ID 'n4qMRlAlqjg'
-    expect(handlePlayVideo).toHaveBeenCalledWith('n4qMRlAlqjg');
+    fireEvent.click(btn2026);
+    expect(handlePlayVideo).toHaveBeenLastCalledWith(
+      'n4qMRlAlqjg',
+      false,
+      'video',
+      null,
+      '2026 SHOWREEL'
+    );
+
+    fireEvent.click(btn2025);
+    expect(handlePlayVideo).toHaveBeenLastCalledWith(
+      's6s2p87fPdA',
+      false,
+      'video',
+      null,
+      '2025 SHOWREEL'
+    );
   });
 });
