@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { m, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useOverlayLock } from '../hooks/useOverlayLock';
+import { emilSpring } from '../utils/motion';
 import { isSafeLocalImageUrl } from '../utils/url';
 
 export default function Modal({ isOpen, onClose, type, data }) {
@@ -57,29 +58,30 @@ export default function Modal({ isOpen, onClose, type, data }) {
             initial={{ scale: 0.96, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.96, y: 20, opacity: 0 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+            transition={emilSpring.smooth}
             className={`relative w-full bg-[#05070B] border border-white/20 shadow-[0_30px_100px_rgba(0,0,0,0.95)] z-10 flex flex-col max-h-[94dvh] overflow-y-auto overscroll-contain ${
               currentType === 'video' && currentData.aspect === 'portrait'
                 ? 'max-w-[45dvh] md:max-w-[50dvh]'
                 : currentType === 'video' && currentData.aspect === 'square'
                 ? 'max-w-[70dvh] md:max-w-[75dvh]'
-                : currentType === 'image'
-                ? 'max-w-5xl'
                 : 'max-w-5xl'
             }`}
           >
-            {/* 頂緣光譜細線與獨立暗房頂部控制列（避免壓在 YouTube 右上角控制鈕上方造成手機橫屏誤觸） */}
+            {/* 頂緣光譜細線與獨立暗房頂部控制列（左側顯示當前播放作品標題，右側為獨立關閉鈕防誤觸） */}
             <div
               aria-hidden="true"
               className="h-[2px] w-full shrink-0"
               style={{ background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 40%, #1276B8 100%)' }}
             />
 
-            <div className="flex items-center justify-end px-2.5 py-1.5 bg-[#05070B] border-b border-white/10 shrink-0">
+            <div className="flex items-center justify-between pl-4 pr-2.5 py-1.5 bg-[#05070B] border-b border-white/10 shrink-0 gap-3">
+              <span className="text-xs font-medium tracking-wider text-zinc-300 truncate">
+                {currentData.title || 'SHOWREEL'}
+              </span>
               <button
                 type="button"
                 onClick={onClose}
-                className="min-w-[40px] min-h-[40px] text-zinc-300 hover:text-spectral-crimson transition-colors flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                className="min-w-[40px] min-h-[40px] shrink-0 text-zinc-300 hover:text-spectral-crimson transition-colors flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
                 aria-label="Close modal"
               >
                 <X size={18} />

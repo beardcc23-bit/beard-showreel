@@ -5,6 +5,7 @@ import { categories } from '../data/portfolio';
 import { emilSpring, tapFeedback } from '../utils/motion';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 import { NAV_SCROLL_OFFSET, getHeroFinalFrameY } from '../constants/heroScroll';
+import { APP_EVENTS } from '../constants/siteConfig';
 import { smoothScrollTo } from '../utils/scroll';
 
 const SECTION_IDS = ['introduction', 'about', 'vfx', 'contact'];
@@ -109,8 +110,8 @@ export default function Navigation() {
       const catId = e.detail?.categoryId;
       if (catId) setActivePortfolioTab(catId);
     };
-    window.addEventListener('portfolio-category-changed', syncTab);
-    return () => window.removeEventListener('portfolio-category-changed', syncTab);
+    window.addEventListener(APP_EVENTS.PORTFOLIO_CATEGORY_CHANGED, syncTab);
+    return () => window.removeEventListener(APP_EVENTS.PORTFOLIO_CATEGORY_CHANGED, syncTab);
   }, []);
 
   useEffect(() => {
@@ -138,7 +139,7 @@ export default function Navigation() {
   const handleSelectPortfolioCategory = (categoryId) => {
     setActivePortfolioTab(categoryId);
     window.dispatchEvent(
-      new CustomEvent('select-portfolio-category', { detail: { categoryId } })
+      new CustomEvent(APP_EVENTS.SELECT_PORTFOLIO_CATEGORY, { detail: { categoryId } })
     );
     setActiveSection('vfx');
     closeMenu();
@@ -177,6 +178,8 @@ export default function Navigation() {
             type="button"
             whileTap={tapFeedback}
             onClick={toggleMenu}
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav-drawer"
             className="md:hidden min-w-[44px] min-h-[44px] p-2.5 flex items-center justify-center text-title-white hover:text-spectral-crimson transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
             aria-label="Toggle Navigation Menu"
           >
@@ -258,6 +261,7 @@ export default function Navigation() {
             >
               {/* 左側母選單（z-20 在前） */}
               <div
+                id="mobile-nav-drawer"
                 data-lenis-prevent
                 aria-label="行動版導覽選單"
                 className="relative z-20 pointer-events-auto w-[198px] min-[390px]:w-[216px] sm:w-[260px] h-full overflow-y-auto overscroll-contain bg-[#060911]/88 backdrop-blur-2xl backdrop-saturate-[180%] flex flex-col px-4 sm:px-6 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] border-r border-white/15"

@@ -3,16 +3,32 @@ import { m, AnimatePresence, useInView, useReducedMotion } from 'framer-motion';
 import { Play, ArrowUpRight, ArrowRight } from 'lucide-react';
 import { categories, normalizeItem } from '../data/portfolio';
 import { NAV_SCROLL_OFFSET } from '../constants/heroScroll';
+import { APP_EVENTS } from '../constants/siteConfig';
 import { instantScrollTo } from '../utils/scroll';
 import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import RevealHeading from './common/RevealHeading';
 
 const loadedImageCache = new Set();
+const inflightImageCache = new Set();
 
-// 模組載入時一次性預先正規化 97 筆靜態作品並排好主推首位（切換分類 Tab 時 O(1) 零陣列重新配置）
+// 模組載入時一次性預先正規化 97 筆靜態作品、安全外部連結與主推排序（渲染期 0 次 URL 解析與陣列重配）
 function buildOrderedCategoryItems(category) {
-  const list = category.items.map((raw) => normalizeItem(raw));
+  const list = category.items.map((raw) => {
+    const it = normalizeItem(raw);
+    const isInlineVideo = Boolean(it.videoId && !it.isFacebook);
+    const safeExternalUrl = !isInlineVideo && it.hasVideo ? getSafeExternalUrl(it.url) : null;
+    const isExternalVideo = Boolean(safeExternalUrl);
+    const isInteractive = isInlineVideo || isExternalVideo;
+    return {
+      ...it,
+      isInlineVideo,
+      safeExternalUrl,
+      isExternalVideo,
+      isInteractive,
+    };
+  });
   let featIdx = list.findIndex((it) => it.featured);
   if (featIdx === -1) {
     featIdx = list.findIndex(
@@ -155,22 +171,19 @@ const BrandCard = React.memo(
     waveStartAt,
     prefersReduced,
   }) => {
-    const { hasVideo } = item;
+    const { isInlineVideo, safeExternalUrl, isExternalVideo, isInteractive } = item;
     const bgImageUrl = getDisplayImageUrl(item);
-    const isInlineVideo = Boolean(item.videoId && !item.isFacebook);
-    const safeExternalUrl = !isInlineVideo && hasVideo ? getSafeExternalUrl(item.url) : null;
-    const isExternalVideo = Boolean(safeExternalUrl);
-    const isInteractive = isInlineVideo || isExternalVideo;
 
     const CardElement = isInlineVideo ? m.button : isExternalVideo ? m.a : m.div;
     const [isImageLoaded, setIsImageLoaded] = useState(() =>
       bgImageUrl ? loadedImageCache.has(bgImageUrl) : false
     );
     const [hasImageError, setHasImageError] = useState(false);
+    const [shutterSettled, setShutterSettled] = useState(prefersReduced);
 
     const handleClick = () => {
       if (isInlineVideo) {
-        onPlayVideo(item.videoId, false, item.aspect);
+        onPlayVideo(item.videoId, false, item.aspect, null, item.name);
       }
     };
 
@@ -236,9 +249,10 @@ const BrandCard = React.memo(
               data-testid="card-shutter-viewport"
               custom={customMotion}
               variants={prefersReduced ? undefined : SHUTTER_MEDIA_VARIANTS}
-              className={`w-full h-full will-change-[clip-path,transform,opacity] ${
-                isFeatured ? 'lg:absolute lg:inset-0' : ''
-              }`}
+              onAnimationComplete={() => setShutterSettled(true)}
+              className={`w-full h-full ${
+                shutterSettled ? '' : 'will-change-[clip-path,transform,opacity]'
+              } ${isFeatured ? 'lg:absolute lg:inset-0' : ''}`}
             >
               {!isImageLoaded && <div className="absolute inset-0 bg-zinc-950 animate-pulse" />}
               <img
@@ -337,9 +351,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
     transitionMode: 'slide',
   });
   const [isDissolving, setIsDissolving] = useState(false);
-  const [isCompactViewport, setIsCompactViewport] = useState(
-    () => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(max-width: 1023px)').matches)
-  );
+  const isCompactViewport = useMediaQuery('(max-width: 1023px)');
   const sectionRef = useRef(null);
   const tabListRef = useRef(null);
   const tabPanelRef = useRef(null);
@@ -362,15 +374,6 @@ export default function VisualSynthesis({ onPlayVideo }) {
   useOffscreenPause(sectionRef);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
-    const mq = window.matchMedia('(max-width: 1023px)');
-    const syncViewport = () => setIsCompactViewport(mq.matches);
-    syncViewport();
-    mq.addEventListener?.('change', syncViewport);
-    return () => mq.removeEventListener?.('change', syncViewport);
-  }, []);
-
-  useEffect(() => {
     return () => {
       if (prefetchTimerRef.current) {
         clearTimeout(prefetchTimerRef.current);
@@ -385,14 +388,21 @@ export default function VisualSynthesis({ onPlayVideo }) {
     const isMobileViewport =
       typeof window !== 'undefined' && window.matchMedia?.('(max-width: 767px)').matches;
     ordered
-      .filter((item) => !isMobileViewport || item.hasVideo)
+      .filter((item) => !isMobileViewport || item.isInteractive)
       .slice(0, limit)
       .forEach((normalized) => {
         const bgImage = getDisplayImageUrl(normalized);
-        if (!bgImage || loadedImageCache.has(bgImage)) return;
+        if (!bgImage || loadedImageCache.has(bgImage) || inflightImageCache.has(bgImage)) return;
+        inflightImageCache.add(bgImage);
         const img = new Image();
         img.decoding = 'async';
-        img.onload = () => loadedImageCache.add(bgImage);
+        img.onload = () => {
+          inflightImageCache.delete(bgImage);
+          loadedImageCache.add(bgImage);
+        };
+        img.onerror = () => {
+          inflightImageCache.delete(bgImage);
+        };
         img.src = bgImage;
       });
   };
@@ -436,7 +446,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
     }
     if (typeof window !== 'undefined') {
       window.dispatchEvent(
-        new CustomEvent('portfolio-category-changed', { detail: { categoryId: activeTab } })
+        new CustomEvent(APP_EVENTS.PORTFOLIO_CATEGORY_CHANGED, { detail: { categoryId: activeTab } })
       );
     }
   }, [activeTab]);
@@ -446,8 +456,8 @@ export default function VisualSynthesis({ onPlayVideo }) {
       const catId = e.detail?.categoryId;
       if (catId) handleTabChange(catId);
     };
-    window.addEventListener('select-portfolio-category', onSelectCategory);
-    return () => window.removeEventListener('select-portfolio-category', onSelectCategory);
+    window.addEventListener(APP_EVENTS.SELECT_PORTFOLIO_CATEGORY, onSelectCategory);
+    return () => window.removeEventListener(APP_EVENTS.SELECT_PORTFOLIO_CATEGORY, onSelectCategory);
   }, [handleTabChange]);
 
   // 保留背景光影的原地溶解瞬切：僅將前景作品區透明淡出（不蓋黑幕、100% 保留背後 WebGL 流動光影），趁透明幀 0ms 回頂後原地顯影新分類
@@ -597,11 +607,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
               {(() => {
                 let mobileCounter = 0;
                 return orderedItems.map((item, index) => {
-                  const isMobileVisible = Boolean(
-                    (item.videoId && !item.isFacebook) ||
-                      (item.hasVideo && getSafeExternalUrl(item.url))
-                  );
-                  const currentMobileIdx = isMobileVisible ? mobileCounter++ : index;
+                  const currentMobileIdx = item.isInteractive ? mobileCounter++ : index;
                   return (
                     <BrandCard
                       key={`${activeTab}-${item.name}-${index}`}

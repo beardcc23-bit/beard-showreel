@@ -259,5 +259,9 @@
 - **作品牆「保留背景光影」透明瞬切換頁與 Z 字光學快門波浪（`VisualSynthesis.jsx`、`scroll.js`）**：
   - 行動端作品牆底部「下一分類」按鈕移至右側第 2 欄（`col-start-2`）；點擊切換時移除長距離往上倒拉捲動與死黑遮罩，改為**保留背後 `OpticalLightField` 流動光影、僅前景作品區 `150ms` 透明淡出 ➔ `instantScrollTo` `0ms` 無感回頂 ➔ 原地顯影**。
   - 全新雙端 **光學快門拉幕 ＋ 鏡頭回正（`clip-path` 方向感知曝光 ＋ `scale 1.085 → 1.0`）** 作品進場動態：補齊首次滑入 `ADVERTISING` 進場與折頁下滾動逐排顯現；桌機首屏嚴格依「左 `2×2` 大卡（`0.02s`）➔ 右側 4 張小卡 Z 字序（`0.22s ~ 0.64s`）➔ 下方整排 4 張（`0.78s ~ 1.17s`）」三段波浪依序接力曝光，杜絕下方排搶跑。
+- **第三輪 37 項深度效能壓榨、死碼清除與部署韌性升級（同日上午第二波）**：
+  - **GPU 合成層釋放與計算下沉**：`VisualSynthesis.jsx` 與 `RevealHeading.jsx` 於進場結束後自動解除 `will-change`（並卸載一次性橫條／光刃 DOM）；`OpticalLightField.jsx` 將純時間／捲動運算移至 CPU Uniform 傳入並為 `resize` 加 `rAF` 節流；`CanvasSequence.jsx` 以 `ResizeObserver` 快取幾何指標消除滾動熱路徑同步 `offsetHeight` 重排，並於首幀解鎖後卸除行內 `backgroundImage`；`App.jsx` 移除零引用的 `isPageLoaded` 根重繪並延遲掛載 `Modal` Portal；`vite.config.js` 將 `lenis` 拆入 `vendor` 長期快取 Chunk（主業務包降至 `97.8 KB`），`index.html` 移除未使用之 `Montserrat 600/900` 字重並對齊 `#030407` 暗房黑。
+  - **架構模組化與死碼清零**：新增 `useMediaQuery.js`、`sequenceLoader.js`（含單元測試）與 `ErrorBoundary.jsx`（防部署換版動態 Chunk 404 白屏）；`siteConfig.js` 收斂 `APP_EVENTS` 事件常數；清除 `experience.js`、`tailwind.config.js`、`index.css` 遺留死欄位與零引用 Token，並移除廢棄之 `gh-pages`（刪減 29 個冗餘依賴套件）。
+  - **互動、無障礙與部署強化**：`Modal.jsx` 頂欄左側顯示當前播放作品名稱；`CanvasSequence.jsx` 滑桿補齊 `aria-valuetext` 與 `PageUp/PageDown` 大步進；`Navigation.jsx` 補齊漢堡鈕 `aria-expanded`／`aria-controls`，`useOverlayLock.js` 將 `<nav>` 一併納入 `inert`；`FeedbackModal.jsx` 改用 `sessionStorage` 防未來系統時鐘鎖死、支援 `Cmd/Ctrl + Enter` 送出與草稿自動暫存；升級 `vercel.json`、`deploy.yml`（`timeout-minutes: 10` 與 `404.html` 保護）並新增 `public/manifest.webmanifest`，全站擴充至 **17 個測試檔 / 54 項單元測試** 100% 通過。
 
 

@@ -17,10 +17,13 @@ const sanitizeSheetInput = (str) => {
 let lastSubmitTimestamp = 0;
 const COOLDOWN_MS = 20000;
 const COOLDOWN_STORAGE_KEY = 'fb_last_ts';
+const DRAFT_STORAGE_KEY = 'fb_draft_v1';
+
 const getLastSubmitTime = () => {
   try {
-    const stored = Number(localStorage.getItem(COOLDOWN_STORAGE_KEY) || 0);
-    return Math.max(lastSubmitTimestamp, stored);
+    const stored = Number(sessionStorage.getItem(COOLDOWN_STORAGE_KEY) || 0);
+    const validStored = Number.isFinite(stored) && stored <= Date.now() ? stored : 0;
+    return Math.max(lastSubmitTimestamp, validStored);
   } catch {
     return lastSubmitTimestamp;
   }
@@ -28,9 +31,36 @@ const getLastSubmitTime = () => {
 const setLastSubmitTime = (ts) => {
   lastSubmitTimestamp = ts;
   try {
-    localStorage.setItem(COOLDOWN_STORAGE_KEY, String(ts));
+    sessionStorage.setItem(COOLDOWN_STORAGE_KEY, String(ts));
   } catch {
     // 忽略無痕或禁用 storage 環境
+  }
+};
+
+const readDraft = () => {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!raw) return { name: '', email: '', message: '' };
+    const parsed = JSON.parse(raw);
+    return {
+      name: typeof parsed?.name === 'string' ? parsed.name.slice(0, 60) : '',
+      email: typeof parsed?.email === 'string' ? parsed.email.slice(0, 100) : '',
+      message: typeof parsed?.message === 'string' ? parsed.message.slice(0, 500) : '',
+    };
+  } catch {
+    return { name: '', email: '', message: '' };
+  }
+};
+
+const writeDraft = (nextForm) => {
+  try {
+    if (!nextForm.name && !nextForm.email && !nextForm.message) {
+      sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+    } else {
+      sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(nextForm));
+    }
+  } catch {
+    // 忽略無痕限制
   }
 };
 
@@ -38,7 +68,7 @@ const setLastSubmitTime = (ts) => {
  * 右側全高滑出式工業回饋抽屜 (Right-Side Optical Slide-Over Panel)
  */
 export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState(readDraft);
   const [honeypot, setHoneypot] = useState('');
   const [openTime, setOpenTime] = useState(Date.now());
   const [status, setStatus] = useState('idle');
@@ -73,7 +103,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
   const handleChange = (e) => {
     hasUserInteractedRef.current = true;
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const next = { ...formData, [e.target.name]: e.target.value };
+    setFormData(next);
+    writeDraft(next);
     if (status === 'error') {
       setStatus('idle');
       setErrorMessage('');
@@ -109,7 +141,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
     if (honeypot || (now - openTime < 600 && !hasUserInteractedRef.current)) {
       setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
+      const cleared = { name: '', email: '', message: '' };
+      setFormData(cleared);
+      writeDraft(cleared);
       closeTimerRef.current = setTimeout(() => {
         setStatus('idle');
         onCloseRef.current?.();
@@ -160,7 +194,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       if (controller.signal.aborted) return;
       setLastSubmitTime(Date.now());
       setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
+      const cleared = { name: '', email: '', message: '' };
+      setFormData(cleared);
+      writeDraft(cleared);
       closeTimerRef.current = setTimeout(() => {
         setStatus('idle');
         onCloseRef.current?.();
@@ -270,6 +306,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     name="name"
                     autoComplete="name"
                     aria-required="true"
+                    aria-invalid={status === 'error' && !formData.name.trim() ? 'true' : undefined}
                     maxLength={60}
                     value={formData.name}
                     onChange={handleChange}
@@ -309,9 +346,17 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     name="message"
                     rows={5}
                     aria-required="true"
+                    aria-invalid={
+                      status === 'error' && !formData.message.trim() ? 'true' : undefined
+                    }
                     maxLength={500}
                     value={formData.message}
                     onChange={handleChange}
+                    onKeyDown={(e) => {
+                      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                        handleSubmit(e);
+                      }
+                    }}
                     placeholder="請輸入想說的話..."
                     className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors resize-none select-text"
                   />

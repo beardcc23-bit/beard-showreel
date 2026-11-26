@@ -3,9 +3,11 @@ import { extractYoutubeId, normalizeItem, categories } from '../portfolio';
 
 describe('portfolio.js 最佳化邏輯測試', () => {
   describe('extractYoutubeId', () => {
-    it('能正確解析標準 watch 格式網址', () => {
+    it('能正確解析標準 watch 格式網址（含查詢參數前置與 youtube-nocookie）', () => {
       expect(extractYoutubeId('https://www.youtube.com/watch?v=wZhogI5TPB8')).toBe('wZhogI5TPB8');
       expect(extractYoutubeId('https://youtube.com/watch?v=yjl03-QCzbM&feature=share')).toBe('yjl03-QCzbM');
+      expect(extractYoutubeId('https://www.youtube.com/watch?feature=share&v=AuuxyMIutf8')).toBe('AuuxyMIutf8');
+      expect(extractYoutubeId('https://www.youtube-nocookie.com/embed/s6s2p87fPdA')).toBe('s6s2p87fPdA');
     });
 
     it('能正確解析 shorts 格式網址', () => {

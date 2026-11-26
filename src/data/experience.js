@@ -13,26 +13,20 @@ export const achievementStats = [
   {
     key: 'years',
     getValue: getExperienceYears,
-    unit: '//Years',
+    unit: 'Years',
     label: '後期資歷',
-    delayClass: 'gold-delay-1',
-    offsetClass: '',
   },
   {
     key: 'campaigns',
     getValue: () => 300,
-    unit: '//Campaigns',
+    unit: 'Campaigns',
     label: '廣告專案',
-    delayClass: 'gold-delay-2',
-    offsetClass: 'translate-x-[2px] md:translate-x-0',
   },
   {
     key: 'versions',
     getValue: () => 1000,
-    unit: '//Versions',
+    unit: 'Versions',
     label: '播放版本',
-    delayClass: 'gold-delay-3',
-    offsetClass: '',
   },
 ];
 

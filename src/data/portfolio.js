@@ -2,7 +2,9 @@ const BASE_URL = import.meta.env?.BASE_URL || '/';
 
 export function extractYoutubeId(url) {
   if (!url) return null;
-  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([\w-]{11})/);
+  const match = url.match(
+    /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|shorts\/|watch\?(?:[^#]*&)?v=))([\w-]{11})/
+  );
   return match ? match[1] : null;
 }
 

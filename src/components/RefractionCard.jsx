@@ -23,7 +23,13 @@ export default function RefractionCard({ children, className = '', ...props }) {
   };
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current || hoverNoneQuery?.matches) return;
+    if (
+      !cardRef.current ||
+      hoverNoneQuery?.matches ||
+      document.body.classList.contains('is-scrolling')
+    ) {
+      return;
+    }
     pointerRef.current.x = e.clientX;
     pointerRef.current.y = e.clientY;
 

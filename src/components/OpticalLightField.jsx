@@ -18,6 +18,8 @@ uniform vec2 u_resolution;
 uniform float u_scroll;
 uniform vec2 u_pointer;
 uniform float u_velocity;
+uniform vec3 u_scrollWeights;
+uniform vec2 u_dir;
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -56,10 +58,10 @@ void main() {
   // 直向手機螢幕收束補償權重（桌機 aspect >= 1.15 時為 0.0，完全維持桌機原比例；手機直屏維持 ~60% 純黑留白）
   float portrait = smoothstep(1.15, 0.55, aspect);
 
-  // 光源全程鎖定於左側／左下緣（絕不翻轉至右側），僅在左側垂直微幅呼吸游移
-  float s1 = smoothstep(0.05, 0.40, u_scroll);
-  float s2 = smoothstep(0.40, 0.75, u_scroll);
-  float s3 = smoothstep(0.78, 0.98, u_scroll);
+  // 光源全程鎖定於左側／左下緣（由 CPU 每幀計算一次傳入，消除百萬像素重複三角函數與 smoothstep 開銷）
+  float s1 = u_scrollWeights.x;
+  float s2 = u_scrollWeights.y;
+  float s3 = u_scrollWeights.z;
 
   vec2 origin = vec2(
     -0.10 * aspect,
@@ -70,8 +72,7 @@ void main() {
   origin += (vec2(u_pointer.x, u_pointer.y) - vec2(0.3, 0.3)) * 0.045;
 
   // 光束角度全程維持左下往右上斜射（約 40° ~ 45°），極慢速微幅呼吸
-  float angle = mix(0.76, 0.70, s1) + sin(u_time * 0.07) * 0.025;
-  vec2 dir = vec2(cos(angle), sin(angle));
+  vec2 dir = u_dir;
   vec2 perp = vec2(-dir.y, dir.x);
 
   vec2 rel = p - origin;
@@ -162,6 +163,11 @@ void main() {
 }
 `;
 
+function glSmoothstep(e0, e1, x) {
+  const t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0)));
+  return t * t * (3 - 2 * t);
+}
+
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
   if (!shader) return null;
@@ -237,6 +243,8 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     const uScroll = gl.getUniformLocation(program, 'u_scroll');
     const uPointer = gl.getUniformLocation(program, 'u_pointer');
     const uVelocity = gl.getUniformLocation(program, 'u_velocity');
+    const uScrollWeights = gl.getUniformLocation(program, 'u_scrollWeights');
+    const uDir = gl.getUniformLocation(program, 'u_dir');
 
     const resize = () => {
       isMobile = detectMobile();
@@ -316,11 +324,18 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
       const elapsed = prefersReduced ? 2.5 : (now - startTime) * 0.001;
+      const s1 = glSmoothstep(0.05, 0.4, currentScroll);
+      const s2 = glSmoothstep(0.4, 0.75, currentScroll);
+      const s3 = glSmoothstep(0.78, 0.98, currentScroll);
+      const angle = 0.76 + (0.7 - 0.76) * s1 + Math.sin(elapsed * 0.07) * 0.025;
+
       gl.uniform1f(uTime, elapsed);
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uScroll, currentScroll);
       gl.uniform2f(uPointer, currentPtrX, currentPtrY);
       gl.uniform1f(uVelocity, velocity);
+      gl.uniform3f(uScrollWeights, s1, s2, s3);
+      gl.uniform2f(uDir, Math.cos(angle), Math.sin(angle));
 
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
@@ -346,9 +361,14 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       }
     };
 
+    let resizeRaf = null;
     const handleResize = () => {
-      resize();
-      updateMaxScroll();
+      if (resizeRaf !== null) return;
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = null;
+        resize();
+        updateMaxScroll();
+      });
     };
 
     const bodyObserver = new MutationObserver(() => {
@@ -386,6 +406,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
 
     return () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
+      if (resizeRaf !== null) cancelAnimationFrame(resizeRaf);
       bodyObserver.disconnect();
       docResizeObserver?.disconnect();
       canvas.removeEventListener('webglcontextlost', handleContextLost);

@@ -7,58 +7,17 @@ import {
   HERO_EXIT_END_PROGRESS,
   getHeroStickyScrollable,
 } from '../constants/heroScroll';
+import {
+  TOTAL_SOURCE_FRAMES,
+  buildSampledFrames,
+  buildLoadOrder,
+  findNearestLoadedSlot,
+} from '../utils/sequenceLoader';
 import { useIdleHeroAutoScroll } from '../hooks/useIdleHeroAutoScroll';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
-const TOTAL_SOURCE_FRAMES = 117;
-const LAST_SOURCE_FRAME = TOTAL_SOURCE_FRAMES - 1;
 const MAX_CONCURRENT_LOADS = 6;
 const SEQUENCE_VERSION = 'v11';
-
-/**
- * 依裝置抽樣影格索引（頭尾必保留 0 與 116），並排出「首尾 -> 均勻骨架 -> 細節補間」兩階段載入順序
- */
-function buildSampledFrames(step) {
-  const indices = [];
-  for (let i = 0; i < TOTAL_SOURCE_FRAMES; i += step) {
-    indices.push(i);
-  }
-  if (indices[indices.length - 1] !== LAST_SOURCE_FRAME) {
-    indices.push(LAST_SOURCE_FRAME);
-  }
-  return indices;
-}
-
-function buildLoadOrder(count) {
-  if (count <= 1) return [0];
-  const order = [];
-  const added = new Set();
-  const push = (slot) => {
-    if (slot >= 0 && slot < count && !added.has(slot)) {
-      added.add(slot);
-      order.push(slot);
-    }
-  };
-
-  // 第 0 層：起點與終點必先載入
-  push(0);
-  push(count - 1);
-
-  // 第 1 層：均勻骨架幀（約 12 格），進站瞬間可全段順滑刷動不斷格
-  const skeletonStep = Math.max(1, Math.floor((count - 1) / 10));
-  for (let i = skeletonStep; i < count - 1; i += skeletonStep) {
-    push(i);
-  }
-
-  // 第 2 層：二分穿插補齊其餘細節影格
-  const midStep = Math.max(1, Math.floor(skeletonStep / 2));
-  for (let i = midStep; i < count - 1; i += midStep) {
-    push(i);
-  }
-  for (let i = 1; i < count - 1; i += 1) {
-    push(i);
-  }
-  return order;
-}
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
@@ -93,16 +52,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== 'undefined' && window.innerWidth < 768
   );
-  const [isTouchOnly] = useState(
-    () =>
-      typeof window !== 'undefined' &&
-      Boolean(window.matchMedia?.('(hover: none) and (pointer: coarse)').matches)
-  );
-  const [prefersReduced] = useState(
-    () =>
-      typeof window !== 'undefined' &&
-      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
-  );
+  const isTouchOnly = useMediaQuery('(hover: none) and (pointer: coarse)');
+  const prefersReduced = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   // 視窗縮放跨過 768px 斷點時自動切換桌機橫圖與手機直圖，避免縮放預覽時殘留錯版比例圖檔
   useEffect(() => {
@@ -119,17 +70,6 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   const step = isMobile ? 2 : 1;
   const initialFrameIdx = prefersReduced ? HERO_REDUCED_MOTION_FRAME : 0;
   const posterSrc = `${basePath}${folder}/png-0_${String(initialFrameIdx).padStart(8, '0')}.webp?${SEQUENCE_VERSION}`;
-
-  // 尋找距離目標 slot 最近的已載入影格，確保網路載入期間刷動永不黑屏
-  const findNearestLoadedSlot = (targetSlot) => {
-    const frames = framesRef.current;
-    if (frames[targetSlot]) return targetSlot;
-    for (let dist = 1; dist < frames.length; dist += 1) {
-      if (targetSlot - dist >= 0 && frames[targetSlot - dist]) return targetSlot - dist;
-      if (targetSlot + dist < frames.length && frames[targetSlot + dist]) return targetSlot + dist;
-    }
-    return -1;
-  };
 
   const drawSlot = (slot) => {
     const canvas = canvasRef.current;
@@ -163,7 +103,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     const displayFrame = sampled[targetSlot] ?? 0;
 
     if (targetSlot !== drawnSlotRef.current) {
-      const nearest = findNearestLoadedSlot(targetSlot);
+      const nearest = findNearestLoadedSlot(framesRef.current, targetSlot);
       if (nearest !== -1 && nearest !== drawnSlotRef.current) {
         drawSlot(nearest);
       }
@@ -183,6 +123,10 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     }
     if (sliderRef.current) {
       sliderRef.current.setAttribute('aria-valuenow', frameNumber);
+      sliderRef.current.setAttribute(
+        'aria-valuetext',
+        `第 ${frameNumber} 格，共 ${TOTAL_SOURCE_FRAMES} 格`
+      );
     }
 
     // 全程保留「向下滑動推進」與滑桿底端箭頭引導，快刷到主定版前（73% -> 83%）同步淡出
@@ -267,13 +211,20 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
   const handleRailKeyDown = (e) => {
     const currentRatio = clamp01(currentProgressRef.current / HERO_SCRUB_END_PROGRESS);
-    const step = 0.05;
+    const stepSize = 0.05;
+    const pageStep = 0.15;
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
       e.preventDefault();
-      scrollToScrubRatio(currentRatio + step);
+      scrollToScrubRatio(currentRatio + stepSize);
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
       e.preventDefault();
-      scrollToScrubRatio(currentRatio - step);
+      scrollToScrubRatio(currentRatio - stepSize);
+    } else if (e.key === 'PageDown') {
+      e.preventDefault();
+      scrollToScrubRatio(currentRatio + pageStep);
+    } else if (e.key === 'PageUp') {
+      e.preventDefault();
+      scrollToScrubRatio(currentRatio - pageStep);
     } else if (e.key === 'Home') {
       e.preventDefault();
       scrollToScrubRatio(0);
@@ -385,16 +336,35 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, prefersReduced, basePath, folder, step]);
 
-  // 滾動監聽 ＋ 時間無關指數衰減阻尼引擎（60Hz / 120Hz 一致手感，離屏與靜止 0 rAF 休眠）
+  // 滾動監聽 ＋ 幾何指標快取（消除滾動熱路徑同步 offsetHeight 重排）＋ 時間無關阻尼引擎
   useEffect(() => {
     let lastFrameTime = 0;
+    let cachedHeroTop = 0;
+    let cachedScrollable = 1;
+    let hasDomElement = false;
+
+    const refreshHeroMetrics = () => {
+      const container = containerRef?.current;
+      if (!container) return;
+      hasDomElement = typeof Element !== 'undefined' && container instanceof Element;
+      const rect = container.getBoundingClientRect();
+      cachedHeroTop = rect.top + window.scrollY;
+      cachedScrollable = Math.max(1, getHeroStickyScrollable(container, rect));
+    };
+    refreshHeroMetrics();
 
     const computeScrollProgress = () => {
       const container = containerRef?.current;
       if (!container) return 0;
+      if (hasDomElement && window.scrollY > 0) {
+        return Math.max(
+          0,
+          Math.min(HERO_EXIT_END_PROGRESS, (window.scrollY - cachedHeroTop) / cachedScrollable)
+        );
+      }
       const rect = container.getBoundingClientRect();
-      const scrollable = Math.max(1, getHeroStickyScrollable(container, rect));
-      return Math.max(0, Math.min(HERO_EXIT_END_PROGRESS, -rect.top / scrollable));
+      const denom = hasDomElement ? cachedScrollable : Math.max(1, getHeroStickyScrollable(container, rect));
+      return Math.max(0, Math.min(HERO_EXIT_END_PROGRESS, -rect.top / denom));
     };
 
     const tick = (now) => {
@@ -464,6 +434,20 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       scheduleTick();
     };
 
+    const handleResizeMetrics = () => {
+      refreshHeroMetrics();
+      handleScrollOrResize();
+    };
+
+    const containerEl = containerRef?.current;
+    const heroResizeObserver =
+      typeof ResizeObserver !== 'undefined' &&
+      typeof Element !== 'undefined' &&
+      containerEl instanceof Element
+        ? new ResizeObserver(refreshHeroMetrics)
+        : null;
+    heroResizeObserver?.observe(containerEl);
+
     // 初始同步一次（支援重新整理時捲動在頁面中段）
     const initial = computeScrollProgress();
     targetProgressRef.current = initial;
@@ -471,13 +455,14 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     applyProgress(initial);
 
     window.addEventListener('scroll', handleScrollOrResize, { passive: true });
-    window.addEventListener('resize', handleScrollOrResize, { passive: true });
+    window.addEventListener('resize', handleResizeMetrics, { passive: true });
     document.addEventListener('visibilitychange', resumeIfPending);
 
     return () => {
       resumeTickRef.current = null;
+      heroResizeObserver?.disconnect();
       window.removeEventListener('scroll', handleScrollOrResize);
-      window.removeEventListener('resize', handleScrollOrResize);
+      window.removeEventListener('resize', handleResizeMetrics);
       document.removeEventListener('visibilitychange', resumeIfPending);
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
@@ -540,11 +525,15 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
             <canvas
               ref={canvasRef}
               className="w-full h-full block pointer-events-none object-cover object-top md:object-center"
-              style={{
-                backgroundImage: `url(${posterSrc})`,
-                backgroundSize: 'cover',
-                backgroundPosition: isMobile ? 'top center' : 'center',
-              }}
+              style={
+                isLoading
+                  ? {
+                      backgroundImage: `url(${posterSrc})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: isMobile ? 'top center' : 'center',
+                    }
+                  : undefined
+              }
               aria-hidden="true"
             />
           </div>

@@ -26,6 +26,10 @@ const AnimatedCounter = React.memo(function AnimatedCounter({ value, trigger, du
     let lastRendered = -1;
 
     const step = (timestamp) => {
+      if (document.hidden) {
+        if (spanRef.current) spanRef.current.textContent = String(targetValue);
+        return;
+      }
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
       const easeProgress = progress * (2 - progress); // easeOutQuad

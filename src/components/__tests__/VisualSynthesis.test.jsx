@@ -45,9 +45,9 @@ describe('VisualSynthesis Component', () => {
 
     render(<VisualSynthesis onPlayVideo={handlePlayVideo} />);
 
-    // 點擊主推站內 YouTube 卡片（UCC）
+    // 點擊主推站內 YouTube 卡片（UCC），應帶入品牌名稱供 Modal 頂欄呈現
     fireEvent.click(screen.getByRole('button', { name: /播放影片：UCC/i }));
-    expect(handlePlayVideo).toHaveBeenCalledWith('AuuxyMIutf8', false, undefined);
+    expect(handlePlayVideo).toHaveBeenCalledWith('AuuxyMIutf8', false, undefined, null, 'UCC');
 
     // 無影片大牌劇照（Johnnie Walker）應為靜態展示（非 button），手機版隱藏（hidden md:flex）以節省版面，點擊不觸發燈箱
     const staticLabel = screen.getByText('Johnnie Walker');

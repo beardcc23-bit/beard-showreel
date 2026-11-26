@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { LazyMotion, MotionConfig, domMax } from 'framer-motion';
 import Navigation from './components/Navigation';
 import OpticalLightField from './components/OpticalLightField';
@@ -7,7 +7,9 @@ import Introduction from './components/Introduction';
 import Manifesto from './components/Manifesto';
 import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { useLenisScroll } from './hooks/useLenisScroll';
+import { APP_EVENTS } from './constants/siteConfig';
 import { isSafeLocalImageUrl } from './utils/url';
 
 const loadModal = () => import('./components/Modal');
@@ -19,7 +21,8 @@ export default function App() {
     type: null,
     data: null,
   });
-  const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [hasModalMounted, setHasModalMounted] = useState(false);
+  const hasPreloadedModalRef = useRef(false);
 
   useLenisScroll();
 
@@ -28,23 +31,28 @@ export default function App() {
       if (!e?.detail || typeof e.detail.imageUrl !== 'string') return;
       const { imageUrl, title, description } = e.detail;
       if (!isSafeLocalImageUrl(imageUrl)) return;
+      setHasModalMounted(true);
       setModalState({
         isOpen: true,
         type: 'image',
         data: { imageUrl, title, description },
       });
     };
-    window.addEventListener('open-image-modal', handleOpenImage);
-    return () => window.removeEventListener('open-image-modal', handleOpenImage);
+    window.addEventListener(APP_EVENTS.OPEN_IMAGE_MODAL, handleOpenImage);
+    return () => window.removeEventListener(APP_EVENTS.OPEN_IMAGE_MODAL, handleOpenImage);
   }, []);
 
-  const handleOpenVideoModal = React.useCallback((videoId, isFacebook = false, aspect = 'video', videoUrl = null) => {
-    setModalState({
-      isOpen: true,
-      type: 'video',
-      data: { videoId, isFacebook, aspect, videoUrl },
-    });
-  }, []);
+  const handleOpenVideoModal = React.useCallback(
+    (videoId, isFacebook = false, aspect = 'video', videoUrl = null, title = 'SHOWREEL') => {
+      setHasModalMounted(true);
+      setModalState({
+        isOpen: true,
+        type: 'video',
+        data: { videoId, isFacebook, aspect, videoUrl, title },
+      });
+    },
+    []
+  );
 
   const handleCloseModal = React.useCallback(() => {
     setModalState({
@@ -55,8 +63,9 @@ export default function App() {
   }, []);
 
   const handlePageLoaded = React.useCallback(() => {
-    setIsPageLoaded(true);
-    // 首屏就緒後利用瀏覽器閒置期預熱 Modal chunk，確保首次點擊播放影片 0ms 秒開
+    if (hasPreloadedModalRef.current) return;
+    hasPreloadedModalRef.current = true;
+    // 首屏就緒後利用瀏覽器閒置期預熱 Modal chunk，確保首次點擊播放影片 0ms 秒開且不觸發全站重繪
     if (typeof window !== 'undefined') {
       if ('requestIdleCallback' in window) {
         window.requestIdleCallback(() => loadModal(), { timeout: 1500 });
@@ -69,11 +78,7 @@ export default function App() {
   return (
     <LazyMotion features={domMax} strict>
       <MotionConfig reducedMotion="user">
-        <div
-          className={`relative min-h-screen text-title-white selection:bg-spectral-crimson selection:text-white overflow-x-clip ${
-            isPageLoaded ? 'is-loaded' : 'is-loading'
-          }`}
-        >
+        <div className="relative min-h-screen text-title-white selection:bg-spectral-crimson selection:text-white overflow-x-clip">
           {/* 全程深淵黑底 × 左側慢速流動光譜引擎 */}
           <OpticalLightField />
 
@@ -99,15 +104,19 @@ export default function App() {
             </div>
           </footer>
 
-          {/* 全域互動彈窗 */}
-          <React.Suspense fallback={null}>
-            <Modal
-              isOpen={modalState.isOpen}
-              onClose={handleCloseModal}
-              type={modalState.type}
-              data={modalState.data}
-            />
-          </React.Suspense>
+          {/* 全域互動彈窗（首次觸發前不掛載 Portal 樹，並包覆 Chunk 錯誤邊界） */}
+          {hasModalMounted && (
+            <ErrorBoundary minimal>
+              <React.Suspense fallback={null}>
+                <Modal
+                  isOpen={modalState.isOpen}
+                  onClose={handleCloseModal}
+                  type={modalState.type}
+                  data={modalState.data}
+                />
+              </React.Suspense>
+            </ErrorBoundary>
+          )}
         </div>
       </MotionConfig>
     </LazyMotion>

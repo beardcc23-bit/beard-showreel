@@ -26,6 +26,7 @@ describe('useOverlayLock Hook 測試', () => {
     try {
       const { rerender, getByTestId } = render(
         <>
+          <nav data-testid="bg-nav">Nav</nav>
           <main data-testid="bg-main">Main</main>
           <footer data-testid="bg-footer">Footer</footer>
           <OverlayFixture isOpen={true} onClose={closeA} />
@@ -37,6 +38,7 @@ describe('useOverlayLock Hook 測試', () => {
       expect(document.body.style.overflow).toBe('hidden');
       expect(document.body.style.paddingRight).toBe('15px');
       expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('15px');
+      expect(getByTestId('bg-nav')).toHaveAttribute('inert');
       expect(getByTestId('bg-main')).toHaveAttribute('inert');
       expect(getByTestId('bg-footer')).toHaveAttribute('inert');
 
@@ -48,6 +50,7 @@ describe('useOverlayLock Hook 測試', () => {
       // 關閉上層 B 時，A 仍開啟，背景與 --scrollbar-comp 不得提前解鎖
       rerender(
         <>
+          <nav data-testid="bg-nav">Nav</nav>
           <main data-testid="bg-main">Main</main>
           <footer data-testid="bg-footer">Footer</footer>
           <OverlayFixture isOpen={true} onClose={closeA} />
@@ -56,11 +59,13 @@ describe('useOverlayLock Hook 測試', () => {
       );
       expect(document.body).toHaveClass('modal-open');
       expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('15px');
+      expect(getByTestId('bg-nav')).toHaveAttribute('inert');
       expect(getByTestId('bg-main')).toHaveAttribute('inert');
 
       // 關閉最後一層 A 時，應解鎖背景並移除 --scrollbar-comp 與 inert
       rerender(
         <>
+          <nav data-testid="bg-nav">Nav</nav>
           <main data-testid="bg-main">Main</main>
           <footer data-testid="bg-footer">Footer</footer>
           <OverlayFixture isOpen={false} onClose={closeA} />
@@ -70,6 +75,7 @@ describe('useOverlayLock Hook 測試', () => {
       expect(document.body).not.toHaveClass('modal-open');
       expect(document.body.style.overflow).toBe('');
       expect(document.documentElement.style.getPropertyValue('--scrollbar-comp')).toBe('');
+      expect(getByTestId('bg-nav')).not.toHaveAttribute('inert');
       expect(getByTestId('bg-main')).not.toHaveAttribute('inert');
       expect(getByTestId('bg-footer')).not.toHaveAttribute('inert');
     } finally {

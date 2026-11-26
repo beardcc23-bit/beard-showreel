@@ -5,8 +5,10 @@ import { Play, ArrowUpRight } from 'lucide-react';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
 import RevealHeading from './common/RevealHeading';
+import { APP_EVENTS } from '../constants/siteConfig';
 import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const lawCategories = [
   {
@@ -83,6 +85,7 @@ const lawCategories = [
 export default function Manifesto({ onPlayVideo }) {
   const sectionRef = useRef(null);
   const [flamePreview, setFlamePreview] = useState(null);
+  const isTouchOnly = useMediaQuery('(hover: none) and (pointer: coarse)');
   useOffscreenPause(sectionRef);
 
   // 區塊進入視窗前背景預熱 f1.webp（115KB），確保首次懸停 Autodesk Flame 時 0ms 無黑底秒出節點圖
@@ -157,7 +160,7 @@ export default function Manifesto({ onPlayVideo }) {
   const openFlameSchematic = () => {
     setFlamePreview(null);
     window.dispatchEvent(
-      new CustomEvent('open-image-modal', {
+      new CustomEvent(APP_EVENTS.OPEN_IMAGE_MODAL, {
         detail: {
           imageUrl: `${import.meta.env.BASE_URL}f1.webp`,
           title: 'Autodesk Flame Batch Schematic',
@@ -262,7 +265,13 @@ export default function Manifesto({ onPlayVideo }) {
                         const triggerVideo = () => {
                           if (!hasVideo) return;
                           if (onPlayVideo) {
-                            onPlayVideo(param.videoId, param.isFacebook, param.aspect, param.url);
+                            onPlayVideo(
+                              param.videoId,
+                              param.isFacebook,
+                              param.aspect,
+                              param.url,
+                              param.key
+                            );
                           }
                         };
 
@@ -315,8 +324,9 @@ export default function Manifesto({ onPlayVideo }) {
         </div>
       </div>
 
-      {/* 游標懸停 Autodesk Flame 時於文字右下或右上方完整呈現無裁切 Batch 節點介面 */}
+      {/* 游標懸停 Autodesk Flame 時於文字右下或右上方完整呈現無裁切 Batch 節點介面（純觸控手機跳過 Portal 掛載） */}
       {typeof document !== 'undefined' &&
+        !isTouchOnly &&
         ReactDOM.createPortal(
           <AnimatePresence>
             {flamePreview && (

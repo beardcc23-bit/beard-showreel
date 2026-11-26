@@ -4,29 +4,25 @@
 
 @layer base {
 
-  h1,
-  .h1 {
+  h1 {
     font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
     font-size: 32px;
     font-weight: 800;
   }
 
-  h2,
-  .h2 {
+  h2 {
     font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
     font-size: 24px;
     font-weight: 800;
   }
 
-  h3,
-  .h3 {
+  h3 {
     font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 20px;
     font-weight: 500;
   }
 
-  p,
-  .body-text {
+  p {
     font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px;
     font-weight: 400;
@@ -36,9 +32,6 @@
 :root {
   --color-bg-core: #030407;
   /* 極深暗房純黑 */
-  --color-bg-mist: #0A0D12;
-  --color-bg-shadow: #06080C;
-  /* 主光譜強調色：熾熱朱紅 */
   --color-dawn-gold: #FF8A6C;
   /* 高光漫射珊瑚白 */
   --color-spectral-magenta: #D0346C;
@@ -46,18 +39,14 @@
   --color-spectral-cyan: #1276B8;
   /* 光學深海青藍 */
   --color-title-white: #F2F5F8;
-  --color-info-gold-gray: #9AA3AE;
 
   /* Tailwind 透明度 RGB 通道 */
   --rgb-bg-core: 3 4 7;
-  --rgb-bg-mist: 10 13 18;
-  --rgb-bg-shadow: 6 8 12;
   --rgb-accent: 235 74 46;
   --rgb-highlight: 255 138 108;
   --rgb-magenta: 208 52 108;
   --rgb-cyan: 18 118 184;
   --rgb-title-white: 242 245 248;
-  --rgb-info-gold-gray: 154 163 174;
 
   --glass-blur: 18px;
 }

@@ -1,0 +1,16 @@
+{
+  "name": "Beard Chou | 視覺創造",
+  "short_name": "Beard Showreel",
+  "description": "周威全 (Beard Chou) - Autodesk Flame 商業廣告視覺特效合成作品集",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#030407",
+  "theme_color": "#030407",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

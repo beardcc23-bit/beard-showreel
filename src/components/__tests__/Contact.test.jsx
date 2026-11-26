@@ -7,6 +7,7 @@ import Contact from '../Contact';
 describe('Contact 元件 TDD 單元測試', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    sessionStorage.clear();
   });
 
   it('應該正確渲染 Contact 區塊標題與 Email 地址', () => {

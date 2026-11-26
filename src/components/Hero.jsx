@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import CanvasSequence from './CanvasSequence';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 /**
  * 第一幕 Hero：滾動驅動 Sticky 逐幀時間軸舞台（往下推進、往上倒轉、尾段微縮淡出銜接個人介紹）
@@ -9,11 +10,7 @@ import { useOffscreenPause } from '../hooks/useOffscreenPause';
 export default function Hero({ isModalOpen, onLoaded }) {
   const sectionRef = useRef(null);
   useOffscreenPause(sectionRef);
-  const [prefersReduced] = useState(
-    () =>
-      typeof window !== 'undefined' &&
-      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
-  );
+  const prefersReduced = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   return (
     <section

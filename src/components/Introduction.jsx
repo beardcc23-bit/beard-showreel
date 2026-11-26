@@ -105,7 +105,7 @@ export default function Introduction({ onPlayVideo }) {
                   </sup>
                 </div>
                 <span className="font-display text-xs md:text-sm font-bold uppercase tracking-[0.14em] text-white leading-none">
-                  {stat.unit.replace(/^\/\//, '')}
+                  {stat.unit}
                 </span>
               </div>
             </div>
