@@ -25,19 +25,60 @@ function collectComponentFiles(dir) {
 }
 
 /**
- * 擷取 JSX 中所有靜態或樣板字串的 className 內容
+ * 擷取 JSX 中所有靜態字串、跨行樣板字串（含 ${...} 條件分支內字串片段）與三元表達式的 className 內容
  */
-function extractClassStrings(source) {
-  const matches = [];
-  const patterns = [/className="([^"]+)"/g, /className=\{\s*`([^`]+)`\s*\}/g];
-  for (const regex of patterns) {
+export function extractClassStrings(source) {
+  const results = [];
+
+  // 1. 靜態雙引號與單引號 className="..." / className='...'
+  for (const regex of [/className="([^"]+)"/g, /className='([^']+)'/g]) {
     let match = regex.exec(source);
     while (match) {
-      matches.push(match[1]);
+      results.push(match[1]);
       match = regex.exec(source);
     }
   }
-  return matches;
+
+  // 2. 動態大括號表達式 className={...}（支援巢狀一層大括號以解析樣板字串內的 ${...} 與跨行三元表達式）
+  const exprRegex = /className=\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g;
+  let exprMatch = exprRegex.exec(source);
+  while (exprMatch) {
+    const expr = exprMatch[1].trim();
+    if (expr.startsWith('`') && expr.endsWith('`')) {
+      const inner = expr.slice(1, -1);
+      // 將 ${...} 插值內的引號字串字面量展開為空白分隔 token，再與外層靜態樣板文字合併
+      const flattened = inner.replace(/\$\{([^}]*)\}/g, (_all, interp) => {
+        const quoted = [];
+        const litRegex = /'([^']*)'|"([^"]*)"/g;
+        let lm = litRegex.exec(interp);
+        while (lm) {
+          quoted.push(lm[1] ?? lm[2]);
+          lm = litRegex.exec(interp);
+        }
+        return ` ${quoted.join(' ')} `;
+      });
+      results.push(flattened.trim());
+    } else {
+      // 純三元或邏輯表達式 className={cond ? 'fixed h-screen' : 'hidden'}：逐一檢查各引號分支與整體合併
+      const quoted = [];
+      const litRegex = /'([^']*)'|"([^"]*)"/g;
+      let lm = litRegex.exec(expr);
+      while (lm) {
+        const val = lm[1] ?? lm[2];
+        if (val) {
+          results.push(val);
+          quoted.push(val);
+        }
+        lm = litRegex.exec(expr);
+      }
+      if (quoted.length > 1) {
+        results.push(quoted.join(' '));
+      }
+    }
+    exprMatch = exprRegex.exec(source);
+  }
+
+  return results;
 }
 
 describe('全站響應式與定位排版防呆靜態守門 (Layout Guardrails)', () => {
@@ -107,5 +148,27 @@ describe('全站響應式與定位排版防呆靜態守門 (Layout Guardrails)',
       }
     }
     expect(violations).toEqual([]);
+  });
+
+  it('extractClassStrings 應能穿透解析樣板插值與跨行三元條件內的違規 class token', () => {
+    const sample = `
+      <div className={\`z-50 \${isOpen ? 'fixed h-screen' : 'hidden'}\`} />
+      <aside className={
+        active
+          ? 'fixed optical-surface p-4'
+          : 'relative'
+      } />
+    `;
+    const extracted = extractClassStrings(sample);
+    const hasFixedVh = extracted.some((cls) => {
+      const t = cls.split(/\s+/);
+      return t.includes('fixed') && t.includes('h-screen');
+    });
+    const hasFixedOptical = extracted.some((cls) => {
+      const t = cls.split(/\s+/);
+      return t.includes('fixed') && t.includes('optical-surface');
+    });
+    expect(hasFixedVh).toBe(true);
+    expect(hasFixedOptical).toBe(true);
   });
 });

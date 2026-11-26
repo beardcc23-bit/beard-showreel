@@ -177,4 +177,31 @@ describe('Navigation 元件行動端對齊與互動測試', () => {
       window.lenis = originalLenis;
     }
   });
+
+  it('行動端選單支援 ArrowRight 展開聚焦子面板，以及 ArrowLeft / 兩段式 Escape 先收合子面板再關閉選單', () => {
+    render(<Navigation />);
+
+    fireEvent.click(screen.getByLabelText('Toggle Navigation Menu'));
+    const portfolioBtns = screen.getAllByText('作品案例');
+    const mobilePortfolioBtn = portfolioBtns[portfolioBtns.length - 1].closest('button');
+
+    // 按下 ArrowRight 展開右側子面板
+    fireEvent.keyDown(mobilePortfolioBtn, { key: 'ArrowRight' });
+    const subpanel = screen.getByTestId('mobile-portfolio-subpanel');
+    expect(subpanel).toBeInTheDocument();
+
+    // 第 1 次在舞台內按 Escape：僅收合右側子面板，母選單維持開啟且焦點歸還「作品案例」按鈕
+    fireEvent.keyDown(subpanel, { key: 'Escape' });
+    expect(screen.queryByTestId('mobile-portfolio-subpanel')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('行動版導覽選單')).toBeInTheDocument();
+    expect(document.activeElement).toBe(mobilePortfolioBtn);
+
+    // 再次展開子面板並聚焦子按鈕，按下 ArrowLeft 應收合子面板並將焦點歸還母按鈕
+    fireEvent.keyDown(mobilePortfolioBtn, { key: 'ArrowRight' });
+    const firstCatBtn = screen.getByTestId('mobile-portfolio-subpanel').querySelector('button');
+    firstCatBtn.focus();
+    fireEvent.keyDown(firstCatBtn, { key: 'ArrowLeft' });
+    expect(screen.queryByTestId('mobile-portfolio-subpanel')).not.toBeInTheDocument();
+    expect(document.activeElement).toBe(mobilePortfolioBtn);
+  });
 });

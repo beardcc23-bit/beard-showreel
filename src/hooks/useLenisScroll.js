@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
+import { SCROLL_TRIGGER_KEYS, isEditableElement } from '../utils/scroll';
 
 /**
  * 自訂 Hook: 初始化電影級平滑滾動 Lenis
@@ -98,9 +99,8 @@ export function useLenisScroll() {
     };
 
     const handleKeyWake = (e) => {
-      if (
-        ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Space', ' ', 'Home', 'End'].includes(e.key)
-      ) {
+      if (isEditableElement(e.target)) return;
+      if (SCROLL_TRIGGER_KEYS.has(e.key)) {
         startRaf();
       }
     };

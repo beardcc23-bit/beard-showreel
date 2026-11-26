@@ -4,6 +4,7 @@ import {
   HERO_IDLE_AUTO_SCROLL_MS,
   HERO_AUTO_SCROLL_DURATION_MS,
 } from '../constants/heroScroll';
+import { SCROLL_TRIGGER_KEYS, isEditableElement } from '../utils/scroll';
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 const easeInOutSine = (t) => -(Math.cos(Math.PI * t) - 1) / 2;
@@ -64,9 +65,7 @@ export function useIdleHeroAutoScroll({ enabled, containerRef, isModalOpenRef })
     const onWheelInterrupt = () => stopAutoScroll(false);
     const onImmediateInterrupt = () => stopAutoScroll(true);
     const onKeyInterrupt = (e) => {
-      if (
-        ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Space', ' ', 'Home', 'End'].includes(e.key)
-      ) {
+      if (!isEditableElement(e.target) && SCROLL_TRIGGER_KEYS.has(e.key)) {
         stopAutoScroll(true);
       }
     };

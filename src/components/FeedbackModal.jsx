@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { m, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 
+const FORMULA_PREFIX_RE = /^[=+@\-\t\r|＝＋－＠｜]/;
+
 const sanitizeSheetInput = (str) => {
   if (!str) return '';
   const cleaned = str.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
-  const safeLines = cleaned.replace(/([\r\n]+)\s*([=+@\-\t\r|])/g, "$1'$2");
-  if (/^[=+@\-\t\r|]/.test(safeLines)) {
+  const safeLines = cleaned.replace(/([\r\n]+)\s*([=+@\-\t\r|＝＋－＠｜])/g, "$1'$2");
+  if (FORMULA_PREFIX_RE.test(safeLines)) {
     return `'${safeLines}`;
   }
   return safeLines;
@@ -81,7 +83,12 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
-  useOverlayLock(isOpen, onClose, { containerRef: dialogRef });
+  const handleSafeClose = useCallback(() => {
+    if (isSubmittingRef.current || status === 'submitting') return;
+    onCloseRef.current?.();
+  }, [status]);
+
+  useOverlayLock(isOpen, handleSafeClose, { containerRef: dialogRef });
 
   useEffect(() => {
     if (isOpen) {
@@ -225,14 +232,16 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
           data-lenis-prevent
           className="fixed inset-0 z-[99999] flex justify-end select-none"
         >
-          {/* 暗房遮罩 */}
+          {/* 暗房遮罩（傳送中鎖定防誤觸中斷請求） */}
           <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm cursor-pointer z-0"
+            onClick={handleSafeClose}
+            className={`fixed inset-0 bg-black/80 backdrop-blur-sm z-0 ${
+              status === 'submitting' ? 'cursor-wait' : 'cursor-pointer'
+            }`}
           />
 
           {/* 右側全高滑出式磨砂毛玻璃面板 */}
@@ -241,7 +250,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
-            className="relative w-full max-w-lg h-full max-h-[100dvh] bg-[#060912]/62 backdrop-blur-2xl backdrop-saturate-[185%] border-l border-white/18 px-7 pt-7 sm:px-10 sm:pt-10 pb-[calc(2rem+env(safe-area-inset-bottom))] shadow-[-30px_0_80px_rgba(0,0,0,0.92)] z-10 overflow-y-auto overscroll-contain flex flex-col justify-between text-left"
+            className="optical-frosted-drawer relative w-full max-w-lg h-full max-h-[100dvh] bg-[#060912]/62 backdrop-blur-2xl backdrop-saturate-[185%] border-l border-white/18 px-7 pt-7 sm:px-10 sm:pt-10 pb-[calc(2rem+env(safe-area-inset-bottom))] shadow-[-30px_0_80px_rgba(0,0,0,0.92)] z-10 overflow-y-auto overscroll-contain flex flex-col justify-between text-left"
           >
             {/* 左緣光譜漫射細線 */}
             <div
@@ -261,9 +270,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
               </div>
 
               <button
-                onClick={onClose}
+                onClick={handleSafeClose}
+                disabled={status === 'submitting'}
                 type="button"
-                className="min-w-[44px] min-h-[44px] -mr-2 -mt-1 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                className="min-w-[44px] min-h-[44px] -mr-2 -mt-1 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
                 aria-label="關閉回饋表單"
               >
                 <X size={20} />
@@ -377,8 +387,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 <div className="flex items-center justify-end gap-4 pt-4 border-t border-white/10">
                   <button
                     type="button"
-                    onClick={onClose}
-                    className="px-5 py-3 text-xs tracking-widest text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                    onClick={handleSafeClose}
+                    disabled={status === 'submitting'}
+                    className="px-5 py-3 text-xs tracking-widest text-zinc-400 hover:text-white transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     取消
                   </button>

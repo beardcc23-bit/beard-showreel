@@ -21,7 +21,6 @@ export default function Contact() {
   const GAS_SCRIPT_URL = import.meta.env.VITE_GAS_SCRIPT_URL || DEFAULT_GAS_SCRIPT_URL;
 
   const handleCopyEmail = () => {
-    if (copied) return;
     copy(email);
   };
 

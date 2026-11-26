@@ -387,6 +387,7 @@ body {
   .optical-surface,
   .optical-surface::before,
   .optical-surface::after,
+  .optical-frosted-drawer,
   .hero-glass-rail,
   .hero-glass-rail::before,
   .hero-glass-rail::after,
@@ -475,15 +476,19 @@ body.is-scrolling .optical-surface {
   pointer-events: none !important;
 }
 
+.section-offscreen .optical-blob-warm,
+.section-offscreen .optical-blob-cool,
 .section-offscreen .optical-surface::before,
 .section-offscreen .optical-surface::after,
 .section-offscreen .hero-glass-rail::before,
+.section-offscreen .hero-glass-rail::after,
 .section-offscreen .spectral-flow-line,
 body.modal-open .optical-blob-warm,
 body.modal-open .optical-blob-cool,
 body.modal-open .optical-surface::before,
 body.modal-open .optical-surface::after,
 body.modal-open .hero-glass-rail::before,
+body.modal-open .hero-glass-rail::after,
 body.modal-open .spectral-flow-line {
   animation-play-state: paused !important;
 }

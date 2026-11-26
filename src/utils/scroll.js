@@ -1,5 +1,27 @@
 export const LENIS_EASE_OUT_EXPO = (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
 
+export const SCROLL_TRIGGER_KEYS = new Set([
+  'ArrowDown',
+  'ArrowUp',
+  'PageDown',
+  'PageUp',
+  'Space',
+  ' ',
+  'Home',
+  'End',
+]);
+
+export function isEditableElement(target) {
+  if (!target || typeof target !== 'object') return false;
+  const tag = target.tagName;
+  return (
+    tag === 'INPUT' ||
+    tag === 'TEXTAREA' ||
+    tag === 'SELECT' ||
+    Boolean(target.isContentEditable)
+  );
+}
+
 /**
  * 全站統一平滑捲動工具：優先走全域 Lenis，純觸控行動端／測試環境自動降級至原生 scrollTo 並支援減少動態
  */

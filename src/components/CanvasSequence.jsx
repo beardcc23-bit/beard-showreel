@@ -40,6 +40,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   const framesRef = useRef([]);
   const sampledIndicesRef = useRef([]);
   const drawnSlotRef = useRef(-1);
+  const lastFrameAttrRef = useRef('');
+  const lastHintOpacityRef = useRef('');
   const targetProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
   const rafIdRef = useRef(null);
@@ -118,24 +120,30 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     }
 
     const frameNumber = String(displayFrame + 1);
-    if (canvasRef.current) {
-      canvasRef.current.dataset.frame = frameNumber;
-    }
-    if (sliderRef.current) {
-      sliderRef.current.setAttribute('aria-valuenow', frameNumber);
-      sliderRef.current.setAttribute(
-        'aria-valuetext',
-        `第 ${frameNumber} 格，共 ${TOTAL_SOURCE_FRAMES} 格`
-      );
+    if (frameNumber !== lastFrameAttrRef.current) {
+      lastFrameAttrRef.current = frameNumber;
+      if (canvasRef.current) {
+        canvasRef.current.dataset.frame = frameNumber;
+      }
+      if (sliderRef.current) {
+        sliderRef.current.setAttribute('aria-valuenow', frameNumber);
+        sliderRef.current.setAttribute(
+          'aria-valuetext',
+          `第 ${frameNumber} 格，共 ${TOTAL_SOURCE_FRAMES} 格`
+        );
+      }
     }
 
     // 全程保留「向下滑動推進」與滑桿底端箭頭引導，快刷到主定版前（73% -> 83%）同步淡出
     const hintOpacity = clamp01(1 - (progress - 0.73) / 0.1).toFixed(3);
-    if (scrollHintRef.current) {
-      scrollHintRef.current.style.opacity = hintOpacity;
-    }
-    if (scrollArrowRef.current) {
-      scrollArrowRef.current.style.opacity = hintOpacity;
+    if (hintOpacity !== lastHintOpacityRef.current) {
+      lastHintOpacityRef.current = hintOpacity;
+      if (scrollHintRef.current) {
+        scrollHintRef.current.style.opacity = hintOpacity;
+      }
+      if (scrollArrowRef.current) {
+        scrollArrowRef.current.style.opacity = hintOpacity;
+      }
     }
 
     // 尾段 86% -> 100% 銀幕微縮半透明，100% -> 126% 隨上滑離場柔和歸零並切換 visibility: hidden 剔除合成層
@@ -234,17 +242,27 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     }
   };
 
-  // Canvas 資產防右鍵與防批次 dump 保護
+  // Canvas 資產防右鍵／防批次 dump 保護 ＋ 視窗失焦自動解除滑桿拖曳鎖定（防止 Cmd+Tab 切回後黏連）
   useEffect(() => {
+    const resetDrag = () => {
+      isDraggingRailRef.current = false;
+    };
+    window.addEventListener('blur', resetDrag);
+
     const canvas = canvasRef.current;
-    if (!canvas) return undefined;
+    if (!canvas) {
+      return () => window.removeEventListener('blur', resetDrag);
+    }
     const blockMenu = (e) => e.preventDefault();
     canvas.addEventListener('contextmenu', blockMenu);
     try {
       canvas.toDataURL = () => 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
       canvas.toBlob = () => null;
     } catch (_) {}
-    return () => canvas.removeEventListener('contextmenu', blockMenu);
+    return () => {
+      window.removeEventListener('blur', resetDrag);
+      canvas.removeEventListener('contextmenu', blockMenu);
+    };
   }, []);
 
   // 兩階段骨架交錯預解碼載入（桌機全 117 格原生 30fps / 手機 59 格減重；減少動態模式直接載入第 80 格清晰定版幀）

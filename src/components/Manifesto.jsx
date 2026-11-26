@@ -78,6 +78,8 @@ const lawCategories = [
   },
 ];
 
+let isFlameSchematicPreloaded = false;
+
 /**
  * 第三幕 Manifesto：左側 Sticky 釘選核心宣言 × 右側三層滾動堆疊光譜分鏡卡 (Sticky-Stack)
  * - 無須手動點小按鈕，隨滾動由朱紅 -> 洋紅 -> 光學青藍層層向上覆蓋堆疊
@@ -88,14 +90,13 @@ export default function Manifesto({ onPlayVideo }) {
   const isTouchOnly = useMediaQuery('(hover: none) and (pointer: coarse)');
   useOffscreenPause(sectionRef);
 
-  // 區塊進入視窗前背景預熱 f1.webp（115KB），確保首次懸停 Autodesk Flame 時 0ms 無黑底秒出節點圖
+  // 區塊進入視窗前背景預熱 f1.webp（115KB），模組級單次鎖確保首次懸停或聚焦 Autodesk Flame 時 0ms 無黑底秒出節點圖
   useEffect(() => {
     const el = sectionRef.current;
-    if (!el || typeof window === 'undefined') return undefined;
-    let preloaded = false;
+    if (!el || typeof window === 'undefined' || isFlameSchematicPreloaded) return undefined;
     const preloadSchematic = () => {
-      if (preloaded) return;
-      preloaded = true;
+      if (isFlameSchematicPreloaded) return;
+      isFlameSchematicPreloaded = true;
       const img = new Image();
       img.decoding = 'async';
       img.src = `${import.meta.env.BASE_URL}f1.webp`;
@@ -134,9 +135,9 @@ export default function Manifesto({ onPlayVideo }) {
     };
   }, [flamePreview]);
 
-  const handleFlameEnter = (e) => {
-    if (e.pointerType === 'touch') return;
-    const rect = e.currentTarget.getBoundingClientRect();
+  const showFlamePreviewFromTarget = (targetEl) => {
+    if (!targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const pad = 24;
@@ -155,6 +156,16 @@ export default function Manifesto({ onPlayVideo }) {
       : Math.max(navSafeTop, Math.min(rect.top - estH - 14, vh - estH - pad));
 
     setFlamePreview({ left, top, width: cardW });
+  };
+
+  const handleFlameEnter = (e) => {
+    if (e.pointerType === 'touch') return;
+    showFlamePreviewFromTarget(e.currentTarget);
+  };
+
+  const handleFlameFocus = (e) => {
+    if (isTouchOnly) return;
+    showFlamePreviewFromTarget(e.currentTarget);
   };
 
   const openFlameSchematic = () => {
@@ -196,12 +207,17 @@ export default function Manifesto({ onPlayVideo }) {
                 aria-label="檢視 Autodesk Flame 實際專案 Batch 節點介面"
                 onPointerEnter={handleFlameEnter}
                 onPointerLeave={() => setFlamePreview(null)}
+                onFocus={handleFlameFocus}
                 onBlur={() => setFlamePreview(null)}
                 onClick={openFlameSchematic}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     openFlameSchematic();
+                  } else if (e.key === 'Escape' && flamePreview) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setFlamePreview(null);
                   }
                 }}
                 className="relative inline-flex items-center gap-1 group/flame cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"

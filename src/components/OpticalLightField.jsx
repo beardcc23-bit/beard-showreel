@@ -269,6 +269,9 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let targetPtrY = 0.25;
     let currentPtrX = 0.25;
     let currentPtrY = 0.25;
+    let rawClientX = 0;
+    let rawClientY = 0;
+    let hasPendingPointer = false;
     let rafId = null;
     let lastRenderTime = 0;
     let prevSimTime = 0;
@@ -286,9 +289,11 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       targetScroll = Math.max(0, Math.min(1, sy / cachedMaxScroll));
     };
 
+    // 1000Hz 高回報率滑鼠下僅記錄原始整數座標，延後至 36fps renderFrame 才執行單次正規化除法
     const handlePointerMove = (e) => {
-      targetPtrX = e.clientX / Math.max(1, window.innerWidth);
-      targetPtrY = 1.0 - e.clientY / Math.max(1, window.innerHeight);
+      rawClientX = e.clientX;
+      rawClientY = e.clientY;
+      hasPendingPointer = true;
     };
 
     handleScroll();
@@ -307,6 +312,12 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
         return;
       }
       lastRenderTime = now;
+
+      if (hasPendingPointer) {
+        hasPendingPointer = false;
+        targetPtrX = rawClientX / Math.max(1, window.innerWidth);
+        targetPtrY = 1.0 - rawClientY / Math.max(1, window.innerHeight);
+      }
 
       // 時間無關指數衰減：確保 24fps 與 36fps 下滾動光影跟隨速率一致
       const dt = prevSimTime ? Math.min(0.1, Math.max(0.001, (now - prevSimTime) * 0.001)) : 1 / 36;

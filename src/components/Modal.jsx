@@ -129,7 +129,11 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 ) : (
                   <iframe
                     key={currentData.videoId}
-                    src={isOpen && safeVideoId ? `https://www.youtube-nocookie.com/embed/${safeVideoId}?autoplay=1&rel=0` : 'about:blank'}
+                    src={
+                      isOpen && safeVideoId
+                        ? `https://www.youtube-nocookie.com/embed/${safeVideoId}?autoplay=1&rel=0&playsinline=1`
+                        : 'about:blank'
+                    }
                     title="YouTube Video Player"
                     sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -29,12 +29,8 @@ function buildOrderedCategoryItems(category) {
       isInteractive,
     };
   });
-  let featIdx = list.findIndex((it) => it.featured);
-  if (featIdx === -1) {
-    featIdx = list.findIndex(
-      (it) => it.videoId && !it.isFacebook && it.aspect !== 'portrait' && it.aspect !== 'square'
-    );
-  }
+  // 6 大分類皆具備唯一顯式 featured: true 主推作品（由 portfolio.test.js 單元測試強制把關）
+  const featIdx = list.findIndex((it) => it.featured);
   if (featIdx <= 0) return list;
   return [list[featIdx], ...list.slice(0, featIdx), ...list.slice(featIdx + 1)];
 }
@@ -168,7 +164,7 @@ const BrandCard = React.memo(
     direction,
     isCompactViewport,
     isStageEntered,
-    waveStartAt,
+    waveOriginRef,
     prefersReduced,
   }) => {
     const { isInlineVideo, safeExternalUrl, isExternalVideo, isInteractive } = item;
@@ -203,7 +199,7 @@ const BrandCard = React.memo(
       mobileIdx,
       isCompactViewport,
       isFoldTriggered,
-      waveStartAt,
+      waveStartAt: waveOriginRef?.current?.time || 0,
     };
 
     const motionProps = prefersReduced
@@ -370,7 +366,6 @@ export default function VisualSynthesis({ onPlayVideo }) {
       waveOriginRef.current = { key: waveKey, time: performance.now() };
     }
   }
-  const waveStartAt = waveOriginRef.current.time;
   useOffscreenPause(sectionRef);
 
   useEffect(() => {
@@ -617,7 +612,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                       direction={direction}
                       isCompactViewport={isCompactViewport}
                       isStageEntered={isStageEntered}
-                      waveStartAt={waveStartAt}
+                      waveOriginRef={waveOriginRef}
                       prefersReduced={Boolean(prefersReduced)}
                       isFeatured={index === 0}
                       onPlayVideo={onPlayVideo}

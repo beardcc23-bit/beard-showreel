@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, it, expect } from 'vitest';
 import { extractYoutubeId, normalizeItem, categories } from '../portfolio';
 
@@ -123,6 +125,27 @@ describe('portfolio.js 最佳化邏輯測試', () => {
       const allImages = categories.flatMap((c) => c.items.map((i) => i.bgImage));
       expect(allImages).toHaveLength(97);
       expect(new Set(allImages).size).toBe(97);
+    });
+
+    it('6 大分類皆各有且僅有唯一 1 筆 featured: true 主推作品，且全部 97 張劇照實體檔案皆存在於 public 目錄', () => {
+      const publicDir = path.resolve(process.cwd(), 'public');
+
+      for (const cat of categories) {
+        const featuredItems = cat.items.filter((item) => item.featured === true);
+        expect(featuredItems, `分類 ${cat.id} 必須恰有 1 筆 featured 主推作品`).toHaveLength(1);
+      }
+
+      const missingFiles = [];
+      for (const cat of categories) {
+        for (const item of cat.items) {
+          const relPath = String(item.bgImage || '').replace(/^\//, '');
+          const absPath = path.join(publicDir, relPath);
+          if (!relPath || !fs.existsSync(absPath) || fs.statSync(absPath).size === 0) {
+            missingFiles.push(`${cat.id}:${item.name} -> ${item.bgImage}`);
+          }
+        }
+      }
+      expect(missingFiles).toEqual([]);
     });
   });
 });

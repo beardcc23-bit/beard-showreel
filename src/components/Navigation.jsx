@@ -29,6 +29,8 @@ export default function Navigation() {
   );
   const drawerRef = useRef(null);
   const progressBarRef = useRef(null);
+  const portfolioBtnRef = useRef(null);
+  const subpanelRef = useRef(null);
 
   // 關閉選單時僅設 isOpen=false，讓母頁面與已展開的子頁面連體同步向左退場消失；待退場完成後於 onExitComplete 重置子面板狀態
   const closeMenu = useCallback(() => {
@@ -50,10 +52,14 @@ export default function Navigation() {
       if (elements.length > 0) {
         observer = new IntersectionObserver(
           (entries) => {
+            let latestId = null;
             for (let i = 0; i < entries.length; i += 1) {
               if (entries[i].isIntersecting) {
-                setActiveSection(entries[i].target.id);
+                latestId = entries[i].target.id;
               }
+            }
+            if (latestId !== null) {
+              setActiveSection(latestId);
             }
           },
           { rootMargin: '-35% 0px -55% 0px' }
@@ -160,7 +166,7 @@ export default function Navigation() {
     <>
       <nav
         style={{ right: 'var(--scrollbar-comp, 0px)' }}
-        className="fixed top-0 left-0 z-50 px-5 md:px-10 h-16 md:h-[72px] flex justify-between items-center border-b border-white/[0.12] bg-[#05080F]/45 backdrop-blur-xl backdrop-saturate-[180%] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)]"
+        className="optical-frosted-drawer fixed top-0 left-0 z-50 px-5 md:px-10 h-16 md:h-[72px] flex justify-between items-center border-b border-white/[0.12] bg-[#05080F]/45 backdrop-blur-xl backdrop-saturate-[180%] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)]"
       >
         {/* 頂部最上緣 1px 光譜滾動進度線 */}
         <div
@@ -253,6 +259,16 @@ export default function Navigation() {
             <m.div
               key="mobile-menu-stage"
               ref={drawerRef}
+              onKeyDown={(e) => {
+                if (!isPortfolioOpen) return;
+                const inSubpanel = subpanelRef.current?.contains(document.activeElement);
+                if (e.key === 'Escape' || (e.key === 'ArrowLeft' && inSubpanel)) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsPortfolioOpen(false);
+                  portfolioBtnRef.current?.focus({ preventScroll: true });
+                }
+              }}
               initial={{ x: '-100%', opacity: 1 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: '-100%', opacity: 0 }}
@@ -264,7 +280,7 @@ export default function Navigation() {
                 id="mobile-nav-drawer"
                 data-lenis-prevent
                 aria-label="行動版導覽選單"
-                className="relative z-20 pointer-events-auto w-[198px] min-[390px]:w-[216px] sm:w-[260px] h-full overflow-y-auto overscroll-contain bg-[#060911]/88 backdrop-blur-2xl backdrop-saturate-[180%] flex flex-col px-4 sm:px-6 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] border-r border-white/15"
+                className="optical-frosted-drawer relative z-20 pointer-events-auto w-[198px] min-[390px]:w-[216px] sm:w-[260px] h-full overflow-y-auto overscroll-contain bg-[#060911]/88 backdrop-blur-2xl backdrop-saturate-[180%] flex flex-col px-4 sm:px-6 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] border-r border-white/15"
               >
                 <div className="h-14 flex items-center justify-end border-b border-white/10 shrink-0">
                   <button
@@ -285,6 +301,7 @@ export default function Navigation() {
                       return (
                         <m.button
                           key={item.href}
+                          ref={portfolioBtnRef}
                           type="button"
                           aria-expanded={isPortfolioOpen}
                           aria-controls="mobile-portfolio-subpanel"
@@ -292,6 +309,17 @@ export default function Navigation() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
                           onClick={() => setIsPortfolioOpen((prev) => !prev)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'ArrowRight') {
+                              e.preventDefault();
+                              setIsPortfolioOpen(true);
+                              requestAnimationFrame(() => {
+                                subpanelRef.current
+                                  ?.querySelector('button')
+                                  ?.focus({ preventScroll: true });
+                              });
+                            }
+                          }}
                           className={`w-full text-left ${MOBILE_MENU_TEXT_CLASS} transition-colors duration-200 flex items-center justify-between pl-5 sm:pl-6 pr-1 py-1.5 border-l-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
                             isHighlighted
                               ? 'text-white border-spectral-crimson'
@@ -356,6 +384,7 @@ export default function Navigation() {
                     {isPortfolioOpen && (
                       <m.div
                         key="mobile-portfolio-subpanel"
+                        ref={subpanelRef}
                         id="mobile-portfolio-subpanel"
                         data-testid="mobile-portfolio-subpanel"
                         data-lenis-prevent
@@ -365,7 +394,7 @@ export default function Navigation() {
                         animate={{ x: '0%' }}
                         exit={{ x: '-102%' }}
                         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                        className="pointer-events-auto w-[min(170px,calc(100vw-204px))] min-[390px]:w-[min(186px,calc(100vw-222px))] sm:w-[216px] max-h-full overflow-y-auto overscroll-contain bg-[#060911]/90 backdrop-blur-2xl backdrop-saturate-[180%] border-y border-r border-white/[0.14] p-2.5 flex flex-col gap-2 shadow-[16px_24px_48px_rgba(0,0,0,0.85)]"
+                        className="optical-frosted-drawer pointer-events-auto w-[min(170px,calc(100vw-204px))] min-[390px]:w-[min(186px,calc(100vw-222px))] sm:w-[216px] max-h-full overflow-y-auto overscroll-contain bg-[#060911]/90 backdrop-blur-2xl backdrop-saturate-[180%] border-y border-r border-white/[0.14] p-2.5 flex flex-col gap-2 shadow-[16px_24px_48px_rgba(0,0,0,0.85)]"
                       >
                         {categories.map((cat) => {
                           const isCatActive = activePortfolioTab === cat.id;
