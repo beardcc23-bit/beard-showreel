@@ -295,6 +295,8 @@
   - **零 CPU Paint 管線、靜止 `12fps` 省電、部署瘦身與守門防線**：
     - `index.css` & `layoutGuard.test.js`：移除全站玻璃斜切邊與 `.spectral-flow-line` 之 `background-position` 非合成屬性無限動畫，改用 `200%` 寬偽元素純 GPU `translate3d` 達成靜止態 **0% CPU Paint 重繪**，收斂散落光譜漸層至 `.spectral-bar-h/v` 並於 `layoutGuard.test.js` 新增 `@keyframes` 非合成屬性自動化攔截測試。
     - `OpticalLightField.jsx`：滾動與游標收斂且無互動滿 `1.2s` 時自動降檔至 `12fps`（貼合底片顆粒原生幀率，省下 66% 背景 GPU 功耗，互動瞬間 `0ms` 瞬回 `36fps` / `24fps`）；`useOverlayLock.js` & `FeedbackModal.jsx` 支援開啟抽屜自動聚焦首欄輸入框，`Contact.jsx` 複製信箱加入浮升淡入微動效；清除已零引用之 `public/png-0-mobile/` 舊縮圖目錄（減重 `2.39 MB`）並收斂 `vercel.json`，全站擴充至 **28 個測試檔 / 84 項單元測試** 100% 通過（生產建置 `862ms`）。
+  - **首頁桌機與手機閒置 `1.5 秒` 自動往下推進演繹（`heroScroll.js`、`CanvasSequence.jsx`、`useIdleHeroAutoScroll.js`）**：
+    - 將 `HERO_IDLE_AUTO_SCROLL_MS` 由 `3.5s` 調快至 `1.5s`，並同步開放手機純觸控端支援——首次進站載完首幀後無操作滿 `1.5 秒` 即自動溫柔推進完整序列並帶入「個人介紹」，任一觸碰或滾輪操作 `0ms` 瞬停交還控制權。
 
 
 

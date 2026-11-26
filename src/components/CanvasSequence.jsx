@@ -57,7 +57,6 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== 'undefined' && window.innerWidth < 768
   );
-  const isTouchOnly = useMediaQuery('(hover: none) and (pointer: coarse)');
   const prefersReduced = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   // 視窗縮放跨過 768px 斷點時自動切換桌機橫圖與手機直圖，避免縮放預覽時殘留錯版比例圖檔
@@ -538,9 +537,9 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     }
   }, [isModalOpen]);
 
-  // 僅於桌機（非手機／非純觸控）首次進站無操作 3.5 秒後溫柔自動推進至「個人介紹」
+  // 首次進站載完首幀後若無操作滿 1.5 秒，自動溫柔推進全序列並順勢帶進「個人介紹」（桌機與手機皆支援，任一觸控／滾輪 0ms 瞬停）
   useIdleHeroAutoScroll({
-    enabled: !isLoading && !prefersReduced && !isMobile && !isTouchOnly,
+    enabled: !isLoading && !prefersReduced,
     containerRef,
     isModalOpenRef,
   });

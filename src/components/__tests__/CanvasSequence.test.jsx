@@ -244,7 +244,7 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     expect(canvas.toBlob()).toBeNull();
   });
 
-  it('首次進站載完首幀後閒置 3.5 秒應自動溫柔推進至個人介紹，且任一互動應立即取消不搶捲軸', async () => {
+  it('首次進站載完首幀後閒置 1.5 秒應自動溫柔推進至個人介紹（含桌機與手機），且任一互動應立即取消不搶捲軸', async () => {
     const introEl = document.createElement('section');
     introEl.id = 'introduction';
     introEl.getBoundingClientRect = () => ({
@@ -264,8 +264,9 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     window.lenis = { start: vi.fn(), scrollTo: mockScrollTo };
 
     try {
-      // 情境 1：完全無操作，載入完成滿 3.5 秒應觸發自動平滑捲動至 #introduction（含導覽列緩衝 -76px）
+      // 情境 1：完全無操作，載入完成滿 1.5 秒應觸發自動平滑捲動至 #introduction（含導覽列緩衝 -76px）
       const { ref } = makeContainerRef(0);
+      expect(HERO_IDLE_AUTO_SCROLL_MS).toBe(1500);
       const { unmount } = render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
 
       await act(async () => {
@@ -286,20 +287,23 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
       expect(mockScrollTo.mock.calls[0][1].duration).toBe(HERO_AUTO_SCROLL_DURATION_MS / 1000);
       unmount();
 
-      // 情境 2：3.5 秒內使用者已觸發滾輪互動，倒數應立即取消、絕不搶捲軸
+      // 情境 2：1.5 秒內使用者已觸發滾輪互動，倒數應立即取消、絕不搶捲軸
       mockScrollTo.mockClear();
-      render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
+      const { unmount: unmountWheelCase } = render(
+        <CanvasSequence containerRef={ref} isModalOpen={false} />
+      );
       await act(async () => {
         await Promise.resolve();
         await Promise.resolve();
       });
 
       act(() => {
-        vi.advanceTimersByTime(1000);
+        vi.advanceTimersByTime(800);
         window.dispatchEvent(new Event('wheel'));
         vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS + 1000);
       });
       expect(mockScrollTo).not.toHaveBeenCalled();
+      unmountWheelCase();
 
       // 情境 3：行動漢堡選單開啟（body.modal-open）期間不應偷捲
       mockScrollTo.mockClear();
@@ -318,8 +322,9 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
       unmountModalCase();
       document.body.classList.remove('modal-open');
 
-      // 情境 4：手機版（innerWidth < 768）不應觸發 3.5 秒自動往下捲動
-      mockScrollTo.mockClear();
+      // 情境 4：手機版（無 Lenis 純觸控環境）載完首幀閒置滿 1.5 秒亦應透過原生 rAF 自動往下捲動，且觸碰螢幕立即煞停
+      window.lenis = null;
+      const windowScrollSpy = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
       Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
       render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
       await act(async () => {
@@ -327,9 +332,16 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
         await Promise.resolve();
       });
       act(() => {
-        vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS + 1000);
+        vi.advanceTimersByTime(HERO_IDLE_AUTO_SCROLL_MS + 200);
       });
-      expect(mockScrollTo).not.toHaveBeenCalled();
+      expect(windowScrollSpy).toHaveBeenCalled();
+
+      windowScrollSpy.mockClear();
+      act(() => {
+        window.dispatchEvent(new Event('touchstart'));
+        vi.advanceTimersByTime(500);
+      });
+      expect(windowScrollSpy).not.toHaveBeenCalled();
     } finally {
       document.body.classList.remove('modal-open');
       introEl.remove();

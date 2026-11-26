@@ -14,7 +14,7 @@ const isOverlayActive = (isModalOpenRef) =>
 
 /**
  * 首次進站 Hero 閒置自動演繹 Hook（方案 2）：
- * - 首幀載入完成且停在頁面最頂端時，若無操作滿 3.5 秒，自動溫柔推進全序列並順勢帶進「個人介紹」
+ * - 首幀載入完成且停在頁面最頂端時，若無操作滿 1.5 秒，自動溫柔推進全序列並順勢帶進「個人介紹」
  * - 全程僅觸發一次；任一滾輪、觸控、點擊、按鍵或開啟行動抽屜／彈窗皆 0ms 瞬停交還控制權
  */
 export function useIdleHeroAutoScroll({ enabled, containerRef, isModalOpenRef }) {
