@@ -128,7 +128,7 @@ export default function Contact() {
             </span>
           </button>
 
-          {/* 右艙（5/12）：開啟右側滑出式回饋抽屜（懸停／聚焦預熱 chunk，點擊秒開） */}
+          {/* 右艙（5/12）：開啟右側滑出式聯繫抽屜（懸停／聚焦預熱 chunk，點擊秒開） */}
           <button
             type="button"
             onPointerEnter={warmFeedbackChunk}
@@ -137,7 +137,7 @@ export default function Contact() {
               setHasFeedbackMounted(true);
               setIsFeedbackOpen(true);
             }}
-            aria-label="開啟回饋表單"
+            aria-label="開啟聯繫表單"
             className="lg:col-span-5 w-full py-9 sm:py-11 md:py-12 px-6 sm:px-10 md:px-11 flex items-center text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group"
           >
             <span className="w-full flex items-center justify-between gap-4">
@@ -146,7 +146,7 @@ export default function Contact() {
                   Leave a Note
                 </span>
                 <span className="block mt-2.5 text-xs sm:text-sm text-zinc-400 font-light tracking-wide group-hover:text-zinc-200 transition-colors">
-                  留下回饋，探討影像的更多可能
+                  專案合作洽詢、職務邀約或影像交流
                 </span>
               </span>
               <span className="w-10 h-10 shrink-0 border border-spectral-crimson/35 bg-spectral-crimson/[0.06] group-hover:border-spectral-crimson/80 group-hover:bg-spectral-crimson/15 flex items-center justify-center transition-colors duration-300">

@@ -73,7 +73,7 @@ export const categories = [
       {
         "name": "TOBLERONE 三角巧克力",
         "bgImage": "/vfx/A/A-003.webp",
-        "url": "https://www.youtube.com/watch?v=exDc-2Xnb4E&t=1s"
+        "url": "https://www.youtube.com/watch?v=exDc-2Xnb4E"
       },
       {
         "name": "好侍咖哩",
@@ -214,7 +214,7 @@ export const categories = [
       {
         "name": "Panasonic 冷萃咖啡機",
         "bgImage": "/vfx/B/B-05_coffee.webp",
-        "url": "https://www.facebook.com/PanasonicCooking/videos/1251224095275421/?locale=ms_MY",
+        "url": "https://www.facebook.com/PanasonicCooking/videos/1251224095275421/",
         "videoId": "1251224095275421",
         "isFacebook": true
       },
@@ -259,7 +259,7 @@ export const categories = [
       {
         "name": "Foxtron Cavira",
         "bgImage": "/vfx/C/C-02.webp",
-        "url": "https://youtu.be/pCBQA1vEDig?si=lbbvGmTm90P5Vx4P",
+        "url": "https://www.youtube.com/watch?v=pCBQA1vEDig",
         "featured": true
       },
       {
@@ -356,7 +356,7 @@ export const categories = [
         "bgImage": "/vfx/D/D-01.webp"
       },
       {
-        "name": "Foodpanda",
+        "name": "foodpanda",
         "bgImage": "/vfx/D/D-02.webp"
       },
       {
@@ -365,7 +365,7 @@ export const categories = [
         "url": "https://www.youtube.com/watch?v=j8XBx4yFsN8"
       },
       {
-        "name": "UberEats",
+        "name": "Uber Eats",
         "bgImage": "/vfx/D/D-06.webp"
       },
       {
@@ -469,7 +469,7 @@ export const categories = [
         "bgImage": "/vfx/E/E-07.webp"
       },
       {
-        "name": "大本山 益生菌",
+        "name": "農純鄉 大本山益生菌",
         "bgImage": "/vfx/E/E-16_dabenshan.webp",
         "url": "https://www.youtube.com/watch?v=llWjKbg46OM"
       },
@@ -542,7 +542,7 @@ export const categories = [
       {
         "name": "中國信託 點燃生命之火",
         "bgImage": "/vfx/F/F-01.webp",
-        "url": "https://www.youtube.com/watch?v=u1uWyX51Prc&list=PLfRfUZjsbf4RuYO75RLGDmhQ3hhbX0Ul5&index=37"
+        "url": "https://www.youtube.com/watch?v=u1uWyX51Prc"
       },
       {
         "name": "復華投信",

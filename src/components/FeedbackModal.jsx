@@ -174,7 +174,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
     if (!formData.message || !formData.message.trim()) {
       setStatus('error');
-      setErrorMessage('請填寫回饋內容！');
+      setErrorMessage('請填寫訊息內容！');
       dialogRef.current?.querySelector('#feedback-message')?.focus();
       return;
     }
@@ -326,10 +326,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             <div className="flex items-start justify-between border-b border-white/10 pb-6">
               <div>
                 <h3 id="feedback-modal-title" className="font-display text-2xl font-bold text-title-white tracking-tight">
-                  留下回饋
+                  傳送訊息
                 </h3>
                 <p className="text-xs text-zinc-400 mt-1.5 font-light">
-                  歡迎分享您的任何想法或優化建議
+                  歡迎專案合作洽詢、職務邀約或交流想法
                 </p>
               </div>
 
@@ -338,7 +338,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 disabled={status === 'submitting'}
                 type="button"
                 className="min-w-[44px] min-h-[44px] -mr-2 -mt-1 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-                aria-label="關閉回饋表單"
+                aria-label="關閉聯繫表單"
               >
                 <X size={20} />
               </button>
@@ -354,7 +354,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                   <CheckCircle2 size={28} />
                 </div>
                 <h4 className="text-xl font-semibold text-white tracking-wide">
-                  感謝你的回饋
+                  訊息已送出，我將盡快與您聯繫
                 </h4>
               </m.div>
             ) : (
@@ -414,7 +414,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                 <div>
                   <div className="flex items-baseline justify-between mb-2">
                     <label htmlFor="feedback-message" className="block text-xs tracking-wider text-zinc-400">
-                      回饋內容 <span className="text-spectral-crimson">*</span>
+                      訊息內容 <span className="text-spectral-crimson">*</span>
                     </label>
                     <span
                       className={`mono text-[11px] tabular-nums transition-colors ${
@@ -441,7 +441,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                         handleSubmit(e);
                       }
                     }}
-                    placeholder="請輸入想說的話..."
+                    placeholder="請輸入合作需求、職務資訊或想交流的內容..."
                     className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:bg-white/[0.06] focus:border-spectral-crimson/85 focus:shadow-[inset_0_0_16px_rgba(235,74,46,0.08)] transition-[background-color,border-color,box-shadow] resize-none select-text"
                   />
                 </div>
@@ -481,7 +481,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     ) : (
                       <>
                         <Send size={13} />
-                        <span>送出回饋</span>
+                        <span>傳送訊息</span>
                       </>
                     )}
                   </button>

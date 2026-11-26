@@ -32,7 +32,7 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
 
     const nameInput = screen.getByLabelText(/您的稱呼/i);
     const emailInput = screen.getByLabelText(/信箱 \/ LINE/i);
-    const msgInput = screen.getByLabelText(/回饋內容/i);
+    const msgInput = screen.getByLabelText(/訊息內容/i);
 
     await waitFor(() => {
       expect(document.activeElement).toBe(nameInput);
@@ -63,7 +63,7 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     expect(bodyParams.get('message')).toBe('\'=IMPORTXML("https://x")\n\'@HYPERLINK("https://y")');
 
     await waitFor(() => {
-      expect(screen.getByText('感謝你的回饋')).toBeInTheDocument();
+      expect(screen.getByText('訊息已送出，我將盡快與您聯繫')).toBeInTheDocument();
     });
     expect(sessionStorage.getItem('fb_draft_v1')).toBeNull();
   });
@@ -89,15 +89,15 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     fireEvent.change(screen.getByLabelText(/您的稱呼/i), {
       target: { name: 'name', value: '王導演' },
     });
-    fireEvent.change(screen.getByLabelText(/回饋內容/i), {
+    fireEvent.change(screen.getByLabelText(/訊息內容/i), {
       target: { name: 'message', value: '詢問檔期與 Flame 合成合作' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
     expect(screen.getByText('傳送中...')).toBeInTheDocument();
 
     const cancelBtn = screen.getByRole('button', { name: '取消' });
-    const closeIconBtn = screen.getByLabelText('關閉回饋表單');
+    const closeIconBtn = screen.getByLabelText('關閉聯繫表單');
     expect(cancelBtn).toBeDisabled();
     expect(closeIconBtn).toBeDisabled();
 
@@ -125,15 +125,15 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     fireEvent.change(screen.getByLabelText(/您的稱呼/i), {
       target: { name: 'name', value: 'SpamBot' },
     });
-    fireEvent.change(screen.getByLabelText(/回饋內容/i), {
+    fireEvent.change(screen.getByLabelText(/訊息內容/i), {
       target: { name: 'message', value: 'Buy cheap SEO' },
     });
     const honeypot = document.querySelector('input[name="corporate_organization"]');
     fireEvent.change(honeypot, { target: { value: 'BotCorp' } });
 
-    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
     expect(fetchSpy).not.toHaveBeenCalled();
-    expect(screen.getByText('感謝你的回饋')).toBeInTheDocument();
+    expect(screen.getByText('訊息已送出，我將盡快與您聯繫')).toBeInTheDocument();
     unmount();
 
     // 模擬剛成功送出過（設定 fb_last_ts 為現在），驗證 20 秒防刷冷卻攔截
@@ -148,10 +148,10 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     fireEvent.change(screen.getByLabelText(/您的稱呼/i), {
       target: { name: 'name', value: 'Beard' },
     });
-    fireEvent.change(screen.getByLabelText(/回饋內容/i), {
+    fireEvent.change(screen.getByLabelText(/訊息內容/i), {
       target: { name: 'message', value: '連續點擊測試' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
     expect(screen.getByRole('alert')).toHaveTextContent(/送出過於頻繁/);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
@@ -174,7 +174,7 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     );
 
     // 尚未經過 600ms 且無打字事件（Date.now 未推進），直接點送出
-    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
     expect(screen.getByRole('alert')).toHaveTextContent(/未設定有效之後端 API 網址/);
     expect(fetchSpy).not.toHaveBeenCalled();
 
@@ -186,7 +186,7 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
         scriptUrl="https://script.google.com/macros/s/valid_id/exec"
       />
     );
-    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
     await waitFor(() => {
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
@@ -210,11 +210,11 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     fireEvent.change(emailInput, {
       target: { name: 'email', value: 'producer@gmail' },
     });
-    fireEvent.change(screen.getByLabelText(/回饋內容/i), {
+    fireEvent.change(screen.getByLabelText(/訊息內容/i), {
       target: { name: 'message', value: '合作洽詢' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
     expect(screen.getByRole('alert')).toHaveTextContent(/信箱格式似乎不完整/);
     expect(emailInput).toHaveAttribute('aria-invalid', 'true');
     expect(fetchSpy).not.toHaveBeenCalled();
@@ -223,7 +223,7 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     fireEvent.change(emailInput, {
       target: { name: 'email', value: 'line_id_888' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
     await waitFor(() => {
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });

@@ -38,19 +38,19 @@ describe('Contact 元件 TDD 單元測試', () => {
     });
   });
 
-  it('點擊「留下回饋」按鈕時應該開啟 FeedbackModal 彈窗', async () => {
+  it('點擊「Leave a Note」按鈕時應該開啟 FeedbackModal 彈窗', async () => {
     render(<Contact />);
 
-    const feedbackBtn = screen.getByRole('button', { name: /開啟回饋表單/i });
+    const feedbackBtn = screen.getByRole('button', { name: /開啟聯繫表單/i });
     fireEvent.click(feedbackBtn);
 
-    // 回饋彈窗開啟後應該能找到 dialog 元素
+    // 聯繫彈窗開啟後應該能找到 dialog 元素
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
   });
 
-  it('回饋表單送出若超過 12 秒連線逾時，應解除 submitting 並顯示逾時錯誤提示（不卡死）', async () => {
+  it('聯繫表單送出若超過 12 秒連線逾時，應解除 submitting 並顯示逾時錯誤提示（不卡死）', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation(
       (_url, opts) =>
@@ -63,15 +63,15 @@ describe('Contact 元件 TDD 單元測試', () => {
 
     try {
       render(<Contact />);
-      fireEvent.click(screen.getByRole('button', { name: /開啟回饋表單/i }));
+      fireEvent.click(screen.getByRole('button', { name: /開啟聯繫表單/i }));
       const dialog = await screen.findByRole('dialog');
       expect(dialog).toBeInTheDocument();
 
       fireEvent.change(screen.getByLabelText(/您的稱呼/i), { target: { value: 'Beard' } });
-      fireEvent.change(screen.getByLabelText(/回饋內容/i), { target: { value: '測試逾時防卡死' } });
+      fireEvent.change(screen.getByLabelText(/訊息內容/i), { target: { value: '測試逾時防卡死' } });
       expect(screen.getByText('7 / 500')).toBeInTheDocument();
 
-      fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+      fireEvent.click(screen.getByRole('button', { name: /傳送訊息/i }));
       expect(screen.getByText('傳送中...')).toBeInTheDocument();
 
       await act(async () => {
