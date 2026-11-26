@@ -30,7 +30,7 @@ describe('scroll 全站捲動工具函式測試', () => {
     expect(isEditableElement(null)).toBe(false);
   });
 
-  it('smoothScrollTo 與 instantScrollTo 應優先驅動 window.lenis，無 Lenis 時降級至原生 window.scrollTo', () => {
+  it('smoothScrollTo 與 instantScrollTo 應優先驅動 window.lenis，無 Lenis 時降級至原生 window.scrollTo，且距離 < 2px 時早退', () => {
     const lenisScrollTo = vi.fn();
     window.lenis = { start: vi.fn(), scrollTo: lenisScrollTo };
 
@@ -50,6 +50,11 @@ describe('scroll 全站捲動工具函式測試', () => {
     expect(nativeSpy).toHaveBeenCalledWith({ top: 450, behavior: 'smooth' });
 
     instantScrollTo(300, { offset: -20 });
-    expect(nativeSpy).toHaveBeenLastCalledWith({ top: 280, behavior: 'auto' });
+    expect(nativeSpy).toHaveBeenCalledWith({ top: 280, behavior: 'auto' });
+
+    // 距離當前 scrollY (0) < 2px 時早退
+    nativeSpy.mockClear();
+    smoothScrollTo(1, { offset: 0 });
+    expect(nativeSpy).not.toHaveBeenCalled();
   });
 });

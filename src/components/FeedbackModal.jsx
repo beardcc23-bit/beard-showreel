@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { X, Send, CheckCircle2, AlertCircle, Loader2 } from './common/Icons';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 
 const FORMULA_PREFIX_RE = /^[=+@\-\t\r|＝＋－＠｜]/;
 const CONTROL_CHARS_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u200B-\u200D\uFEFF]/g;
+
+const isIncompleteEmail = (val) => {
+  const trimmed = (val || '').trim();
+  return trimmed.includes('@') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed);
+};
 
 const isValidGasUrl = (url) => {
   if (!url || typeof url !== 'string') return false;
@@ -155,8 +160,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
-    const trimmedEmail = (formData.email || '').trim();
-    if (trimmedEmail.includes('@') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+    if (isIncompleteEmail(formData.email)) {
       setStatus('error');
       setErrorMessage('信箱格式似乎不完整，請確認後再送出（或直接填寫 LINE ID）。');
       dialogRef.current?.querySelector('#feedback-email')?.focus();
@@ -373,11 +377,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     autoCapitalize="none"
                     spellCheck={false}
                     aria-invalid={
-                      status === 'error' &&
-                      formData.email.trim().includes('@') &&
-                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
-                        ? 'true'
-                        : undefined
+                      status === 'error' && isIncompleteEmail(formData.email) ? 'true' : undefined
                     }
                     maxLength={100}
                     value={formData.email}

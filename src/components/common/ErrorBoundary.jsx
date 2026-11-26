@@ -34,6 +34,16 @@ export default class ErrorBoundary extends React.Component {
     }
   }
 
+  handleManualReload = () => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('_v', String(Date.now()));
+      window.location.replace(url.toString());
+    } catch {
+      window.location.reload();
+    }
+  };
+
   render() {
     if (this.state.hasError) {
       if (this.props.minimal) return null;
@@ -44,7 +54,7 @@ export default class ErrorBoundary extends React.Component {
           </p>
           <button
             type="button"
-            onClick={() => window.location.reload()}
+            onClick={this.handleManualReload}
             className="spectral-cta px-7 py-3 text-xs tracking-[0.2em] cursor-pointer"
           >
             重新載入

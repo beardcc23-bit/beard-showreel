@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown } from './common/Icons';
 import {
   HERO_SCRUB_END_PROGRESS,
   HERO_REDUCED_MOTION_FRAME,
@@ -17,7 +17,8 @@ import { useIdleHeroAutoScroll } from '../hooks/useIdleHeroAutoScroll';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const MAX_CONCURRENT_LOADS = 6;
-const SEQUENCE_VERSION = 'v11';
+const DESKTOP_SEQUENCE_VERSION = 'v11';
+const MOBILE_SEQUENCE_VERSION = 'v13';
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
@@ -53,6 +54,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   isModalOpenRef.current = Boolean(isModalOpen);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [hasDrawnFrame, setHasDrawnFrame] = useState(false);
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== 'undefined' && window.innerWidth < 768
   );
@@ -71,9 +73,10 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
   const basePath = import.meta.env.BASE_URL;
   const folder = isMobile ? 'png-0-mobile' : 'png-0';
+  const sequenceVersion = isMobile ? MOBILE_SEQUENCE_VERSION : DESKTOP_SEQUENCE_VERSION;
   const step = isMobile ? 2 : 1;
   const initialFrameIdx = prefersReduced ? HERO_REDUCED_MOTION_FRAME : 0;
-  const posterSrc = `${basePath}${folder}/png-0_${String(initialFrameIdx).padStart(8, '0')}.webp?${SEQUENCE_VERSION}`;
+  const posterSrc = `${basePath}${folder}/png-0_${String(initialFrameIdx).padStart(8, '0')}.webp?${sequenceVersion}`;
 
   const drawSlot = (slot) => {
     const canvas = canvasRef.current;
@@ -93,6 +96,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     }
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     drawnSlotRef.current = slot;
+    setHasDrawnFrame((prev) => (prev ? prev : true));
     return true;
   };
 
@@ -151,7 +155,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       }
     }
 
-    // 尾段 86% -> 100% 銀幕微縮半透明，100% -> 126% 隨上滑離場柔和歸零並切換 visibility: hidden 剔除合成層
+    // 尾段 87% -> 100% 桌機銀幕微縮半透明（手機版維持滿寬原尺寸不縮小），100% -> 126% 隨上滑離場柔和淡出並切換 visibility: hidden 剔除合成層
     if (stageRef.current) {
       if (prefersReduced) {
         if (lastStageKeyRef.current !== 'reduced') {
@@ -166,13 +170,14 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
         );
         const exitOutro = clamp01((progress - 1) / (HERO_EXIT_END_PROGRESS - 1));
         const isIdleMainZone = stickyOutro === 0 && exitOutro === 0;
-        const stageTransform = isIdleMainZone
-          ? ''
-          : `translate3d(0, ${(-stickyOutro * 22).toFixed(2)}px, 0) scale(${(
-              1 -
-              stickyOutro * 0.055 -
-              exitOutro * 0.025
-            ).toFixed(4)})`;
+        const stageTransform =
+          isIdleMainZone || isMobile
+            ? ''
+            : `translate3d(0, ${(-stickyOutro * 22).toFixed(2)}px, 0) scale(${(
+                1 -
+                stickyOutro * 0.055 -
+                exitOutro * 0.025
+              ).toFixed(4)})`;
         const opacityNum = isIdleMainZone
           ? 1
           : Math.max(0, 1 - stickyOutro * 0.62 - exitOutro * 0.38);
@@ -298,6 +303,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     sampledIndicesRef.current = sampled;
     framesRef.current = new Array(sampled.length).fill(null);
     drawnSlotRef.current = -1;
+    setHasDrawnFrame(false);
 
     const unlock = () => {
       if (isCancelled || unlocked) return;
@@ -333,6 +339,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
     const pump = () => {
       while (!isCancelled && activeLoads < MAX_CONCURRENT_LOADS && cursor < loadQueue.length) {
+        const queueRank = cursor;
         const slot = loadQueue[cursor];
         cursor += 1;
         const frameNum = sampled[slot];
@@ -345,8 +352,13 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
           pump();
         };
         img.onload = () => {
-          // 真實瀏覽器背景預解碼至圖層快取，消除快刷時主執行緒解碼掉幀
-          if (typeof img.decode === 'function') {
+          // 僅對第 0/1 層關鍵骨架幀與當前停留位置前後 ±14 格執行強制點陣預解碼，釋放數百 MB 未壓縮 RGBA 記憶體峰值
+          const currentRatio = clamp01(currentProgressRef.current / HERO_EXIT_END_PROGRESS);
+          const currentTargetSlot = Math.round(currentRatio * Math.max(0, sampled.length - 1));
+          const shouldForceDecode =
+            queueRank < 16 || Math.abs(slot - currentTargetSlot) <= 14;
+
+          if (shouldForceDecode && typeof img.decode === 'function') {
             img
               .decode()
               .catch(() => {})
@@ -363,7 +375,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
           if (slot === 0) unlock();
           done();
         };
-        img.src = `${basePath}${folder}/png-0_${String(frameNum).padStart(8, '0')}.webp?${SEQUENCE_VERSION}`;
+        img.src = `${basePath}${folder}/png-0_${String(frameNum).padStart(8, '0')}.webp?${sequenceVersion}`;
       }
     };
 
@@ -534,8 +546,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   });
 
   return (
-    <div ref={stageRef} className="w-full origin-top will-change-transform">
-      {/* 手機版隱藏右側滑桿吃滿全寬；桌機採左右 24px 對稱平衡網格維持銀幕置中，右側掛載 3D 玻璃棱柱滑桿 */}
+    <div ref={stageRef} className="relative w-full origin-top will-change-transform">
+      {/* 手機版隱藏右側滑桿並貼齊螢幕滿寬吃滿橘框高度；桌機採左右 24px 對稱平衡網格維持銀幕置中，右側掛載 3D 玻璃棱柱滑桿 */}
       <div
         className={
           prefersReduced
@@ -548,7 +560,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
         <div
           data-testid="hero-screen"
-          className="relative w-full h-[62dvh] md:h-auto md:aspect-video bg-transparent md:bg-[#030407] shadow-none md:shadow-[0_32px_90px_rgba(0,0,0,0.85)] max-md:[mask-image:linear-gradient(to_bottom,black_0%,black_82%,transparent_100%)] overflow-hidden"
+          className="relative w-full h-[calc(100dvh-4.75rem)] md:h-auto md:aspect-video bg-transparent md:bg-[#030407] shadow-none md:shadow-[0_32px_90px_rgba(0,0,0,0.85)] max-md:[mask-image:linear-gradient(to_bottom,transparent_0%,black_8%,black_88%,transparent_100%)] overflow-hidden"
         >
           {/* 極簡暗房載入遮罩 */}
           {isLoading && (
@@ -571,13 +583,14 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
           >
             <canvas
               ref={canvasRef}
-              className="w-full h-full block pointer-events-none object-cover object-top md:object-center"
+              className="w-full h-full block pointer-events-none max-md:object-contain md:object-cover object-center"
               style={
-                isLoading
+                !hasDrawnFrame
                   ? {
                       backgroundImage: `url(${posterSrc})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: isMobile ? 'top center' : 'center',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: isMobile ? 'contain' : 'cover',
+                      backgroundPosition: 'center',
                     }
                   : undefined
               }
@@ -635,10 +648,10 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
         )}
       </div>
 
-      {/* 銀幕下方資訊列：手機版置中呈現提示與箭頭；桌機版沿用對稱網格讓紅箭頭與右側 3D 玻璃柱中軸同軸對齊 */}
+      {/* 銀幕下方資訊列：手機版懸浮壓於滿框銀幕底部內緣；桌機版沿用對稱網格讓紅箭頭與右側 3D 玻璃柱中軸同軸對齊 */}
       {!prefersReduced && (
         <div
-          className="mt-3 flex items-center justify-center gap-1.5 md:grid md:grid-cols-[24px_minmax(0,1fr)_24px] md:gap-4 select-none text-[11px] text-zinc-200/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]"
+          className="max-md:absolute max-md:inset-x-0 max-md:bottom-5 max-md:z-20 max-md:pointer-events-none md:mt-3 flex items-center justify-center gap-1.5 md:grid md:grid-cols-[24px_minmax(0,1fr)_24px] md:gap-4 select-none text-[11px] text-zinc-200/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]"
           aria-hidden="true"
         >
           {/* 桌機左側隱形對稱平衡欄 */}

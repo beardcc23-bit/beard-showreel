@@ -281,5 +281,11 @@
   - **部署當日日期注入、靜態長效快取與雙規格圖示**：`deploy.yml` 建置後自動將 `dist/sitemap.xml` 之 `<lastmod>` 替換為部署當日 UTC 日期；為 `avatar.webp`、`f1.webp`、`optical-streak.webp` 補齊 `?v=2` 快取版本號與 `vercel.json` 1 年 `immutable` 標頭；新增 `public/icon-512.png` 並升級 `manifest.webmanifest` 為 `192x192` + `512x512` 雙規格。
   - **渲染收斂與互動韌性**：`OpticalLightField.jsx` 單一 Shader Program 頂點緩衝改於初始化與 `webglcontextrestored` 單次綁定；清除 `index.css` 無效 `@layer base` 規則；`CanvasSequence.jsx` 卸載歸零 `canvas.width / height` 釋放 VRAM；`FeedbackModal.jsx` 新增「信箱含 `@` 格式驗證、純 LINE ID 直接放行」智慧防呆；`Modal.jsx` 頂欄補上「於新分頁開啟原影片 `↗`」安全備援鈕；`Contact.jsx` 滑近聯絡區時自動於閒置期預熱表單 Chunk。
   - **全專案 `src/` 100% 模組級測試覆蓋**：新增 `scroll.test.js`、`heroScroll.test.js`、`useLenisScroll.test.jsx`（並補齊無 `matchMedia` 環境 optional chaining 防護）與 `App.test.jsx`，全站擴充至 **28 個測試檔 / 82 項單元測試** 100% 通過（0 警告）。
+- **第八輪 12 項底層編譯加速、VRAM 智慧預解碼與手機版首頁滿框極限放大（無模糊、尾段不縮小）升級（同日午間第七波）**：
+  - **編譯模組暴減 76.7% 與底層收斂**：新增 `src/components/common/Icons.js` 直連 13 顆 Lucide 圖示單檔並升級 `vite.config.js` 函式型 `manualChunks(id)`，Vite 轉換模組數由 `1,855` 降至 `432`（生產建置 `886ms`）；`OpticalLightField.jsx` 將 GLSL 5 處 `pow(x, 2.0)` 改為硬體安全 `d * d` 杜絕負底數 `NaN` 並合併 `u_scrollWeights` `vec4`；`CanvasSequence.jsx` 升級智慧按需點陣預解碼（僅前 16 順位骨架幀與停留位置 `±14` 格執行 `img.decode()`）＋ `hasDrawnFrame` 慢網底圖保護；`VisualSynthesis.jsx` 模組頂層預算 `mobileIdx`；`portfolio.js` 移除 62 筆重複 `videoId`；`index.css` 清除廢棄 `--beam-shift-*`；`FeedbackModal.jsx`、`Manifesto.jsx`、`scroll.js`、`ErrorBoundary.jsx`、`vercel.json` 完成邊界防呆補強。
+  - **手機版首頁滿框極限放大、零模糊暗房柔邊與尾段不縮小（`public/png-0-mobile/`、`Hero.jsx`、`CanvasSequence.jsx`、`index.html`）**：
+    - 以像素尺對準 `Showreel` 視覺中心裁切 `972×1080` 極限全字不切邊區域，重製 `public/png-0-mobile/` 全 60 張為 `648×864` 純黑暗房 `#030407` 餘弦短柔邊畫布（`?v=13`，徹底消除下方高斯模糊拉伸區塊；桌機 `public/png-0/` 維持 `?v=11` 原生無損不動）。
+    - 手機 `hero-screen` 升級為滿寬 `h-[calc(100dvh-4.75rem)]` 搭配 `max-md:object-contain` 與懸浮底部提示；手機版往上滑推進至尾段與離場區（`87% → 126%`）停用 `scale(...)` 微縮，全程維持 `1:1` 滿寬原尺寸柔和淡出上滑離場（全站 **28 個測試檔 / 83 項單元測試** 100% 通過）。
+
 
 

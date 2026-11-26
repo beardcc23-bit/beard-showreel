@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, Suspense } from 'react';
-import { Check, Copy, ArrowRight } from 'lucide-react';
+import { Check, Copy, ArrowRight } from './common/Icons';
 import RevealHeading from './common/RevealHeading';
 import { DEFAULT_GAS_SCRIPT_URL } from '../constants/siteConfig';
 import { useClipboard } from '../hooks/useClipboard';

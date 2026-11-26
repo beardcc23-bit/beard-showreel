@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Menu, X, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronRight } from './common/Icons';
 import { m, AnimatePresence } from 'framer-motion';
 import { categories } from '../data/portfolio';
 import { emilSpring, tapFeedback } from '../utils/motion';

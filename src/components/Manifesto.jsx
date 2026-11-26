@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { Play, ArrowUpRight } from 'lucide-react';
+import { Play, ArrowUpRight } from './common/Icons';
 import RefractionCard from './RefractionCard';
 import ScrubText from './common/ScrubText';
 import RevealHeading from './common/RevealHeading';
@@ -87,6 +87,7 @@ const FLAME_SCHEMATIC_FILE = 'f1.webp?v=2';
  */
 export default function Manifesto({ onPlayVideo }) {
   const sectionRef = useRef(null);
+  const suppressNextFocusRef = useRef(false);
   const [flamePreview, setFlamePreview] = useState(null);
   const isTouchOnly = useMediaQuery('(hover: none) and (pointer: coarse)');
   useOffscreenPause(sectionRef);
@@ -165,11 +166,16 @@ export default function Manifesto({ onPlayVideo }) {
   };
 
   const handleFlameFocus = (e) => {
+    if (suppressNextFocusRef.current) {
+      suppressNextFocusRef.current = false;
+      return;
+    }
     if (isTouchOnly) return;
     showFlamePreviewFromTarget(e.currentTarget);
   };
 
   const openFlameSchematic = () => {
+    suppressNextFocusRef.current = true;
     setFlamePreview(null);
     window.dispatchEvent(
       new CustomEvent(APP_EVENTS.OPEN_IMAGE_MODAL, {

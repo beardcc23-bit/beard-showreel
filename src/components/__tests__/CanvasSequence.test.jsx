@@ -82,7 +82,7 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     expect(canvas).toBeInTheDocument();
     expect(canvas.dataset.frame).toBe('1');
     const heroScreen = screen.getByTestId('hero-screen');
-    expect(heroScreen).toHaveClass('h-[62dvh]');
+    expect(heroScreen).toHaveClass('h-[calc(100dvh-4.75rem)]');
     expect(heroScreen).toHaveClass('md:aspect-video');
     expect(container.querySelector('video')).toBeNull();
     const slider = screen.getByTestId('hero-vertical-progress');
@@ -192,6 +192,36 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     expect(canvas.dataset.frame).toBe('1');
     expect(Number(stage.style.opacity)).toBe(1);
     expect(Number(hint.style.opacity)).toBe(1);
+  });
+
+  it('手機版往上滑推進至尾段與離場區（87%→126%）應維持滿寬 1:1 原尺寸不縮小', async () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    const { ref, setTop } = makeContainerRef(0, 2520); // scrollable = 1620
+    const { container } = render(
+      <CanvasSequence containerRef={ref} isModalOpen={false} />
+    );
+
+    const canvas = container.querySelector('canvas');
+    const stage = container.firstElementChild;
+
+    // 滑至 100% Sticky 終點（-1620px）：手機版 transform 應維持空字串（不套用 scale 縮小）
+    setTop(-1620);
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+      vi.advanceTimersByTime(1500);
+    });
+    expect(stage.style.transform).toBe('');
+    expect(stage.style.transform).not.toContain('scale(');
+    expect(Number(stage.style.opacity)).toBeLessThan(0.5);
+
+    // 繼續滑至 126% 離場終點（-2041.2px）：走完第 117 格且全程不縮小
+    setTop(-2041.2);
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+      vi.advanceTimersByTime(1500);
+    });
+    expect(canvas.dataset.frame).toBe('117');
+    expect(stage.style.transform).toBe('');
   });
 
   it('銀幕應保持純粹無懸停按鈕連結遮擋，且 Canvas 應保護資產不被 dump', async () => {

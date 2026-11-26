@@ -20,10 +20,22 @@ export default defineConfig({
     target: 'es2020',
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'lenis'],
-          motion: ['framer-motion'],
-          icons: ['lucide-react'],
+        manualChunks(id) {
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/scheduler/') ||
+            id.includes('node_modules/lenis/')
+          ) {
+            return 'vendor';
+          }
+          if (id.includes('node_modules/framer-motion/')) {
+            return 'motion';
+          }
+          if (id.includes('node_modules/lucide-react/')) {
+            return 'icons';
+          }
+          return undefined;
         },
       },
     },

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { m, AnimatePresence, useInView, useReducedMotion } from 'framer-motion';
-import { Play, ArrowUpRight, ArrowRight } from 'lucide-react';
+import { Play, ArrowUpRight, ArrowRight } from './common/Icons';
 import { categories, normalizeItem } from '../data/portfolio';
 import { NAV_SCROLL_OFFSET } from '../constants/heroScroll';
 import { APP_EVENTS } from '../constants/siteConfig';
@@ -13,7 +13,7 @@ import RevealHeading from './common/RevealHeading';
 const loadedImageCache = new Set();
 const inflightImageCache = new Set();
 
-// 模組載入時一次性預先正規化 97 筆靜態作品、安全外部連結與主推排序（渲染期 0 次 URL 解析與陣列重配）
+// 模組載入時一次性預先正規化 97 筆靜態作品、安全外部連結、主推排序與行動端可見索引（渲染期 0 次 URL 解析與迴圈計數）
 function buildOrderedCategoryItems(category) {
   const list = category.items.map((raw) => {
     const it = normalizeItem(raw);
@@ -31,8 +31,14 @@ function buildOrderedCategoryItems(category) {
   });
   // 6 大分類皆具備唯一顯式 featured: true 主推作品（由 portfolio.test.js 單元測試強制把關）
   const featIdx = list.findIndex((it) => it.featured);
-  if (featIdx <= 0) return list;
-  return [list[featIdx], ...list.slice(0, featIdx), ...list.slice(featIdx + 1)];
+  const ordered =
+    featIdx <= 0 ? list : [list[featIdx], ...list.slice(0, featIdx), ...list.slice(featIdx + 1)];
+
+  let mobileCounter = 0;
+  return ordered.map((item, idx) => ({
+    ...item,
+    mobileIdx: item.isInteractive ? mobileCounter++ : idx,
+  }));
 }
 
 const ORDERED_ITEMS_BY_ID = new Map(
@@ -626,27 +632,21 @@ export default function VisualSynthesis({ onPlayVideo }) {
               exit="exit"
               className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 md:gap-4 grid-flow-dense"
             >
-              {(() => {
-                let mobileCounter = 0;
-                return orderedItems.map((item, index) => {
-                  const currentMobileIdx = item.isInteractive ? mobileCounter++ : index;
-                  return (
-                    <BrandCard
-                      key={`${activeTab}-${item.name}-${index}`}
-                      item={item}
-                      index={index}
-                      mobileIdx={currentMobileIdx}
-                      direction={direction}
-                      isCompactViewport={isCompactViewport}
-                      isStageEntered={isStageEntered}
-                      waveOriginRef={waveOriginRef}
-                      prefersReduced={Boolean(prefersReduced)}
-                      isFeatured={index === 0}
-                      onPlayVideo={onPlayVideo}
-                    />
-                  );
-                });
-              })()}
+              {orderedItems.map((item, index) => (
+                <BrandCard
+                  key={`${activeTab}-${item.name}-${index}`}
+                  item={item}
+                  index={index}
+                  mobileIdx={item.mobileIdx}
+                  direction={direction}
+                  isCompactViewport={isCompactViewport}
+                  isStageEntered={isStageEntered}
+                  waveOriginRef={waveOriginRef}
+                  prefersReduced={Boolean(prefersReduced)}
+                  isFeatured={index === 0}
+                  onPlayVideo={onPlayVideo}
+                />
+              ))}
             </m.div>
           </AnimatePresence>
         </div>

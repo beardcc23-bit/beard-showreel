@@ -15,10 +15,9 @@ varying vec2 v_uv;
 
 uniform float u_time;
 uniform vec2 u_resolution;
-uniform float u_scroll;
 uniform vec2 u_pointer;
 uniform float u_velocity;
-uniform vec3 u_scrollWeights;
+uniform vec4 u_scrollWeights;
 uniform vec2 u_dir;
 
 float hash(vec2 p) {
@@ -101,19 +100,23 @@ void main() {
   float stageMetric = p.x + uv.y * mix(0.30, 0.40, portrait) * aspect;
   float leftStageMask = smoothstep(mix(1.18, 1.08, portrait) * aspect, mix(0.30, 0.22, portrait) * aspect, stageMetric);
 
-  // 錯位緩慢流動的光譜通道（上翼朱紅、中軸洋紅、下翼與底部加強深海藍與冰藍）
-  float rBand = exp(-pow((warpedAcross - 0.14 - sin(t * 0.55 + along * 1.1) * 0.065) * 3.6, 2.0));
-  float mBand = exp(-pow((warpedAcross - 0.01 + cos(t * 0.44 + along * 1.2) * 0.055) * 4.1, 2.0));
-  float cBand = exp(-pow((warpedAcross + 0.15 - sin(t * 0.40 - along * 0.95) * 0.075) * 2.9, 2.0));
+  // 錯位緩慢流動的光譜通道（使用硬體安全乘法取代負底數未定義的 pow(x, 2.0)，消除 NaN 風險與超越函數開銷）
+  float rDist = (warpedAcross - 0.14 - sin(t * 0.55 + along * 1.1) * 0.065) * 3.6;
+  float mDist = (warpedAcross - 0.01 + cos(t * 0.44 + along * 1.2) * 0.055) * 4.1;
+  float cDist = (warpedAcross + 0.15 - sin(t * 0.40 - along * 0.95) * 0.075) * 2.9;
+  float rBand = exp(-(rDist * rDist));
+  float mBand = exp(-(mDist * mDist));
+  float cBand = exp(-(cDist * cDist));
 
   // 畫面下方專屬深藍副光帶（呼應參考圖底部濃郁的藍色拉絲，並在滾動至頁面最下方時進一步增強）
-  float bottomBlueZone = smoothstep(mix(0.58, 0.48, portrait), 0.0, uv.y) * exp(-pow((warpedAcross + 0.24) * 2.5, 2.0));
+  float bDist = (warpedAcross + 0.24) * 2.5;
+  float bottomBlueZone = smoothstep(mix(0.58, 0.48, portrait), 0.0, uv.y) * exp(-(bDist * bDist));
   float bottomBlueStreak = smoothstep(0.30, 0.86, midStreak * 0.65 + fineFilaments * 0.35) * bottomBlueZone * forwardFade;
 
-  // 滾動至頁面最下方 (s3) 時大幅拉高藍色光譜比重、收斂暖紅
+  // 滾動至頁面最下方 (s3) 時大幅拉高藍色光譜比重、收斂暖紅（archiveCalm 由 CPU 併入 u_scrollWeights.w 傳入）
   float warmWeight = mix(1.15, 1.30, s1 * (1.0 - s2)) * mix(1.0, 0.58, s3);
   float coolWeight = mix(1.22, 1.48, s2) * mix(1.0, 1.45, s3);
-  float archiveCalm = 1.0 - 0.26 * exp(-pow((u_scroll - 0.74) / 0.11, 2.0));
+  float archiveCalm = u_scrollWeights.w;
 
   vec3 colCrimson = vec3(0.95, 0.27, 0.16);
   vec3 colCoral   = vec3(1.00, 0.57, 0.42);
@@ -220,7 +223,6 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let posLoc = -1;
     let uTime = null;
     let uRes = null;
-    let uScroll = null;
     let uPointer = null;
     let uVelocity = null;
     let uScrollWeights = null;
@@ -269,7 +271,6 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       posLoc = gl.getAttribLocation(program, 'a_position');
       uTime = gl.getUniformLocation(program, 'u_time');
       uRes = gl.getUniformLocation(program, 'u_resolution');
-      uScroll = gl.getUniformLocation(program, 'u_scroll');
       uPointer = gl.getUniformLocation(program, 'u_pointer');
       uVelocity = gl.getUniformLocation(program, 'u_velocity');
       uScrollWeights = gl.getUniformLocation(program, 'u_scrollWeights');
@@ -320,6 +321,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let s1 = 0;
     let s2 = 0;
     let s3 = 0;
+    let calmWeight = 1;
     const startTime = performance.now();
     let isModalLocked = document.body.classList.contains('modal-open');
     let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -385,15 +387,16 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
         s1 = glSmoothstep(0.05, 0.4, currentScroll);
         s2 = glSmoothstep(0.4, 0.75, currentScroll);
         s3 = glSmoothstep(0.78, 0.98, currentScroll);
+        const calmDist = (currentScroll - 0.74) / 0.11;
+        calmWeight = 1.0 - 0.26 * Math.exp(-(calmDist * calmDist));
       }
       const angle = 0.76 + (0.7 - 0.76) * s1 + Math.sin(elapsed * 0.07) * 0.025;
 
       gl.uniform1f(uTime, elapsed);
       gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform1f(uScroll, currentScroll);
       gl.uniform2f(uPointer, currentPtrX, currentPtrY);
       gl.uniform1f(uVelocity, velocity);
-      gl.uniform3f(uScrollWeights, s1, s2, s3);
+      gl.uniform4f(uScrollWeights, s1, s2, s3, calmWeight);
       gl.uniform2f(uDir, Math.cos(angle), Math.sin(angle));
 
       gl.drawArrays(gl.TRIANGLES, 0, 3);

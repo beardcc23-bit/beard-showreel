@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { m, useInView } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { Play } from './common/Icons';
 import AnimatedCounter from './common/AnimatedCounter';
 import ScrubText from './common/ScrubText';
 import RevealHeading from './common/RevealHeading';

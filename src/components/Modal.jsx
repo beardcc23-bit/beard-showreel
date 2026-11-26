@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { X, ArrowUpRight } from 'lucide-react';
+import { X, ArrowUpRight } from './common/Icons';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 import { emilSpring } from '../utils/motion';
 import {

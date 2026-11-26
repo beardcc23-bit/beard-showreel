@@ -31,6 +31,17 @@ export function smoothScrollTo(
 ) {
   if (typeof window === 'undefined') return;
 
+  const rawTop =
+    typeof target === 'number'
+      ? target + offset
+      : target && typeof target.getBoundingClientRect === 'function'
+      ? target.getBoundingClientRect().top + window.scrollY + offset
+      : 0;
+  const top = Math.max(0, Math.round(rawTop));
+
+  // 若當前捲動座標已停在目標錨點 2px 誤差內，直接早退避免重複啟動 1.05s 捲動計時器
+  if (Math.abs(top - window.scrollY) < 2) return;
+
   if (window.lenis) {
     window.lenis.start();
     const options = { duration, easing };
@@ -39,13 +50,6 @@ export function smoothScrollTo(
     return;
   }
 
-  const rawTop =
-    typeof target === 'number'
-      ? target + offset
-      : target
-      ? target.getBoundingClientRect().top + window.scrollY + offset
-      : 0;
-  const top = Math.max(0, Math.round(rawTop));
   const prefersReduced = Boolean(
     window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
   );

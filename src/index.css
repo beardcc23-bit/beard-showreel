@@ -73,8 +73,6 @@ body {
   --beam-white-opacity: 0.92;
   --beam-warm-opacity: 0.85;
   --beam-cool-opacity: 0.85;
-  --beam-shift-x: 0%;
-  --beam-shift-y: 0%;
 }
 
 @keyframes slow-spectral-drift-warm {
@@ -173,7 +171,7 @@ body {
   background-repeat: no-repeat;
   mix-blend-mode: screen;
   opacity: calc(0.22 + var(--beam-white-opacity) * 0.36);
-  transform: translate3d(var(--beam-shift-x), var(--beam-shift-y), 0);
+  transform: translateZ(0);
   mask-image: radial-gradient(ellipse 88% 86% at 14% 88%, black 18%, rgba(0, 0, 0, 0.5) 52%, transparent 82%);
   -webkit-mask-image: radial-gradient(ellipse 88% 86% at 14% 88%, black 18%, rgba(0, 0, 0, 0.5) 52%, transparent 82%);
   will-change: transform, opacity;

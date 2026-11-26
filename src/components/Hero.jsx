@@ -26,7 +26,7 @@ export default function Hero({ isModalOpen, onLoaded }) {
       {/* Sticky 釘選舞台：桌機與手機統一 items-start 釘在導覽列正下方，消除視窗縮放時的上方空隙 */}
       <div
         data-hero-sticky
-        className="sticky top-0 h-auto pb-3 md:pb-5 w-full flex items-start justify-center px-0 md:px-6 pt-16 md:pt-[84px]"
+        className="sticky top-0 h-auto pb-0 md:pb-5 w-full flex items-start justify-center px-0 md:px-6 pt-16 md:pt-[84px]"
       >
         <div className="w-full md:max-w-[min(1760px,calc((100dvh-7.25rem)*1.7778+80px))] mx-auto relative z-10">
           <CanvasSequence
