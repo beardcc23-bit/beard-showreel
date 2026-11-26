@@ -274,6 +274,12 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       uVelocity = gl.getUniformLocation(program, 'u_velocity');
       uScrollWeights = gl.getUniformLocation(program, 'u_scrollWeights');
       uDir = gl.getUniformLocation(program, 'u_dir');
+
+      // 單一 Shader Program 與頂點緩衝於初始化及 Context Restored 時單次綁定，省去每幀重複狀態呼叫
+      gl.useProgram(program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.enableVertexAttribArray(posLoc);
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
       return true;
     };
 
@@ -371,13 +377,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       currentPtrX += (targetPtrX - currentPtrX) * ptrAlpha;
       currentPtrY += (targetPtrY - currentPtrY) * ptrAlpha;
 
-      const renderProgram = program;
-      if (!renderProgram || !buffer) return;
-
-      gl.useProgram(renderProgram);
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.enableVertexAttribArray(posLoc);
-      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+      if (!program || !buffer) return;
 
       const elapsed = prefersReduced ? 2.5 : (now - startTime) * 0.001;
       if (Math.abs(currentScroll - cachedWeightScroll) >= 0.00005) {
@@ -493,7 +493,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     };
   }, []);
 
-  const streakSrc = `${import.meta.env.BASE_URL}optical-streak.webp`;
+  const streakSrc = `${import.meta.env.BASE_URL}optical-streak.webp?v=2`;
 
   return (
     <div

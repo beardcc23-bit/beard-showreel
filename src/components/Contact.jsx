@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { Check, Copy, ArrowRight } from 'lucide-react';
 import RevealHeading from './common/RevealHeading';
 import { DEFAULT_GAS_SCRIPT_URL } from '../constants/siteConfig';
@@ -6,11 +6,21 @@ import { useClipboard } from '../hooks/useClipboard';
 
 const loadFeedbackModal = () => import('./FeedbackModal');
 const FeedbackModal = React.lazy(loadFeedbackModal);
+let isFeedbackChunkPreloaded = false;
+
+const warmFeedbackChunk = () => {
+  if (isFeedbackChunkPreloaded) return;
+  isFeedbackChunkPreloaded = true;
+  loadFeedbackModal().catch(() => {
+    isFeedbackChunkPreloaded = false;
+  });
+};
 
 /**
  * 第五幕 Contact：瑞士雙欄分割厚玻璃艙（左艙信箱複製 × 右艙滑出式回饋抽屜觸發器）
  */
 export default function Contact() {
+  const sectionRef = useRef(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [hasFeedbackMounted, setHasFeedbackMounted] = useState(false);
   const emailUser = 'beard.cc23';
@@ -19,6 +29,36 @@ export default function Contact() {
   const { copied, copy } = useClipboard(2500);
 
   const GAS_SCRIPT_URL = import.meta.env.VITE_GAS_SCRIPT_URL || DEFAULT_GAS_SCRIPT_URL;
+
+  // 滑近聯絡區時於閒置期自動預熱 FeedbackModal chunk（3.9KB），確保純觸控手機首次點擊亦 0ms 秒開
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof window === 'undefined' || isFeedbackChunkPreloaded) return undefined;
+    if (typeof IntersectionObserver === 'undefined') return undefined;
+    let idleId = null;
+    let timerId = null;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          io.disconnect();
+          if ('requestIdleCallback' in window) {
+            idleId = window.requestIdleCallback(warmFeedbackChunk, { timeout: 1500 });
+          } else {
+            timerId = setTimeout(warmFeedbackChunk, 350);
+          }
+        }
+      },
+      { rootMargin: '280px 0px' }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      if (idleId !== null && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timerId !== null) clearTimeout(timerId);
+    };
+  }, []);
 
   const handleCopyEmail = () => {
     copy(email);
@@ -30,6 +70,7 @@ export default function Contact() {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       className="relative overflow-hidden py-32 md:py-44 px-5 md:px-12 border-t border-white/[0.08]"
     >
@@ -82,8 +123,8 @@ export default function Contact() {
           {/* 右艙（5/12）：開啟右側滑出式回饋抽屜（懸停／聚焦預熱 chunk，點擊秒開） */}
           <button
             type="button"
-            onPointerEnter={loadFeedbackModal}
-            onFocus={loadFeedbackModal}
+            onPointerEnter={warmFeedbackChunk}
+            onFocus={warmFeedbackChunk}
             onClick={() => {
               setHasFeedbackMounted(true);
               setIsFeedbackOpen(true);

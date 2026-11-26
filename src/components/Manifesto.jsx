@@ -79,6 +79,7 @@ const lawCategories = [
 ];
 
 let isFlameSchematicPreloaded = false;
+const FLAME_SCHEMATIC_FILE = 'f1.webp?v=2';
 
 /**
  * 第三幕 Manifesto：左側 Sticky 釘選核心宣言 × 右側三層滾動堆疊光譜分鏡卡 (Sticky-Stack)
@@ -99,7 +100,7 @@ export default function Manifesto({ onPlayVideo }) {
       isFlameSchematicPreloaded = true;
       const img = new Image();
       img.decoding = 'async';
-      img.src = `${import.meta.env.BASE_URL}f1.webp`;
+      img.src = `${import.meta.env.BASE_URL}${FLAME_SCHEMATIC_FILE}`;
     };
     if (typeof IntersectionObserver === 'undefined') {
       preloadSchematic();
@@ -173,7 +174,7 @@ export default function Manifesto({ onPlayVideo }) {
     window.dispatchEvent(
       new CustomEvent(APP_EVENTS.OPEN_IMAGE_MODAL, {
         detail: {
-          imageUrl: `${import.meta.env.BASE_URL}f1.webp`,
+          imageUrl: `${import.meta.env.BASE_URL}${FLAME_SCHEMATIC_FILE}`,
           title: 'Autodesk Flame Batch Schematic',
           description: '實際專案 Batch 節點介面',
         },
@@ -364,7 +365,7 @@ export default function Manifesto({ onPlayVideo }) {
                 <div className="optical-surface p-2.5 md:p-3 shadow-[0_28px_80px_rgba(0,0,0,0.9)]">
                   <div className="w-full aspect-[1920/902] border border-white/10 bg-black overflow-hidden">
                     <img
-                      src={`${import.meta.env.BASE_URL}f1.webp`}
+                      src={`${import.meta.env.BASE_URL}${FLAME_SCHEMATIC_FILE}`}
                       alt="Autodesk Flame Batch Schematic"
                       width="1920"
                       height="902"

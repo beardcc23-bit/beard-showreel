@@ -276,8 +276,10 @@
   - **安全性強化**：`FeedbackModal.jsx` 新增 `isValidGasUrl` 強制驗證 `https://script.google.com/macros/s/` 白名單，並於 `sanitizeSheetInput` 剔除 ASCII 控制字元（`\x00`～`\x1F`）阻斷 Null-Byte 公式繞過；`url.js` 新增 `getSafeFacebookVideoUrl` 統一以 `new URL()` 阻斷帳密偽裝供 `Modal.jsx` 共用，並為 `isSafeLocalImageUrl` 加入長度上限與 `?v=` 版本參數支援；`vercel.json` 補齊 `X-Permitted-Cross-Domain-Policies: none` 與 CSP `manifest-src 'self'`；`scripts/pre-commit.sh` 新增 Webhook／Slack Token 掃描、`> 5MB` 大檔攔截與 `npm ci --dry-run` 鎖定檔同步檢查。
   - **正確性修復**：`CanvasSequence.jsx` 修正 `commitDecodedImage` 停駐補幀除數為 `HERO_EXIT_END_PROGRESS (1.26)` 並於跨斷點重載時對齊當下捲動進度；`Navigation.jsx` 將 `cachedHeroClearThreshold` 下調至 `heroHeight - 0.72 * innerHeight` 修復往下滑入「個人介紹」時亮燈被洗掉的 Bug；`FeedbackModal.jsx` 修復草稿恢復後 `0.6s` 內直接送出被誤判機器人吃單的 Bug；`VisualSynthesis.jsx` 補上 `img.complete` 同步快取命中檢查防 Safari 卡黑底；`useOverlayLock.js` 修復隱藏父容器（`display: none`）導致 `Tab` 焦點循環卡死的瑕疵。
   - **順暢性壓榨與防回歸測試**：`Manifesto.jsx` 三層 `92%` 深黑底 Sticky 疊壓卡收斂為 `!backdrop-blur-md` 消除三重 `18px` 高斯模糊堆疊；`ScrubText.jsx` 導入 `useInView` 視口閘門於離屏時自動卸載 6 組常駐 `useScroll` 訂閱；消除 `CanvasSequence` 滑回 `0px` 同步重排、`Navigation` 首屏冗餘 `setState`、`useLenisScroll` 慣性尾端多餘 `rAF` 喚醒、`VisualSynthesis` 底欄殘留矩陣與 `OpticalLightField` 彈窗鎖定期間背景座標計算；全站擴充至 **24 個測試檔 / 75 項單元測試** 100% 通過（0 警告）。
-
-
-
+- **第七輪 10 項部署自動化、長效快取、信箱智慧防呆與 100% 全模組測試覆蓋（同日上午第六波）**：
+  - **作品連結更新（`portfolio.js`）**：為「3C與家電」分類之 `中華電信 企業形象影片` 補上 Instagram Reels 連結（桌機與手機版同步開放安全外連）。
+  - **部署當日日期注入、靜態長效快取與雙規格圖示**：`deploy.yml` 建置後自動將 `dist/sitemap.xml` 之 `<lastmod>` 替換為部署當日 UTC 日期；為 `avatar.webp`、`f1.webp`、`optical-streak.webp` 補齊 `?v=2` 快取版本號與 `vercel.json` 1 年 `immutable` 標頭；新增 `public/icon-512.png` 並升級 `manifest.webmanifest` 為 `192x192` + `512x512` 雙規格。
+  - **渲染收斂與互動韌性**：`OpticalLightField.jsx` 單一 Shader Program 頂點緩衝改於初始化與 `webglcontextrestored` 單次綁定；清除 `index.css` 無效 `@layer base` 規則；`CanvasSequence.jsx` 卸載歸零 `canvas.width / height` 釋放 VRAM；`FeedbackModal.jsx` 新增「信箱含 `@` 格式驗證、純 LINE ID 直接放行」智慧防呆；`Modal.jsx` 頂欄補上「於新分頁開啟原影片 `↗`」安全備援鈕；`Contact.jsx` 滑近聯絡區時自動於閒置期預熱表單 Chunk。
+  - **全專案 `src/` 100% 模組級測試覆蓋**：新增 `scroll.test.js`、`heroScroll.test.js`、`useLenisScroll.test.jsx`（並補齊無 `matchMedia` 環境 optional chaining 防護）與 `App.test.jsx`，全站擴充至 **28 個測試檔 / 82 項單元測試** 100% 通過（0 警告）。
 
 

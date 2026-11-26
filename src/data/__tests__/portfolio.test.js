@@ -173,6 +173,12 @@ describe('portfolio.js 最佳化邏輯測試', () => {
 
       expect(idMismatches).toEqual([]);
       expect(unsafeUrls).toEqual([]);
+
+      const chtItem = categories
+        .find((c) => c.id === 'tech')
+        .items.find((i) => i.name === '中華電信 企業形象影片');
+      expect(chtItem?.url).toBe('https://www.instagram.com/reels/Cs-SBDQs9cN/');
+      expect(normalizeItem(chtItem).hasVideo).toBe(true);
     });
   });
 });

@@ -155,6 +155,14 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
+    const trimmedEmail = (formData.email || '').trim();
+    if (trimmedEmail.includes('@') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setStatus('error');
+      setErrorMessage('信箱格式似乎不完整，請確認後再送出（或直接填寫 LINE ID）。');
+      dialogRef.current?.querySelector('#feedback-email')?.focus();
+      return;
+    }
+
     if (!formData.message || !formData.message.trim()) {
       setStatus('error');
       setErrorMessage('請填寫回饋內容！');
@@ -364,6 +372,13 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     autoComplete="email"
                     autoCapitalize="none"
                     spellCheck={false}
+                    aria-invalid={
+                      status === 'error' &&
+                      formData.email.trim().includes('@') &&
+                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
+                        ? 'true'
+                        : undefined
+                    }
                     maxLength={100}
                     value={formData.email}
                     onChange={handleChange}

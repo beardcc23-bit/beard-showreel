@@ -2,33 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-
-  h1 {
-    font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
-    font-size: 32px;
-    font-weight: 800;
-  }
-
-  h2 {
-    font-family: 'Montserrat', 'Noto Sans TC', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-  }
-
-  h3 {
-    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 20px;
-    font-weight: 500;
-  }
-
-  p {
-    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-  }
-}
-
 :root {
   --color-bg-core: #030407;
   /* 極深暗房純黑 */

@@ -43,6 +43,9 @@ jobs:
           npm run build
           test -f dist/index.html
           ! find dist -name "*.map" | grep -q .
+          TODAY_UTC=$(date -u +%Y-%m-%d)
+          sed -i "s|<lastmod>[0-9-]*</lastmod>|<lastmod>${TODAY_UTC}</lastmod>|g" dist/sitemap.xml
+          grep -q "<lastmod>${TODAY_UTC}</lastmod>" dist/sitemap.xml
           cp dist/index.html dist/404.html
       - name: Setup Pages
         uses: actions/configure-pages@v6

@@ -24,6 +24,15 @@
       ]
     },
     {
+      "source": "/(avatar\\.webp|f1\\.webp|optical-streak\\.webp|favicon\\.png|favicon\\.ico|icon-512\\.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {

@@ -1,10 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { m, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, ArrowUpRight } from 'lucide-react';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 import { emilSpring } from '../utils/motion';
-import { isSafeLocalImageUrl, getSafeFacebookVideoUrl } from '../utils/url';
+import {
+  isSafeLocalImageUrl,
+  getSafeFacebookVideoUrl,
+  getSafeExternalUrl,
+} from '../utils/url';
 
 export default function Modal({ isOpen, onClose, type, data }) {
   const [iframeLoading, setIframeLoading] = React.useState(true);
@@ -22,6 +26,13 @@ export default function Modal({ isOpen, onClose, type, data }) {
   const safeVideoUrl = getSafeFacebookVideoUrl(currentData?.videoUrl);
   const safeImageUrl = isSafeLocalImageUrl(currentData?.imageUrl) ? currentData.imageUrl : '';
   const hasValidVideoSource = currentType === 'video' && (currentData?.isFacebook ? Boolean(safeVideoUrl || safeVideoId) : Boolean(safeVideoId));
+  const rawExternalWatchUrl =
+    currentType === 'video' && hasValidVideoSource
+      ? currentData?.isFacebook
+        ? safeVideoUrl || `https://www.facebook.com/watch/?v=${safeVideoId}`
+        : `https://www.youtube.com/watch?v=${safeVideoId}`
+      : '';
+  const safeExternalWatchUrl = getSafeExternalUrl(rawExternalWatchUrl);
 
   useEffect(() => {
     if (!isOpen || type !== 'video' || !hasValidVideoSource) {
@@ -81,14 +92,27 @@ export default function Modal({ isOpen, onClose, type, data }) {
               <span className="text-xs font-medium tracking-wider text-zinc-300 truncate">
                 {currentData.title || 'SHOWREEL'}
               </span>
-              <button
-                type="button"
-                onClick={onClose}
-                className="min-w-[40px] min-h-[40px] shrink-0 text-zinc-300 hover:text-spectral-crimson transition-colors flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </button>
+              <div className="flex items-center gap-1 shrink-0">
+                {safeExternalWatchUrl && (
+                  <a
+                    href={safeExternalWatchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="於新分頁開啟原影片"
+                    className="min-w-[40px] min-h-[40px] px-2 text-zinc-400 hover:text-title-white transition-colors inline-flex items-center justify-center gap-1 text-[11px] tracking-wider focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                  >
+                    <ArrowUpRight size={15} className="text-spectral-crimson" />
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="min-w-[40px] min-h-[40px] shrink-0 text-zinc-300 hover:text-spectral-crimson transition-colors flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                  aria-label="Close modal"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
 
             {currentType === 'video' ? (

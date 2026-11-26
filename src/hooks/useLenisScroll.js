@@ -9,10 +9,10 @@ import { SCROLL_TRIGGER_KEYS, isEditableElement } from '../utils/scroll';
 export function useLenisScroll() {
   useEffect(() => {
     const isPureTouch =
-      'ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches;
+      'ontouchstart' in window && !window.matchMedia?.('(pointer: fine)')?.matches;
     if (isPureTouch) return undefined;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return undefined;
 
     const lenis = new Lenis({
       lerp: 0.18,

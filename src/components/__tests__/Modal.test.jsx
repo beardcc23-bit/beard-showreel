@@ -28,6 +28,10 @@ describe('Modal 影音與圖片燈箱單元測試', () => {
       'src',
       'https://www.youtube-nocookie.com/embed/pCBQA1vEDig?autoplay=1&rel=0&playsinline=1'
     );
+    const extLink = screen.getByLabelText('於新分頁開啟原影片');
+    expect(extLink).toHaveAttribute('href', 'https://www.youtube.com/watch?v=pCBQA1vEDig');
+    expect(extLink).toHaveAttribute('target', '_blank');
+    expect(extLink).toHaveAttribute('rel', 'noopener noreferrer');
     expect(screen.getByText('LOADING STREAM')).toBeInTheDocument();
 
     // 觸發 iframe onLoad 後應隱藏 LOADING STREAM 遮罩

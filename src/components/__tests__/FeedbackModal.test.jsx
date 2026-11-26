@@ -187,4 +187,41 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
   });
+
+  it('「信箱 / LINE」欄位含 @ 但格式不完整時應友善提醒，填寫純 LINE ID 則應正常放行', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({ ok: true });
+
+    render(
+      <FeedbackModal
+        isOpen={true}
+        onClose={vi.fn()}
+        scriptUrl="https://script.google.com/macros/s/valid_id/exec"
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText(/您的稱呼/i), {
+      target: { name: 'name', value: '林製片' },
+    });
+    const emailInput = screen.getByLabelText(/信箱 \/ LINE/i);
+    fireEvent.change(emailInput, {
+      target: { name: 'email', value: 'producer@gmail' },
+    });
+    fireEvent.change(screen.getByLabelText(/回饋內容/i), {
+      target: { name: 'message', value: '合作洽詢' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    expect(screen.getByRole('alert')).toHaveTextContent(/信箱格式似乎不完整/);
+    expect(emailInput).toHaveAttribute('aria-invalid', 'true');
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    // 改填純 LINE ID（不含 @）應正常放行送出
+    fireEvent.change(emailInput, {
+      target: { name: 'email', value: 'line_id_888' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+  });
 });

@@ -284,6 +284,9 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     return () => {
       window.removeEventListener('blur', resetDrag);
       canvas.removeEventListener('contextmenu', blockMenu);
+      ctxRef.current = null;
+      canvas.width = 0;
+      canvas.height = 0;
     };
   }, []);
 

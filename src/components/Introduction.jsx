@@ -38,7 +38,7 @@ export default function Introduction({ onPlayVideo }) {
           >
             <div className="group relative w-full max-w-[260px] sm:max-w-[320px] md:max-w-none mx-auto aspect-[3/4] overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.75)]">
               <img
-                src={`${import.meta.env.BASE_URL}avatar.webp`}
+                src={`${import.meta.env.BASE_URL}avatar.webp?v=2`}
                 alt="Beard Chou"
                 width="768"
                 height="1024"
