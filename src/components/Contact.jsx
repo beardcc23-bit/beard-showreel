@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, Suspense } from 'react';
+import { m, AnimatePresence } from 'framer-motion';
 import { Check, Copy, ArrowRight } from './common/Icons';
 import RevealHeading from './common/RevealHeading';
+import RefractionCard from './RefractionCard';
 import { DEFAULT_GAS_SCRIPT_URL } from '../constants/siteConfig';
 import { useClipboard } from '../hooks/useClipboard';
 
@@ -72,7 +74,7 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative overflow-hidden py-32 md:py-44 px-5 md:px-12 border-t border-white/[0.08]"
+      className="relative overflow-hidden py-32 md:py-44 px-5 md:px-12 section-hairline"
     >
       <div className="max-w-7xl mx-auto relative z-10">
         {/* 左對齊標頭（移除寬度限制以固定單排呈現） */}
@@ -82,26 +84,32 @@ export default function Contact() {
           </RevealHeading>
         </div>
 
-        {/* 瑞士雙欄 1px 分割厚玻璃互動艙（保留外層無 overflow-hidden 以完整呈現右上 3D 玻璃厚度斷面） */}
-        <div className="optical-surface grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.10]">
+        {/* 瑞士雙欄 1px 分割厚玻璃互動艙（支援雙色溫游標折射漫射，保留外層無 overflow-hidden 以完整呈現右上 3D 玻璃厚度斷面） */}
+        <RefractionCard className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.10]">
           {/* 左艙（7/12）：點擊複製信箱 */}
           <button
             type="button"
             onClick={handleCopyEmail}
             aria-label={`複製 Email 地址: ${email}`}
-            className="lg:col-span-7 w-full py-9 sm:py-11 md:py-12 px-6 sm:px-10 md:px-11 flex items-center text-left transition-colors duration-300 hover:bg-white/[0.025] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group relative"
+            className="lg:col-span-7 w-full py-9 sm:py-11 md:py-12 px-6 sm:px-10 md:px-11 flex items-center text-left transition-[background-color,transform] duration-200 hover:bg-white/[0.025] active:scale-[0.996] focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson cursor-pointer group relative"
           >
-            {copied && (
-              <span
-                role="status"
-                aria-live="polite"
-                className="absolute top-3.5 left-6 sm:left-10 md:left-11 inline-flex items-center gap-1.5 text-xs text-spectral-crimson"
-              >
-                <Check size={13} className="shrink-0" />
-                <span className="sr-only">COPIED TO CLIPBOARD</span>
-                <span>已複製 Email</span>
-              </span>
-            )}
+            <AnimatePresence>
+              {copied && (
+                <m.span
+                  role="status"
+                  aria-live="polite"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -3 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  className="absolute top-3.5 left-6 sm:left-10 md:left-11 inline-flex items-center gap-1.5 text-xs text-spectral-crimson"
+                >
+                  <Check size={13} className="shrink-0" />
+                  <span className="sr-only">COPIED TO CLIPBOARD</span>
+                  <span>已複製 Email</span>
+                </m.span>
+              )}
+            </AnimatePresence>
 
             <span className="w-full flex items-center justify-between gap-4">
               <span className="font-display text-lg sm:text-xl md:text-2xl font-bold tracking-[-0.02em] leading-none text-title-white group-hover:text-white transition-colors duration-300 truncate">
@@ -149,7 +157,7 @@ export default function Contact() {
               </span>
             </span>
           </button>
-        </div>
+        </RefractionCard>
       </div>
 
       {hasFeedbackMounted && (

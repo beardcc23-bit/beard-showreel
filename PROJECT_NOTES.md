@@ -288,6 +288,13 @@
     - 手機 `hero-screen` 升級為滿寬 `h-[calc(100dvh-4.75rem)]`，內層以 `9:10` 視窗搭配 `object-cover max-md:object-[48.95%_50%]` 精準對位 `Showreel` 全字不切邊區域與上下暗房柔邊遮罩；手機版往上滑推進至尾段與離場區（`87% → 126%`）停用 `scale(...)` 微縮，全程維持 `1:1` 滿寬原尺寸柔和淡出離場（全站 **28 個測試檔 / 83 項單元測試** 100% 通過）。
   - **YouTube 作品彈窗點擊即自動有聲播放修復（`Modal.jsx`、`App.jsx`、`Modal.test.jsx`）**：
     - 移除 `Modal.jsx` 內嵌 `<iframe>` 的 `sandbox` 封鎖旗標與載入期間 `opacity-0` 透明隱藏（將載入條改置底層 `z-0` 防瀏覽器透明媒體自動播放攔截），並改回標準高 MEI 信譽 `www.youtube.com/embed`；同時於 `App.jsx` 將 `Modal` 改為同步靜態匯入，確保點擊作品卡同幀掛載繼承使用者手勢權限。
+- **第九輪 14 項暗房光學視覺強化、零重繪動畫管線與背景靜止省電升級（同日午間第八波）**：
+  - **暗房調色室光學質感與微互動升級**：
+    - `Introduction.jsx` & `ExperienceTimeline.jsx` & `RefractionCard.jsx` & `ScrubText.jsx`：個人肖像補齊左緣 `1.5px` 光譜導光刃、內嵌微光玻璃刃口與 Hover `115°` 暗房玻璃反光掠過；數據牆、演職員表（`RefractionCard as="ol"`）與聯絡雙艙全面啟用「雙色溫游標折射漫射光暈」；`ScrubText` 升級為 `opacity: [0.38, 1]` 搭配純 GPU `y: [6, 0]` 微浮升；演職員表為現職列加入暖紅微光漸層底襯與 Hover 右推 `4px` 手感。
+    - `Manifesto.jsx` & `Navigation.jsx` & `Modal.jsx` & `index.css`：`Manifesto` 三層疊壓分鏡卡注入專屬色溫識別（`01 朱紅` ➔ `02 洋紅` ➔ `03 青藍`）；四大幕交界改用兩端羽化之 `.section-hairline` 避免硬邊灰線截斷左側 45° 背景流光；導覽列升級首屏輕透、下滑加深暗房磨砂玻璃並為桌機區塊底線導入 `layoutId` 光譜橫移滑軌；`Modal` 注入審片室雙色環境背光暈染與頂欄信號標記。
+  - **零 CPU Paint 管線、靜止 `12fps` 省電、部署瘦身與守門防線**：
+    - `index.css` & `layoutGuard.test.js`：移除全站玻璃斜切邊與 `.spectral-flow-line` 之 `background-position` 非合成屬性無限動畫，改用 `200%` 寬偽元素純 GPU `translate3d` 達成靜止態 **0% CPU Paint 重繪**，收斂散落光譜漸層至 `.spectral-bar-h/v` 並於 `layoutGuard.test.js` 新增 `@keyframes` 非合成屬性自動化攔截測試。
+    - `OpticalLightField.jsx`：滾動與游標收斂且無互動滿 `1.2s` 時自動降檔至 `12fps`（貼合底片顆粒原生幀率，省下 66% 背景 GPU 功耗，互動瞬間 `0ms` 瞬回 `36fps` / `24fps`）；`useOverlayLock.js` & `FeedbackModal.jsx` 支援開啟抽屜自動聚焦首欄輸入框，`Contact.jsx` 複製信箱加入浮升淡入微動效；清除已零引用之 `public/png-0-mobile/` 舊縮圖目錄（減重 `2.39 MB`）並收斂 `vercel.json`，全站擴充至 **28 個測試檔 / 84 項單元測試** 100% 通過（生產建置 `862ms`）。
 
 
 

@@ -14,7 +14,9 @@ const lawCategories = [
   {
     id: '01',
     subtitle: 'AI 智慧影像生成',
-    ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(235, 74, 46, 0.16) 0%, transparent 62%)',
+    ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(235, 74, 46, 0.17) 0%, transparent 62%)',
+    quoteBorderClass: 'border-spectral-crimson/70',
+    watermarkClass: 'text-spectral-crimson/[0.08]',
     stickyTop: 'top-[76px] md:top-24',
     quote: '「AI 負責拓寬創意的邊界，而我負責將其無縫封裝落地。」',
     desc: 'AI 生成看似帶來無限想像，實則伴隨著物理邏輯崩壞、畫面閃爍與無規律的細節錯誤。我專注於從這些隨機不可控的片段中，精準篩選並萃取可用元素，將零散的 AI 生成素材，無痕合成為符合大片質感的高階商業畫面。',
@@ -34,7 +36,9 @@ const lawCategories = [
   {
     id: '02',
     subtitle: '綠幕去背合成',
-    ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(208, 52, 108, 0.16) 0%, transparent 62%)',
+    ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(208, 52, 108, 0.17) 0%, transparent 62%)',
+    quoteBorderClass: 'border-[#D0346C]/70',
+    watermarkClass: 'text-[#D0346C]/[0.08]',
     stickyTop: 'top-[92px] md:top-32',
     quote: '「乾淨的去背不是把背景切掉，而是把環境光找回來。」',
     desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
@@ -54,7 +58,9 @@ const lawCategories = [
   {
     id: '03',
     subtitle: '人物美體膚質精修',
-    ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(18, 118, 184, 0.18) 0%, transparent 62%)',
+    ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(18, 118, 184, 0.19) 0%, transparent 62%)',
+    quoteBorderClass: 'border-[#1276B8]/75',
+    watermarkClass: 'text-[#1276B8]/[0.09]',
     stickyTop: 'top-[108px] md:top-40',
     quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
     desc: '極致的人像修飾，是讓主角展現無瑕面容與完美體態，卻不失真實溫度。我藉由精確的動態轉描與肌理微調，在避免塑膠感的同時，精修出最符合黃金比例的自然物理動態。',
@@ -192,7 +198,7 @@ export default function Manifesto({ onPlayVideo }) {
     <section
       ref={sectionRef}
       id="about"
-      className="w-full relative py-28 md:py-40 px-5 md:px-12 border-t border-white/[0.08]"
+      className="w-full relative py-28 md:py-40 px-5 md:px-12 section-hairline"
     >
       <div className="max-w-7xl mx-auto">
         {/* 左對齊編輯標頭 */}
@@ -259,7 +265,7 @@ export default function Manifesto({ onPlayVideo }) {
                   <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 left-0 right-0 h-[2px] spectral-flow-line" />
                     <div className="absolute inset-0" style={{ background: cat.ambientGlow }} />
-                    <span className="font-display text-7xl sm:text-8xl font-extrabold text-white/[0.04] absolute top-4 right-6 leading-none select-none">
+                    <span className={`font-display text-7xl sm:text-8xl font-extrabold ${cat.watermarkClass} absolute top-4 right-6 leading-none select-none`}>
                       {cat.id}
                     </span>
                   </div>
@@ -270,7 +276,7 @@ export default function Manifesto({ onPlayVideo }) {
                     </h3>
 
                     <blockquote
-                      className="text-zinc-100 font-normal text-base sm:text-lg leading-relaxed border-l-2 border-white/30 py-0.5 mb-5"
+                      className={`text-zinc-100 font-normal text-base sm:text-lg leading-relaxed border-l-2 ${cat.quoteBorderClass} py-0.5 mb-5`}
                       style={{ textIndent: '-1em', paddingLeft: 'calc(1rem + 1em)' }}
                     >
                       {cat.quote}

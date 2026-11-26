@@ -73,7 +73,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.96, y: 20, opacity: 0 }}
             transition={emilSpring.smooth}
-            className={`relative w-full bg-[#05070B] border border-white/20 shadow-[0_30px_100px_rgba(0,0,0,0.95)] z-10 flex flex-col max-h-[94dvh] overflow-y-auto overscroll-contain ${
+            className={`relative w-full bg-[#05070B] border border-white/[0.16] shadow-[0_32px_100px_rgba(0,0,0,0.96),-18px_-14px_64px_rgba(235,74,46,0.12),18px_18px_68px_rgba(18,118,184,0.14)] z-10 flex flex-col max-h-[94dvh] overflow-y-auto overscroll-contain ${
               currentType === 'video' && currentData.aspect === 'portrait'
                 ? 'max-w-[45dvh] md:max-w-[50dvh]'
                 : currentType === 'video' && currentData.aspect === 'square'
@@ -81,16 +81,16 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 : 'max-w-5xl'
             }`}
           >
-            {/* 頂緣光譜細線與獨立暗房頂部控制列（左側顯示當前播放作品標題，右側為獨立關閉鈕防誤觸） */}
+            {/* 頂緣光譜細線與獨立暗房審片室頂部控制列（左側顯示當前播放作品標題，右側為獨立關閉鈕防誤觸） */}
             <div
               aria-hidden="true"
-              className="h-[2px] w-full shrink-0"
-              style={{ background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 40%, #1276B8 100%)' }}
+              className="h-[2px] w-full shrink-0 spectral-bar-h"
             />
 
             <div className="flex items-center justify-between pl-4 pr-2.5 py-1.5 bg-[#05070B] border-b border-white/10 shrink-0 gap-3">
-              <span className="text-xs font-medium tracking-wider text-zinc-300 truncate">
-                {currentData.title || 'SHOWREEL'}
+              <span className="inline-flex items-center gap-2.5 min-w-0 text-xs font-medium tracking-wider text-zinc-200">
+                <span aria-hidden="true" className="w-1.5 h-1.5 bg-spectral-crimson shrink-0 shadow-[0_0_8px_rgba(235,74,46,0.8)]" />
+                <span className="truncate">{currentData.title || 'SHOWREEL'}</span>
               </span>
               <div className="flex items-center gap-1 shrink-0">
                 {safeExternalWatchUrl && (

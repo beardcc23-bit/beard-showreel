@@ -115,7 +115,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
     onCloseRef.current?.();
   }, [status]);
 
-  useOverlayLock(isOpen, handleSafeClose, { containerRef: dialogRef });
+  useOverlayLock(isOpen, handleSafeClose, {
+    containerRef: dialogRef,
+    initialFocusSelector: formData.name.trim() ? '#feedback-message' : '#feedback-name',
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -295,8 +298,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             {/* 左緣光譜漫射細線 */}
             <div
               aria-hidden="true"
-              className="absolute inset-y-0 left-0 w-[2px]"
-              style={{ background: 'linear-gradient(180deg, #FFFFFF 0%, #EB4A2E 42%, #D0346C 72%, #1276B8 100%)' }}
+              className="absolute inset-y-0 left-0 w-[2px] spectral-bar-v"
             />
 
             <div className="flex items-start justify-between border-b border-white/10 pb-6">

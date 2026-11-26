@@ -310,8 +310,7 @@ const BrandCard = React.memo(
           {isInteractive && (
             <div
               aria-hidden="true"
-              className="absolute bottom-0 left-0 right-0 h-[1.5px] z-20 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
-              style={{ background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 45%, #1276B8 100%)' }}
+              className="absolute bottom-0 left-0 right-0 h-[1.5px] z-20 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left spectral-bar-h"
             />
           )}
         </div>
@@ -528,7 +527,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
     <section
       ref={sectionRef}
       id="vfx"
-      className="w-full relative py-28 md:py-36 px-5 md:px-12 border-t border-white/[0.08]"
+      className="w-full relative py-28 md:py-36 px-5 md:px-12 section-hairline"
     >
       <div className="max-w-7xl mx-auto">
         {/* 左對齊編輯標頭 */}
@@ -594,8 +593,7 @@ export default function VisualSynthesis({ onPlayVideo }) {
                     />
                     <m.div
                       layoutId="activeTabGlow"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none"
-                      style={{ background: 'linear-gradient(90deg, #EB4A2E 0%, #D0346C 50%, #1276B8 100%)' }}
+                      className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none spectral-indicator-h"
                       transition={{ type: 'spring', stiffness: 420, damping: 32 }}
                     />
                   </>

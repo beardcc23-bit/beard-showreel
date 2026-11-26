@@ -15,7 +15,7 @@
       ]
     },
     {
-      "source": "/(vfx|png-0|png-0-mobile)/(.*)",
+      "source": "/(vfx|png-0)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

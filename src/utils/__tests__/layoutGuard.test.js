@@ -171,4 +171,21 @@ describe('全站響應式與定位排版防呆靜態守門 (Layout Guardrails)',
     expect(hasFixedVh).toBe(true);
     expect(hasFixedOptical).toBe(true);
   });
+
+  it('禁止 index.css 中的 @keyframes 操作非 GPU 合成屬性（如 background-position、top、left、width、height、filter）', () => {
+    const nonCompositedPropRe =
+      /(?:^|[;{\s])(background-position|background-size|top|left|right|bottom|width|height|margin|padding|filter|backdrop-filter|box-shadow)\s*:/i;
+    const keyframesRegex = /@keyframes\s+([\w-]+)\s*\{([\s\S]*?\}\s*)\}/g;
+    const violations = [];
+    let match = keyframesRegex.exec(indexCss);
+    while (match) {
+      const [, name, body] = match;
+      const propMatch = body.match(nonCompositedPropRe);
+      if (propMatch) {
+        violations.push(`@keyframes ${name} 使用了非合成屬性 "${propMatch[1]}"`);
+      }
+      match = keyframesRegex.exec(indexCss);
+    }
+    expect(violations).toEqual([]);
+  });
 });

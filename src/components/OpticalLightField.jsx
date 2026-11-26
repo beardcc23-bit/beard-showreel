@@ -323,6 +323,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let s3 = 0;
     let calmWeight = 1;
     const startTime = performance.now();
+    let lastInputTime = startTime;
     let isModalLocked = document.body.classList.contains('modal-open');
     let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
 
@@ -332,6 +333,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
 
     const handleScroll = () => {
       if (isModalLocked) return;
+      lastInputTime = performance.now();
       const sy = window.scrollY;
       velocity = Math.max(-2.5, Math.min(2.5, (sy - lastScrollY) * 0.02));
       lastScrollY = sy;
@@ -341,6 +343,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     // 1000Hz 高回報率滑鼠下僅記錄原始整數座標，延後至 36fps renderFrame 才執行單次正規化除法；彈窗鎖定期間直接略過
     const handlePointerMove = (e) => {
       if (isModalLocked) return;
+      lastInputTime = performance.now();
       rawClientX = e.clientX;
       rawClientY = e.clientY;
       hasPendingPointer = true;
@@ -355,8 +358,15 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
         return;
       }
 
-      // 手機鎖定 24fps、桌機鎖定 36fps（皆為 12fps 電影顆粒的整數倍，大幅降低筆電 120Hz GPU 耗電且零視覺差異）
-      const minFrameMs = isMobile ? 1000 / 24 : 1000 / 36;
+      // 滾動與游標皆收斂且無互動超過 1.2s 時，自動降檔至 12fps（貼合底片銀鹽顆粒原生幀率，省下 66% GPU 功耗）；一旦互動 0ms 瞬切回 36fps / 24fps
+      const isSettled =
+        !hasPendingPointer &&
+        Math.abs(targetScroll - currentScroll) < 0.0005 &&
+        Math.abs(targetPtrX - currentPtrX) < 0.001 &&
+        Math.abs(targetPtrY - currentPtrY) < 0.001 &&
+        now - lastInputTime > 1200;
+      const targetFps = isSettled ? 12 : isMobile ? 24 : 36;
+      const minFrameMs = 1000 / targetFps;
       if (lastRenderTime > 0 && now - lastRenderTime < minFrameMs) {
         rafId = requestAnimationFrame(renderFrame);
         return;

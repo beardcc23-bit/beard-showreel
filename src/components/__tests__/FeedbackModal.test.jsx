@@ -34,6 +34,10 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     const emailInput = screen.getByLabelText(/信箱 \/ LINE/i);
     const msgInput = screen.getByLabelText(/回饋內容/i);
 
+    await waitFor(() => {
+      expect(document.activeElement).toBe(nameInput);
+    });
+
     expect(emailInput).toHaveAttribute('spellcheck', 'false');
     expect(emailInput).toHaveAttribute('autocapitalize', 'none');
 

@@ -23,10 +23,12 @@ function isFocusableVisible(el, root) {
 export function useOverlayLock(
   isOpen,
   onClose,
-  { containerRef = null, restoreFocus = true } = {}
+  { containerRef = null, restoreFocus = true, initialFocusSelector = null } = {}
 ) {
   const onCloseRef = useRef(onClose);
+  const initialFocusSelectorRef = useRef(initialFocusSelector);
   onCloseRef.current = onClose;
+  initialFocusSelectorRef.current = initialFocusSelector;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -55,13 +57,19 @@ export function useOverlayLock(
     const closeHandler = () => onCloseRef.current?.();
     escapeStack.push(closeHandler);
 
-    // 將初始焦點移入彈窗內第一個可聚焦元素，避免鍵盤焦點留在背景層
+    // 將初始焦點優先移入指定的業務首欄（如表單輸入框），未指定時退回第一個可聚焦元素，避免鍵盤焦點留在背景層
     const focusFrameId = requestAnimationFrame(() => {
       const container = containerRef?.current;
       if (!container) return;
       if (container.contains(document.activeElement)) return;
-      const firstFocusable = container.querySelector(FOCUSABLE_SELECTOR);
-      firstFocusable?.focus?.({ preventScroll: true });
+      const preferred = initialFocusSelectorRef.current
+        ? container.querySelector(initialFocusSelectorRef.current)
+        : null;
+      const target =
+        preferred && isFocusableVisible(preferred, container)
+          ? preferred
+          : container.querySelector(FOCUSABLE_SELECTOR);
+      target?.focus?.({ preventScroll: true });
     });
 
     const handleKeyDown = (e) => {

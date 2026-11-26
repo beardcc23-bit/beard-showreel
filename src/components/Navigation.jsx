@@ -21,7 +21,9 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
   const activeSectionRef = useRef('');
+  const isScrolledRef = useRef(false);
   const [activePortfolioTab, setActivePortfolioTab] = useState(
     () =>
       (typeof document !== 'undefined' && document.documentElement.dataset.portfolioTab) ||
@@ -90,17 +92,24 @@ export default function Navigation() {
     updateScrollMetrics();
 
     const handleScroll = () => {
-      if (window.scrollY < cachedHeroClearThreshold && activeSectionRef.current !== '') {
+      const sy = window.scrollY;
+      const nextScrolled = sy > 40;
+      if (isScrolledRef.current !== nextScrolled) {
+        isScrolledRef.current = nextScrolled;
+        setIsScrolled(nextScrolled);
+      }
+      if (sy < cachedHeroClearThreshold && activeSectionRef.current !== '') {
         updateActiveSection('');
       }
       if (progressBarRef.current) {
-        const ratio = Math.max(0, Math.min(1, window.scrollY / cachedMaxScroll));
+        const ratio = Math.max(0, Math.min(1, sy / cachedMaxScroll));
         if (Math.abs(ratio - lastRatio) >= 0.0005) {
           lastRatio = ratio;
           progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
         }
       }
     };
+    handleScroll();
 
     const docResizeObserver =
       typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateScrollMetrics) : null;
@@ -192,17 +201,18 @@ export default function Navigation() {
     <>
       <nav
         style={{ right: 'var(--scrollbar-comp, 0px)' }}
-        className="optical-frosted-drawer fixed top-0 left-0 z-50 px-5 md:px-10 h-16 md:h-[72px] flex justify-between items-center border-b border-white/[0.12] bg-[#05080F]/45 backdrop-blur-xl backdrop-saturate-[180%] shadow-[inset_0_-1px_0_rgba(255,255,255,0.06)]"
+        className={`optical-frosted-drawer fixed top-0 left-0 z-50 px-5 md:px-10 h-16 md:h-[72px] flex justify-between items-center border-b backdrop-blur-xl backdrop-saturate-[180%] transition-[background-color,border-color,box-shadow] duration-500 ${
+          isScrolled
+            ? 'border-white/[0.13] bg-[#05080F]/72 shadow-[0_14px_36px_rgba(0,0,0,0.65),inset_0_-1px_0_rgba(255,255,255,0.06)]'
+            : 'border-white/[0.06] bg-[#03050A]/22 shadow-none'
+        }`}
       >
         {/* 頂部最上緣 1px 光譜滾動進度線 */}
         <div
           ref={progressBarRef}
           aria-hidden="true"
-          style={{
-            transform: 'scaleX(0)',
-            background: 'linear-gradient(90deg, #FFFFFF 0%, #EB4A2E 38%, #D0346C 68%, #1276B8 100%)',
-          }}
-          className="absolute top-0 left-0 right-0 h-[1.5px] origin-left pointer-events-none will-change-transform"
+          style={{ transform: 'scaleX(0)' }}
+          className="absolute top-0 left-0 right-0 h-[1.5px] origin-left pointer-events-none will-change-transform spectral-bar-h"
         />
 
         <div className="flex items-center gap-3 md:gap-5">
@@ -245,14 +255,18 @@ export default function Navigation() {
                   }`}
                 >
                   <span>{item.name}</span>
-                  <span
-                    className={`absolute bottom-1 left-4 right-4 h-[1.5px] transition-transform duration-300 origin-left ${
-                      isCurrent ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                    }`}
-                    style={{
-                      background: 'linear-gradient(90deg, #EB4A2E 0%, #1276B8 100%)',
-                    }}
-                  />
+                  {isCurrent ? (
+                    <m.span
+                      layoutId="desktopNavIndicator"
+                      className="absolute bottom-1 left-4 right-4 h-[1.5px] spectral-indicator-h pointer-events-none"
+                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                    />
+                  ) : (
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-1 left-4 right-4 h-[1.5px] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left spectral-indicator-h pointer-events-none opacity-75"
+                    />
+                  )}
                 </a>
               );
             })}

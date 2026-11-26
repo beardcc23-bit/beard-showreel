@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-export default function RefractionCard({ children, className = '', ...props }) {
+export default function RefractionCard({ as: Component = 'div', children, className = '', ...props }) {
   const cardRef = useRef(null);
   const rafRef = useRef(null);
   const rectRef = useRef(null);
@@ -56,7 +56,7 @@ export default function RefractionCard({ children, className = '', ...props }) {
   };
 
   return (
-    <div
+    <Component
       ref={cardRef}
       onPointerEnter={handlePointerEnter}
       onPointerMove={handlePointerMove}
@@ -65,6 +65,6 @@ export default function RefractionCard({ children, className = '', ...props }) {
       {...props}
     >
       {children}
-    </div>
+    </Component>
   );
 }

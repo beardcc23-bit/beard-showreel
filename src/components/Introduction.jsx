@@ -4,6 +4,7 @@ import { Play } from './common/Icons';
 import AnimatedCounter from './common/AnimatedCounter';
 import ScrubText from './common/ScrubText';
 import RevealHeading from './common/RevealHeading';
+import RefractionCard from './RefractionCard';
 import ExperienceTimeline from './ExperienceTimeline';
 import { achievementStats } from '../data/experience';
 import { MAIN_SHOWREEL_VIDEO_ID } from '../constants/siteConfig';
@@ -23,12 +24,12 @@ export default function Introduction({ onPlayVideo }) {
     <section
       ref={sectionRef}
       id="introduction"
-      className="relative pt-6 pb-24 md:py-36 px-5 md:px-12 md:border-t md:border-white/[0.08]"
+      className="relative pt-6 pb-24 md:py-36 px-5 md:px-12 md-section-hairline"
     >
       <div className="max-w-7xl mx-auto w-full">
         {/* 不對稱雙欄：左肖像 + 右大標與文案 */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 items-start">
-          {/* 左側：銳利直角雜誌肖像（左側帶 45° 光譜邊緣光條） */}
+          {/* 左側：銳利直角雜誌肖像（左側帶光譜導光細絲、內嵌玻璃刃口與懸停暗房反光掠過） */}
           <m.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -36,7 +37,7 @@ export default function Introduction({ onPlayVideo }) {
             transition={{ duration: 0.7 }}
             className="md:col-span-5 lg:col-span-4"
           >
-            <div className="group relative w-full max-w-[260px] sm:max-w-[320px] md:max-w-none mx-auto aspect-[3/4] overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.75)]">
+            <div className="group relative w-full max-w-[260px] sm:max-w-[320px] md:max-w-none mx-auto aspect-[3/4] overflow-hidden ring-1 ring-inset ring-white/[0.12] shadow-[0_28px_80px_rgba(0,0,0,0.82)]">
               <img
                 src={`${import.meta.env.BASE_URL}avatar.webp?v=2`}
                 alt="Beard Chou"
@@ -46,6 +47,16 @@ export default function Introduction({ onPlayVideo }) {
                 loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover contrast-[1.03] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+              {/* 左緣 1.5px 暗房光譜導光刃 */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-0 left-0 w-[1.5px] z-10 spectral-bar-v opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+              />
+              {/* 懸停 115° 暗房玻璃微光掠過（純 GPU transform 合成層） */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-y-12 -left-1/2 w-2/3 -skew-x-[22deg] bg-gradient-to-r from-transparent via-white/[0.09] to-transparent -translate-x-[160%] group-hover:translate-x-[280%] transition-transform duration-1000 ease-out z-10"
               />
             </div>
           </m.div>
@@ -79,38 +90,40 @@ export default function Introduction({ onPlayVideo }) {
           </div>
         </div>
 
-        {/* 純淨磨砂毛玻璃數據牆 */}
+        {/* 純淨磨砂毛玻璃數據牆（支援雙色溫游標折射漫射追蹤） */}
         <m.div
           ref={statsRef}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mt-20 md:mt-28 optical-surface grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/15"
+          className="mt-20 md:mt-28"
         >
-          {achievementStats.map((stat) => (
-            <div
-              key={stat.key}
-              className="p-7 sm:p-9 flex flex-col justify-between gap-3"
-            >
-              <div className="flex items-center">
-                <span className="text-xs text-zinc-400 font-medium tracking-[0.2em]">
-                  {stat.label}
-                </span>
-              </div>
-              <div className="mt-3 flex items-baseline gap-x-2.5 gap-y-1.5 flex-wrap">
-                <div className="inline-flex items-baseline font-display text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-[-0.035em] text-title-white tabular-nums leading-none">
-                  <AnimatedCounter value={stat.getValue()} trigger={statsInView} />
-                  <sup className="static self-start text-spectral-crimson text-2xl md:text-3xl lg:text-4xl font-extrabold leading-none ml-0.5 -mt-1">
-                    +
-                  </sup>
+          <RefractionCard className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/15">
+            {achievementStats.map((stat) => (
+              <div
+                key={stat.key}
+                className="p-7 sm:p-9 flex flex-col justify-between gap-3"
+              >
+                <div className="flex items-center">
+                  <span className="text-xs text-zinc-400 font-medium tracking-[0.2em]">
+                    {stat.label}
+                  </span>
                 </div>
-                <span className="font-display text-xs md:text-sm font-bold uppercase tracking-[0.14em] text-white leading-none">
-                  {stat.unit}
-                </span>
+                <div className="mt-3 flex items-baseline gap-x-2.5 gap-y-1.5 flex-wrap">
+                  <div className="inline-flex items-baseline font-display text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-[-0.035em] text-title-white tabular-nums leading-none">
+                    <AnimatedCounter value={stat.getValue()} trigger={statsInView} />
+                    <sup className="static self-start text-spectral-crimson text-2xl md:text-3xl lg:text-4xl font-extrabold leading-none ml-0.5 -mt-1">
+                      +
+                    </sup>
+                  </div>
+                  <span className="font-display text-xs md:text-sm font-bold uppercase tracking-[0.14em] text-white leading-none">
+                    {stat.unit}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </RefractionCard>
         </m.div>
 
         {/* 電影演職員表風格學經歷 */}
