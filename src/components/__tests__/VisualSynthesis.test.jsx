@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import React from 'react';
+import React, { act } from 'react';
 import VisualSynthesis from '../VisualSynthesis';
 import { categories } from '../../data/portfolio';
 
@@ -27,6 +27,9 @@ describe('VisualSynthesis Component', () => {
     expect(samsungTabLink.className).toContain('col-span-2');
     expect(samsungTabLink.className).toContain('lg:row-span-2');
     const samsungImg = samsungTabLink.querySelector('img');
+    const shutterViewport = samsungTabLink.querySelector('[data-testid="card-shutter-viewport"]');
+    expect(shutterViewport).toBeInTheDocument();
+    expect(shutterViewport.className).toContain('lg:absolute');
     expect(samsungImg.className).toContain('lg:absolute');
     expect(samsungImg.className).toContain('lg:inset-0');
     expect(samsungTabLink).toHaveAttribute('target', '_blank');
@@ -63,7 +66,8 @@ describe('VisualSynthesis Component', () => {
     window.removeEventListener('open-image-modal', imageModalListener);
   });
 
-  it('行動端底部應僅呈現極簡單一「下一分類名稱 + 箭頭」按鈕，點擊切換下一分類並捲回分類選單頂端（含末項循環）', () => {
+  it('行動端底部應呈現右側單一「下一分類」按鈕，點擊後以暗場瞬切（0ms 無倒拉回頂）並原地顯影下一分類（含末項循環）', () => {
+    vi.useFakeTimers();
     const originalScrollY = window.scrollY;
     const originalScrollTo = window.scrollTo;
     const scrollToSpy = vi.fn();
@@ -89,21 +93,39 @@ describe('VisualSynthesis Component', () => {
 
       const nextBtn = screen.getByTestId('mobile-next-category-btn');
       expect(nextBtn).toHaveClass('optical-surface');
+      expect(nextBtn).toHaveClass('col-start-2');
       expect(nextBtn.textContent).toBe('3C與家電');
 
-      // 1. 點擊「3C與家電」：自動切換至「3C與家電」、平滑捲回 tablist 位置 (2400 - 1200 - 88 = 1112)，按鈕更新為「交通工具」
+      // 1. 點擊「3C與家電」：僅將前景作品區透明淡出（不蓋全黑幕、完整保留背後光影），於 150ms 透明幀以 behavior: 'auto' 0ms 瞬切回頂並原地顯影
+      const tabpanel = screen.getByRole('tabpanel');
       fireEvent.click(nextBtn);
+      expect(screen.queryByTestId('vfx-dissolve-curtain')).toBeNull();
+      expect(tabpanel).toHaveAttribute('data-dissolving', 'true');
+      expect(tabpanel).toHaveClass('opacity-0');
+      act(() => {
+        vi.advanceTimersByTime(160);
+      });
       expect(screen.getByRole('tab', { name: '3C與家電' })).toHaveAttribute('aria-selected', 'true');
-      expect(scrollToSpy).toHaveBeenLastCalledWith({ top: 1112, behavior: 'smooth' });
+      expect(scrollToSpy).toHaveBeenLastCalledWith({ top: 1112, behavior: 'auto' });
       expect(nextBtn.textContent).toBe('交通工具');
 
-      // 2. 切到最後一類時，按鈕應循環顯示第一類「食品與飲料」
+      act(() => {
+        vi.advanceTimersByTime(50);
+      });
+      expect(tabpanel).toHaveAttribute('data-dissolving', 'false');
+      expect(tabpanel).toHaveClass('opacity-100');
+
+      // 2. 切到最後一類時，按鈕應循環顯示第一類「食品與飲料」並同樣支援暗場瞬切
       const lastCatName = categories[categories.length - 1].name;
       fireEvent.click(screen.getByRole('tab', { name: lastCatName }));
       expect(nextBtn.textContent).toBe('食品與飲料');
       fireEvent.click(nextBtn);
+      act(() => {
+        vi.advanceTimersByTime(220);
+      });
       expect(screen.getByRole('tab', { name: '食品與飲料' })).toHaveAttribute('aria-selected', 'true');
     } finally {
+      vi.useRealTimers();
       Object.defineProperty(window, 'scrollY', { configurable: true, value: originalScrollY });
       window.scrollTo = originalScrollTo;
     }
@@ -129,5 +151,13 @@ describe('VisualSynthesis Component', () => {
 
     fireEvent.keyDown(lastTab, { key: 'Home' });
     expect(foodTab).toHaveAttribute('aria-selected', 'true');
+
+    // 驗證從行動漢堡選單子面板派發 select-portfolio-category 時同步切換對應分類
+    fireEvent(
+      window,
+      new CustomEvent('select-portfolio-category', { detail: { categoryId: 'vehicle' } })
+    );
+    expect(screen.getByRole('tab', { name: '交通工具' })).toHaveAttribute('aria-selected', 'true');
+    expect(document.documentElement.dataset.portfolioTab).toBe('vehicle');
   });
 });

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronRight } from 'lucide-react';
 import { m, AnimatePresence } from 'framer-motion';
+import { categories } from '../data/portfolio';
 import { emilSpring, tapFeedback } from '../utils/motion';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 import { NAV_SCROLL_OFFSET, getHeroFinalFrameY } from '../constants/heroScroll';
@@ -10,17 +11,35 @@ const SECTION_IDS = ['introduction', 'about', 'vfx', 'contact'];
 const MENU_ITEMS = [
   { name: '個人介紹', href: '#introduction' },
   { name: '視覺思考', href: '#about' },
-  { name: '作品案例', href: '#vfx' },
+  { name: '作品案例', href: '#vfx', hasSubmenu: true },
 ];
+// 行動端母選單與右側作品子選單共用完全一致的字體、字級、字重與字距
+const MOBILE_MENU_TEXT_CLASS = 'text-[16px] min-[390px]:text-[18px] font-medium tracking-[0.06em]';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const [activePortfolioTab, setActivePortfolioTab] = useState(
+    () =>
+      (typeof document !== 'undefined' && document.documentElement.dataset.portfolioTab) ||
+      categories[0]?.id ||
+      'food'
+  );
   const drawerRef = useRef(null);
   const progressBarRef = useRef(null);
 
-  const toggleMenu = () => setIsOpen((prev) => !prev);
-  const closeMenu = useCallback(() => setIsOpen(false), []);
+  // 關閉選單時僅設 isOpen=false，讓母頁面與已展開的子頁面連體同步向左退場消失；待退場完成後於 onExitComplete 重置子面板狀態
+  const closeMenu = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  const toggleMenu = () => {
+    setIsOpen((prev) => {
+      if (!prev) setIsPortfolioOpen(false);
+      return !prev;
+    });
+  };
 
   // Scroll Spy + 頂部 1px 全站光譜滾動進度線（直寫 transform，零重排）
   useEffect(() => {
@@ -84,14 +103,26 @@ export default function Navigation() {
 
   useOverlayLock(isOpen, closeMenu, { containerRef: drawerRef });
 
+  // 同步追蹤 VisualSynthesis 目前所在的作品分類，以於子面板精準高亮當前分類
+  useEffect(() => {
+    const syncTab = (e) => {
+      const catId = e.detail?.categoryId;
+      if (catId) setActivePortfolioTab(catId);
+    };
+    window.addEventListener('portfolio-category-changed', syncTab);
+    return () => window.removeEventListener('portfolio-category-changed', syncTab);
+  }, []);
+
   useEffect(() => {
     if (!isOpen) return undefined;
+    const currentAttr = document.documentElement.dataset.portfolioTab;
+    if (currentAttr) setActivePortfolioTab(currentAttr);
     const handleResize = () => {
-      if (window.innerWidth >= 768) setIsOpen(false);
+      if (window.innerWidth >= 768) closeMenu();
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isOpen]);
+  }, [isOpen, closeMenu]);
 
   const handleScroll = (e, href) => {
     if (e) e.preventDefault();
@@ -100,14 +131,27 @@ export default function Navigation() {
     if (!element) return;
 
     setActiveSection(targetId);
-    setIsOpen(false);
+    closeMenu();
     smoothScrollTo(element, { offset: -NAV_SCROLL_OFFSET });
+  };
+
+  const handleSelectPortfolioCategory = (categoryId) => {
+    setActivePortfolioTab(categoryId);
+    window.dispatchEvent(
+      new CustomEvent('select-portfolio-category', { detail: { categoryId } })
+    );
+    setActiveSection('vfx');
+    closeMenu();
+    const targetEl = document.getElementById('vfx-tabs') || document.getElementById('vfx');
+    if (targetEl) {
+      smoothScrollTo(targetEl, { offset: -(NAV_SCROLL_OFFSET + 12) });
+    }
   };
 
   const scrollToHeroEnd = (e) => {
     if (e) e.preventDefault();
     setActiveSection('');
-    setIsOpen(false);
+    closeMenu();
     smoothScrollTo(getHeroFinalFrameY());
   };
 
@@ -190,71 +234,157 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* 行動裝置側邊選單：90 度銳利直角暗房面板 */}
-      <AnimatePresence>
+      {/* 行動裝置側邊選單：母子連體雙翼架構（關閉時母頁面與子頁面同步向左滑出消失） */}
+      <AnimatePresence onExitComplete={() => setIsPortfolioOpen(false)}>
         {isOpen && (
           <>
             <m.div
+              key="mobile-menu-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={toggleMenu}
+              transition={{ duration: 0.22 }}
+              onClick={closeMenu}
               className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[999] md:hidden"
             />
             <m.div
+              key="mobile-menu-stage"
               ref={drawerRef}
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
+              initial={{ x: '-100%', opacity: 1 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '-100%', opacity: 0 }}
               transition={emilSpring.gentle}
-              data-lenis-prevent
-              aria-label="行動版導覽選單"
-              className="fixed inset-y-0 left-0 w-[82%] max-w-[320px] overflow-y-auto overscroll-contain bg-[#060911]/72 backdrop-blur-2xl backdrop-saturate-[180%] z-[1000] md:hidden flex flex-col justify-between px-8 pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))] border-r border-white/15"
+              className="fixed inset-y-0 left-0 z-[1000] flex items-stretch pointer-events-none md:hidden"
             >
-              <div className="flex items-center justify-end border-b border-white/10 pb-5 shrink-0">
-                <button
-                  type="button"
-                  onClick={toggleMenu}
-                  className="text-title-white hover:text-spectral-crimson transition-colors min-w-[44px] min-h-[44px] -mr-2 flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
-                  aria-label="Close Menu"
-                >
-                  <X size={22} />
-                </button>
-              </div>
-
-              <div className="flex-1 flex flex-col justify-center gap-6 py-6">
-                {MENU_ITEMS.map((item, index) => {
-                  const isCurrent = activeSection === item.href.slice(1);
-                  return (
-                    <m.a
-                      key={item.href}
-                      href={item.href}
-                      aria-current={isCurrent ? 'location' : undefined}
-                      initial={{ opacity: 0, x: -16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
-                      onClick={(e) => handleScroll(e, item.href)}
-                      className={`text-lg font-medium tracking-tight transition-colors duration-200 flex flex-col px-6 py-1.5 border-l-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
-                        isCurrent
-                          ? 'text-white border-spectral-crimson'
-                          : 'text-zinc-300 hover:text-white border-white/10'
-                      }`}
-                    >
-                      {item.name}
-                    </m.a>
-                  );
-                })}
-              </div>
-
-              <a
-                href="#contact"
-                aria-current={activeSection === 'contact' ? 'location' : undefined}
-                onClick={(e) => handleScroll(e, '#contact')}
-                className="spectral-cta shrink-0 w-full px-6 py-4 flex items-center justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
+              {/* 左側母選單（z-20 在前） */}
+              <div
+                data-lenis-prevent
+                aria-label="行動版導覽選單"
+                className="relative z-20 pointer-events-auto w-[198px] min-[390px]:w-[216px] sm:w-[260px] h-full overflow-y-auto overscroll-contain bg-[#060911]/88 backdrop-blur-2xl backdrop-saturate-[180%] flex flex-col px-4 sm:px-6 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] border-r border-white/15"
               >
-                <span className="text-base font-semibold tracking-widest">建立聯繫</span>
-              </a>
+                <div className="h-14 flex items-center justify-end border-b border-white/10 shrink-0">
+                  <button
+                    type="button"
+                    onClick={closeMenu}
+                    className="text-title-white hover:text-spectral-crimson transition-colors min-w-[44px] min-h-[44px] -mr-2 flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson"
+                    aria-label="Close Menu"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                <div className="flex-1 flex flex-col justify-center gap-7 py-6 pl-2 min-[390px]:pl-3 sm:pl-5">
+                  {MENU_ITEMS.map((item, index) => {
+                    const sectionKey = item.href.slice(1);
+                    if (item.hasSubmenu) {
+                      const isHighlighted = isPortfolioOpen || activeSection === sectionKey;
+                      return (
+                        <m.button
+                          key={item.href}
+                          type="button"
+                          aria-expanded={isPortfolioOpen}
+                          aria-controls="mobile-portfolio-subpanel"
+                          initial={{ opacity: 0, x: -16 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
+                          onClick={() => setIsPortfolioOpen((prev) => !prev)}
+                          className={`w-full text-left ${MOBILE_MENU_TEXT_CLASS} transition-colors duration-200 flex items-center justify-between pl-5 sm:pl-6 pr-1 py-1.5 border-l-2 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+                            isHighlighted
+                              ? 'text-white border-spectral-crimson'
+                              : 'text-zinc-300 hover:text-white border-white/10'
+                          }`}
+                        >
+                          <span>{item.name}</span>
+                          <ChevronRight
+                            size={19}
+                            strokeWidth={2.25}
+                            data-testid="portfolio-submenu-arrow"
+                            className={`shrink-0 text-spectral-crimson transition-transform duration-200 ${
+                              isPortfolioOpen ? 'translate-x-1' : ''
+                            }`}
+                          />
+                        </m.button>
+                      );
+                    }
+
+                    // 當「作品案例」子選單展開時，其他項目的橘色線自動暗掉，維持單一互斥焦點
+                    const isHighlighted = !isPortfolioOpen && activeSection === sectionKey;
+                    return (
+                      <m.a
+                        key={item.href}
+                        href={item.href}
+                        aria-current={isHighlighted ? 'location' : undefined}
+                        initial={{ opacity: 0, x: -16 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ ...emilSpring.smooth, delay: 0.05 * index }}
+                        onClick={(e) => handleScroll(e, item.href)}
+                        className={`${MOBILE_MENU_TEXT_CLASS} transition-colors duration-200 flex flex-col pl-5 sm:pl-6 pr-1 py-1.5 border-l-2 focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+                          isHighlighted
+                            ? 'text-white border-spectral-crimson'
+                            : 'text-zinc-300 hover:text-white border-white/10'
+                        }`}
+                      >
+                        {item.name}
+                      </m.a>
+                    );
+                  })}
+
+                  <m.a
+                    href="#contact"
+                    aria-current={
+                      !isPortfolioOpen && activeSection === 'contact' ? 'location' : undefined
+                    }
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ ...emilSpring.smooth, delay: 0.15 }}
+                    onClick={(e) => handleScroll(e, '#contact')}
+                    className="spectral-cta w-fit px-5 sm:px-6 py-3.5 inline-flex items-center justify-center leading-none focus:outline-none focus-visible:ring-2 focus-visible:ring-spectral-crimson"
+                  >
+                    <span className={MOBILE_MENU_TEXT_CLASS}>建立聯繫</span>
+                  </m.a>
+                </div>
+              </div>
+
+              {/* 右側 6 大作品分類子面板（z-10 在母選單後方，由邊界向右滑出且上下精準對齊，關閉時隨父層一體退場） */}
+              <div className="relative z-10 h-full overflow-hidden pointer-events-none flex flex-col justify-center pt-[calc(0.75rem+3.5rem)] pb-[calc(1.75rem+env(safe-area-inset-bottom))]">
+                <div className="py-6 max-h-full flex items-center">
+                  <AnimatePresence>
+                    {isPortfolioOpen && (
+                      <m.div
+                        key="mobile-portfolio-subpanel"
+                        id="mobile-portfolio-subpanel"
+                        data-testid="mobile-portfolio-subpanel"
+                        data-lenis-prevent
+                        role="region"
+                        aria-label="作品案例分類子選單"
+                        initial={{ x: '-102%' }}
+                        animate={{ x: '0%' }}
+                        exit={{ x: '-102%' }}
+                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                        className="pointer-events-auto w-[min(170px,calc(100vw-204px))] min-[390px]:w-[min(186px,calc(100vw-222px))] sm:w-[216px] max-h-full overflow-y-auto overscroll-contain bg-[#060911]/90 backdrop-blur-2xl backdrop-saturate-[180%] border-y border-r border-white/[0.14] p-2.5 flex flex-col gap-2 shadow-[16px_24px_48px_rgba(0,0,0,0.85)]"
+                      >
+                        {categories.map((cat) => {
+                          const isCatActive = activePortfolioTab === cat.id;
+                          return (
+                            <button
+                              key={cat.id}
+                              type="button"
+                              onClick={() => handleSelectPortfolioCategory(cat.id)}
+                              className={`w-full px-3.5 sm:px-5 py-2.5 text-left ${MOBILE_MENU_TEXT_CLASS} whitespace-nowrap border transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson ${
+                                isCatActive
+                                  ? 'border-spectral-crimson/75 bg-spectral-crimson/[0.14] text-white'
+                                  : 'border-white/[0.12] bg-white/[0.02] text-zinc-200 hover:border-spectral-crimson/50 hover:bg-white/[0.06] hover:text-white active:bg-spectral-crimson/20'
+                              }`}
+                            >
+                              {cat.name}
+                            </button>
+                          );
+                        })}
+                      </m.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
             </m.div>
           </>
         )}

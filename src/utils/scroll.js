@@ -33,3 +33,31 @@ export function smoothScrollTo(
     behavior: prefersReduced ? 'auto' : 'smooth',
   });
 }
+
+/**
+ * 0ms 無感瞬切定位工具（用於電影級 Dip-to-Black 暗場換頁，消除長距離往回倒拉捲動的暈眩感）
+ */
+export function instantScrollTo(target, { offset = 0 } = {}) {
+  if (typeof window === 'undefined') return;
+
+  if (window.lenis) {
+    window.lenis.start();
+    const options = { immediate: true };
+    if (offset !== 0) options.offset = offset;
+    window.lenis.scrollTo(target, options);
+    return;
+  }
+
+  const rawTop =
+    typeof target === 'number'
+      ? target + offset
+      : target
+      ? target.getBoundingClientRect().top + window.scrollY + offset
+      : 0;
+  const top = Math.max(0, Math.round(rawTop));
+
+  window.scrollTo({
+    top,
+    behavior: 'auto',
+  });
+}

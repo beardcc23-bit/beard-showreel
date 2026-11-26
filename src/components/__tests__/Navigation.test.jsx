@@ -5,28 +5,98 @@ import Navigation from '../Navigation';
 import { HERO_FINAL_FRAME_PROGRESS } from '../../constants/heroScroll';
 
 describe('Navigation 元件行動端對齊與互動測試', () => {
-  it('開啟行動端選單後，選單文字與按鈕文字均具有 px-6 對齊樣式', () => {
-    render(<Navigation />);
+  it('開啟行動端窄版選單後，母子頁面字級應完全統一，展開作品案例時個人介紹橘線應自動暗掉，點擊子項目應連體同步關閉', async () => {
+    const introEl = document.createElement('section');
+    introEl.id = 'introduction';
+    document.body.appendChild(introEl);
 
-    // 點擊漢堡按鈕開啟行動端側邊選單
-    const toggleBtn = screen.getByLabelText('Toggle Navigation Menu');
-    fireEvent.click(toggleBtn);
+    const vfxTabs = document.createElement('div');
+    vfxTabs.id = 'vfx-tabs';
+    vfxTabs.getBoundingClientRect = () => ({
+      top: 1200,
+      height: 80,
+      bottom: 1280,
+      left: 0,
+      right: 390,
+      width: 390,
+    });
+    document.body.appendChild(vfxTabs);
 
-    // 驗證行動端選單項目的類別包含 px-6 (取行動版選單內的元素)
-    const profileLinks = screen.getAllByText('個人介紹');
-    const mobileProfileLink = profileLinks[profileLinks.length - 1].closest('a');
-    expect(mobileProfileLink).toHaveClass('px-6');
+    const originalIO = window.IntersectionObserver;
+    let observerCb = null;
+    class SpyIO {
+      constructor(cb) {
+        observerCb = cb;
+      }
+      observe() {}
+      disconnect() {}
+    }
+    window.IntersectionObserver = SpyIO;
+    global.IntersectionObserver = SpyIO;
 
-    // 驗證下方建立聯繫按鈕亦包含 px-6，文字起點一致，且抽屜使用 inset-y-0 避免手機 100vh 裁切底部按鈕
-    const contactBtns = screen.getAllByText('建立聯繫');
-    const mobileContactBtn = contactBtns[contactBtns.length - 1].closest('a');
-    expect(mobileContactBtn).toHaveClass('px-6');
-    expect(mobileContactBtn).toHaveAttribute('href', '#contact');
+    const selectCategorySpy = vi.fn();
+    window.addEventListener('select-portfolio-category', selectCategorySpy);
 
-    const drawer = screen.getByLabelText('行動版導覽選單');
-    expect(drawer).toHaveClass('inset-y-0');
-    expect(drawer).toHaveClass('overflow-y-auto');
-    expect(drawer).not.toHaveClass('h-screen');
+    try {
+      render(<Navigation />);
+
+      // 模擬目前滾動停留在「個人介紹」區塊
+      act(() => {
+        observerCb?.([{ target: introEl, isIntersecting: true }]);
+      });
+
+      // 點擊漢堡按鈕開啟行動端側邊選單
+      const toggleBtn = screen.getByLabelText('Toggle Navigation Menu');
+      fireEvent.click(toggleBtn);
+
+      const drawer = screen.getByLabelText('行動版導覽選單');
+      expect(drawer).toHaveClass('overflow-y-auto');
+      expect(drawer).not.toHaveClass('h-screen');
+
+      // 初始時「個人介紹」亮起橘色線（border-spectral-crimson）
+      const profileLinks = screen.getAllByText('個人介紹');
+      const mobileProfileLink = profileLinks[profileLinks.length - 1].closest('a');
+      expect(mobileProfileLink).toHaveClass('border-spectral-crimson', 'min-[390px]:text-[18px]');
+
+      const contactBtns = screen.getAllByText('建立聯繫');
+      const mobileContactSpan = contactBtns[contactBtns.length - 1];
+      const mobileContactBtn = mobileContactSpan.closest('a');
+      expect(mobileContactSpan).toHaveClass('min-[390px]:text-[18px]');
+      expect(mobileContactBtn).toHaveClass('py-3.5', 'w-fit');
+      expect(mobileContactBtn.parentElement).toBe(mobileProfileLink.parentElement);
+
+      // 驗證「作品案例」右側箭頭常駐為橘色
+      expect(screen.getByTestId('portfolio-submenu-arrow')).toHaveClass('text-spectral-crimson');
+
+      // 點擊「作品案例」展開右側 6 大分類子面板：此時「個人介紹」橘色線應立刻暗掉（border-white/10），僅「作品案例」亮橘色線
+      const portfolioBtns = screen.getAllByText('作品案例');
+      const mobilePortfolioBtn = portfolioBtns[portfolioBtns.length - 1].closest('button');
+      fireEvent.click(mobilePortfolioBtn);
+      expect(mobilePortfolioBtn).toHaveClass('border-spectral-crimson');
+      expect(mobileProfileLink).toHaveClass('border-white/10');
+      expect(mobileProfileLink).not.toHaveClass('border-spectral-crimson');
+
+      const subpanel = screen.getByTestId('mobile-portfolio-subpanel');
+      expect(subpanel).toBeInTheDocument();
+      // 驗證子面板與母面板處於同一個連體滑動舞台內（關閉時一體同步退場）
+      expect(drawer.parentElement).toContainElement(subpanel);
+
+      const categoryButtons = subpanel.querySelectorAll('button');
+      expect(categoryButtons).toHaveLength(6);
+      // 驗證子頁面按鈕字級與母頁面完全一致
+      expect(categoryButtons[0]).toHaveClass('min-[390px]:text-[18px]', 'font-medium', 'tracking-[0.06em]');
+
+      // 點擊子面板中的「交通工具」，應派發分類切換事件並讓母子舞台一起關閉消失
+      fireEvent.click(screen.getByRole('button', { name: '交通工具' }));
+      expect(selectCategorySpy).toHaveBeenCalledTimes(1);
+      expect(selectCategorySpy.mock.calls[0][0].detail).toEqual({ categoryId: 'vehicle' });
+    } finally {
+      window.removeEventListener('select-portfolio-category', selectCategorySpy);
+      window.IntersectionObserver = originalIO;
+      global.IntersectionObserver = originalIO;
+      introEl.remove();
+      vfxTabs.remove();
+    }
   });
 
   it('Scroll Spy 應在區塊進入視窗時標記 aria-current="location"，滑回頂部時清除', () => {
