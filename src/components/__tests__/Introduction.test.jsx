@@ -23,7 +23,7 @@ describe('Introduction 元件 TDD 單元測試', () => {
     const showreelBtn = screen.getByRole('button', { name: /SHOWREEL/i });
     fireEvent.click(showreelBtn);
 
-    // 驗證是否傳遞預設的 YouTube ID 's6s2p87fPdA'
-    expect(handlePlayVideo).toHaveBeenCalledWith('s6s2p87fPdA');
+    // 驗證是否傳遞預設的 YouTube ID 'n4qMRlAlqjg'
+    expect(handlePlayVideo).toHaveBeenCalledWith('n4qMRlAlqjg');
   });
 });

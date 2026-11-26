@@ -297,6 +297,8 @@
     - `OpticalLightField.jsx`：滾動與游標收斂且無互動滿 `1.2s` 時自動降檔至 `12fps`（貼合底片顆粒原生幀率，省下 66% 背景 GPU 功耗，互動瞬間 `0ms` 瞬回 `36fps` / `24fps`）；`useOverlayLock.js` & `FeedbackModal.jsx` 支援開啟抽屜自動聚焦首欄輸入框，`Contact.jsx` 複製信箱加入浮升淡入微動效；清除已零引用之 `public/png-0-mobile/` 舊縮圖目錄（減重 `2.39 MB`）並收斂 `vercel.json`，全站擴充至 **28 個測試檔 / 84 項單元測試** 100% 通過（生產建置 `862ms`）。
   - **首頁桌機與手機閒置 `1.5 秒` 自動往下推進演繹（`heroScroll.js`、`CanvasSequence.jsx`、`useIdleHeroAutoScroll.js`）**：
     - 將 `HERO_IDLE_AUTO_SCROLL_MS` 由 `3.5s` 調快至 `1.5s`，並同步開放手機純觸控端支援——首次進站載完首幀後無操作滿 `1.5 秒` 即自動溫柔推進完整序列並帶入「個人介紹」，任一觸碰或滾輪操作 `0ms` 瞬停交還控制權。
+  - **主 Showreel 影片升級為 2026 最新版（`siteConfig.js`、`index.html`、`Introduction.test.jsx`、`sitemap.xml`）**：
+    - 將 `MAIN_SHOWREEL_VIDEO_ID` 與 JSON-LD `VideoObject` 嵌入網址同步更新為 `n4qMRlAlqjg`（`https://youtu.be/n4qMRlAlqjg`），更新結構化資料上傳日期與 Sitemap 日期至 `2026-11-26`。
 
 
 
