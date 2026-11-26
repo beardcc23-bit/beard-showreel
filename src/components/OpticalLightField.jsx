@@ -315,6 +315,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let s2 = 0;
     let s3 = 0;
     const startTime = performance.now();
+    let isModalLocked = document.body.classList.contains('modal-open');
     let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
 
     const updateMaxScroll = () => {
@@ -322,14 +323,16 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     };
 
     const handleScroll = () => {
+      if (isModalLocked) return;
       const sy = window.scrollY;
       velocity = Math.max(-2.5, Math.min(2.5, (sy - lastScrollY) * 0.02));
       lastScrollY = sy;
       targetScroll = Math.max(0, Math.min(1, sy / cachedMaxScroll));
     };
 
-    // 1000Hz 高回報率滑鼠下僅記錄原始整數座標，延後至 36fps renderFrame 才執行單次正規化除法
+    // 1000Hz 高回報率滑鼠下僅記錄原始整數座標，延後至 36fps renderFrame 才執行單次正規化除法；彈窗鎖定期間直接略過
     const handlePointerMove = (e) => {
+      if (isModalLocked) return;
       rawClientX = e.clientX;
       rawClientY = e.clientY;
       hasPendingPointer = true;
@@ -428,7 +431,8 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     };
 
     const bodyObserver = new MutationObserver(() => {
-      if (!document.body.classList.contains('modal-open')) {
+      isModalLocked = document.body.classList.contains('modal-open');
+      if (!isModalLocked) {
         startLoop();
       }
     });

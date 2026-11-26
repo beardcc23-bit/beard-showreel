@@ -145,6 +145,9 @@ const CAPTION_VARIANTS = {
         delay: delay + duration * 0.28,
         ease: SHUTTER_EASE,
       },
+      transitionEnd: {
+        transform: 'none',
+      },
     };
   },
 };
@@ -178,6 +181,17 @@ const BrandCard = React.memo(
     );
     const [hasImageError, setHasImageError] = useState(false);
     const [shutterSettled, setShutterSettled] = useState(prefersReduced);
+
+    // 修復 Safari / WebKit 記憶體快取同步命中時 img.complete 已為 true 卻不補發 onLoad 的邊界問題
+    const handleImgRef = React.useCallback(
+      (imgEl) => {
+        if (imgEl && imgEl.complete && imgEl.naturalWidth > 0 && bgImageUrl) {
+          loadedImageCache.add(bgImageUrl);
+          setIsImageLoaded(true);
+        }
+      },
+      [bgImageUrl]
+    );
 
     const handleClick = () => {
       if (isInlineVideo) {
@@ -249,11 +263,12 @@ const BrandCard = React.memo(
               variants={prefersReduced ? undefined : SHUTTER_MEDIA_VARIANTS}
               onAnimationComplete={() => setShutterSettled(true)}
               className={`w-full h-full ${
-                shutterSettled ? '' : 'will-change-[clip-path,transform,opacity]'
+                prefersReduced || shutterSettled ? '' : 'will-change-[clip-path,transform,opacity]'
               } ${isFeatured ? 'lg:absolute lg:inset-0' : ''}`}
             >
               {!isImageLoaded && <div className="absolute inset-0 bg-zinc-950 animate-pulse" />}
               <img
+                ref={handleImgRef}
                 src={bgImageUrl}
                 alt={item.name}
                 width={isFeatured ? 1200 : 600}

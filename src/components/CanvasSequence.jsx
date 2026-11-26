@@ -312,16 +312,19 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     const commitDecodedImage = (slot, img) => {
       if (isCancelled) return;
       framesRef.current[slot] = img;
+      const currentRatio = clamp01(currentProgressRef.current / HERO_EXIT_END_PROGRESS);
+      const desiredSlot = Math.round(currentRatio * Math.max(0, sampled.length - 1));
       if (slot === 0) {
-        drawSlot(0);
+        const nearest = findNearestLoadedSlot(framesRef.current, desiredSlot);
+        drawSlot(nearest !== -1 ? nearest : 0);
         unlock();
-      } else {
-        // 若訪客正好停在剛載完的這格附近，立刻補上精細影格
-        const currentScrub = clamp01(currentProgressRef.current / HERO_SCRUB_END_PROGRESS);
-        const desiredSlot = Math.round(currentScrub * Math.max(0, sampled.length - 1));
-        if (slot === desiredSlot) {
-          drawSlot(slot);
-        }
+      } else if (
+        slot === desiredSlot ||
+        (drawnSlotRef.current !== -1 &&
+          Math.abs(slot - desiredSlot) < Math.abs(drawnSlotRef.current - desiredSlot))
+      ) {
+        // 若訪客正停在此格（或視窗縮放重載時有更貼近當前捲動位置的骨架幀就緒），立即補繪消除閃跳
+        drawSlot(slot);
       }
     };
 
@@ -397,14 +400,14 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     const computeScrollProgress = () => {
       const container = containerRef?.current;
       if (!container) return 0;
-      if (hasDomElement && window.scrollY > 0) {
+      if (hasDomElement) {
         return Math.max(
           0,
           Math.min(HERO_EXIT_END_PROGRESS, (window.scrollY - cachedHeroTop) / cachedScrollable)
         );
       }
       const rect = container.getBoundingClientRect();
-      const denom = hasDomElement ? cachedScrollable : Math.max(1, getHeroStickyScrollable(container, rect));
+      const denom = Math.max(1, getHeroStickyScrollable(container, rect));
       return Math.max(0, Math.min(HERO_EXIT_END_PROGRESS, -rect.top / denom));
     };
 

@@ -4,7 +4,7 @@ import { m, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 import { emilSpring } from '../utils/motion';
-import { isSafeLocalImageUrl } from '../utils/url';
+import { isSafeLocalImageUrl, getSafeFacebookVideoUrl } from '../utils/url';
 
 export default function Modal({ isOpen, onClose, type, data }) {
   const [iframeLoading, setIframeLoading] = React.useState(true);
@@ -19,7 +19,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
   const currentData = data || activeDataRef.current;
   const currentType = type || activeTypeRef.current;
   const safeVideoId = currentData?.videoId && /^[\w-]+$/.test(String(currentData.videoId)) ? currentData.videoId : '';
-  const safeVideoUrl = currentData?.videoUrl && /^https:\/\/((www\.|web\.)?facebook\.com|fb\.watch)\//i.test(String(currentData.videoUrl)) ? currentData.videoUrl : '';
+  const safeVideoUrl = getSafeFacebookVideoUrl(currentData?.videoUrl);
   const safeImageUrl = isSafeLocalImageUrl(currentData?.imageUrl) ? currentData.imageUrl : '';
   const hasValidVideoSource = currentType === 'video' && (currentData?.isFacebook ? Boolean(safeVideoUrl || safeVideoId) : Boolean(safeVideoId));
 

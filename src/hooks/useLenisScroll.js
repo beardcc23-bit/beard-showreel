@@ -95,7 +95,9 @@ export function useLenisScroll() {
         document.body.classList.add('is-scrolling');
         scrollEndTimer = setTimeout(checkScrollEnd, SCROLL_IDLE_MS);
       }
-      startRaf();
+      if (rafId === null) {
+        startRaf();
+      }
     };
 
     const handleKeyWake = (e) => {

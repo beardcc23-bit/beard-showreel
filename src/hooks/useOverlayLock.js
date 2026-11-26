@@ -6,6 +6,17 @@ const escapeStack = [];
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+function isFocusableVisible(el, root) {
+  let cur = el;
+  while (cur && cur !== root) {
+    if (cur.hidden || cur.getAttribute('aria-hidden') === 'true') return false;
+    const style = window.getComputedStyle(cur);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    cur = cur.parentElement;
+  }
+  return true;
+}
+
 /**
  * 統一管理彈窗與側邊選單的背景滾動鎖定、捲軸補償（含 fixed 導覽列）、Lenis 暫停、Escape 堆疊關閉與無障礙焦點陷阱
  */
@@ -68,11 +79,7 @@ export function useOverlayLock(
         if (escapeStack[escapeStack.length - 1] !== closeHandler) return;
         const focusables = Array.from(
           containerRef.current.querySelectorAll(FOCUSABLE_SELECTOR)
-        ).filter((el) => {
-          if (el.closest('[aria-hidden="true"]')) return false;
-          const style = window.getComputedStyle(el);
-          return style.display !== 'none' && style.visibility !== 'hidden';
-        });
+        ).filter((el) => isFocusableVisible(el, containerRef.current));
 
         if (focusables.length === 0) return;
 

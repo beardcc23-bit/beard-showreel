@@ -117,10 +117,38 @@ describe('Navigation 元件行動端對齊與互動測試', () => {
     aboutEl.id = 'about';
     document.body.appendChild(aboutEl);
 
+    const heroEl = document.createElement('section');
+    heroEl.id = 'hero';
+    heroEl.getBoundingClientRect = () => ({
+      top: 0,
+      height: 2520,
+      bottom: 2520,
+      left: 0,
+      right: 1440,
+      width: 1440,
+    });
+    document.body.appendChild(heroEl);
+
+    const introEl = document.createElement('section');
+    introEl.id = 'introduction';
+    document.body.appendChild(introEl);
+
+    const originalInnerHeight = window.innerHeight;
+    Object.defineProperty(window, 'innerHeight', { value: 900, configurable: true });
+
     try {
       render(<Navigation />);
+      const introLink = screen.getByText('個人介紹').closest('a');
       const aboutLink = screen.getByText('視覺思考').closest('a');
       expect(aboutLink).not.toHaveAttribute('aria-current');
+
+      // 模擬往下滑至 IO 觸發點（scrollY = 2520 - 900 * 0.65 = 1935），scroll 事件不得將剛點亮的「個人介紹」洗掉
+      Object.defineProperty(window, 'scrollY', { value: 1940, configurable: true });
+      act(() => {
+        observerCb([{ target: introEl, isIntersecting: true }]);
+        window.dispatchEvent(new Event('scroll'));
+      });
+      expect(introLink).toHaveAttribute('aria-current', 'location');
 
       act(() => {
         observerCb([{ target: aboutEl, isIntersecting: true }]);
@@ -133,7 +161,10 @@ describe('Navigation 元件行動端對齊與互動測試', () => {
       });
       expect(aboutLink).not.toHaveAttribute('aria-current');
     } finally {
+      heroEl.remove();
+      introEl.remove();
       aboutEl.remove();
+      Object.defineProperty(window, 'innerHeight', { value: originalInnerHeight, configurable: true });
       window.IntersectionObserver = originalIO;
       global.IntersectionObserver = originalIO;
     }

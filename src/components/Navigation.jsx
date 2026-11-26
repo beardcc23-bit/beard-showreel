@@ -21,6 +21,7 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+  const activeSectionRef = useRef('');
   const [activePortfolioTab, setActivePortfolioTab] = useState(
     () =>
       (typeof document !== 'undefined' && document.documentElement.dataset.portfolioTab) ||
@@ -31,6 +32,12 @@ export default function Navigation() {
   const progressBarRef = useRef(null);
   const portfolioBtnRef = useRef(null);
   const subpanelRef = useRef(null);
+
+  const updateActiveSection = useCallback((nextSection) => {
+    if (activeSectionRef.current === nextSection) return;
+    activeSectionRef.current = nextSection;
+    setActiveSection(nextSection);
+  }, []);
 
   // 關閉選單時僅設 isOpen=false，讓母頁面與已展開的子頁面連體同步向左退場消失；待退場完成後於 onExitComplete 重置子面板狀態
   const closeMenu = useCallback(() => {
@@ -59,7 +66,7 @@ export default function Navigation() {
               }
             }
             if (latestId !== null) {
-              setActiveSection(latestId);
+              updateActiveSection(latestId);
             }
           },
           { rootMargin: '-35% 0px -55% 0px' }
@@ -75,15 +82,16 @@ export default function Navigation() {
     const updateScrollMetrics = () => {
       cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const heroEl = document.getElementById('hero');
+      // 門檻嚴格低於 IntersectionObserver 的 0.65 觸發線（取 0.72），防止滑入「個人介紹」時把剛點亮的狀態洗掉
       cachedHeroClearThreshold = heroEl
-        ? Math.max(160, heroEl.getBoundingClientRect().height - window.innerHeight * 0.5)
+        ? Math.max(160, heroEl.getBoundingClientRect().height - window.innerHeight * 0.72)
         : 160;
     };
     updateScrollMetrics();
 
     const handleScroll = () => {
-      if (window.scrollY < cachedHeroClearThreshold) {
-        setActiveSection((prev) => (prev ? '' : prev));
+      if (window.scrollY < cachedHeroClearThreshold && activeSectionRef.current !== '') {
+        updateActiveSection('');
       }
       if (progressBarRef.current) {
         const ratio = Math.max(0, Math.min(1, window.scrollY / cachedMaxScroll));
@@ -105,7 +113,7 @@ export default function Navigation() {
     let hashRafId = null;
     const rawHash = window.location.hash ? window.location.hash.slice(1) : '';
     if (rawHash && SECTION_IDS.includes(rawHash)) {
-      setActiveSection(rawHash);
+      updateActiveSection(rawHash);
       hashRafId = requestAnimationFrame(() => {
         const hashTarget = document.getElementById(rawHash);
         if (hashTarget) {
@@ -121,7 +129,7 @@ export default function Navigation() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', updateScrollMetrics);
     };
-  }, []);
+  }, [updateActiveSection]);
 
   useOverlayLock(isOpen, closeMenu, { containerRef: drawerRef });
 
@@ -140,7 +148,10 @@ export default function Navigation() {
     const currentAttr = document.documentElement.dataset.portfolioTab;
     if (currentAttr) setActivePortfolioTab(currentAttr);
     const handleResize = () => {
-      if (window.innerWidth >= 768) closeMenu();
+      if (window.innerWidth >= 768) {
+        setIsPortfolioOpen(false);
+        closeMenu();
+      }
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -152,7 +163,7 @@ export default function Navigation() {
     const element = document.getElementById(targetId);
     if (!element) return;
 
-    setActiveSection(targetId);
+    updateActiveSection(targetId);
     closeMenu();
     smoothScrollTo(element, { offset: -NAV_SCROLL_OFFSET });
   };
@@ -162,7 +173,7 @@ export default function Navigation() {
     window.dispatchEvent(
       new CustomEvent(APP_EVENTS.SELECT_PORTFOLIO_CATEGORY, { detail: { categoryId } })
     );
-    setActiveSection('vfx');
+    updateActiveSection('vfx');
     closeMenu();
     const targetEl = document.getElementById('vfx-tabs') || document.getElementById('vfx');
     if (targetEl) {
@@ -172,7 +183,7 @@ export default function Navigation() {
 
   const scrollToHeroEnd = (e) => {
     if (e) e.preventDefault();
-    setActiveSection('');
+    updateActiveSection('');
     closeMenu();
     smoothScrollTo(getHeroFinalFrameY());
   };

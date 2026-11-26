@@ -40,7 +40,7 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     fireEvent.change(nameInput, { target: { name: 'name', value: '＝SUM(A1:A5)' } });
     fireEvent.change(emailInput, { target: { name: 'email', value: '+886912345678' } });
     fireEvent.change(msgInput, {
-      target: { name: 'message', value: '=IMPORTXML("https://x")\n@HYPERLINK("https://y")' },
+      target: { name: 'message', value: '\u0000=IMPORTXML("https://x")\n@HYPERLINK("https://y")' },
     });
 
     // 草稿應即時寫入 sessionStorage
@@ -150,5 +150,41 @@ describe('FeedbackModal 右側滑出式回饋抽屜與資安防護測試', () =>
     fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
     expect(screen.getByRole('alert')).toHaveTextContent(/送出過於頻繁/);
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('恢復 sessionStorage 既有草稿後立即點擊送出（<600ms）不應被誤判為機器人吃單，且應攔截非 GAS 網域 scriptUrl', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({ ok: true });
+
+    // 1. 先驗證傳入非白名單後端網址會被拒絕且不洩漏表單資料
+    sessionStorage.setItem(
+      'fb_draft_v1',
+      JSON.stringify({ name: '陳監製', email: 'producer@studio.tw', message: '草稿自動恢復測試' })
+    );
+
+    const { rerender } = render(
+      <FeedbackModal
+        isOpen={true}
+        onClose={vi.fn()}
+        scriptUrl="https://evil.example.com/collect"
+      />
+    );
+
+    // 尚未經過 600ms 且無打字事件（Date.now 未推進），直接點送出
+    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    expect(screen.getByRole('alert')).toHaveTextContent(/未設定有效之後端 API 網址/);
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    // 2. 改為合法 Google Apps Script 端點後再次於 <600ms 內直接送出既有草稿，應真實發送 POST
+    rerender(
+      <FeedbackModal
+        isOpen={true}
+        onClose={vi.fn()}
+        scriptUrl="https://script.google.com/macros/s/valid_id/exec"
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: /送出回饋/i }));
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
   });
 });

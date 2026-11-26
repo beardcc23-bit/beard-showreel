@@ -247,7 +247,7 @@ export default function Manifesto({ onPlayVideo }) {
                 style={{ zIndex: 11 + idx }}
                 className={`sticky ${cat.stickyTop}`}
               >
-                <RefractionCard className="w-full p-7 sm:p-10 !bg-[#060911]/[0.92]">
+                <RefractionCard className="w-full p-7 sm:p-10 !bg-[#060911]/[0.92] !backdrop-blur-md">
                   {/* 內層裁切裝飾容器（保留外層 3D 立體玻璃厚邊不被 overflow-hidden 裁掉） */}
                   <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div className="absolute top-0 left-0 right-0 h-[2px] spectral-flow-line" />

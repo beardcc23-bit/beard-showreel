@@ -10,6 +10,9 @@ function OverlayFixture({ isOpen, onClose }) {
   return (
     <div ref={ref}>
       <button type="button" data-testid="first-btn">First</button>
+      <div style={{ display: 'none' }}>
+        <button type="button" data-testid="hidden-parent-btn">HiddenChild</button>
+      </div>
       <button type="button" data-testid="last-btn">Last</button>
     </div>
   );

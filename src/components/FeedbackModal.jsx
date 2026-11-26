@@ -5,10 +5,27 @@ import { X, Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useOverlayLock } from '../hooks/useOverlayLock';
 
 const FORMULA_PREFIX_RE = /^[=+@\-\t\r|＝＋－＠｜]/;
+const CONTROL_CHARS_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u200B-\u200D\uFEFF]/g;
+
+const isValidGasUrl = (url) => {
+  if (!url || typeof url !== 'string') return false;
+  try {
+    const parsed = new URL(url);
+    return (
+      parsed.protocol === 'https:' &&
+      !parsed.username &&
+      !parsed.password &&
+      parsed.hostname.toLowerCase() === 'script.google.com' &&
+      parsed.pathname.startsWith('/macros/s/')
+    );
+  } catch {
+    return false;
+  }
+};
 
 const sanitizeSheetInput = (str) => {
   if (!str) return '';
-  const cleaned = str.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+  const cleaned = str.replace(CONTROL_CHARS_RE, '').trim();
   const safeLines = cleaned.replace(/([\r\n]+)\s*([=+@\-\t\r|＝＋－＠｜])/g, "$1'$2");
   if (FORMULA_PREFIX_RE.test(safeLines)) {
     return `'${safeLines}`;
@@ -78,6 +95,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const closeTimerRef = useRef(null);
   const isSubmittingRef = useRef(false);
   const hasUserInteractedRef = useRef(false);
+  const hadRestoredDraftRef = useRef(false);
   const abortControllerRef = useRef(null);
   const dialogRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -97,8 +115,11 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   useEffect(() => {
     if (isOpen) {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      const restored = readDraft();
+      setFormData(restored);
       isSubmittingRef.current = false;
       hasUserInteractedRef.current = false;
+      hadRestoredDraftRef.current = Boolean(restored.name.trim() || restored.message.trim());
       setOpenTime(Date.now());
       setHoneypot('');
       setStatus('idle');
@@ -150,7 +171,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
-    if (honeypot || (now - openTime < 600 && !hasUserInteractedRef.current)) {
+    if (
+      honeypot ||
+      (now - openTime < 600 && !hasUserInteractedRef.current && !hadRestoredDraftRef.current)
+    ) {
       setStatus('success');
       const cleared = { name: '', email: '', message: '' };
       setFormData(cleared);
@@ -162,9 +186,9 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
       return;
     }
 
-    if (!scriptUrl) {
+    if (!isValidGasUrl(scriptUrl)) {
       setStatus('error');
-      setErrorMessage('未設定後端 API 網址');
+      setErrorMessage('未設定有效之後端 API 網址');
       return;
     }
 
