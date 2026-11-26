@@ -297,6 +297,11 @@
     - `OpticalLightField.jsx`：滾動與游標收斂且無互動滿 `1.2s` 時自動降檔至 `12fps`（貼合底片顆粒原生幀率，省下 66% 背景 GPU 功耗，互動瞬間 `0ms` 瞬回 `36fps` / `24fps`）；`useOverlayLock.js` & `FeedbackModal.jsx` 支援開啟抽屜自動聚焦首欄輸入框，`Contact.jsx` 複製信箱加入浮升淡入微動效；清除已零引用之 `public/png-0-mobile/` 舊縮圖目錄（減重 `2.39 MB`）並收斂 `vercel.json`，全站擴充至 **28 個測試檔 / 84 項單元測試** 100% 通過（生產建置 `862ms`）。
   - **首頁桌機與手機閒置 `1.5 秒` 自動往下推進演繹（`heroScroll.js`、`CanvasSequence.jsx`、`useIdleHeroAutoScroll.js`）**：
     - 將 `HERO_IDLE_AUTO_SCROLL_MS` 由 `3.5s` 調快至 `1.5s`，並同步開放手機純觸控端支援——首次進站載完首幀後無操作滿 `1.5 秒` 即自動溫柔推進完整序列並帶入「個人介紹」，任一觸碰或滾輪操作 `0ms` 瞬停交還控制權。
+- **第十輪 30 項深水區優化：WebGL 閒置 `0%` 休眠、跨斷點影格共享、原生抽屜滑動手勢與雙向資產守門（同日下午第九波）**：
+  - **快取對齊、跨斷點秒切與零殘響（1～7）**：`index.html` 將 `dns-prefetch` 與 `VideoObject.embedUrl` 對齊 `https://www.youtube.com` 並合併單一首幀 `preload`；`CanvasSequence.jsx` 新增 `loadedByFrameNumRef` 跨 `768px` 斷點共享已解碼大圖快取（省下 `5.3 MB` 重複下載）與 `canvasSizeRef`；`scroll.js` 單次預算目標數值傳入 Lenis 省去二次重排；`Navigation.jsx` 動態高度變更同步校正頂部進度線；`Manifesto.jsx` 保護鍵盤聚焦預覽不被滑鼠擦過誤關；`Modal.jsx` 關閉瞬間切斷音源達成 `0.00s` 零殘響。
+  - **背景 `0%` 閒置功耗、Shader 代數簡化與 GPU 圖層精簡（8～15）**：`OpticalLightField.jsx` 無互動滿 `6 秒` 自動煞停 WebGL `rAF`（閒置 GPU 功耗降至 `0.0%`，微動 `0ms` 喚醒），GLSL 提出 `const mat2 FBM_ROT` 並以純代數曲線取代 `pow(x, 1.36)`；`RevealHeading.jsx` 折頁外延遲啟用 `will-change`（首屏減少 12 個常駐合成層）；`RefractionCard.jsx` 減少透明度模式跳過座標計算；`ScrubText.jsx` 差值守衛與清除歸零 `transform`；`useLenisScroll.js` 頂底撞牆滾輪跳過空轉喚醒；`index.css` 清理備援層多餘 `will-change`。
+  - **暗房捲軸、細節回饋與左右抽屜原生觸控手勢（16～20、23～26）**：`index.css` 統一原生細捲軸暗房配色；`Navigation.jsx` 左上角品牌標 Hover 朱紅微光與手機左抽屜**左滑收合手勢**；`FeedbackModal.jsx` 輸入框聚焦內光、`>=450` 字暖色提醒與右抽屜**右滑關閉手勢**；`VisualSynthesis.jsx` 手機底部切換鈕按壓微縮回饋；`Modal.jsx` 節點燈箱鎖定 `1920:902` 比例防塌陷；`motion.js` 收斂共用彈簧常數；`useMediaQuery.js` 升級模組級共享 `MediaQueryList` 參照計數池。
+  - **資產瘦身、建置精簡與雙向守門防線（21～22、27～30）**：刪除重複之 `public/avatar.jpg`（減重 `52 KB`，JSON-LD 對齊 `avatar.webp`）與 `public/vfx/.DS_Store`；`vite.config.js` 設定 `modulePreload: { polyfill: false }`（轉換模組降至 `431`）；更新 `deploy.yml`、`scripts/pre-commit.sh` 系統檔攔截與核心資產檢查，並於 `portfolio.test.js` 新增 `public/vfx` 97 張雙向 `1:1` 零孤兒檔守門測試（`28/28` 測試檔、`84/84` 項測試全過）。
   - **主 Showreel 影片升級為 2026 最新版（`siteConfig.js`、`index.html`、`Introduction.test.jsx`、`sitemap.xml`）**：
     - 將 `MAIN_SHOWREEL_VIDEO_ID` 與 JSON-LD `VideoObject` 嵌入網址同步更新為 `n4qMRlAlqjg`（`https://youtu.be/n4qMRlAlqjg`），更新結構化資料上傳日期與 Sitemap 日期至 `2026-11-26`。
 

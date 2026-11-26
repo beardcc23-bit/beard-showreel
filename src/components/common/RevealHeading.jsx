@@ -71,13 +71,13 @@ export default function RevealHeading({ children, className = '', delay = 0 }) {
             ease: SHUTTER_EASE,
           }}
           className={`block absolute inset-0 ${
-            settled ? '' : 'will-change-[clip-path,transform,opacity]'
+            isInView && !settled ? 'will-change-[clip-path,transform,opacity]' : ''
           }`}
         >
           {children}
         </m.span>
 
-        {/* 底部品牌橘紅導引橫條與光刃：定版消隱後自動卸載釋放合成層 */}
+        {/* 底部品牌橘紅導引橫條與光刃：僅於進入視口期間啟用合成層，定版消隱後自動卸載 */}
         {!settled && (
           <>
             <m.span
@@ -109,7 +109,9 @@ export default function RevealHeading({ children, className = '', delay = 0 }) {
                   ease: 'easeOut',
                 },
               }}
-              className="pointer-events-none select-none block absolute left-0 right-0 -bottom-[0.1em] h-[3px] sm:h-[4px] origin-left will-change-[transform,opacity]"
+              className={`pointer-events-none select-none block absolute left-0 right-0 -bottom-[0.1em] h-[3px] sm:h-[4px] origin-left ${
+                isInView ? 'will-change-[transform,opacity]' : ''
+              }`}
               style={{
                 background:
                   'linear-gradient(90deg, rgba(235, 74, 46, 0.18) 0%, #EB4A2E 62%, #FF8A6C 100%)',
@@ -141,7 +143,9 @@ export default function RevealHeading({ children, className = '', delay = 0 }) {
                     ease: 'linear',
                   },
                 }}
-                className="block relative w-full h-full will-change-[transform,opacity]"
+                className={`block relative w-full h-full ${
+                  isInView ? 'will-change-[transform,opacity]' : ''
+                }`}
               >
                 <span
                   className="block absolute top-0 bottom-0 left-0 -translate-x-full w-20 sm:w-28 md:w-40"

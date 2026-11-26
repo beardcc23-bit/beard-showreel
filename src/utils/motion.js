@@ -25,6 +25,18 @@ export const emilSpring = {
     damping: 24,
     mass: 1,
   },
+  // 適用於導覽與分類列 layoutId 光譜滑軌橫移
+  indicator: {
+    type: 'spring',
+    stiffness: 420,
+    damping: 34,
+  },
+  // 適用於右側全高滑出式回饋抽屜
+  drawer: {
+    type: 'spring',
+    stiffness: 320,
+    damping: 32,
+  },
 };
 
 // 點擊微反饋 (Micro-tap Feedback)

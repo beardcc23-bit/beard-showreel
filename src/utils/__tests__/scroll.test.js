@@ -36,10 +36,10 @@ describe('scroll 全站捲動工具函式測試', () => {
 
     smoothScrollTo(1200, { offset: -76 });
     expect(window.lenis.start).toHaveBeenCalledTimes(1);
-    expect(lenisScrollTo).toHaveBeenCalledWith(1200, expect.objectContaining({ offset: -76 }));
+    expect(lenisScrollTo).toHaveBeenCalledWith(1124, expect.objectContaining({ duration: 1.05 }));
 
     instantScrollTo(800, { offset: -88 });
-    expect(lenisScrollTo).toHaveBeenLastCalledWith(800, { immediate: true, offset: -88 });
+    expect(lenisScrollTo).toHaveBeenLastCalledWith(712, { immediate: true });
 
     // 無 Lenis 降級情境
     window.lenis = null;

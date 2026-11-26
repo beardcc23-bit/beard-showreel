@@ -37,13 +37,14 @@ float noise(vec2 p) {
   );
 }
 
+const mat2 FBM_ROT = mat2(0.80, -0.60, 0.60, 0.80);
+
 float fbm(vec2 p) {
   float v = 0.0;
   float a = 0.5;
-  mat2 rot = mat2(0.80, -0.60, 0.60, 0.80);
   for (int i = 0; i < 4; i++) {
     v += a * noise(p);
-    p = rot * p * 2.05 + vec2(1.9, 7.3);
+    p = FBM_ROT * p * 2.05 + vec2(1.9, 7.3);
     a *= 0.5;
   }
   return v;
@@ -92,8 +93,9 @@ void main() {
   float fineFilaments = noise(vec2(along * 1.35 - flow * 1.65, warpedAcross * 25.0 + broadStream * 1.8));
 
   float rawMask = broadStream * 0.50 + midStreak * 0.33 + fineFilaments * 0.17;
-  // 控制明暗切割與覆蓋範圍：桌機維持 ~55% 純黑，手機直屏收斂至 ~60% 純淨深黑留白
-  float streakMask = pow(smoothstep(mix(0.27, 0.30, portrait), 0.88, rawMask), 1.36);
+  // 控制明暗切割與覆蓋範圍：以純代數曲線取代昂貴的 pow(x, 1.36) 超越函數指令，減輕行動端 GPU 負擔
+  float sm = smoothstep(mix(0.27, 0.30, portrait), 0.88, rawMask);
+  float streakMask = sm * mix(1.0, sm, 0.36);
 
   // 放寬延伸距離至對角中段，手機直屏收斂右上與上半部延伸量以保留 60% 深黑
   float forwardFade = smoothstep(-0.22, 0.18, along) * exp(-max(along, 0.0) * mix(0.94, 1.18, portrait));
@@ -331,22 +333,30 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     };
 
+    const wakeFromIdle = () => {
+      lastInputTime = performance.now();
+      if (rafId === null && !document.hidden && !isModalLocked && !prefersReduced) {
+        prevSimTime = 0;
+        rafId = requestAnimationFrame(renderFrame);
+      }
+    };
+
     const handleScroll = () => {
       if (isModalLocked) return;
-      lastInputTime = performance.now();
       const sy = window.scrollY;
       velocity = Math.max(-2.5, Math.min(2.5, (sy - lastScrollY) * 0.02));
       lastScrollY = sy;
       targetScroll = Math.max(0, Math.min(1, sy / cachedMaxScroll));
+      wakeFromIdle();
     };
 
     // 1000Hz 高回報率滑鼠下僅記錄原始整數座標，延後至 36fps renderFrame 才執行單次正規化除法；彈窗鎖定期間直接略過
     const handlePointerMove = (e) => {
       if (isModalLocked) return;
-      lastInputTime = performance.now();
       rawClientX = e.clientX;
       rawClientY = e.clientY;
       hasPendingPointer = true;
+      wakeFromIdle();
     };
 
     handleScroll();
@@ -358,13 +368,22 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
         return;
       }
 
-      // 滾動與游標皆收斂且無互動超過 1.2s 時，自動降檔至 12fps（貼合底片銀鹽顆粒原生幀率，省下 66% GPU 功耗）；一旦互動 0ms 瞬切回 36fps / 24fps
-      const isSettled =
+      const idleMs = now - lastInputTime;
+      const isConverged =
         !hasPendingPointer &&
         Math.abs(targetScroll - currentScroll) < 0.0005 &&
         Math.abs(targetPtrX - currentPtrX) < 0.001 &&
-        Math.abs(targetPtrY - currentPtrY) < 0.001 &&
-        now - lastInputTime > 1200;
+        Math.abs(targetPtrY - currentPtrY) < 0.001;
+
+      // 無滾動／滑鼠互動滿 6 秒後自動暫停 WebGL rAF 迴圈（閒置 GPU 功耗降至 0.0%），任一微動 0ms 喚醒
+      if (isConverged && idleMs > 6000 && !prefersReduced) {
+        rafId = null;
+        prevSimTime = 0;
+        return;
+      }
+
+      // 滾動與游標皆收斂且無互動超過 1.2s 時，自動降檔至 12fps（貼合底片銀鹽顆粒原生幀率）；一旦互動 0ms 瞬切回 36fps / 24fps
+      const isSettled = isConverged && idleMs > 1200;
       const targetFps = isSettled ? 12 : isMobile ? 24 : 36;
       const minFrameMs = 1000 / targetFps;
       if (lastRenderTime > 0 && now - lastRenderTime < minFrameMs) {
@@ -429,6 +448,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
           rafId = null;
         }
       } else {
+        lastInputTime = performance.now();
         startLoop();
       }
     };

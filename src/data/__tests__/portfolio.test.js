@@ -147,6 +147,26 @@ describe('portfolio.js 最佳化邏輯測試', () => {
         }
       }
       expect(missingFiles).toEqual([]);
+
+      // 反向雙向對等守門：驗證 public/vfx 目錄內絕無任何未引用的孤兒廢圖或系統隱藏檔（如 .DS_Store）
+      const vfxRoot = path.join(publicDir, 'vfx');
+      const collectDiskFiles = (dir) => {
+        const out = [];
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+          const full = path.join(dir, entry.name);
+          if (entry.isDirectory()) {
+            out.push(...collectDiskFiles(full));
+          } else {
+            out.push(`/${path.relative(publicDir, full).replace(/\\/g, '/')}`);
+          }
+        }
+        return out;
+      };
+      const diskVfxFiles = collectDiskFiles(vfxRoot);
+      const referencedSet = new Set(categories.flatMap((c) => c.items.map((i) => i.bgImage)));
+      const orphanFiles = diskVfxFiles.filter((f) => !referencedSet.has(f));
+      expect(orphanFiles).toEqual([]);
+      expect(diskVfxFiles).toHaveLength(97);
     });
 
     it('全部具連結之作品其 YouTube url 與顯式 videoId 必須 100% 一致，且所有外部網址皆通過白名單校驗', () => {

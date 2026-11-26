@@ -139,7 +139,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   <iframe
                     key={safeVideoUrl || safeVideoId}
                     src={
-                      safeVideoUrl || safeVideoId
+                      isOpen && (safeVideoUrl || safeVideoId)
                         ? safeVideoUrl
                           ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(safeVideoUrl)}&show_text=0&t=0&autoplay=1`
                           : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${safeVideoId}&show_text=0&t=0&autoplay=1`
@@ -149,14 +149,14 @@ export default function Modal({ isOpen, onClose, type, data }) {
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
-                    onLoad={hasValidVideoSource ? () => setIframeLoading(false) : undefined}
+                    onLoad={isOpen && hasValidVideoSource ? () => setIframeLoading(false) : undefined}
                     className="relative z-10 w-full h-full border-0"
                   />
                 ) : (
                   <iframe
                     key={currentData.videoId}
                     src={
-                      safeVideoId
+                      isOpen && safeVideoId
                         ? `https://www.youtube.com/embed/${safeVideoId}?autoplay=1&rel=0&playsinline=1`
                         : 'about:blank'
                     }
@@ -164,15 +164,15 @@ export default function Modal({ isOpen, onClose, type, data }) {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
-                    onLoad={hasValidVideoSource ? () => setIframeLoading(false) : undefined}
+                    onLoad={isOpen && hasValidVideoSource ? () => setIframeLoading(false) : undefined}
                     className="relative z-10 w-full h-full border-0"
                   />
                 )}
               </div>
             ) : (
-              /* 圖片模式：無裁切完整展示 1920x902 Flame Batch 節點樹 */
+              /* 圖片模式：固定 1920:902 比例防開窗瞬間高度塌陷跳動，無裁切完整展示 Flame Batch 節點樹 */
               <div className="p-4 md:p-6 flex flex-col bg-[#05070B]">
-                <div className="w-full overflow-hidden border border-white/10 mb-3.5 bg-black">
+                <div className="w-full aspect-[1920/902] max-h-[78dvh] overflow-hidden border border-white/10 mb-3.5 bg-black flex items-center justify-center">
                   {safeImageUrl && (
                     <img
                       src={safeImageUrl}
@@ -180,7 +180,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                       width="1920"
                       height="902"
                       decoding="async"
-                      className="w-full h-auto max-h-[78dvh] object-contain"
+                      className="w-full h-full object-contain"
                     />
                   )}
                 </div>

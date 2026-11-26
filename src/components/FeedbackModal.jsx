@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { m, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle2, AlertCircle, Loader2 } from './common/Icons';
 import { useOverlayLock } from '../hooks/useOverlayLock';
+import { emilSpring } from '../utils/motion';
 
 const FORMULA_PREFIX_RE = /^[=+@\-\t\r|＝＋－＠｜]/;
 const CONTROL_CHARS_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u200B-\u200D\uFEFF]/g;
@@ -103,6 +104,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
   const hadRestoredDraftRef = useRef(false);
   const abortControllerRef = useRef(null);
   const dialogRef = useRef(null);
+  const swipeStartRef = useRef(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
 
@@ -287,12 +289,32 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
             }`}
           />
 
-          {/* 右側全高滑出式磨砂毛玻璃面板 */}
+          {/* 右側全高滑出式磨砂毛玻璃面板（支援非輸入框區向右滑動直覺收合） */}
           <m.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+            transition={emilSpring.drawer}
+            onTouchStart={(e) => {
+              const tag = e.target?.tagName;
+              if (tag === 'INPUT' || tag === 'TEXTAREA') {
+                swipeStartRef.current = null;
+                return;
+              }
+              const t = e.touches?.[0];
+              if (t) swipeStartRef.current = { x: t.clientX, y: t.clientY };
+            }}
+            onTouchEnd={(e) => {
+              const start = swipeStartRef.current;
+              swipeStartRef.current = null;
+              const t = e.changedTouches?.[0];
+              if (!start || !t) return;
+              const dx = t.clientX - start.x;
+              const dy = t.clientY - start.y;
+              if (dx > 56 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                handleSafeClose();
+              }
+            }}
             className="optical-frosted-drawer relative w-full max-w-lg h-full max-h-[100dvh] bg-[#060912]/62 backdrop-blur-2xl backdrop-saturate-[185%] border-l border-white/18 px-7 pt-7 sm:px-10 sm:pt-10 pb-[calc(2rem+env(safe-area-inset-bottom))] shadow-[-30px_0_80px_rgba(0,0,0,0.92)] z-10 overflow-y-auto overscroll-contain flex flex-col justify-between text-left"
           >
             {/* 左緣光譜漫射細線 */}
@@ -363,7 +385,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="請輸入稱呼"
-                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors select-text"
+                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:bg-white/[0.06] focus:border-spectral-crimson/85 focus:shadow-[inset_0_0_16px_rgba(235,74,46,0.08)] transition-[background-color,border-color,box-shadow] select-text"
                   />
                 </div>
 
@@ -385,7 +407,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="選填，方便回覆您"
-                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors select-text"
+                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:bg-white/[0.06] focus:border-spectral-crimson/85 focus:shadow-[inset_0_0_16px_rgba(235,74,46,0.08)] transition-[background-color,border-color,box-shadow] select-text"
                   />
                 </div>
 
@@ -394,7 +416,12 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     <label htmlFor="feedback-message" className="block text-xs tracking-wider text-zinc-400">
                       回饋內容 <span className="text-spectral-crimson">*</span>
                     </label>
-                    <span className="mono text-[11px] text-zinc-500 tabular-nums" aria-live="off">
+                    <span
+                      className={`mono text-[11px] tabular-nums transition-colors ${
+                        formData.message.length >= 450 ? 'text-dawn-gold' : 'text-zinc-500'
+                      }`}
+                      aria-live="off"
+                    >
                       {formData.message.length} / 500
                     </span>
                   </div>
@@ -415,7 +442,7 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                       }
                     }}
                     placeholder="請輸入想說的話..."
-                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-spectral-crimson transition-colors resize-none select-text"
+                    className="w-full bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:bg-white/[0.06] focus:border-spectral-crimson/85 focus:shadow-[inset_0_0_16px_rgba(235,74,46,0.08)] transition-[background-color,border-color,box-shadow] resize-none select-text"
                   />
                 </div>
 

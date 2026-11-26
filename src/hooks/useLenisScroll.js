@@ -124,7 +124,16 @@ export function useLenisScroll() {
     });
     bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
-    window.addEventListener('wheel', startRaf, { passive: true });
+    const handleWheelWake = (e) => {
+      if (!lenis.isScrolling) {
+        if (window.scrollY <= 0 && e.deltaY < 0) return;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (maxScroll > 0 && window.scrollY >= maxScroll - 1 && e.deltaY > 0) return;
+      }
+      startRaf();
+    };
+
+    window.addEventListener('wheel', handleWheelWake, { passive: true });
     window.addEventListener('touchstart', startRaf, { passive: true });
     window.addEventListener('keydown', handleKeyWake);
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -137,7 +146,7 @@ export function useLenisScroll() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearTimeout(scrollEndTimer);
       document.body.classList.remove('is-scrolling');
-      window.removeEventListener('wheel', startRaf);
+      window.removeEventListener('wheel', handleWheelWake);
       window.removeEventListener('touchstart', startRaf);
       window.removeEventListener('keydown', handleKeyWake);
       window.removeEventListener('scroll', handleScroll);

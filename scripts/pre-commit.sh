@@ -4,8 +4,8 @@ set -e
 
 echo "🔐 [Git Hook] 正在掃描 Staged 變更是否誤含敏感檔案、金鑰或異常大型母帶..."
 
-# 1. 阻擋 .env、私鑰與未壓縮原始剪輯母帶進入版控
-FORBIDDEN_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(^|/)\.env(\..+)?$|\.(pem|key|p12|mov|psd|exr|dpx)$' | grep -v '\.env\.example$' || true)
+# 1. 阻擋 .env、私鑰、系統隱藏檔與未壓縮原始剪輯母帶進入版控
+FORBIDDEN_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '(^|/)\.env(\..+)?$|(?:^|/)(\.DS_Store|Thumbs\.db)$|\.(pem|key|p12|mov|psd|exr|dpx)$' | grep -v '\.env\.example$' || true)
 if [ -n "$FORBIDDEN_FILES" ]; then
   echo "❌ [Git Hook] 偵測到禁止提交的敏感憑證或原始母帶檔案："
   echo "$FORBIDDEN_FILES"

@@ -34,6 +34,7 @@ export default function Navigation() {
   const progressBarRef = useRef(null);
   const portfolioBtnRef = useRef(null);
   const subpanelRef = useRef(null);
+  const touchStartRef = useRef(null);
 
   const updateActiveSection = useCallback((nextSection) => {
     if (activeSectionRef.current === nextSection) return;
@@ -81,6 +82,16 @@ export default function Navigation() {
     let cachedHeroClearThreshold = 160;
     let lastRatio = -1;
 
+    const syncProgressBar = () => {
+      if (progressBarRef.current) {
+        const ratio = Math.max(0, Math.min(1, window.scrollY / cachedMaxScroll));
+        if (Math.abs(ratio - lastRatio) >= 0.0005) {
+          lastRatio = ratio;
+          progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
+        }
+      }
+    };
+
     const updateScrollMetrics = () => {
       cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const heroEl = document.getElementById('hero');
@@ -88,6 +99,7 @@ export default function Navigation() {
       cachedHeroClearThreshold = heroEl
         ? Math.max(160, heroEl.getBoundingClientRect().height - window.innerHeight * 0.72)
         : 160;
+      syncProgressBar();
     };
     updateScrollMetrics();
 
@@ -101,13 +113,7 @@ export default function Navigation() {
       if (sy < cachedHeroClearThreshold && activeSectionRef.current !== '') {
         updateActiveSection('');
       }
-      if (progressBarRef.current) {
-        const ratio = Math.max(0, Math.min(1, sy / cachedMaxScroll));
-        if (Math.abs(ratio - lastRatio) >= 0.0005) {
-          lastRatio = ratio;
-          progressBarRef.current.style.transform = `scaleX(${ratio.toFixed(4)})`;
-        }
-      }
+      syncProgressBar();
     };
     handleScroll();
 
@@ -231,11 +237,15 @@ export default function Navigation() {
           <button
             type="button"
             onClick={scrollToHeroEnd}
-            className="group flex items-center gap-3 text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson cursor-pointer"
+            className="group flex items-center gap-3 text-left transition-transform duration-200 active:scale-[0.98] focus:outline-none focus-visible:ring-1 focus-visible:ring-spectral-crimson cursor-pointer"
             aria-label="Beard Showreel - 回到首頁主視覺定版"
           >
-            <span className="font-display text-lg md:text-xl font-extrabold tracking-[-0.03em] text-title-white group-hover:opacity-85 transition-opacity">
-              Beard<span className="text-spectral-crimson"> Showreel</span>
+            <span className="font-display text-lg md:text-xl font-extrabold tracking-[-0.03em] text-title-white group-hover:text-white transition-colors">
+              Beard
+              <span className="text-spectral-crimson transition-[filter] duration-300 group-hover:drop-shadow-[0_0_12px_rgba(235,74,46,0.58)]">
+                {' '}
+                Showreel
+              </span>
             </span>
           </button>
         </div>
@@ -259,7 +269,7 @@ export default function Navigation() {
                     <m.span
                       layoutId="desktopNavIndicator"
                       className="absolute bottom-1 left-4 right-4 h-[1.5px] spectral-indicator-h pointer-events-none"
-                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                      transition={emilSpring.indicator}
                     />
                   ) : (
                     <span
@@ -299,6 +309,25 @@ export default function Navigation() {
             <m.div
               key="mobile-menu-stage"
               ref={drawerRef}
+              onTouchStart={(e) => {
+                const t = e.touches?.[0];
+                if (t) touchStartRef.current = { x: t.clientX, y: t.clientY };
+              }}
+              onTouchEnd={(e) => {
+                const start = touchStartRef.current;
+                touchStartRef.current = null;
+                const t = e.changedTouches?.[0];
+                if (!start || !t) return;
+                const dx = t.clientX - start.x;
+                const dy = t.clientY - start.y;
+                if (dx < -48 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                  if (isPortfolioOpen) {
+                    setIsPortfolioOpen(false);
+                  } else {
+                    closeMenu();
+                  }
+                }
+              }}
               onKeyDown={(e) => {
                 if (!isPortfolioOpen) return;
                 const inSubpanel = subpanelRef.current?.contains(document.activeElement);

@@ -219,7 +219,11 @@ export default function Manifesto({ onPlayVideo }) {
                 tabIndex={0}
                 aria-label="檢視 Autodesk Flame 實際專案 Batch 節點介面"
                 onPointerEnter={handleFlameEnter}
-                onPointerLeave={() => setFlamePreview(null)}
+                onPointerLeave={(e) => {
+                  if (document.activeElement !== e.currentTarget) {
+                    setFlamePreview(null);
+                  }
+                }}
                 onFocus={handleFlameFocus}
                 onBlur={() => setFlamePreview(null)}
                 onClick={openFlameSchematic}

@@ -41,7 +41,10 @@ jobs:
         run: |
           npm audit --omit=dev --audit-level=high
           npm run build
+          find dist \( -name '.DS_Store' -o -name 'Thumbs.db' \) -delete
           test -f dist/index.html
+          test -f dist/png-0/png-0_00000000.webp
+          test -f dist/og-cover.jpg
           ! find dist -name "*.map" | grep -q .
           TODAY_UTC=$(date -u +%Y-%m-%d)
           sed -i "s|<lastmod>[0-9-]*</lastmod>|<lastmod>${TODAY_UTC}</lastmod>|g" dist/sitemap.xml

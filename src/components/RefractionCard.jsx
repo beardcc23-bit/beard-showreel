@@ -1,5 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 
+const isReducedTransparency = () =>
+  typeof window !== 'undefined' &&
+  Boolean(window.matchMedia?.('(prefers-reduced-transparency: reduce)')?.matches);
+
 export default function RefractionCard({ as: Component = 'div', children, className = '', ...props }) {
   const cardRef = useRef(null);
   const rafRef = useRef(null);
@@ -14,7 +18,7 @@ export default function RefractionCard({ as: Component = 'div', children, classN
   }, []);
 
   const handlePointerEnter = (e) => {
-    if (e.pointerType === 'touch' || !cardRef.current) return;
+    if (e.pointerType === 'touch' || !cardRef.current || isReducedTransparency()) return;
     rectRef.current = cardRef.current.getBoundingClientRect();
     scrollYRef.current = window.scrollY;
   };
@@ -23,7 +27,8 @@ export default function RefractionCard({ as: Component = 'div', children, classN
     if (
       e.pointerType === 'touch' ||
       !cardRef.current ||
-      document.body.classList.contains('is-scrolling')
+      document.body.classList.contains('is-scrolling') ||
+      isReducedTransparency()
     ) {
       return;
     }

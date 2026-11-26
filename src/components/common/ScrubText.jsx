@@ -14,11 +14,15 @@ function ActiveScrubSpan({ containerRef, settledStateRef, children }) {
   );
 
   useMotionValueEvent(opacity, 'change', (latest) => {
-    settledStateRef.current.opacity = latest;
+    if (Math.abs(latest - settledStateRef.current.opacity) >= 0.005) {
+      settledStateRef.current.opacity = latest;
+    }
   });
 
   useMotionValueEvent(y, 'change', (latest) => {
-    settledStateRef.current.y = latest;
+    if (Math.abs(latest - settledStateRef.current.y) >= 0.05) {
+      settledStateRef.current.y = latest;
+    }
   });
 
   return (
@@ -58,9 +62,10 @@ export default function ScrubText({ text, className = '', children }) {
         <span
           style={{
             opacity: settledStateRef.current.opacity,
-            transform: settledStateRef.current.y
-              ? `translate3d(0, ${settledStateRef.current.y}px, 0)`
-              : undefined,
+            transform:
+              Math.abs(settledStateRef.current.y) >= 0.05
+                ? `translate3d(0, ${settledStateRef.current.y.toFixed(2)}px, 0)`
+                : undefined,
           }}
           className="block text-white"
         >

@@ -18,6 +18,9 @@ export default defineConfig({
   },
   build: {
     target: 'es2020',
+    modulePreload: {
+      polyfill: false,
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {

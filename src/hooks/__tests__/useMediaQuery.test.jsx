@@ -29,14 +29,23 @@ describe('useMediaQuery 即時媒體查詢監聽測試', () => {
       removeEventListener,
     }));
 
-    const { unmount } = render(<MediaProbe query="(max-width: 767px)" />);
-    expect(screen.getByTestId('probe')).toHaveTextContent('NO');
+    const { unmount } = render(
+      <>
+        <MediaProbe query="(max-width: 767px)" />
+        <MediaProbe query="(max-width: 767px)" />
+      </>
+    );
+    const probes = screen.getAllByTestId('probe');
+    expect(probes[0]).toHaveTextContent('NO');
+    expect(probes[1]).toHaveTextContent('NO');
+    // 多個元件訂閱同一查詢字串時應共享單一底層 MediaQueryList 監聽器
     expect(addEventListener).toHaveBeenCalledTimes(1);
 
     act(() => {
       changeHandler?.({ matches: true });
     });
-    expect(screen.getByTestId('probe')).toHaveTextContent('YES');
+    expect(probes[0]).toHaveTextContent('YES');
+    expect(probes[1]).toHaveTextContent('YES');
 
     unmount();
     expect(removeEventListener).toHaveBeenCalledTimes(1);

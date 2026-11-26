@@ -5,6 +5,7 @@ import { categories, normalizeItem } from '../data/portfolio';
 import { NAV_SCROLL_OFFSET } from '../constants/heroScroll';
 import { APP_EVENTS } from '../constants/siteConfig';
 import { instantScrollTo } from '../utils/scroll';
+import { emilSpring } from '../utils/motion';
 import { getSafeExternalUrl } from '../utils/url';
 import { useOffscreenPause } from '../hooks/useOffscreenPause';
 import { useMediaQuery } from '../hooks/useMediaQuery';
@@ -589,12 +590,12 @@ export default function VisualSynthesis({ onPlayVideo }) {
                     <m.div
                       layoutId="activeTabSurface"
                       className="absolute inset-0 bg-white/[0.07] pointer-events-none"
-                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                      transition={emilSpring.indicator}
                     />
                     <m.div
                       layoutId="activeTabGlow"
                       className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none spectral-indicator-h"
-                      transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+                      transition={emilSpring.indicator}
                     />
                   </>
                 )}
@@ -664,14 +665,14 @@ export default function VisualSynthesis({ onPlayVideo }) {
             onFocus={() => schedulePrefetch(nextCategory.id)}
             onBlur={cancelPrefetch}
             onClick={() => handleNextCategoryDissolveCut(nextCategory.id)}
-            className="col-start-2 optical-surface w-full px-2.5 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-3 text-left text-title-white hover:bg-white/[0.03] active:bg-white/[0.07] transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson group"
+            className="col-start-2 optical-surface w-full px-2.5 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-1.5 sm:gap-3 text-left text-title-white hover:bg-white/[0.03] active:bg-white/[0.07] active:scale-[0.985] transition-[background-color,transform] duration-150 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-spectral-crimson group"
           >
             <span className="text-[11px] sm:text-[13px] font-medium text-zinc-100 group-hover:text-white tracking-wide truncate">
               {nextCategory.name}
             </span>
             <ArrowRight
               size={14}
-              className="shrink-0 text-spectral-crimson transition-transform duration-200 group-hover:translate-x-0.5"
+              className="shrink-0 text-spectral-crimson transition-transform duration-200 group-hover:translate-x-0.5 group-active:translate-x-1"
             />
           </button>
         </div>

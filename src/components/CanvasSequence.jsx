@@ -38,7 +38,9 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   const scrollArrowRef = useRef(null);
 
   const framesRef = useRef([]);
+  const loadedByFrameNumRef = useRef(new Map());
   const sampledIndicesRef = useRef([]);
+  const canvasSizeRef = useRef({ w: 0, h: 0 });
   const drawnSlotRef = useRef(-1);
   const lastFrameAttrRef = useRef('');
   const lastHintOpacityRef = useRef('');
@@ -89,11 +91,12 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
     const w = img.naturalWidth || 1920;
     const h = img.naturalHeight || 1080;
-    if (canvas.width !== w || canvas.height !== h) {
+    if (canvasSizeRef.current.w !== w || canvasSizeRef.current.h !== h) {
       canvas.width = w;
       canvas.height = h;
+      canvasSizeRef.current = { w, h };
     }
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, w, h);
     drawnSlotRef.current = slot;
     setHasDrawnFrame((prev) => (prev ? prev : true));
     return true;
@@ -289,6 +292,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       window.removeEventListener('blur', resetDrag);
       canvas.removeEventListener('contextmenu', blockMenu);
       ctxRef.current = null;
+      canvasSizeRef.current = { w: 0, h: 0 };
+      loadedByFrameNumRef.current.clear();
       canvas.width = 0;
       canvas.height = 0;
     };
@@ -300,9 +305,10 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     let unlocked = false;
     const sampled = prefersReduced ? [HERO_REDUCED_MOTION_FRAME] : buildSampledFrames(step);
     sampledIndicesRef.current = sampled;
-    framesRef.current = new Array(sampled.length).fill(null);
+    const frameCache = loadedByFrameNumRef.current;
+    // 跨 768px 斷點縮放時直接沿用已解碼之同編號原生大圖，省去 5.3MB 重複下載與黑底閃爍
+    framesRef.current = sampled.map((frameNum) => frameCache.get(frameNum) || null);
     drawnSlotRef.current = -1;
-    setHasDrawnFrame(false);
 
     const unlock = () => {
       if (isCancelled || unlocked) return;
@@ -311,14 +317,27 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       if (onLoaded) onLoaded();
     };
 
+    if (framesRef.current.some(Boolean)) {
+      const currentRatio = clamp01(currentProgressRef.current / HERO_EXIT_END_PROGRESS);
+      const desiredSlot = Math.round(currentRatio * Math.max(0, sampled.length - 1));
+      const nearest = findNearestLoadedSlot(framesRef.current, desiredSlot);
+      if (nearest !== -1) {
+        drawSlot(nearest);
+        unlock();
+      }
+    } else {
+      setHasDrawnFrame(false);
+    }
+
     const fallbackTimer = setTimeout(unlock, 2500);
     const holdSlot = sampled.findIndex((f) => f >= HERO_REDUCED_MOTION_FRAME);
     const loadQueue = buildLoadOrder(sampled.length, holdSlot);
     let cursor = 0;
     let activeLoads = 0;
 
-    const commitDecodedImage = (slot, img) => {
+    const commitDecodedImage = (slot, frameNum, img) => {
       if (isCancelled) return;
+      frameCache.set(frameNum, img);
       framesRef.current[slot] = img;
       const currentRatio = clamp01(currentProgressRef.current / HERO_EXIT_END_PROGRESS);
       const desiredSlot = Math.round(currentRatio * Math.max(0, sampled.length - 1));
@@ -341,6 +360,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
         const queueRank = cursor;
         const slot = loadQueue[cursor];
         cursor += 1;
+        if (framesRef.current[slot]) continue;
         const frameNum = sampled[slot];
         activeLoads += 1;
 
@@ -362,12 +382,12 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
               .decode()
               .catch(() => {})
               .finally(() => {
-                commitDecodedImage(slot, img);
+                commitDecodedImage(slot, frameNum, img);
                 done();
               });
             return;
           }
-          commitDecodedImage(slot, img);
+          commitDecodedImage(slot, frameNum, img);
           done();
         };
         img.onerror = () => {
@@ -384,7 +404,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       isCancelled = true;
       clearTimeout(fallbackTimer);
       framesRef.current.forEach((img) => {
-        if (img) {
+        if (img && !img.complete) {
           img.onload = null;
           img.onerror = null;
         }

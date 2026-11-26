@@ -49,6 +49,11 @@
   }
 }
 
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(235, 74, 46, 0.35) #030407;
+}
+
 body {
   font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--color-bg-core);
@@ -117,7 +122,7 @@ body {
       transparent 82%);
   opacity: var(--beam-warm-opacity);
   animation: slow-spectral-drift-warm 24s ease-in-out infinite alternate;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
 /* 冷冽漫射光雲：深海光學青藍 + 冰鋼藍，28 秒交錯呼吸 */
@@ -134,7 +139,7 @@ body {
       transparent 82%);
   opacity: var(--beam-cool-opacity);
   animation: slow-spectral-drift-cool 28s ease-in-out infinite alternate;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
 /* 前景切面流動光譜細線（以 200% 寬偽元素執行純 GPU translate3d 平移，靜止態 0% CPU Paint 重繪） */
@@ -235,7 +240,6 @@ body {
   transform: translateZ(0);
   mask-image: radial-gradient(ellipse 88% 86% at 14% 88%, black 18%, rgba(0, 0, 0, 0.5) 52%, transparent 82%);
   -webkit-mask-image: radial-gradient(ellipse 88% 86% at 14% 88%, black 18%, rgba(0, 0, 0, 0.5) 52%, transparent 82%);
-  will-change: transform, opacity;
 }
 
 /* ==========================================================================
