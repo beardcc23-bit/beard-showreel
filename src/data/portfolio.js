@@ -512,9 +512,10 @@ export const categories = [
     "name": "金融與保險",
     "items": [
       {
-        "name": "磊山保經",
-        "bgImage": "/vfx/F/F-09.webp",
-        "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc",
+        "name": "渣打銀行",
+        "bgImage": "/vfx/F/F-08.webp",
+        "url": "https://www.youtube.com/watch?v=OBTrK1ukstc",
+        "imagePosition": "36% 50%",
         "featured": true
       },
       {
@@ -523,9 +524,9 @@ export const categories = [
         "url": "https://www.youtube.com/watch?v=gsQScjFurQs"
       },
       {
-        "name": "渣打銀行",
-        "bgImage": "/vfx/F/F-08.webp",
-        "url": "https://www.youtube.com/watch?v=OBTrK1ukstc"
+        "name": "磊山保經",
+        "bgImage": "/vfx/F/F-09.webp",
+        "url": "https://www.youtube.com/watch?v=Rwrn87N2PUc"
       },
       {
         "name": "安聯人壽",

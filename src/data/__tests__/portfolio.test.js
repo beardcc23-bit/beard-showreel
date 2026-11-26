@@ -115,9 +115,9 @@ describe('portfolio.js 最佳化邏輯測試', () => {
         'EMSCULPT 肌動減脂',
       ]);
       expect(getNames('finance', 5)).toEqual([
-        '磊山保經',
-        '台灣Pay',
         '渣打銀行',
+        '台灣Pay',
+        '磊山保經',
         '安聯人壽',
         '台灣Pay',
       ]);
