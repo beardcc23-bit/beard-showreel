@@ -18,12 +18,13 @@ describe('sequenceLoader 序列載入演算法純函式測試', () => {
     expect(half[58]).toBe(116);
   });
 
-  it('buildLoadOrder 應優先排入首尾幀且無遺漏無重複', () => {
-    const order = buildLoadOrder(59);
+  it('buildLoadOrder 應優先排入首尾幀與指定主視覺定版幀，且無遺漏無重複', () => {
+    const order = buildLoadOrder(59, 40);
     expect(order).toHaveLength(59);
     expect(new Set(order).size).toBe(59);
     expect(order[0]).toBe(0);
     expect(order[1]).toBe(58);
+    expect(order[2]).toBe(40);
   });
 
   it('findNearestLoadedSlot 應在目標幀未載入時回傳雙向最近可用影格', () => {

@@ -100,7 +100,22 @@ export default function Navigation() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', updateScrollMetrics, { passive: true });
+
+    // 支援外部直接分享錨點網址（如 #vfx / #contact）進站時自動扣除導覽列高度定位並高亮對應選單
+    let hashRafId = null;
+    const rawHash = window.location.hash ? window.location.hash.slice(1) : '';
+    if (rawHash && SECTION_IDS.includes(rawHash)) {
+      setActiveSection(rawHash);
+      hashRafId = requestAnimationFrame(() => {
+        const hashTarget = document.getElementById(rawHash);
+        if (hashTarget) {
+          smoothScrollTo(hashTarget, { offset: -NAV_SCROLL_OFFSET, duration: 0.6 });
+        }
+      });
+    }
+
     return () => {
+      if (hashRafId !== null) cancelAnimationFrame(hashRafId);
       observer?.disconnect();
       docResizeObserver?.disconnect();
       window.removeEventListener('scroll', handleScroll);
@@ -275,12 +290,14 @@ export default function Navigation() {
               transition={emilSpring.gentle}
               className="fixed inset-y-0 left-0 z-[1000] flex items-stretch pointer-events-none md:hidden"
             >
-              {/* 左側母選單（z-20 在前） */}
+              {/* 左側母選單（z-20 在前，退場期間鎖定 pointer-events-none 防連點） */}
               <div
                 id="mobile-nav-drawer"
                 data-lenis-prevent
                 aria-label="行動版導覽選單"
-                className="optical-frosted-drawer relative z-20 pointer-events-auto w-[198px] min-[390px]:w-[216px] sm:w-[260px] h-full overflow-y-auto overscroll-contain bg-[#060911]/88 backdrop-blur-2xl backdrop-saturate-[180%] flex flex-col px-4 sm:px-6 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] border-r border-white/15"
+                className={`optical-frosted-drawer relative z-20 ${
+                  isOpen ? 'pointer-events-auto' : 'pointer-events-none'
+                } w-[198px] min-[390px]:w-[216px] sm:w-[260px] h-full overflow-y-auto overscroll-contain bg-[#060911]/88 backdrop-blur-2xl backdrop-saturate-[180%] flex flex-col px-4 sm:px-6 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] border-r border-white/15`}
               >
                 <div className="h-14 flex items-center justify-end border-b border-white/10 shrink-0">
                   <button
@@ -394,7 +411,9 @@ export default function Navigation() {
                         animate={{ x: '0%' }}
                         exit={{ x: '-102%' }}
                         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                        className="optical-frosted-drawer pointer-events-auto w-[min(170px,calc(100vw-204px))] min-[390px]:w-[min(186px,calc(100vw-222px))] sm:w-[216px] max-h-full overflow-y-auto overscroll-contain bg-[#060911]/90 backdrop-blur-2xl backdrop-saturate-[180%] border-y border-r border-white/[0.14] p-2.5 flex flex-col gap-2 shadow-[16px_24px_48px_rgba(0,0,0,0.85)]"
+                        className={`optical-frosted-drawer ${
+                          isOpen ? 'pointer-events-auto' : 'pointer-events-none'
+                        } w-[min(170px,calc(100vw-204px))] min-[390px]:w-[min(186px,calc(100vw-222px))] sm:w-[216px] max-h-full overflow-y-auto overscroll-contain bg-[#060911]/90 backdrop-blur-2xl backdrop-saturate-[180%] border-y border-r border-white/[0.14] p-2.5 flex flex-col gap-2 shadow-[16px_24px_48px_rgba(0,0,0,0.85)]`}
                       >
                         {categories.map((cat) => {
                           const isCatActive = activePortfolioTab === cat.id;

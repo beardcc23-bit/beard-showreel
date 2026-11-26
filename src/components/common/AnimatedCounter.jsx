@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 /**
  * 公用元件: 緩動數字累積動畫計數器
@@ -6,12 +7,10 @@ import React, { useEffect, useRef } from 'react';
  */
 const AnimatedCounter = React.memo(function AnimatedCounter({ value, trigger, duration = 1.5 }) {
   const spanRef = useRef(null);
+  const prefersReduced = useMediaQuery('(prefers-reduced-motion: reduce)');
   const targetValue = typeof value === 'number' && !isNaN(value) ? value : 0;
 
   useEffect(() => {
-    const prefersReduced =
-      typeof window !== 'undefined' &&
-      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
     if (prefersReduced) {
       if (spanRef.current) spanRef.current.textContent = String(targetValue);
       return undefined;
@@ -52,7 +51,7 @@ const AnimatedCounter = React.memo(function AnimatedCounter({ value, trigger, du
         window.cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [trigger, targetValue, duration]);
+  }, [trigger, targetValue, duration, prefersReduced]);
 
   return (
     <span aria-label={String(targetValue)}>

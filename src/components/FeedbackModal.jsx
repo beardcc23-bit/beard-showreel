@@ -85,6 +85,10 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
 
   const handleSafeClose = useCallback(() => {
     if (isSubmittingRef.current || status === 'submitting') return;
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
     onCloseRef.current?.();
   }, [status]);
 
@@ -334,6 +338,8 @@ export default function FeedbackModal({ isOpen, onClose, scriptUrl }) {
                     type="text"
                     name="email"
                     autoComplete="email"
+                    autoCapitalize="none"
+                    spellCheck={false}
                     maxLength={100}
                     value={formData.email}
                     onChange={handleChange}

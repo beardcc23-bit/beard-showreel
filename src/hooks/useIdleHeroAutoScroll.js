@@ -23,8 +23,8 @@ export function useIdleHeroAutoScroll({ enabled, containerRef, isModalOpenRef })
   useEffect(() => {
     if (!enabled || hasSettledRef.current) return undefined;
 
-    // 重新整理時已在頁面中下方，或當下已開啟彈窗／行動選單，直接視為已互動不再自動捲動
-    if (window.scrollY > 8 || isOverlayActive(isModalOpenRef)) {
+    // 重新整理時已在頁面中下方、網址已指定錨點 Hash，或當下已開啟彈窗／行動選單，直接視為已互動不再自動捲動
+    if (window.scrollY > 8 || Boolean(window.location.hash) || isOverlayActive(isModalOpenRef)) {
       hasSettledRef.current = true;
       return undefined;
     }

@@ -17,7 +17,7 @@ export function buildSampledFrames(step = 1, totalFrames = TOTAL_SOURCE_FRAMES) 
   return indices;
 }
 
-export function buildLoadOrder(count) {
+export function buildLoadOrder(count, keySlot = -1) {
   if (count <= 0) return [];
   if (count === 1) return [0];
   const order = [];
@@ -29,9 +29,12 @@ export function buildLoadOrder(count) {
     }
   };
 
-  // 第 0 層：起點與終點必先載入
+  // 第 0 層：起點、終點與主視覺定版幀（第 80 格）同批最優先載入
   push(0);
   push(count - 1);
+  if (keySlot > 0 && keySlot < count - 1) {
+    push(keySlot);
+  }
 
   // 第 1 層：均勻骨架幀（進站瞬間即可全段順滑刷動不斷格）
   const skeletonStep = Math.max(1, Math.floor((count - 1) / 10));

@@ -24,12 +24,15 @@ export default function Modal({ isOpen, onClose, type, data }) {
   const hasValidVideoSource = currentType === 'video' && (currentData?.isFacebook ? Boolean(safeVideoUrl || safeVideoId) : Boolean(safeVideoId));
 
   useEffect(() => {
-    if (!isOpen || type !== 'video') return undefined;
+    if (!isOpen || type !== 'video' || !hasValidVideoSource) {
+      setIframeLoading(false);
+      return undefined;
+    }
     setIframeLoading(true);
     // 8 秒載入看門狗：若企業防火牆阻擋外部嵌入插件或 onLoad 延遲，自動揭開遮罩防永久卡死
     const watchdog = setTimeout(() => setIframeLoading(false), 8000);
     return () => clearTimeout(watchdog);
-  }, [isOpen, type, data?.videoId, data?.videoUrl]);
+  }, [isOpen, type, hasValidVideoSource, data?.videoId, data?.videoUrl]);
 
   useOverlayLock(isOpen, onClose, { containerRef: dialogRef });
 
@@ -112,7 +115,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                   <iframe
                     key={safeVideoUrl || safeVideoId}
                     src={
-                      isOpen && (safeVideoUrl || safeVideoId)
+                      safeVideoUrl || safeVideoId
                         ? safeVideoUrl
                           ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(safeVideoUrl)}&show_text=0&t=0&autoplay=1`
                           : `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${safeVideoId}&show_text=0&t=0&autoplay=1`
@@ -123,14 +126,14 @@ export default function Modal({ isOpen, onClose, type, data }) {
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
-                    onLoad={() => setIframeLoading(false)}
+                    onLoad={hasValidVideoSource ? () => setIframeLoading(false) : undefined}
                     className={`w-full h-full border-0 transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                   />
                 ) : (
                   <iframe
                     key={currentData.videoId}
                     src={
-                      isOpen && safeVideoId
+                      safeVideoId
                         ? `https://www.youtube-nocookie.com/embed/${safeVideoId}?autoplay=1&rel=0&playsinline=1`
                         : 'about:blank'
                     }
@@ -139,7 +142,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
-                    onLoad={() => setIframeLoading(false)}
+                    onLoad={hasValidVideoSource ? () => setIframeLoading(false) : undefined}
                     className={`w-full h-full border-0 transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
                   />
                 )}

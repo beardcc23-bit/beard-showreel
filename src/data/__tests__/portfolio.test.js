@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, it, expect } from 'vitest';
 import { extractYoutubeId, normalizeItem, categories } from '../portfolio';
+import { getSafeExternalUrl } from '../../utils/url';
 
 describe('portfolio.js 最佳化邏輯測試', () => {
   describe('extractYoutubeId', () => {
@@ -146,6 +147,32 @@ describe('portfolio.js 最佳化邏輯測試', () => {
         }
       }
       expect(missingFiles).toEqual([]);
+    });
+
+    it('全部具連結之作品其 YouTube url 與顯式 videoId 必須 100% 一致，且所有外部網址皆通過白名單校驗', () => {
+      const idMismatches = [];
+      const unsafeUrls = [];
+
+      for (const cat of categories) {
+        for (const item of cat.items) {
+          if (item.url) {
+            if (!getSafeExternalUrl(item.url)) {
+              unsafeUrls.push(`${cat.id}:${item.name} -> ${item.url}`);
+            }
+            if (/youtu\.?be/i.test(item.url)) {
+              const extracted = extractYoutubeId(item.url);
+              if (!extracted || (item.videoId && extracted !== item.videoId)) {
+                idMismatches.push(
+                  `${cat.id}:${item.name} -> url(${extracted}) !== videoId(${item.videoId})`
+                );
+              }
+            }
+          }
+        }
+      }
+
+      expect(idMismatches).toEqual([]);
+      expect(unsafeUrls).toEqual([]);
     });
   });
 });

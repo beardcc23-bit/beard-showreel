@@ -213,38 +213,73 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     }
     if (!gl) return undefined;
 
-    const vs = createShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SRC);
-    const fs = createShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SRC);
-    if (!vs || !fs) return undefined;
+    let vs = null;
+    let fs = null;
+    let program = null;
+    let buffer = null;
+    let posLoc = -1;
+    let uTime = null;
+    let uRes = null;
+    let uScroll = null;
+    let uPointer = null;
+    let uVelocity = null;
+    let uScrollWeights = null;
+    let uDir = null;
 
-    const program = gl.createProgram();
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      gl.deleteProgram(program);
-      return undefined;
-    }
+    const cleanupGlResources = () => {
+      try {
+        if (buffer) gl.deleteBuffer(buffer);
+        if (program) gl.deleteProgram(program);
+        if (vs) gl.deleteShader(vs);
+        if (fs) gl.deleteShader(fs);
+      } catch {
+        // 忽略 Context Lost 期間的釋放錯誤
+      }
+      buffer = null;
+      program = null;
+      vs = null;
+      fs = null;
+    };
+
+    const setupGlPipeline = () => {
+      cleanupGlResources();
+      vs = createShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SRC);
+      fs = createShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SRC);
+      if (!vs || !fs) return false;
+
+      program = gl.createProgram();
+      if (!program) return false;
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        cleanupGlResources();
+        return false;
+      }
+
+      buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      // 單一 3 頂點全螢幕三角形（Full-Screen Triangle），消除傳統 6 頂點雙三角形對角線的 2x2 Quad Overdraw
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 3, -1, -1, 3]),
+        gl.STATIC_DRAW
+      );
+
+      posLoc = gl.getAttribLocation(program, 'a_position');
+      uTime = gl.getUniformLocation(program, 'u_time');
+      uRes = gl.getUniformLocation(program, 'u_resolution');
+      uScroll = gl.getUniformLocation(program, 'u_scroll');
+      uPointer = gl.getUniformLocation(program, 'u_pointer');
+      uVelocity = gl.getUniformLocation(program, 'u_velocity');
+      uScrollWeights = gl.getUniformLocation(program, 'u_scrollWeights');
+      uDir = gl.getUniformLocation(program, 'u_dir');
+      return true;
+    };
+
+    if (!setupGlPipeline()) return undefined;
 
     setWebglActive(true);
-
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    // 單一 3 頂點全螢幕三角形（Full-Screen Triangle），消除傳統 6 頂點雙三角形對角線的 2x2 Quad Overdraw
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 3, -1, -1, 3]),
-      gl.STATIC_DRAW
-    );
-
-    const posLoc = gl.getAttribLocation(program, 'a_position');
-    const uTime = gl.getUniformLocation(program, 'u_time');
-    const uRes = gl.getUniformLocation(program, 'u_resolution');
-    const uScroll = gl.getUniformLocation(program, 'u_scroll');
-    const uPointer = gl.getUniformLocation(program, 'u_pointer');
-    const uVelocity = gl.getUniformLocation(program, 'u_velocity');
-    const uScrollWeights = gl.getUniformLocation(program, 'u_scrollWeights');
-    const uDir = gl.getUniformLocation(program, 'u_dir');
 
     const resize = () => {
       isMobile = detectMobile();
@@ -275,6 +310,10 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
     let rafId = null;
     let lastRenderTime = 0;
     let prevSimTime = 0;
+    let cachedWeightScroll = -1;
+    let s1 = 0;
+    let s2 = 0;
+    let s3 = 0;
     const startTime = performance.now();
     let cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
 
@@ -329,15 +368,21 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       currentPtrX += (targetPtrX - currentPtrX) * ptrAlpha;
       currentPtrY += (targetPtrY - currentPtrY) * ptrAlpha;
 
-      gl.useProgram(program);
+      const renderProgram = program;
+      if (!renderProgram || !buffer) return;
+
+      gl.useProgram(renderProgram);
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       gl.enableVertexAttribArray(posLoc);
       gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
       const elapsed = prefersReduced ? 2.5 : (now - startTime) * 0.001;
-      const s1 = glSmoothstep(0.05, 0.4, currentScroll);
-      const s2 = glSmoothstep(0.4, 0.75, currentScroll);
-      const s3 = glSmoothstep(0.78, 0.98, currentScroll);
+      if (Math.abs(currentScroll - cachedWeightScroll) >= 0.00005) {
+        cachedWeightScroll = currentScroll;
+        s1 = glSmoothstep(0.05, 0.4, currentScroll);
+        s2 = glSmoothstep(0.4, 0.75, currentScroll);
+        s3 = glSmoothstep(0.78, 0.98, currentScroll);
+      }
       const angle = 0.76 + (0.7 - 0.76) * s1 + Math.sin(elapsed * 0.07) * 0.025;
 
       gl.uniform1f(uTime, elapsed);
@@ -393,7 +438,7 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateMaxScroll) : null;
     docResizeObserver?.observe(document.documentElement);
 
-    // 監聽 WebGL Context 遺失（如行動端背景喚醒或系統重置 GPU），自動優雅降級至 CSS 光譜備援層防死黑
+    // 監聽 WebGL Context 遺失與恢復（行動端背景喚醒或系統重置 GPU 時先降級 CSS 光譜備援，GPU 恢復後自動重建 Shader）
     const handleContextLost = (e) => {
       e.preventDefault();
       if (rafId !== null) {
@@ -401,11 +446,23 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
         rafId = null;
       }
       prevSimTime = 0;
+      program = null;
+      buffer = null;
       setWebglActive(false);
+    };
+
+    const handleContextRestored = () => {
+      cachedWeightScroll = -1;
+      if (setupGlPipeline()) {
+        resize();
+        setWebglActive(true);
+        startLoop();
+      }
     };
 
     const pointerListening = !isMobile;
     canvas.addEventListener('webglcontextlost', handleContextLost);
+    canvas.addEventListener('webglcontextrestored', handleContextRestored);
     window.addEventListener('resize', handleResize, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     if (pointerListening) {
@@ -421,16 +478,14 @@ export const OpticalLightField = React.memo(function OpticalLightField() {
       bodyObserver.disconnect();
       docResizeObserver?.disconnect();
       canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', handleContextRestored);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
       if (pointerListening) {
         window.removeEventListener('mousemove', handlePointerMove);
       }
       document.removeEventListener('visibilitychange', handleVisibility);
-      gl.deleteBuffer(buffer);
-      gl.deleteProgram(program);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
+      cleanupGlResources();
     };
   }, []);
 

@@ -8,12 +8,18 @@ function BrokenWidget({ message = 'Unexpected render failure' }) {
 }
 
 describe('ErrorBoundary 安全錯誤邊界單元測試', () => {
+  const suppressJsdomWindowError = (event) => {
+    event.preventDefault();
+  };
+
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    window.addEventListener('error', suppressJsdomWindowError);
     sessionStorage.clear();
   });
 
   afterEach(() => {
+    window.removeEventListener('error', suppressJsdomWindowError);
     vi.restoreAllMocks();
   });
 

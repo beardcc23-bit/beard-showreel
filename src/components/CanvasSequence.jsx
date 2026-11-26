@@ -42,6 +42,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   const drawnSlotRef = useRef(-1);
   const lastFrameAttrRef = useRef('');
   const lastHintOpacityRef = useRef('');
+  const lastRailKeyRef = useRef('');
+  const lastStageKeyRef = useRef('');
   const targetProgressRef = useRef(0);
   const currentProgressRef = useRef(0);
   const rafIdRef = useRef(null);
@@ -111,12 +113,15 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
       }
     }
 
-    if (progressBarRef.current) {
-      progressBarRef.current.style.transform = `scaleY(${railRatio.toFixed(4)})`;
-    }
-
-    if (progressThumbRef.current) {
-      progressThumbRef.current.style.transform = `translate3d(0, ${(railRatio * 100).toFixed(3)}%, 0)`;
+    const railKey = railRatio.toFixed(4);
+    if (railKey !== lastRailKeyRef.current) {
+      lastRailKeyRef.current = railKey;
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleY(${railKey})`;
+      }
+      if (progressThumbRef.current) {
+        progressThumbRef.current.style.transform = `translate3d(0, ${(railRatio * 100).toFixed(3)}%, 0)`;
+      }
     }
 
     const frameNumber = String(displayFrame + 1);
@@ -149,20 +154,37 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     // 尾段 86% -> 100% 銀幕微縮半透明，100% -> 126% 隨上滑離場柔和歸零並切換 visibility: hidden 剔除合成層
     if (stageRef.current) {
       if (prefersReduced) {
-        stageRef.current.style.transform = '';
-        stageRef.current.style.opacity = '1';
-        stageRef.current.style.visibility = 'visible';
+        if (lastStageKeyRef.current !== 'reduced') {
+          lastStageKeyRef.current = 'reduced';
+          stageRef.current.style.transform = '';
+          stageRef.current.style.opacity = '1';
+          stageRef.current.style.visibility = 'visible';
+        }
       } else {
         const stickyOutro = clamp01(
           (progress - HERO_OUTRO_START_PROGRESS) / (1 - HERO_OUTRO_START_PROGRESS)
         );
         const exitOutro = clamp01((progress - 1) / (HERO_EXIT_END_PROGRESS - 1));
-        const scale = 1 - stickyOutro * 0.055 - exitOutro * 0.025;
-        const translateY = -stickyOutro * 22;
-        const opacity = Math.max(0, 1 - stickyOutro * 0.62 - exitOutro * 0.38);
-        stageRef.current.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
-        stageRef.current.style.opacity = opacity.toFixed(3);
-        stageRef.current.style.visibility = opacity <= 0.002 ? 'hidden' : 'visible';
+        const isIdleMainZone = stickyOutro === 0 && exitOutro === 0;
+        const stageTransform = isIdleMainZone
+          ? ''
+          : `translate3d(0, ${(-stickyOutro * 22).toFixed(2)}px, 0) scale(${(
+              1 -
+              stickyOutro * 0.055 -
+              exitOutro * 0.025
+            ).toFixed(4)})`;
+        const opacityNum = isIdleMainZone
+          ? 1
+          : Math.max(0, 1 - stickyOutro * 0.62 - exitOutro * 0.38);
+        const opacityStr = isIdleMainZone ? '1' : opacityNum.toFixed(3);
+        const visibilityStr = opacityNum <= 0.002 ? 'hidden' : 'visible';
+        const stageKey = `${stageTransform}|${opacityStr}|${visibilityStr}`;
+        if (stageKey !== lastStageKeyRef.current) {
+          lastStageKeyRef.current = stageKey;
+          stageRef.current.style.transform = stageTransform;
+          stageRef.current.style.opacity = opacityStr;
+          stageRef.current.style.visibility = visibilityStr;
+        }
       }
     }
   };
@@ -282,7 +304,8 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
     };
 
     const fallbackTimer = setTimeout(unlock, 2500);
-    const loadQueue = buildLoadOrder(sampled.length);
+    const holdSlot = sampled.findIndex((f) => f >= HERO_REDUCED_MOTION_FRAME);
+    const loadQueue = buildLoadOrder(sampled.length, holdSlot);
     let cursor = 0;
     let activeLoads = 0;
 

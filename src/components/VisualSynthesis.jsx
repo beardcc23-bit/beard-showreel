@@ -149,9 +149,11 @@ const CAPTION_VARIANTS = {
   },
 };
 
+const VFX_ASSET_VERSION = 'v4';
+
 const getDisplayImageUrl = (item) => {
   if (!item?.bgImage) return null;
-  return item.featured ? `${item.bgImage}?v=3` : item.bgImage;
+  return `${item.bgImage}?${VFX_ASSET_VERSION}`;
 };
 
 const BrandCard = React.memo(
@@ -256,8 +258,8 @@ const BrandCard = React.memo(
                 alt={item.name}
                 width={isFeatured ? 1200 : 600}
                 height={isFeatured ? 675 : 337}
-                loading={index < 5 ? 'eager' : 'lazy'}
-                fetchpriority={isFeatured ? 'high' : 'auto'}
+                loading={isStageEntered && index < 5 ? 'eager' : 'lazy'}
+                fetchpriority={isStageEntered && isFeatured ? 'high' : 'auto'}
                 decoding="async"
                 style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
                 onLoad={() => {
@@ -392,8 +394,15 @@ export default function VisualSynthesis({ onPlayVideo }) {
         const img = new Image();
         img.decoding = 'async';
         img.onload = () => {
-          inflightImageCache.delete(bgImage);
-          loadedImageCache.add(bgImage);
+          const finalize = () => {
+            inflightImageCache.delete(bgImage);
+            loadedImageCache.add(bgImage);
+          };
+          if (typeof img.decode === 'function') {
+            img.decode().catch(() => {}).finally(finalize);
+          } else {
+            finalize();
+          }
         };
         img.onerror = () => {
           inflightImageCache.delete(bgImage);
@@ -421,6 +430,9 @@ export default function VisualSynthesis({ onPlayVideo }) {
 
   const handleTabChange = React.useCallback(
     (newTabId, forceDirection, mode = 'slide') => {
+      cutTimersRef.current.forEach((id) => clearTimeout(id));
+      cutTimersRef.current = [];
+      setIsDissolving(false);
       setTabState((prev) => {
         if (newTabId === prev.activeTab) return prev;
         cancelPrefetch();

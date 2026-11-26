@@ -1,8 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 
-const hoverNoneQuery =
-  typeof window !== 'undefined' ? window.matchMedia?.('(hover: none)') : null;
-
 export default function RefractionCard({ children, className = '', ...props }) {
   const cardRef = useRef(null);
   const rafRef = useRef(null);
@@ -16,16 +13,16 @@ export default function RefractionCard({ children, className = '', ...props }) {
     };
   }, []);
 
-  const handleMouseEnter = () => {
-    if (hoverNoneQuery?.matches || !cardRef.current) return;
+  const handlePointerEnter = (e) => {
+    if (e.pointerType === 'touch' || !cardRef.current) return;
     rectRef.current = cardRef.current.getBoundingClientRect();
     scrollYRef.current = window.scrollY;
   };
 
-  const handleMouseMove = (e) => {
+  const handlePointerMove = (e) => {
     if (
+      e.pointerType === 'touch' ||
       !cardRef.current ||
-      hoverNoneQuery?.matches ||
       document.body.classList.contains('is-scrolling')
     ) {
       return;
@@ -48,7 +45,7 @@ export default function RefractionCard({ children, className = '', ...props }) {
     });
   };
 
-  const handleMouseLeave = () => {
+  const handlePointerLeave = () => {
     rectRef.current = null;
     if (rafRef.current) {
       cancelAnimationFrame(rafRef.current);
@@ -61,9 +58,9 @@ export default function RefractionCard({ children, className = '', ...props }) {
   return (
     <div
       ref={cardRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       className={`optical-surface ${className}`}
       {...props}
     >

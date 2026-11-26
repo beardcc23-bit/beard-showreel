@@ -30,8 +30,13 @@ export function useOverlayLock(
         document.body.style.paddingRight = `${scrollbarWidth}px`;
         document.documentElement.style.setProperty('--scrollbar-comp', `${scrollbarWidth}px`);
       }
-      // 對背景主區段與頂部導覽列標記原生 inert，阻斷鍵盤與行動螢幕閱讀器穿透背景內容
-      document.querySelectorAll('nav, main, footer').forEach((el) => el.setAttribute('inert', ''));
+      // 對尚未標記 inert 的背景主區段與頂部導覽列掛載原生 inert，並以 data-overlay-inert 區分避免解鎖時誤拆外部既有標記
+      document.querySelectorAll('nav, main, footer').forEach((el) => {
+        if (!el.hasAttribute('inert')) {
+          el.setAttribute('inert', '');
+          el.setAttribute('data-overlay-inert', 'true');
+        }
+      });
       window.lenis?.stop();
     }
     lockCount += 1;
@@ -103,8 +108,11 @@ export function useOverlayLock(
         document.documentElement.style.removeProperty('--scrollbar-comp');
         document.body.classList.remove('modal-open');
         document
-          .querySelectorAll('nav, main, footer')
-          .forEach((el) => el.removeAttribute('inert'));
+          .querySelectorAll('[data-overlay-inert="true"]')
+          .forEach((el) => {
+            el.removeAttribute('inert');
+            el.removeAttribute('data-overlay-inert');
+          });
         window.lenis?.start();
       }
 
