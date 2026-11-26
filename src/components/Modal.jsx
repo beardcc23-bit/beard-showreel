@@ -126,7 +126,7 @@ export default function Modal({ isOpen, onClose, type, data }) {
                 }`}
               >
                 {iframeLoading && hasValidVideoSource && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#05070B] z-10">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#05070B] z-0 pointer-events-none">
                     <div className="w-10 h-[1.5px] bg-white/15 overflow-hidden relative mb-4">
                       <div className="absolute inset-y-0 left-0 w-1/2 bg-spectral-crimson animate-pulse" />
                     </div>
@@ -146,28 +146,26 @@ export default function Modal({ isOpen, onClose, type, data }) {
                         : 'about:blank'
                     }
                     title="Facebook Video Player"
-                    sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
                     onLoad={hasValidVideoSource ? () => setIframeLoading(false) : undefined}
-                    className={`w-full h-full border-0 transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                    className="relative z-10 w-full h-full border-0"
                   />
                 ) : (
                   <iframe
                     key={currentData.videoId}
                     src={
                       safeVideoId
-                        ? `https://www.youtube-nocookie.com/embed/${safeVideoId}?autoplay=1&rel=0&playsinline=1`
+                        ? `https://www.youtube.com/embed/${safeVideoId}?autoplay=1&rel=0&playsinline=1`
                         : 'about:blank'
                     }
                     title="YouTube Video Player"
-                    sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     referrerPolicy="strict-origin-when-cross-origin"
                     onLoad={hasValidVideoSource ? () => setIframeLoading(false) : undefined}
-                    className={`w-full h-full border-0 transition-opacity duration-500 ${iframeLoading ? 'opacity-0' : 'opacity-100'}`}
+                    className="relative z-10 w-full h-full border-0"
                   />
                 )}
               </div>

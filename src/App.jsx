@@ -7,13 +7,11 @@ import Introduction from './components/Introduction';
 import Manifesto from './components/Manifesto';
 import VisualSynthesis from './components/VisualSynthesis';
 import Contact from './components/Contact';
+import Modal from './components/Modal';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import { useLenisScroll } from './hooks/useLenisScroll';
 import { APP_EVENTS } from './constants/siteConfig';
 import { isSafeLocalImageUrl } from './utils/url';
-
-const loadModal = () => import('./components/Modal');
-const Modal = React.lazy(loadModal);
 
 export default function App() {
   const [modalState, setModalState] = useState({
@@ -22,7 +20,6 @@ export default function App() {
     data: null,
   });
   const [hasModalMounted, setHasModalMounted] = useState(false);
-  const hasPreloadedModalRef = useRef(false);
 
   useLenisScroll();
 
@@ -62,19 +59,6 @@ export default function App() {
     });
   }, []);
 
-  const handlePageLoaded = React.useCallback(() => {
-    if (hasPreloadedModalRef.current) return;
-    hasPreloadedModalRef.current = true;
-    // 首屏就緒後利用瀏覽器閒置期預熱 Modal chunk，確保首次點擊播放影片 0ms 秒開且不觸發全站重繪
-    if (typeof window !== 'undefined') {
-      if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(() => loadModal(), { timeout: 1500 });
-      } else {
-        setTimeout(() => loadModal(), 600);
-      }
-    }
-  }, []);
-
   return (
     <LazyMotion features={domMax} strict>
       <MotionConfig reducedMotion="user">
@@ -87,10 +71,7 @@ export default function App() {
 
           {/* 主頁面五幕式區段 */}
           <main className="relative z-10">
-            <Hero
-              isModalOpen={modalState.isOpen}
-              onLoaded={handlePageLoaded}
-            />
+            <Hero isModalOpen={modalState.isOpen} />
             <Introduction onPlayVideo={handleOpenVideoModal} />
             <Manifesto onPlayVideo={handleOpenVideoModal} />
             <VisualSynthesis onPlayVideo={handleOpenVideoModal} />
@@ -104,17 +85,15 @@ export default function App() {
             </div>
           </footer>
 
-          {/* 全域互動彈窗（首次觸發前不掛載 Portal 樹，並包覆 Chunk 錯誤邊界） */}
+          {/* 全域互動彈窗（同步掛載確保點擊同幀繼承瀏覽器自動播放手勢權限） */}
           {hasModalMounted && (
             <ErrorBoundary minimal>
-              <React.Suspense fallback={null}>
-                <Modal
-                  isOpen={modalState.isOpen}
-                  onClose={handleCloseModal}
-                  type={modalState.type}
-                  data={modalState.data}
-                />
-              </React.Suspense>
+              <Modal
+                isOpen={modalState.isOpen}
+                onClose={handleCloseModal}
+                type={modalState.type}
+                data={modalState.data}
+              />
             </ErrorBoundary>
           )}
         </div>

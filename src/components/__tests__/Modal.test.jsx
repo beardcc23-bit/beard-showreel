@@ -9,7 +9,7 @@ describe('Modal 影音與圖片燈箱單元測試', () => {
     vi.restoreAllMocks();
   });
 
-  it('開啟 YouTube 影片時應嵌入 youtube-nocookie 並附帶 playsinline=1，且頂欄左側呈現品牌標題', () => {
+  it('開啟 YouTube 影片時應以無沙盒阻擋、100% 可見狀態嵌入 www.youtube.com 確保繼承自動播放權限，且頂欄左側呈現品牌標題', () => {
     const onClose = vi.fn();
     render(
       <Modal
@@ -26,8 +26,10 @@ describe('Modal 影音與圖片燈箱單元測試', () => {
     const iframe = screen.getByTitle('YouTube Video Player');
     expect(iframe).toHaveAttribute(
       'src',
-      'https://www.youtube-nocookie.com/embed/pCBQA1vEDig?autoplay=1&rel=0&playsinline=1'
+      'https://www.youtube.com/embed/pCBQA1vEDig?autoplay=1&rel=0&playsinline=1'
     );
+    expect(iframe).not.toHaveAttribute('sandbox');
+    expect(iframe.className).not.toContain('opacity-0');
     const extLink = screen.getByLabelText('於新分頁開啟原影片');
     expect(extLink).toHaveAttribute('href', 'https://www.youtube.com/watch?v=pCBQA1vEDig');
     expect(extLink).toHaveAttribute('target', '_blank');
