@@ -309,5 +309,7 @@
     - 定義 `SHOWREEL_2026_VIDEO_ID`（`n4qMRlAlqjg`）與 `SHOWREEL_2025_VIDEO_ID`（`s6s2p87fPdA`），保留 `MAIN_SHOWREEL_VIDEO_ID` 相容別名。
     - 個人介紹區升級為**方案 A 雙鍵並排**：左鍵為主推品牌橘紅光譜框 `▶ 2026 SHOWREEL`（`.spectral-cta`），右鍵為暗房冷霧玻璃次要框 `▶ 2025 SHOWREEL`（`.spectral-cta-secondary`，支援 Hover 青藍微光與 `prefers-reduced-transparency` 無障礙降級）；手機端採 `grid-cols-2` 單排等寬並排、桌機端靠左並排，點擊時審片燈箱頂欄同步顯示對應年度標題。
   - **修復 `OpticalLightField.jsx` WebGL 初始化 TDZ `ReferenceError`（`OpticalLightField.jsx`、`OpticalLightField.test.jsx`）**：
-    - 將 `renderFrame` 改為具名函式宣告支援提升，並移除初始化階段多餘的同步 `handleScroll()` 呼叫（改直接計算初始捲動值），根除真實 WebGL 環境下因 `wakeFromIdle` 早於 `const renderFrame` 宣告觸發之 TDZ 拋錯，同步補齊模擬完整 WebGL Context 之防回歸單元測試（全站 **28 個測試檔 / 85 項單元測試** 100% 通過）。
+    - 將 `renderFrame` 改為具名函式宣告支援提升，並移除初始化階段多餘的同步 `handleScroll()` 呼叫（改直接計算初始捲動值），根除真實 WebGL 環境下因 `wakeFromIdle` 早於 `const renderFrame` 宣告觸發之 TDZ 拋錯，同步補齊模擬完整 WebGL Context 之防回歸單元測試。
+  - **根治 `Modal.jsx` 關閉彈窗後 `<AnimatePresence>` 凍結快照導致殘留聲音問題（`Modal.jsx`、`Modal.test.jsx`）**：
+    - 於 `<AnimatePresence>` 外層建立場次計數 `ModalSessionContext` 穿透退場子樹凍結 Props，當點擊關閉（`isOpen` 轉 `false`）同幀（`0ms`）立即令 `<ActiveVideoEmbed>` 回傳 `null` 由 React 直接從 DOM 拔除 `<iframe>`，同步於 Callback Ref 發送 `postMessage('stopVideo')` 與導向 `about:blank` 切斷跨行程音訊管線；退場動畫收斂為 `160ms` 並掛載 `pointer-events-none`，同時防堵退場期間秒開下一支影片時舊層復燃（全站擴充至 **28 個測試檔 / 86 項單元測試** 100% 通過）。
 

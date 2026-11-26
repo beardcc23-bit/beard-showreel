@@ -26,7 +26,7 @@ describe('Modal 影音與圖片燈箱單元測試', () => {
     const iframe = screen.getByTitle('YouTube Video Player');
     expect(iframe).toHaveAttribute(
       'src',
-      'https://www.youtube.com/embed/pCBQA1vEDig?autoplay=1&rel=0&playsinline=1'
+      'https://www.youtube.com/embed/pCBQA1vEDig?autoplay=1&enablejsapi=1&rel=0&playsinline=1'
     );
     expect(iframe).not.toHaveAttribute('sandbox');
     expect(iframe.className).not.toContain('opacity-0');
@@ -39,6 +39,54 @@ describe('Modal 影音與圖片燈箱單元測試', () => {
     // 觸發 iframe onLoad 後應隱藏 LOADING STREAM 遮罩
     fireEvent.load(iframe);
     expect(screen.queryByText('LOADING STREAM')).not.toBeInTheDocument();
+  });
+
+  it('關閉彈窗瞬間（isOpen 轉 false 同幀、退場動畫尚未結束時）應穿透 AnimatePresence 快照立即從 DOM 卸載 iframe 切斷聲音', () => {
+    const { rerender } = render(
+      <Modal
+        isOpen={true}
+        onClose={vi.fn()}
+        type="video"
+        data={{ videoId: 'n4qMRlAlqjg', title: '2026 SHOWREEL', isFacebook: false }}
+      />
+    );
+
+    expect(screen.getByTitle('YouTube Video Player')).toBeInTheDocument();
+    expect(document.querySelectorAll('iframe')).toHaveLength(1);
+
+    // 模擬點擊關閉（此時 AnimatePresence 仍在跑退場動畫，外層 dialog 尚未卸載）
+    rerender(
+      <Modal
+        isOpen={false}
+        onClose={vi.fn()}
+        type={null}
+        data={null}
+      />
+    );
+
+    // 0ms 同幀斷言：不需等待退場動畫結束，iframe 必須已徹底從 DOM 移除且外層改為 pointer-events-none
+    expect(screen.queryByTitle('YouTube Video Player')).not.toBeInTheDocument();
+    expect(document.querySelectorAll('iframe')).toHaveLength(0);
+    const exitingDialog = screen.queryByRole('dialog');
+    if (exitingDialog) {
+      expect(exitingDialog.className).toContain('pointer-events-none');
+    }
+
+    // 退場動畫尚未結束時立刻開啟下一支影片（2025 SHOWREEL），舊退場層絕不可復燃，全頁僅能存在唯一 1 顆新 iframe
+    rerender(
+      <Modal
+        isOpen={true}
+        onClose={vi.fn()}
+        type="video"
+        data={{ videoId: 's6s2p87fPdA', title: '2025 SHOWREEL', isFacebook: false }}
+      />
+    );
+    const activeIframes = document.querySelectorAll('iframe');
+    expect(activeIframes).toHaveLength(1);
+    expect(activeIframes[0]).toHaveAttribute(
+      'src',
+      'https://www.youtube.com/embed/s6s2p87fPdA?autoplay=1&enablejsapi=1&rel=0&playsinline=1'
+    );
   });
 
   it('8 秒載入看門狗應在外部嵌入未觸發 onLoad 時自動揭開 LOADING STREAM 遮罩防永久卡死', () => {
