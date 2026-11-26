@@ -88,7 +88,7 @@ describe('portfolio.js 最佳化邏輯測試', () => {
         'Samsung Z Fold2 / Z Flip2',
       ]);
       expect(getNames('vehicle', 5)).toEqual([
-        'Foxtron Caviar',
+        'Foxtron Cavira',
         'Mazda',
         'Gogoro Pulse',
         'Gogoro EZZY',

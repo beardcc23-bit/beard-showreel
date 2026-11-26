@@ -22,7 +22,7 @@ const lawCategories = [
     desc: 'AI 生成看似帶來無限想像，實則伴隨著物理邏輯崩壞、畫面閃爍與無規律的細節錯誤。我專注於從這些隨機不可控的片段中，精準篩選並萃取可用元素，將零散的 AI 生成素材，無痕合成為符合大片質感的高階商業畫面。',
     params: [
       {
-        key: 'Foxtron Caviar',
+        key: 'Foxtron Cavira',
         value: '將實拍的車輛行駛影片，完美結合 AI 輔助生成的淡江大橋背景，在 Flame 中重塑極致的物理光影與動態透視。',
         videoId: 'pCBQA1vEDig',
       },

@@ -16,12 +16,12 @@ describe('Modal 影音與圖片燈箱單元測試', () => {
         isOpen={true}
         onClose={onClose}
         type="video"
-        data={{ videoId: 'pCBQA1vEDig', title: 'Foxtron Caviar', isFacebook: false }}
+        data={{ videoId: 'pCBQA1vEDig', title: 'Foxtron Cavira', isFacebook: false }}
       />
     );
 
-    expect(screen.getByRole('dialog')).toHaveAttribute('aria-label', 'Foxtron Caviar');
-    expect(screen.getByText('Foxtron Caviar')).toBeInTheDocument();
+    expect(screen.getByRole('dialog')).toHaveAttribute('aria-label', 'Foxtron Cavira');
+    expect(screen.getByText('Foxtron Cavira')).toBeInTheDocument();
 
     const iframe = screen.getByTitle('YouTube Video Player');
     expect(iframe).toHaveAttribute(

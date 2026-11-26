@@ -257,7 +257,7 @@ export const categories = [
     "name": "交通工具",
     "items": [
       {
-        "name": "Foxtron Caviar",
+        "name": "Foxtron Cavira",
         "bgImage": "/vfx/C/C-02.webp",
         "url": "https://youtu.be/pCBQA1vEDig?si=lbbvGmTm90P5Vx4P",
         "featured": true
@@ -455,9 +455,8 @@ export const categories = [
         "url": "https://www.youtube.com/watch?v=pHGEKlXxdgY"
       },
       {
-        "name": "Acuu-Chek 羅氏血糖機",
-        "bgImage": "/vfx/E/E-02.webp",
-        "url": "https://www.youtube.com/watch?v=HUaASbBDOSM"
+        "name": "Accu-Chek 羅氏血糖機",
+        "bgImage": "/vfx/E/E-02.webp"
       },
       {
         "name": "Bifesta 碧菲絲特",

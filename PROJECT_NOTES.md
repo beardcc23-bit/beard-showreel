@@ -315,4 +315,6 @@
   - **「金融與保險」分類主推大卡更新：渣打銀行換新大圖並與磊山保經交換位置（`F-08.webp`、`portfolio.js`、`VisualSynthesis.jsx`、`portfolio.test.js`）**：
     - 將「渣打銀行 40 週年」劇照精準去除上下遮幅黑邊與底部字幕，對頂部純天空區進行 C1 平滑無痕延展（文字、水滴圓點與大樓渣打 Logo 維持 `1:1` 零幾何變形），輸出高畫質 `1440×771` RGB WebP（`public/vfx/F/F-08.webp`）。
     - 將 `渣打銀行` 移至「金融與保險」首位設為 `featured: true`（`2×2` 大卡，`imagePosition: "36% 50%"` 確保雙端左右完整留白不切字與 Logo），與 `磊山保經` 交換排序（磊山移至第 3 格小卡），並將 `VFX_ASSET_VERSION` 升至 `v5` 破除舊圖快取。
+  - **應徵前全站影片可播性與品牌正名校準（`portfolio.js`、`Manifesto.jsx`、`portfolio.test.js`、`Modal.test.jsx`）**：
+    - 對全站 63 支 YouTube 作品與兩支 Showreel 執行 oEmbed 可播性實彈稽核：修正「美妝與健康」分類 `Accu-Chek 羅氏血糖機` 品牌拼字，並移除客戶已轉為私人影片之失效連結 `HUaASbBDOSM`（轉為純劇照展示卡）；同步將鴻華先進概念車名統一校正為官方正名 `Foxtron Cavira`。
 
