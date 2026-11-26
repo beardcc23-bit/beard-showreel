@@ -17,8 +17,7 @@ import { useIdleHeroAutoScroll } from '../hooks/useIdleHeroAutoScroll';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const MAX_CONCURRENT_LOADS = 6;
-const DESKTOP_SEQUENCE_VERSION = 'v11';
-const MOBILE_SEQUENCE_VERSION = 'v13';
+const SEQUENCE_VERSION = 'v=11';
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
@@ -72,8 +71,9 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
   }, []);
 
   const basePath = import.meta.env.BASE_URL;
-  const folder = isMobile ? 'png-0-mobile' : 'png-0';
-  const sequenceVersion = isMobile ? MOBILE_SEQUENCE_VERSION : DESKTOP_SEQUENCE_VERSION;
+  // 桌機與手機統一共讀第一代原生 1920×1080 大圖（零縮圖、零二次壓縮損耗；手機維持抽樣 59 格兼顧 Retina 銳利度與流量）
+  const folder = 'png-0';
+  const sequenceVersion = SEQUENCE_VERSION;
   const step = isMobile ? 2 : 1;
   const initialFrameIdx = prefersReduced ? HERO_REDUCED_MOTION_FRAME : 0;
   const posterSrc = `${basePath}${folder}/png-0_${String(initialFrameIdx).padStart(8, '0')}.webp?${sequenceVersion}`;
@@ -560,7 +560,7 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
 
         <div
           data-testid="hero-screen"
-          className="relative w-full h-[calc(100dvh-4.75rem)] md:h-auto md:aspect-video bg-transparent md:bg-[#030407] shadow-none md:shadow-[0_32px_90px_rgba(0,0,0,0.85)] max-md:[mask-image:linear-gradient(to_bottom,transparent_0%,black_8%,black_88%,transparent_100%)] overflow-hidden"
+          className="relative w-full h-[calc(100dvh-4.75rem)] md:h-auto md:aspect-video flex items-center justify-center bg-transparent md:bg-[#030407] shadow-none md:shadow-[0_32px_90px_rgba(0,0,0,0.85)] overflow-hidden"
         >
           {/* 極簡暗房載入遮罩 */}
           {isLoading && (
@@ -574,23 +574,23 @@ export default function CanvasSequence({ containerRef, isModalOpen, onLoaded }) 
             </div>
           )}
 
-          {/* 逐幀滾動 Canvas 銀幕本體 */}
+          {/* 逐幀滾動 Canvas 銀幕本體：手機版以 9:10 視窗精準對位原圖 x=464..1436 不切字範圍並加上下暗房柔邊；桌機維持 16:9 滿版 */}
           <div
             onContextMenu={(e) => e.preventDefault()}
-            className={`w-full h-full relative transition-[opacity,transform] duration-700 ease-out ${
+            className={`relative max-md:w-[min(100%,calc((100dvh-4.75rem)*0.9))] max-md:aspect-[9/10] max-md:[mask-image:linear-gradient(to_bottom,transparent_0%,black_9%,black_90%,transparent_100%)] md:w-full md:h-full overflow-hidden transition-[opacity,transform] duration-700 ease-out ${
               isLoading ? 'opacity-0 scale-[0.985]' : 'opacity-100 scale-100'
             }`}
           >
             <canvas
               ref={canvasRef}
-              className="w-full h-full block pointer-events-none max-md:object-contain md:object-cover object-center"
+              className="w-full h-full block pointer-events-none object-cover max-md:object-[48.95%_50%] md:object-center"
               style={
                 !hasDrawnFrame
                   ? {
                       backgroundImage: `url(${posterSrc})`,
                       backgroundRepeat: 'no-repeat',
-                      backgroundSize: isMobile ? 'contain' : 'cover',
-                      backgroundPosition: 'center',
+                      backgroundSize: 'cover',
+                      backgroundPosition: isMobile ? '48.95% 50%' : 'center',
                     }
                   : undefined
               }

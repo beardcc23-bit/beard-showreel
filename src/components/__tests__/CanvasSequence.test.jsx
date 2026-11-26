@@ -114,7 +114,7 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
     expect(requestedSrcs[0]).toContain('png-0_00000000.webp');
     expect(requestedSrcs[1]).toContain('png-0_00000116.webp');
 
-    // 切換手機寬度驗證抽樣為 59 格且使用 png-0-mobile
+    // 切換手機寬度驗證抽樣為 59 格且直接共讀桌機原生 png-0 大圖（零縮圖與二次壓縮）
     requestedSrcs = [];
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
     render(<CanvasSequence containerRef={ref} isModalOpen={false} />);
@@ -124,7 +124,8 @@ describe('CanvasSequence（Hero 滾動驅動逐幀時間軸播放器）', () => 
       }
     });
     expect(requestedSrcs.length).toBe(59);
-    expect(requestedSrcs[0]).toContain('png-0-mobile/png-0_00000000.webp');
+    expect(requestedSrcs[0]).toContain('png-0/png-0_00000000.webp?v=11');
+    expect(requestedSrcs[0]).not.toContain('png-0-mobile');
   });
 
   it('往下滑應以單一等速線性推進影格，於變透明與離場上滑區（86%→126%）緊貼滑動速度走完第 117 格，往上滑應倒轉', async () => {
