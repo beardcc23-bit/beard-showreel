@@ -322,4 +322,8 @@
     - **直式與 4:3 劇照構圖對位**：為 `Samsung Z Fold3 / Z Flip3`（`50% 28%`）、`蕾妮亞`（`50% 24%`）、`Bifesta 碧菲絲特`（`50% 38%`）補齊垂直焦點定位，消除預設居中裁切造成的切額頭與切標題問題。
     - **小卡遮幅黑邊裁除與滿框齊平**：裁除 `Audi`（`C-01.webp` 頂部 42px 單側黑邊）、`桂格`（`A-018.webp`）、`Gogoro Pulse`（`C-04.webp`，搭配 `20% 50%` 完整保留左上 Logo 與翹孤輪騎士）及 `瑞穗鮮乳`（`A-023.webp`，搭配 `22% 50%`）之遮幅黑邊，並將 `VFX_ASSET_VERSION` 升至 `v6`。
     - **同品牌多支作品篇名區隔、外連標示與 CSP 相容**：為「生活與百貨」與「金融與保險」重複同名之 `新光三越`（×4）、`東和鋼鐵`（×3）、`HOLA`（×2）、`台灣Pay`（×2）補上官方篇名副標達成全站同分類零撞名；`Manifesto.jsx` 外部社群案例補齊右上 `ArrowUpRight` 圖示並將 `Autodesk Flame` 升級為原生 `<button>`；移除 `index.html` 字體 `<link onload>` 行內腳本並清理 `vercel.json` 廢棄網域。
+  - **第十二輪 97 張卡片總覽圖逐格審片收官：首類大卡 `UCC` 與剩餘 8 張小卡零切字、iOS 點擊閃灰消除與肖像預載（`A-004.webp`、`D-07.webp`、`portfolio.js`、`VisualSynthesis.jsx`、`index.css`、`Introduction.jsx`）**：
+    - 對 `UCC`（`A-004.webp`）上方純暗部天花板與 `五月花極上系列`（`D-07.webp`）底部純灰地面進行 C1 平滑延展（主體與文字 `1:1` 零變形），使桌機 `2×2` 大卡與 `16:9` 小卡左右文字 `100%` 完整入鏡，並將 `VFX_ASSET_VERSION` 升至 `v7`。
+    - 為 `每朝双纖綠茶`（`88% 50%`）、`Panasonic 溫水洗淨便座`（`16% 50%`）、`Panasonic 蒸氣電熨斗`（`15% 50%`）、`Samsung Z Fold3 / Z Flip3`（`50% 8%`）、`長榮航太`（`10% 50%`）、`台灣武田合利他命 A25`（`10% 50%`）、`臺灣證券交易所`（`50% 16%`）補齊精準 `imagePosition`，達成全站 97 張作品零切字、零切頭。
+    - 於 `index.css` `html` 補齊 `-webkit-tap-highlight-color: transparent` 消除 iOS Safari 點擊灰框，並移除 `Introduction.jsx` 個人肖像之 `loading="lazy"` 確保 `1.5s` 自動推進下滑時 `0ms` 穩定顯現。
 

@@ -159,7 +159,7 @@ const CAPTION_VARIANTS = {
   },
 };
 
-const VFX_ASSET_VERSION = 'v6';
+const VFX_ASSET_VERSION = 'v7';
 
 const getDisplayImageUrl = (item) => {
   if (!item?.bgImage) return null;

@@ -52,6 +52,7 @@
 html {
   scrollbar-width: thin;
   scrollbar-color: rgba(235, 74, 46, 0.35) #030407;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {

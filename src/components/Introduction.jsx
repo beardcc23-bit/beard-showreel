@@ -47,7 +47,6 @@ export default function Introduction({ onPlayVideo }) {
                 width="768"
                 height="1024"
                 sizes="(max-width: 639px) 260px, (max-width: 767px) 320px, (max-width: 1023px) 40vw, 384px"
-                loading="lazy"
                 decoding="async"
                 className="w-full h-full object-cover contrast-[1.03] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
               />

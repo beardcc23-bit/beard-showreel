@@ -30,6 +30,7 @@ export const categories = [
         "name": "UCC",
         "bgImage": "/vfx/A/A-004.webp",
         "url": "https://www.youtube.com/watch?v=AuuxyMIutf8",
+        "imagePosition": "50% 82%",
         "featured": true
       },
       {
@@ -88,7 +89,8 @@ export const categories = [
       {
         "name": "每朝双纖綠茶",
         "bgImage": "/vfx/A/A-008.webp",
-        "url": "https://www.youtube.com/watch?v=w1EUT4JnHck"
+        "url": "https://www.youtube.com/watch?v=w1EUT4JnHck",
+        "imagePosition": "88% 50%"
       },
       {
         "name": "每朝健康",
@@ -189,14 +191,16 @@ export const categories = [
       {
         "name": "Panasonic 溫水洗淨便座",
         "bgImage": "/vfx/B/B-01.webp",
-        "url": "https://www.youtube.com/watch?v=SMCldr-5kbg"
+        "url": "https://www.youtube.com/watch?v=SMCldr-5kbg",
+        "imagePosition": "16% 50%"
       },
       {
         "name": "Panasonic 蒸氣電熨斗",
         "bgImage": "/vfx/B/B-03.webp",
         "url": "https://www.facebook.com/watch/?v=844958797010401",
         "videoId": "844958797010401",
-        "isFacebook": true
+        "isFacebook": true,
+        "imagePosition": "15% 50%"
       },
       {
         "name": "Panasonic W音波電動牙刷",
@@ -225,7 +229,7 @@ export const categories = [
         "url": "https://www.facebook.com/watch/?v=558217842125093",
         "videoId": "558217842125093",
         "isFacebook": true,
-        "imagePosition": "50% 28%"
+        "imagePosition": "50% 8%"
       },
       {
         "name": "Samsung Z Fold4 / Z Flip4",
@@ -320,7 +324,8 @@ export const categories = [
       {
         "name": "長榮航太",
         "bgImage": "/vfx/C/C-12.webp",
-        "url": "https://www.youtube.com/watch?v=yuUHorteLAw"
+        "url": "https://www.youtube.com/watch?v=yuUHorteLAw",
+        "imagePosition": "10% 50%"
       }
     ]
   },
@@ -507,7 +512,8 @@ export const categories = [
       },
       {
         "name": "台灣武田合利他命 A25",
-        "bgImage": "/vfx/E/E-15_alinamin.webp"
+        "bgImage": "/vfx/E/E-15_alinamin.webp",
+        "imagePosition": "10% 50%"
       }
     ]
   },
@@ -570,7 +576,8 @@ export const categories = [
       },
       {
         "name": "臺灣證券交易所",
-        "bgImage": "/vfx/F/F-10_twse.webp"
+        "bgImage": "/vfx/F/F-10_twse.webp",
+        "imagePosition": "50% 16%"
       }
     ]
   }
