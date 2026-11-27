@@ -13,22 +13,22 @@ import { useMediaQuery } from '../hooks/useMediaQuery';
 const lawCategories = [
   {
     id: '01',
-    subtitle: 'AI 智慧影像生成',
+    subtitle: 'AI 素材合成',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(235, 74, 46, 0.17) 0%, transparent 62%)',
     quoteBorderClass: 'border-spectral-crimson/70',
     watermarkClass: 'text-spectral-crimson/[0.08]',
     stickyTop: 'top-[76px] md:top-24',
-    quote: '「AI 負責拓寬創意的邊界，而我負責將其無縫封裝落地。」',
-    desc: 'AI 生成看似帶來無限想像，實則伴隨著物理邏輯崩壞、畫面閃爍與無規律的細節錯誤。我專注於從這些隨機不可控的片段中，精準篩選並萃取可用元素，將零散的 AI 生成素材，無痕合成為符合大片質感的高階商業畫面。',
+    quote: '「AI 給的是素材，不是成品。」',
+    desc: 'AI 生成的畫面常有物理錯誤、閃爍、細節前後對不上。我從一堆生成結果裡挑出能用的部分，和實拍素材合在一起，修到能上電視播。',
     params: [
       {
         key: 'Foxtron Cavira',
-        value: '將實拍的車輛行駛影片，完美結合 AI 輔助生成的淡江大橋背景，在 Flame 中重塑極致的物理光影與動態透視。',
+        value: '實拍車輛行駛畫面，背景換成 AI 生成的淡江大橋，在 Flame 裡重新對齊透視，補上車身反光和光影。',
         videoId: 'pCBQA1vEDig',
       },
       {
         key: '活沛多',
-        value: '利用 AI 生成模型將實拍人物轉譯為微縮比例小人，並無縫融入與其他虛擬 AI 角色之間的跨次元互動。',
+        value: '用 AI 把實拍演員縮成迷你比例，再和其他 AI 角色放進同一個畫面互動。',
         videoId: 'Y4CG2QNa5hs',
       },
     ],
@@ -40,34 +40,34 @@ const lawCategories = [
     quoteBorderClass: 'border-[#D0346C]/70',
     watermarkClass: 'text-[#D0346C]/[0.08]',
     stickyTop: 'top-[92px] md:top-32',
-    quote: '「乾淨的去背不是把背景切掉，而是把環境光找回來。」',
-    desc: '綠幕去背不是單純的去色過濾，它牽涉到極致複雜的髮絲透明度、邊緣溢色消除，以及實拍人物與背景間的光線交融。我專注於雕琢最棘手的邊緣細節，重塑完美且絕對自然的物理邊界。',
+    quote: '「去背切得再乾淨，光不對，一眼就假。」',
+    desc: '最花時間的是髮絲、半透明邊緣、綠色反光，還有人和背景之間的光要對上。這些沒處理好，觀眾說不出哪裡怪，但就是覺得假。',
     params: [
       {
         key: 'UCC',
-        value: '免去出外景的大量時程，於棚內進行綠幕拍攝，後期精準合成海景與山景，依然呈現如同實地外景拍攝般的高質感天光。',
+        value: '為了省掉出外景的時間，整場在棚內綠幕拍攝，後期再合成海景和山景，天光要做到像真的在現場拍。',
         videoId: 'AuuxyMIutf8',
       },
       {
         key: '磊山保經',
-        value: '克服無綠幕環境的限制，以細緻的手工逐格去背抽離人物，並在多重圖層間嵌入動態閃爍色塊，創造出節奏感強烈且層次豐富的視覺張力。',
+        value: '現場沒有綠幕，只能手工逐格把人物摳出來，再在人物前後穿插跳動的色塊，做出層次和節奏。',
         videoId: 'Rwrn87N2PUc',
       },
     ],
   },
   {
     id: '03',
-    subtitle: '人物美體膚質精修',
+    subtitle: '人物修膚與美體',
     ambientGlow: 'radial-gradient(circle at 88% 12%, rgba(18, 118, 184, 0.19) 0%, transparent 62%)',
     quoteBorderClass: 'border-[#1276B8]/75',
     watermarkClass: 'text-[#1276B8]/[0.09]',
     stickyTop: 'top-[108px] md:top-40',
-    quote: '「最頂級的人像修飾，是保留皮膚真實毛孔的自然質感。」',
-    desc: '極致的人像修飾，是讓主角展現無瑕面容與完美體態，卻不失真實溫度。我藉由精確的動態轉描與肌理微調，在避免塑膠感的同時，精修出最符合黃金比例的自然物理動態。',
+    quote: '「修得好看，但不能修到不像本人。」',
+    desc: '代言人的臉和身材要好看，但不能像塑膠。我用追蹤加逐格修飾處理膚質、輪廓和體態，盡量保留毛孔和皮膚原本的紋理。',
     params: [
       {
         key: 'TKLAB',
-        value: '精細打磨代言人小S的肌膚與立體輪廓，打造出不失真的凍齡無瑕容顏，並乾淨抹去手部與雙腿的刺青細節。',
+        value: '修飾小 S 的膚質和臉部輪廓，保留真實感，另外擦掉手部和腿上的刺青。',
         videoId: '1495921932163292',
         isFacebook: true,
         aspect: 'square',
@@ -75,7 +75,7 @@ const lawCategories = [
       },
       {
         key: 'LUX 髮的補給',
-        value: '不只雕琢面部無瑕膚質的自然光澤，更針對秀髮的動態細節進行優化，呈現流暢且具空氣感的長髮飄逸視覺。',
+        value: '除了修膚，也處理頭髮擺動時的細節，讓長髮動起來更順、更輕。',
         videoId: '822528356385191',
         isFacebook: true,
         url: 'https://www.facebook.com/watch/?v=822528356385191',
@@ -241,11 +241,11 @@ export default function Manifesto({ onPlayVideo }) {
                 <ArrowUpRight size={13} className="text-spectral-crimson transition-transform duration-300 group-hover/flame:translate-x-0.5 group-hover/flame:-translate-y-0.5" />
                 <span className="absolute bottom-0 left-0 w-full h-[1.5px] spectral-underline" />
               </button>{' '}
-              進行 Online。依需求進行人物膚質精修、場景穿幫、綠幕去背、3D物件合成、商品合成與字幕效果。在反覆經由導演、代理商確認並與客戶實際交片後，最後製作 <span className="text-white font-normal">SC 播帶</span>，完成這次專案。
+              進行 Online。修膚、修穿幫、綠幕去背、3D 物件與商品合成、上字幕，都在這一關完成。經過導演、代理商和客戶一輪輪確認後，輸出 <span className="text-white font-normal">SC 播帶</span>交片。
             </p>
 
-            <ScrubText text="即使進入交片終點線，只要客戶對細節有所追求，我都會在第一時間提出最佳解法。無論是調整剪接節奏、校正色彩，或是重新置換合成場景，能在分秒必爭的現場快速回應並解決客戶需求，就是我的成就感所在。" />
-            <ScrubText text="面對 AI 浪潮，我不斷學習並掌握 AI 技能，將智慧輔助技術融入傳統合成流程。藉由更高的效率與敏銳的視覺直覺，探索影音創作的全新視野。" />
+            <ScrubText text="交片前的修改不會少，我也不怕改。我在意的是每一次修改，都比上一版更接近客戶要的樣子。" />
+            <ScrubText text="這兩年我把 AI 生成工具接進合成流程，用來補素材、做前期測試。工具一直在變，但最後一關的品質，還是得靠人眼把關。" />
             <ScrubText className="border-l-2 border-spectral-crimson py-2 text-title-white text-sm sm:text-base leading-relaxed pl-5 font-normal">
               「細心雕琢每一格畫面，在極限的時程裡，成為替導演與客戶解決問題的人。」
             </ScrubText>

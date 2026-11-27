@@ -327,3 +327,7 @@
     - 為 `每朝双纖綠茶`（`88% 50%`）、`Panasonic 溫水洗淨便座`（`16% 50%`）、`Panasonic 蒸氣電熨斗`（`15% 50%`）、`Samsung Z Fold3 / Z Flip3`（`50% 8%`）、`長榮航太`（`10% 50%`）、`台灣武田合利他命 A25`（`10% 50%`）、`臺灣證券交易所`（`50% 16%`）補齊精準 `imagePosition`，達成全站 97 張作品零切字、零切頭。
     - 於 `index.css` `html` 補齊 `-webkit-tap-highlight-color: transparent` 消除 iOS Safari 點擊灰框，並移除 `Introduction.jsx` 個人肖像之 `loading="lazy"` 確保 `1.5s` 自動推進下滑時 `0ms` 穩定顯現。
 
+  - **全站文案去 AI 腔改寫（第一批，`Introduction.jsx`、`Manifesto.jsx`）**：
+    - 移除高頻空泛詞（極致、無縫、無痕、完美、精準、雕琢、無瑕、封裝落地、全新視野等）與「不是……而是……」、破折號排比句型，改用業內實際用語（修膚、修穿幫、摳像、上字幕、輸出 SC 播帶）與具體工作情境。
+    - 已套用：Introduction 第一段（A1-2）、Manifesto 左欄第一段流程說明（B1）、第二段現場修改（B2-5）、第三段 AI 工具（B3），以及三張專長卡（`AI 素材合成`、`綠幕去背合成`、`人物修膚與美體`）之標題、引言、說明與 6 則案例描述（C1～C3）。
+    - 待定：Introduction 第二、三段、Manifesto 引言金句與 `index.html` SEO 描述，仍在與使用者確認替代說法。
